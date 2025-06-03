@@ -2,13 +2,16 @@
 import { BookOpen, Menu, Search, User, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
             <div className="w-8 h-8 rounded-lg zambia-gradient flex items-center justify-center">
               <BookOpen className="h-5 w-5 text-white" />
             </div>
@@ -22,15 +25,30 @@ const Header = () => {
           <a href="#" className="text-sm font-medium hover:text-zambia-copper transition-colors">
             Courses
           </a>
-          <a href="#" className="text-sm font-medium hover:text-zambia-copper transition-colors">
-            Community
-          </a>
-          <a href="#" className="text-sm font-medium hover:text-zambia-copper transition-colors">
-            Progress
-          </a>
-          <a href="#" className="text-sm font-medium hover:text-zambia-copper transition-colors">
-            Resources
-          </a>
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="text-sm font-medium hover:text-zambia-copper transition-colors"
+          >
+            Dashboard
+          </button>
+          <button 
+            onClick={() => navigate('/ai-tutor')}
+            className="text-sm font-medium hover:text-zambia-copper transition-colors"
+          >
+            AI Tutor
+          </button>
+          <button 
+            onClick={() => navigate('/achievements')}
+            className="text-sm font-medium hover:text-zambia-copper transition-colors"
+          >
+            Achievements
+          </button>
+          <button 
+            onClick={() => navigate('/analytics')}
+            className="text-sm font-medium hover:text-zambia-copper transition-colors"
+          >
+            Analytics
+          </button>
         </nav>
 
         <div className="flex items-center space-x-3">
