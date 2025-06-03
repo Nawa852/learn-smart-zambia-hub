@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,8 +5,11 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { 
   Brain, Trophy, Target, Clock, BookOpen, Star, TrendingUp, 
-  Calendar, Award, Users, MessageSquare, Zap, Activity 
+  Calendar, Award, Users, MessageSquare, Zap, Activity,
+  Sparkles, Play, BarChart3, Eye
 } from "lucide-react";
+import AnimatedCounter from '@/components/UI/AnimatedCounter';
+import InteractiveScene from '@/components/3D/InteractiveScene';
 
 const StudentDashboard = () => {
   const [learningGoals, setLearningGoals] = useState([
@@ -39,108 +41,157 @@ const StudentDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-orange-600 to-emerald-600 rounded-xl p-6 text-white">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, Sarah!</h1>
-          <p className="text-orange-100">Continue your learning journey. You're doing great!</p>
+        {/* Enhanced Welcome Header */}
+        <div className="relative bg-gradient-to-r from-orange-600 via-red-500 to-emerald-600 rounded-2xl p-8 text-white overflow-hidden">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute top-4 right-4 animate-float">
+            <Sparkles className="h-8 w-8 text-yellow-300" />
+          </div>
+          <div className="absolute bottom-4 left-4 animate-pulse">
+            <div className="w-16 h-16 bg-white/10 rounded-full"></div>
+          </div>
+          <div className="relative z-10">
+            <h1 className="text-4xl font-bold mb-2 animate-fade-in">Welcome back, Sarah! ✨</h1>
+            <p className="text-orange-100 text-lg animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              Continue your learning journey. You're doing great! Ready for some 3D exploration?
+            </p>
+          </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Clock className="h-8 w-8 text-zambia-copper" />
+        {/* Enhanced Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="transform hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white to-orange-50 border-orange-200">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-r from-zambia-copper to-orange-500 rounded-full">
+                  <Clock className="h-6 w-6 text-white" />
+                </div>
                 <div>
-                  <div className="text-2xl font-bold">{learningStats.totalHours}h</div>
-                  <div className="text-sm text-gray-600">Learning Time</div>
+                  <div className="text-3xl font-bold text-gray-800">
+                    <AnimatedCounter end={learningStats.totalHours} suffix="h" />
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">Learning Time</div>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Activity className="h-8 w-8 text-zambia-emerald" />
+          <Card className="transform hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white to-emerald-50 border-emerald-200">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-r from-zambia-emerald to-green-500 rounded-full">
+                  <Activity className="h-6 w-6 text-white" />
+                </div>
                 <div>
-                  <div className="text-2xl font-bold">{learningStats.weeklyStreak}</div>
-                  <div className="text-sm text-gray-600">Day Streak</div>
+                  <div className="text-3xl font-bold text-gray-800">
+                    <AnimatedCounter end={learningStats.weeklyStreak} />
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">Day Streak</div>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Trophy className="h-8 w-8 text-yellow-500" />
+          <Card className="transform hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white to-yellow-50 border-yellow-200">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full">
+                  <Trophy className="h-6 w-6 text-white" />
+                </div>
                 <div>
-                  <div className="text-2xl font-bold">{learningStats.avgScore}%</div>
-                  <div className="text-sm text-gray-600">Avg Score</div>
+                  <div className="text-3xl font-bold text-gray-800">
+                    <AnimatedCounter end={learningStats.avgScore} suffix="%" />
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">Avg Score</div>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="h-8 w-8 text-blue-500" />
+          <Card className="transform hover:scale-105 transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-white to-blue-50 border-blue-200">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-white" />
+                </div>
                 <div>
-                  <div className="text-2xl font-bold">#{learningStats.rank}</div>
-                  <div className="text-sm text-gray-600">Class Rank</div>
+                  <div className="text-3xl font-bold text-gray-800">
+                    #<AnimatedCounter end={learningStats.rank} />
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">Class Rank</div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* 3D Interactive Learning Section */}
+        <Card className="overflow-hidden shadow-2xl border-0 bg-gradient-to-r from-purple-50 to-blue-50">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+            <CardTitle className="flex items-center text-xl">
+              <Eye className="mr-3 h-6 w-6" />
+              3D Interactive Learning Lab
+              <Badge className="ml-3 bg-white/20 text-white border-white/30">
+                New Feature!
+              </Badge>
+            </CardTitle>
+            <CardDescription className="text-purple-100">
+              Explore concepts through immersive 3D models and animations
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6">
+            <InteractiveScene />
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Learning Goals */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
+          <Card className="lg:col-span-2 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
               <CardTitle className="flex items-center">
-                <Target className="mr-2 h-5 w-5" />
+                <Target className="mr-2 h-5 w-5 text-indigo-600" />
                 Personal Learning Goals
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-6">
               {learningGoals.map((goal) => (
-                <div key={goal.id} className="space-y-2">
+                <div key={goal.id} className="space-y-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex justify-between items-center">
                     <span className="font-medium">{goal.title}</span>
                     <span className="text-sm text-gray-500">{goal.target}</span>
                   </div>
-                  <Progress value={goal.progress} className="h-2" />
-                  <div className="text-sm text-gray-600">{goal.progress}% complete</div>
+                  <Progress value={goal.progress} className="h-3" />
+                  <div className="text-sm text-gray-600 font-medium">{goal.progress}% complete</div>
                 </div>
               ))}
-              <Button className="w-full mt-4 bg-zambia-copper hover:bg-orange-600">
+              <Button className="w-full mt-4 bg-gradient-to-r from-zambia-copper to-orange-600 hover:from-orange-700 hover:to-red-600 transform hover:scale-105 transition-all duration-300">
+                <Target className="mr-2 h-4 w-4" />
                 Set New Goal
               </Button>
             </CardContent>
           </Card>
 
           {/* Achievements */}
-          <Card>
-            <CardHeader>
+          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50">
               <CardTitle className="flex items-center">
-                <Award className="mr-2 h-5 w-5" />
+                <Award className="mr-2 h-5 w-5 text-yellow-600" />
                 Achievements
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <div className="grid grid-cols-2 gap-3">
                 {achievements.map((achievement) => (
                   <div 
                     key={achievement.id} 
-                    className={`p-3 rounded-lg border text-center ${
-                      achievement.earned ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50 border-gray-200'
+                    className={`p-4 rounded-xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
+                      achievement.earned 
+                        ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 hover:shadow-lg' 
+                        : 'bg-gray-50 border-dashed border-gray-300 opacity-75'
                     }`}
                   >
                     <achievement.icon 
