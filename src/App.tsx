@@ -16,6 +16,10 @@ import Analytics from "./pages/Analytics";
 import LandingVersePage from "./pages/LandingVerse";
 import AdaptiveLearning from "./pages/AdaptiveLearning";
 import AIContentStudio from "./pages/AIContentStudio";
+import Courses from "./pages/Courses";
+import Profile from "./pages/Profile";
+import SmartRecommendationsPage from "./pages/SmartRecommendations";
+import AdaptiveContent from "./pages/AdaptiveContent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,9 +36,15 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/landing-verse" element={<LandingVersePage />} />
+            <Route path="/courses" element={<Courses />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } />
             <Route path="/ai-tutor" element={
@@ -45,6 +55,16 @@ const App = () => (
             <Route path="/adaptive-learning" element={
               <ProtectedRoute>
                 <AdaptiveLearning />
+              </ProtectedRoute>
+            } />
+            <Route path="/adaptive-content" element={
+              <ProtectedRoute>
+                <AdaptiveContent />
+              </ProtectedRoute>
+            } />
+            <Route path="/smart-recommendations" element={
+              <ProtectedRoute>
+                <SmartRecommendationsPage />
               </ProtectedRoute>
             } />
             <Route path="/ai-content-studio" element={
