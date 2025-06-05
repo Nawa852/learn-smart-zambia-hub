@@ -6,14 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Chrome } from 'lucide-react';
+import { Facebook } from 'lucide-react';
 import { useAuth } from './AuthProvider';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signInWithEmail, signInWithGoogle } = useAuth();
+  const { signInWithEmail, signInWithFacebook } = useAuth();
   const navigate = useNavigate();
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -29,10 +29,10 @@ const LoginPage = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleFacebookLogin = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
+      await signInWithFacebook();
     } catch (error) {
       // Error is handled by AuthProvider
     } finally {
@@ -49,13 +49,13 @@ const LoginPage = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <Button
-            onClick={handleGoogleLogin}
+            onClick={handleFacebookLogin}
             variant="outline"
             className="w-full"
             disabled={loading}
           >
-            <Chrome className="mr-2 h-4 w-4" />
-            Continue with Google
+            <Facebook className="mr-2 h-4 w-4" />
+            Continue with Facebook
           </Button>
           
           <div className="relative">

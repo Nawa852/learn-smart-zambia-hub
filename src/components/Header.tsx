@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { User, LogOut, Brain, BookOpen, BarChart3 } from 'lucide-react';
+import { User, LogOut, Brain, BookOpen, BarChart3, GraduationCap, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   DropdownMenu,
@@ -43,6 +43,9 @@ const Header = () => {
               <Link to="/smart-recommendations" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Smart AI
               </Link>
+              <Link to="/instructor" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Instructor
+              </Link>
             </>
           )}
         </nav>
@@ -75,7 +78,19 @@ const Header = () => {
                     My Courses
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/learning-analytics" className="flex items-center">
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    Learning Analytics
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/instructor" className="flex items-center">
+                    <GraduationCap className="mr-2 h-4 w-4" />
+                    Instructor Portal
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/ai-tutor" className="flex items-center">
                     <Brain className="mr-2 h-4 w-4" />

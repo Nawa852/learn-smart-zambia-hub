@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,18 +8,16 @@ import ProtectedRoute from "@/components/Auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import AITutorPage from "./pages/AITutorPage";
-import Achievements from "./pages/Achievements";
-import Analytics from "./pages/Analytics";
 import LandingVersePage from "./pages/LandingVerse";
-import AdaptiveLearning from "./pages/AdaptiveLearning";
-import AIContentStudio from "./pages/AIContentStudio";
 import Courses from "./pages/Courses";
 import Profile from "./pages/Profile";
 import SmartRecommendationsPage from "./pages/SmartRecommendations";
 import AdaptiveContent from "./pages/AdaptiveContent";
 import NotFound from "./pages/NotFound";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Instructor from "./pages/Instructor";
+import LearningAnalyticsPage from "./pages/LearningAnalyticsPage";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +32,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVersePage />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/dashboard" element={
@@ -45,6 +44,16 @@ const App = () => (
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/instructor" element={
+              <ProtectedRoute>
+                <Instructor />
+              </ProtectedRoute>
+            } />
+            <Route path="/learning-analytics" element={
+              <ProtectedRoute>
+                <LearningAnalyticsPage />
               </ProtectedRoute>
             } />
             <Route path="/ai-tutor" element={
