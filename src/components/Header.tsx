@@ -2,8 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { User, LogOut, Brain, BookOpen, BarChart3, GraduationCap, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { User, LogOut, Brain, BookOpen, BarChart3, GraduationCap } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,31 +14,40 @@ import {
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-blue-600">
+        <Link to={user ? "/dashboard" : "/"} className="text-2xl font-bold text-blue-600">
           EDU ZAMBIA
         </Link>
         
         <nav className="hidden md:flex space-x-6">
-          <Link to="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
-            Courses
-          </Link>
-          <Link to="/about" className="text-gray-600 hover:text-blue-600 transition-colors">
-            About
-          </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-blue-600 transition-colors">
-            Contact
-          </Link>
-          {user && (
+          {!user ? (
+            <>
+              <Link to="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Courses
+              </Link>
+              <Link to="/about" className="text-gray-600 hover:text-blue-600 transition-colors">
+                About
+              </Link>
+              <Link to="/contact" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Contact
+              </Link>
+            </>
+          ) : (
             <>
               <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Dashboard
               </Link>
-              <Link to="/ai-tutor" className="text-gray-600 hover:text-blue-600 transition-colors">
-                AI Tutor
+              <Link to="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Courses
               </Link>
               <Link to="/smart-recommendations" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Smart AI
@@ -92,12 +101,6 @@ const Header = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/ai-tutor" className="flex items-center">
-                    <Brain className="mr-2 h-4 w-4" />
-                    AI Tutor
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link to="/smart-recommendations" className="flex items-center">
                     <Brain className="mr-2 h-4 w-4" />
                     Smart Recommendations
@@ -110,7 +113,7 @@ const Header = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </DropdownMenuItem>

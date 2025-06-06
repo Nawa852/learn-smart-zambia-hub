@@ -19,6 +19,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Instructor from "./pages/Instructor";
 import LearningAnalytics from "./pages/LearningAnalytics";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,11 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVersePage />} />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />

@@ -33,6 +33,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await signInWithFacebook();
+      // Redirect will be handled by OAuth flow
     } catch (error) {
       // Error is handled by AuthProvider
     } finally {
