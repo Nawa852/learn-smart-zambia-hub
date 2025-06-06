@@ -3,7 +3,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -98,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithEmail = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -109,8 +108,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
-      
-      return data;
     } catch (error: any) {
       toast({
         title: "Error signing in",
@@ -126,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUpWithEmail = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -143,8 +140,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         title: "Account created!",
         description: "Please check your email to verify your account.",
       });
-      
-      return data;
     } catch (error: any) {
       toast({
         title: "Error creating account",
