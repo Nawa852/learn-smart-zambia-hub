@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,7 +18,7 @@ import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Instructor from "./pages/Instructor";
-import LearningAnalyticsPage from "./pages/LearningAnalyticsPage";
+import LearningAnalytics from "./pages/LearningAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -36,11 +37,6 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVersePage />} />
             <Route path="/courses" element={<Courses />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
@@ -53,17 +49,7 @@ const App = () => (
             } />
             <Route path="/learning-analytics" element={
               <ProtectedRoute>
-                <LearningAnalyticsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/ai-tutor" element={
-              <ProtectedRoute>
-                <AITutorPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/adaptive-learning" element={
-              <ProtectedRoute>
-                <AdaptiveLearning />
+                <LearningAnalytics />
               </ProtectedRoute>
             } />
             <Route path="/adaptive-content" element={
@@ -76,22 +62,6 @@ const App = () => (
                 <SmartRecommendationsPage />
               </ProtectedRoute>
             } />
-            <Route path="/ai-content-studio" element={
-              <ProtectedRoute>
-                <AIContentStudio />
-              </ProtectedRoute>
-            } />
-            <Route path="/achievements" element={
-              <ProtectedRoute>
-                <Achievements />
-              </ProtectedRoute>
-            } />
-            <Route path="/analytics" element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            } />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
