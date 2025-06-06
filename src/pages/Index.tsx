@@ -1,6 +1,7 @@
 
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
 import CoursesPreview from "@/components/CoursesPreview";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/components/Auth/AuthProvider";
@@ -30,6 +31,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       <HeroSection />
+      <ExpandedFeaturesSection />
       <FeaturesSection />
       <CoursesPreview />
       <Footer />
