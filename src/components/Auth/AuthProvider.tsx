@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,10 +32,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    console.log('AuthProvider: Setting up auth state listener');
+    
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting initial session:', error);
+          setLoading(false);
+          return;
+        }
+        
+        console.log('Initial session:', session?.user?.email || 'No session');
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error in getInitialSession:', error);
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
+
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
+        console.log('Auth state changed:', event, session?.user?.email || 'No session');
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -50,67 +75,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .single();
 
               if (!existingProfile) {
-                await supabase.from('profiles').insert({
-                  id: session.user.id,
-                  email: session.user.email,
-                  full_name: session.user.user_metadata?.full_name || '',
-                  role: 'student'
-                });
+                const { error: profileError } = await supabase
+                  .from('profiles')
+                  .insert({
+                    id: session.user.id,
+                    email: session.user.email,
+                    full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || '',
+                    role: 'student'
+                  });
+                
+                if (profileError) {
+                  console.error('Error creating profile:', profileError);
+                }
               }
             } catch (error) {
               console.error('Error creating profile:', error);
             }
-          }, 0);
+          }, 100);
         }
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('AuthProvider: Cleaning up auth listener');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signInWithFacebook = async () => {
     try {
+      setLoading(true);
+      console.log('Attempting Facebook sign in...');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      if (error) throw error;
+      if (error) {
+        console.error('Facebook sign in error:', error);
+        throw error;
+      }
     } catch (error: any) {
+      console.error('Facebook sign in failed:', error);
       toast({
         title: "Error signing in with Facebook",
-        description: error.message,
+        description: error.message || "Please try again later",
         variant: "destructive",
       });
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   const signInWithEmail = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Attempting email sign in for:', email);
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      if (error) throw error;
-      
+      if (error) {
+        console.error('Email sign in error:', error);
+        throw error;
+      }
+
+      console.log('Email sign in successful:', data.user?.email);
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
     } catch (error: any) {
+      console.error('Email sign in failed:', error);
       toast({
         title: "Error signing in",
-        description: error.message,
+        description: error.message || "Please check your credentials and try again",
         variant: "destructive",
       });
       throw error;
@@ -122,7 +164,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUpWithEmail = async (email: string, password: string, fullName: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({
+      console.log('Attempting email sign up for:', email);
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -133,16 +176,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
       
-      if (error) throw error;
-      
+      if (error) {
+        console.error('Email sign up error:', error);
+        throw error;
+      }
+
+      console.log('Email sign up successful:', data.user?.email);
       toast({
         title: "Account created!",
-        description: "Please check your email to verify your account.",
+        description: "Please check your email to verify your account, or you can sign in immediately.",
       });
     } catch (error: any) {
+      console.error('Email sign up failed:', error);
       toast({
         title: "Error creating account",
-        description: error.message,
+        description: error.message || "Please try again with different credentials",
         variant: "destructive",
       });
       throw error;
@@ -152,28 +200,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const refreshSession = async () => {
-    const { data, error } = await supabase.auth.refreshSession();
-    if (error) {
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) {
+        console.error('Error refreshing session:', error);
+      } else {
+        console.log('Session refreshed successfully');
+      }
+    } catch (error) {
       console.error('Error refreshing session:', error);
     }
   };
 
   const signOut = async () => {
     try {
+      console.log('Attempting sign out...');
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        console.error('Sign out error:', error);
+        throw error;
+      }
       
       setUser(null);
       setSession(null);
       
+      console.log('Sign out successful');
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
     } catch (error: any) {
+      console.error('Sign out failed:', error);
       toast({
         title: "Error signing out",
-        description: error.message,
+        description: error.message || "Please try again",
         variant: "destructive",
       });
     }
@@ -189,6 +249,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     refreshSession,
   };
+
+  console.log('AuthProvider rendering with user:', user?.email || 'No user', 'loading:', loading);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

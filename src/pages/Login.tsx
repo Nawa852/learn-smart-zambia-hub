@@ -1,12 +1,10 @@
 
 import React from 'react';
-import Header from '@/components/Header';
 import LoginPage from '@/components/Auth/LoginPage';
 
 const Login = () => {
   return (
-    <div>
-      <Header />
+    <div className="-mt-20">
       <LoginPage />
     </div>
   );
