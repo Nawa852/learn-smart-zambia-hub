@@ -4,6 +4,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
 import CoursesPreview from "@/components/CoursesPreview";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Header />
       <HeroSection />
       <ExpandedFeaturesSection />
       <FeaturesSection />
