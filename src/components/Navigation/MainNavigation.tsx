@@ -31,9 +31,13 @@ const MainNavigation = () => {
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/courses', label: 'Courses', icon: BookOpen },
     { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
+    { to: '/ai-study-helper', label: 'Study Helper', icon: Brain },
+    { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
     { to: '/learning-analytics', label: 'Analytics', icon: BarChart3 },
     { to: '/achievements', label: 'Achievements', icon: Award },
     { to: '/discussions', label: 'Discussions', icon: MessageCircle },
+    { to: '/study-groups', label: 'Study Groups', icon: Users },
+    { to: '/homework-help', label: 'Homework Help', icon: HelpCircle },
     { to: '/schedule', label: 'Schedule', icon: Calendar },
     { to: '/resources', label: 'Resources', icon: FileText },
   ];

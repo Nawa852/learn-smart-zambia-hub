@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,6 +24,8 @@ import Instructor from "./pages/Instructor";
 import LearningAnalytics from "./pages/LearningAnalytics";
 import Dashboard from "./pages/Dashboard";
 import Achievements from "./pages/Achievements";
+import AIContentStudio from "./pages/AIContentStudio";
+import AIStudyHelper from "./pages/AIStudyHelper";
 
 const queryClient = new QueryClient();
 
@@ -81,12 +82,24 @@ const App = () => (
                 </ProtectedRoute>
               } />
 
-              {/* New Feature Pages */}
+              {/* New AI Features */}
+              <Route path="/ai-content-studio" element={
+                <ProtectedRoute>
+                  <AIContentStudio />
+                </ProtectedRoute>
+              } />
+              <Route path="/ai-study-helper" element={
+                <ProtectedRoute>
+                  <AIStudyHelper />
+                </ProtectedRoute>
+              } />
+
+              {/* Feature Pages */}
               <Route path="/discussions" element={
                 <ProtectedRoute>
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Discussion Forums</h1>
-                    <p>Coming soon - Interactive discussion boards and forums</p>
+                    <p>Interactive discussion boards and forums - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />
@@ -94,7 +107,7 @@ const App = () => (
                 <ProtectedRoute>
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Learning Schedule</h1>
-                    <p>Coming soon - Personalized learning calendar and scheduling</p>
+                    <p>Personalized learning calendar and scheduling - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />
@@ -102,7 +115,7 @@ const App = () => (
                 <ProtectedRoute>
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Learning Resources</h1>
-                    <p>Coming soon - Digital library and resource center</p>
+                    <p>Digital library and resource center - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />
@@ -110,7 +123,7 @@ const App = () => (
                 <ProtectedRoute>
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Virtual Classroom</h1>
-                    <p>Coming soon - 3D virtual learning environments</p>
+                    <p>3D virtual learning environments - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />
@@ -118,7 +131,103 @@ const App = () => (
                 <ProtectedRoute>
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Learning Challenges</h1>
-                    <p>Coming soon - Gamified learning challenges and competitions</p>
+                    <p>Gamified learning challenges and competitions - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+
+              {/* Study Groups and Social Features */}
+              <Route path="/study-groups" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Study Groups</h1>
+                    <p>Join and create study groups with your peers - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/homework-help" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Homework Help</h1>
+                    <p>Get help with your homework from AI and peers - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/parent-teacher-conferences" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Parent-Teacher Conferences</h1>
+                    <p>Schedule and manage parent-teacher meetings - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/grade-tracking" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Grade Tracking</h1>
+                    <p>Track and monitor academic progress - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+
+              {/* Teacher Features */}
+              <Route path="/course-creation" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Course Creation</h1>
+                    <p>Create and manage your courses - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/class-management" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Class Management</h1>
+                    <p>Manage your classes and students - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/assessment-tools" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Assessment Tools</h1>
+                    <p>Create and manage assessments and quizzes - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+
+              {/* Parent Features */}
+              <Route path="/parent-dashboard" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Parent Dashboard</h1>
+                    <p>Monitor your child's academic progress - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/child-progress" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Child Progress</h1>
+                    <p>Detailed view of your child's learning journey - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+
+              {/* Admin Features */}
+              <Route path="/admin-dashboard" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+                    <p>Administrative controls and analytics - Coming soon</p>
+                  </div>
+                </ProtectedRoute>
+              } />
+              <Route path="/user-management" element={
+                <ProtectedRoute>
+                  <div className="p-8">
+                    <h1 className="text-3xl font-bold">User Management</h1>
+                    <p>Manage users, roles, and permissions - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />
