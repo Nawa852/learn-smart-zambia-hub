@@ -29,6 +29,11 @@ import AIContentStudio from "./pages/AIContentStudio";
 import AIStudyHelper from "./pages/AIStudyHelper";
 import LiveLearningPage from "./pages/LiveLearningPage";
 import VideoLearningPage from "./pages/VideoLearningPage";
+import SocialFeedPage from "./pages/SocialFeedPage";
+import AcademicProfilePage from "./pages/AcademicProfilePage";
+import StudyGroupsPage from "./pages/StudyGroupsPage";
+import KnowledgeFeedPage from "./pages/KnowledgeFeedPage";
+import MessengerPage from "./pages/MessengerPage";
 
 const queryClient = new QueryClient();
 
@@ -107,6 +112,33 @@ const App = () => (
                 </ProtectedRoute>
               } />
 
+              {/* Social Learning Features */}
+              <Route path="/social-feed" element={
+                <ProtectedRoute>
+                  <SocialFeedPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/academic-profile" element={
+                <ProtectedRoute>
+                  <AcademicProfilePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/study-groups" element={
+                <ProtectedRoute>
+                  <StudyGroupsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/knowledge-feed" element={
+                <ProtectedRoute>
+                  <KnowledgeFeedPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/messenger" element={
+                <ProtectedRoute>
+                  <MessengerPage />
+                </ProtectedRoute>
+              } />
+
               {/* Feature Pages */}
               <Route path="/discussions" element={
                 <ProtectedRoute>
@@ -150,14 +182,6 @@ const App = () => (
               } />
 
               {/* Study Groups and Social Features */}
-              <Route path="/study-groups" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Study Groups</h1>
-                    <p>Join and create study groups with your peers - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
               <Route path="/homework-help" element={
                 <ProtectedRoute>
                   <div className="p-8">

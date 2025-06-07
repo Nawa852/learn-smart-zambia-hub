@@ -14,7 +14,8 @@ import {
 import { 
   User, LogOut, Brain, BookOpen, BarChart3, GraduationCap,
   Users, Calendar, MessageCircle, Award, Settings, Bell,
-  Home, Search, Video, FileText, Globe, Smartphone, HelpCircle
+  Home, Search, Video, FileText, Globe, HelpCircle, Heart,
+  TrendingUp, MessageSquare, UserPlus, Rss
 } from 'lucide-react';
 
 const MainNavigation = () => {
@@ -30,41 +31,51 @@ const MainNavigation = () => {
   const mainMenuItems = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/courses', label: 'Courses', icon: BookOpen },
+    { to: '/social-feed', label: 'Social Feed', icon: Heart },
     { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
-    { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
     { to: '/live-learning', label: 'Live Learning', icon: Video },
     { to: '/video-learning', label: 'Video Learning', icon: Video },
-    { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
-    { to: '/learning-analytics', label: 'Analytics', icon: BarChart3 },
-    { to: '/achievements', label: 'Achievements', icon: Award },
-    { to: '/discussions', label: 'Discussions', icon: MessageCircle },
     { to: '/study-groups', label: 'Study Groups', icon: Users },
+    { to: '/messenger', label: 'Messages', icon: MessageSquare },
+    { to: '/knowledge-feed', label: 'Knowledge Feed', icon: Rss },
+    { to: '/achievements', label: 'Achievements', icon: Award },
+    { to: '/learning-analytics', label: 'Analytics', icon: BarChart3 },
+  ];
+
+  const socialMenuItems = [
+    { to: '/social-feed', label: 'Learning Feed', icon: Heart },
+    { to: '/academic-profile', label: 'Academic Profile', icon: User },
+    { to: '/study-groups', label: 'Study Groups', icon: Users },
+    { to: '/messenger', label: 'Messenger', icon: MessageSquare },
+    { to: '/knowledge-feed', label: 'Knowledge Feed', icon: Rss },
+    { to: '/discussions', label: 'Discussions', icon: MessageCircle },
     { to: '/homework-help', label: 'Homework Help', icon: HelpCircle },
-    { to: '/schedule', label: 'Schedule', icon: Calendar },
-    { to: '/resources', label: 'Resources', icon: FileText },
+  ];
+
+  const aiToolsMenuItems = [
+    { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
+    { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
+    { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
+    { to: '/adaptive-content', label: 'Adaptive Content', icon: TrendingUp },
   ];
 
   const teacherMenuItems = [
     { to: '/instructor', label: 'Instructor Portal', icon: GraduationCap },
     { to: '/course-creation', label: 'Create Course', icon: BookOpen },
     { to: '/class-management', label: 'Manage Classes', icon: Users },
-    { to: '/parent-conferences', label: 'Parent Conferences', icon: Video },
+    { to: '/parent-teacher-conferences', label: 'Parent Conferences', icon: Video },
     { to: '/assessment-tools', label: 'Assessments', icon: FileText },
   ];
 
   const parentMenuItems = [
     { to: '/parent-dashboard', label: 'Parent Dashboard', icon: Home },
     { to: '/child-progress', label: 'Child Progress', icon: BarChart3 },
-    { to: '/parent-teacher-chat', label: 'Teacher Chat', icon: MessageCircle },
-    { to: '/school-events', label: 'School Events', icon: Calendar },
-    { to: '/fee-management', label: 'Fee Management', icon: Settings },
+    { to: '/grade-tracking', label: 'Grade Tracking', icon: Award },
   ];
 
   const adminMenuItems = [
     { to: '/admin-dashboard', label: 'Admin Dashboard', icon: Settings },
     { to: '/user-management', label: 'User Management', icon: Users },
-    { to: '/school-management', label: 'School Management', icon: Globe },
-    { to: '/reports', label: 'Reports', icon: BarChart3 },
     { to: '/system-settings', label: 'System Settings', icon: Settings },
   ];
 
@@ -111,8 +122,30 @@ const MainNavigation = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   
-                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Learning & AI Tools</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Learning & Dashboard</DropdownMenuLabel>
                   {mainMenuItems.map((item) => (
+                    <DropdownMenuItem key={item.to} asChild>
+                      <Link to={item.to} className="flex items-center">
+                        <item.icon className="mr-2 h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                  
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Social Learning</DropdownMenuLabel>
+                  {socialMenuItems.map((item) => (
+                    <DropdownMenuItem key={item.to} asChild>
+                      <Link to={item.to} className="flex items-center">
+                        <item.icon className="mr-2 h-4 w-4" />
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                  
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">AI Tools</DropdownMenuLabel>
+                  {aiToolsMenuItems.map((item) => (
                     <DropdownMenuItem key={item.to} asChild>
                       <Link to={item.to} className="flex items-center">
                         <item.icon className="mr-2 h-4 w-4" />
