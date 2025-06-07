@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -22,7 +21,7 @@ const SignUpPage = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showResendEmail, setShowResendEmail] = useState(false);
-  const { signUpWithEmail, signInWithFacebook, signInWithGoogle, resendConfirmation } = useAuth();
+  const { signUp, signInWithFacebook, signInWithGoogle, resendConfirmation } = useAuth();
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -48,7 +47,7 @@ const SignUpPage = () => {
 
     setLoading(true);
     try {
-      await signUpWithEmail(email, password, fullName, userType, grade);
+      await signUp(email, password, fullName);
       setShowResendEmail(true);
       // Don't navigate immediately - let user verify email first
     } catch (error: any) {

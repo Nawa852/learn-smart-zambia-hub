@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             title: "Signed out",
             description: "You have been signed out successfully.",
           });
-        } else if (event === 'SIGNED_UP') {
+        } else if (event === 'USER_UPDATED') {
           toast({
             title: "Account created!",
             description: "Please check your email to verify your account.",

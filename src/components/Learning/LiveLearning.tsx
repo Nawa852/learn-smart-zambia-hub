@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Video, Mic, MicOff, Camera, CameraOff, MessageSquare, 
-  Users, Languages, ClosedCaptionsIcon, Share, Clock
+  Users, Languages, Captions, Share, Clock
 } from 'lucide-react';
 
 interface LiveSession {
@@ -104,7 +103,7 @@ const LiveLearning = () => {
               <Languages className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="sm">
-              <ClosedCaptionsIcon className="w-4 h-4" />
+              <Captions className="w-4 h-4" />
             </Button>
             <Button variant="destructive" onClick={leaveSession}>
               Leave Session
@@ -251,7 +250,7 @@ const LiveLearning = () => {
                         )}
                         {session.hasCaptions && (
                           <Badge variant="outline" className="text-xs">
-                            <ClosedCaptionsIcon className="w-3 h-3 mr-1" />
+                            <Captions className="w-3 h-3 mr-1" />
                             Captions
                           </Badge>
                         )}
