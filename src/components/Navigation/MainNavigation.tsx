@@ -30,9 +30,11 @@ const MainNavigation = () => {
   const mainMenuItems = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/courses', label: 'Courses', icon: BookOpen },
-    { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
-    { to: '/ai-study-helper', label: 'Study Helper', icon: Brain },
+    { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
     { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
+    { to: '/live-learning', label: 'Live Learning', icon: Video },
+    { to: '/video-learning', label: 'Video Learning', icon: Video },
+    { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
     { to: '/learning-analytics', label: 'Analytics', icon: BarChart3 },
     { to: '/achievements', label: 'Achievements', icon: Award },
     { to: '/discussions', label: 'Discussions', icon: MessageCircle },
@@ -75,7 +77,7 @@ const MainNavigation = () => {
         </Link>
         
         <nav className="hidden lg:flex space-x-6">
-          {user && mainMenuItems.map((item) => (
+          {user && mainMenuItems.slice(0, 6).map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -109,7 +111,7 @@ const MainNavigation = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   
-                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Learning</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Learning & AI Tools</DropdownMenuLabel>
                   {mainMenuItems.map((item) => (
                     <DropdownMenuItem key={item.to} asChild>
                       <Link to={item.to} className="flex items-center">
@@ -120,7 +122,7 @@ const MainNavigation = () => {
                   ))}
                   
                   <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Teaching</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs font-normal text-gray-500">Teaching Tools</DropdownMenuLabel>
                   {teacherMenuItems.map((item) => (
                     <DropdownMenuItem key={item.to} asChild>
                       <Link to={item.to} className="flex items-center">

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +27,8 @@ import Dashboard from "./pages/Dashboard";
 import Achievements from "./pages/Achievements";
 import AIContentStudio from "./pages/AIContentStudio";
 import AIStudyHelper from "./pages/AIStudyHelper";
+import LiveLearningPage from "./pages/LiveLearningPage";
+import VideoLearningPage from "./pages/VideoLearningPage";
 
 const queryClient = new QueryClient();
 
@@ -82,7 +85,7 @@ const App = () => (
                 </ProtectedRoute>
               } />
 
-              {/* New AI Features */}
+              {/* AI Features */}
               <Route path="/ai-content-studio" element={
                 <ProtectedRoute>
                   <AIContentStudio />
@@ -91,6 +94,16 @@ const App = () => (
               <Route path="/ai-study-helper" element={
                 <ProtectedRoute>
                   <AIStudyHelper />
+                </ProtectedRoute>
+              } />
+              <Route path="/live-learning" element={
+                <ProtectedRoute>
+                  <LiveLearningPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/video-learning" element={
+                <ProtectedRoute>
+                  <VideoLearningPage />
                 </ProtectedRoute>
               } />
 
