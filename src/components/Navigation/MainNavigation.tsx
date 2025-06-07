@@ -14,7 +14,7 @@ import {
 import { 
   User, LogOut, Brain, BookOpen, BarChart3, GraduationCap,
   Users, Calendar, MessageCircle, Award, Settings, Bell,
-  Home, Search, Video, FileText, Globe, Smartphone
+  Home, Search, Video, FileText, Globe, Smartphone, HelpCircle
 } from 'lucide-react';
 
 const MainNavigation = () => {
