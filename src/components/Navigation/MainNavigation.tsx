@@ -15,7 +15,7 @@ import {
   User, LogOut, Brain, BookOpen, BarChart3, GraduationCap,
   Users, Calendar, MessageCircle, Award, Settings, Bell,
   Home, Search, Video, FileText, Globe, HelpCircle, Heart,
-  TrendingUp, MessageSquare, UserPlus, Rss
+  TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb
 } from 'lucide-react';
 
 const MainNavigation = () => {
@@ -48,6 +48,10 @@ const MainNavigation = () => {
     { to: '/study-groups', label: 'Study Groups', icon: Users },
     { to: '/messenger', label: 'Messenger', icon: MessageSquare },
     { to: '/knowledge-feed', label: 'Knowledge Feed', icon: Rss },
+    { to: '/campus-map', label: 'Virtual Campus', icon: MapPin },
+    { to: '/peer-finder', label: 'Find Peers', icon: UserPlus },
+    { to: '/mentorship-hub', label: 'Mentorship Hub', icon: GraduationCap },
+    { to: '/events-learning', label: 'Learning Events', icon: Calendar },
     { to: '/discussions', label: 'Discussions', icon: MessageCircle },
     { to: '/homework-help', label: 'Homework Help', icon: HelpCircle },
   ];
@@ -55,6 +59,7 @@ const MainNavigation = () => {
   const aiToolsMenuItems = [
     { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
     { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
+    { to: '/ai-content-generator', label: 'Content Generator', icon: Lightbulb },
     { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
     { to: '/adaptive-content', label: 'Adaptive Content', icon: TrendingUp },
   ];

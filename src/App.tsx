@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,6 +33,11 @@ import AcademicProfilePage from "./pages/AcademicProfilePage";
 import StudyGroupsPage from "./pages/StudyGroupsPage";
 import KnowledgeFeedPage from "./pages/KnowledgeFeedPage";
 import MessengerPage from "./pages/MessengerPage";
+import CampusMapPage from "./pages/CampusMapPage";
+import PeerFinderPage from "./pages/PeerFinderPage";
+import MentorshipHubPage from "./pages/MentorshipHubPage";
+import EventsLearningPage from "./pages/EventsLearningPage";
+import AIContentGeneratorPage from "./pages/AIContentGeneratorPage";
 
 const queryClient = new QueryClient();
 
@@ -101,6 +105,11 @@ const App = () => (
                   <AIStudyHelper />
                 </ProtectedRoute>
               } />
+              <Route path="/ai-content-generator" element={
+                <ProtectedRoute>
+                  <AIContentGeneratorPage />
+                </ProtectedRoute>
+              } />
               <Route path="/live-learning" element={
                 <ProtectedRoute>
                   <LiveLearningPage />
@@ -138,6 +147,26 @@ const App = () => (
                   <MessengerPage />
                 </ProtectedRoute>
               } />
+              <Route path="/campus-map" element={
+                <ProtectedRoute>
+                  <CampusMapPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/peer-finder" element={
+                <ProtectedRoute>
+                  <PeerFinderPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/mentorship-hub" element={
+                <ProtectedRoute>
+                  <MentorshipHubPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/events-learning" element={
+                <ProtectedRoute>
+                  <EventsLearningPage />
+                </ProtectedRoute>
+              } />
 
               {/* Feature Pages */}
               <Route path="/discussions" element={
@@ -145,38 +174,6 @@ const App = () => (
                   <div className="p-8">
                     <h1 className="text-3xl font-bold">Discussion Forums</h1>
                     <p>Interactive discussion boards and forums - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/schedule" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Learning Schedule</h1>
-                    <p>Personalized learning calendar and scheduling - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/resources" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Learning Resources</h1>
-                    <p>Digital library and resource center - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/virtual-classroom" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Virtual Classroom</h1>
-                    <p>3D virtual learning environments - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/challenges" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Learning Challenges</h1>
-                    <p>Gamified learning challenges and competitions - Coming soon</p>
                   </div>
                 </ProtectedRoute>
               } />

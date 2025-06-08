@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   Send, Paperclip, Mic, Smile, MoreVertical, Phone, Video,
-  Search, Settings, Brain, Translate, PlayCircle, FileText
+  Search, Settings, Brain, PlayCircle, FileText, Languages
 } from 'lucide-react';
 
 interface Message {

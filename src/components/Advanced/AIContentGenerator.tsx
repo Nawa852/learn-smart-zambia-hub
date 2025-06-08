@@ -1,33 +1,103 @@
 
 import React, { useState } from 'react';
-import { Wand2, FileText, Video, Mic, BookOpen, Brain, Sparkles } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Brain, FileText, BookOpen, PenTool, Download, 
+  RefreshCw, Lightbulb, CheckCircle, Copy, Star
+} from 'lucide-react';
 
 interface GeneratedContent {
   id: string;
-  type: 'quiz' | 'summary' | 'flashcards' | 'transcript';
+  type: 'quiz' | 'flashcards' | 'summary' | 'essay' | 'presentation';
   title: string;
   content: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  estimatedTime: number;
   createdAt: Date;
 }
 
-const AIContentGenerator: React.FC = () => {
+const AIContentGenerator = () => {
+  const [activeTab, setActiveTab] = useState('generate');
+  const [topic, setTopic] = useState('');
+  const [contentType, setContentType] = useState('quiz');
+  const [difficulty, setDifficulty] = useState('intermediate');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([]);
-  const [selectedTopic, setSelectedTopic] = useState('');
 
-  const generateContent = async (type: string) => {
+  const contentTypes = [
+    { value: 'quiz', label: 'Quiz Questions', icon: CheckCircle },
+    { value: 'flashcards', label: 'Flashcards', icon: BookOpen },
+    { value: 'summary', label: 'Study Summary', icon: FileText },
+    { value: 'essay', label: 'Essay Outline', icon: PenTool },
+    { value: 'presentation', label: 'Presentation', icon: Star }
+  ];
+
+  const sampleContent: GeneratedContent[] = [
+    {
+      id: '1',
+      type: 'quiz',
+      title: 'Machine Learning Fundamentals Quiz',
+      content: `1. What is supervised learning?
+A) Learning without labeled data
+B) Learning with labeled training data
+C) Learning through reinforcement
+D) Learning through clustering
+
+2. Which algorithm is best for classification?
+A) Linear Regression
+B) K-Means
+C) Random Forest
+D) PCA
+
+3. What is overfitting?
+A) Model performs well on training but poorly on test data
+B) Model performs poorly on both training and test data
+C) Model is too simple
+D) Model has too few parameters`,
+      difficulty: 'intermediate',
+      estimatedTime: 15,
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000)
+    },
+    {
+      id: '2',
+      type: 'flashcards',
+      title: 'React Hooks Flashcards',
+      content: `Card 1:
+Front: What is useState?
+Back: A Hook that lets you add React state to function components
+
+Card 2:
+Front: What is useEffect?
+Back: A Hook that lets you perform side effects in function components
+
+Card 3:
+Front: What is useContext?
+Back: A Hook that lets you subscribe to React context without nesting`,
+      difficulty: 'beginner',
+      estimatedTime: 10,
+      createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000)
+    }
+  ];
+
+  const handleGenerate = async () => {
+    if (!topic.trim()) return;
+    
     setIsGenerating(true);
     
-    // Simulate AI content generation
+    // Simulate AI generation
     setTimeout(() => {
       const newContent: GeneratedContent = {
         id: Date.now().toString(),
-        type: type as any,
-        title: `AI-Generated ${type} for ${selectedTopic || 'Current Topic'}`,
-        content: `This is AI-generated ${type} content. In a real implementation, this would be created using OpenAI or LLaMA APIs.`,
+        type: contentType as any,
+        title: `${topic} - ${contentTypes.find(t => t.value === contentType)?.label}`,
+        content: `Generated content for ${topic}...\n\nThis would be AI-generated content based on your topic and selected type.`,
+        difficulty: difficulty as any,
+        estimatedTime: Math.floor(Math.random() * 30) + 5,
         createdAt: new Date()
       };
       
@@ -36,137 +106,164 @@ const AIContentGenerator: React.FC = () => {
     }, 2000);
   };
 
-  const contentTypes = [
-    { type: 'quiz', icon: FileText, label: 'Generate Quiz', color: 'blue' },
-    { type: 'summary', icon: BookOpen, label: 'Create Summary', color: 'green' },
-    { type: 'flashcards', icon: Brain, label: 'Make Flashcards', color: 'purple' },
-    { type: 'transcript', icon: Mic, label: 'Transcribe Audio', color: 'orange' }
-  ];
+  const getDifficultyColor = (diff: string) => {
+    switch (diff) {
+      case 'beginner': return 'bg-green-100 text-green-800';
+      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'advanced': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'quiz': return 'bg-blue-100 text-blue-800';
+      case 'flashcards': return 'bg-purple-100 text-purple-800';
+      case 'summary': return 'bg-orange-100 text-orange-800';
+      case 'essay': return 'bg-cyan-100 text-cyan-800';
+      case 'presentation': return 'bg-pink-100 text-pink-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Wand2 className="w-8 h-8" />
-            AI Content Creation Studio
-          </CardTitle>
-          <CardDescription className="text-indigo-100">
-            Powered by OpenAI GPT and LLaMA - Generate educational content instantly
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {contentTypes.map(({ type, icon: Icon, label, color }) => (
-              <Button
-                key={type}
-                onClick={() => generateContent(type)}
-                disabled={isGenerating}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur flex flex-col items-center p-6 h-auto"
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center">
+            <Brain className="w-8 h-8 mr-3 text-blue-600" />
+            AI Content Generator
+          </h1>
+          <p className="text-gray-600">Create quizzes, flashcards, and study materials instantly</p>
+        </div>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="generate">Generate Content</TabsTrigger>
+          <TabsTrigger value="history">Content History</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="generate" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Lightbulb className="w-5 h-5 mr-2" />
+                Generate New Content
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Topic or Subject</label>
+                <Input
+                  placeholder="Enter a topic (e.g., Machine Learning, React Hooks, History of Rome)"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Content Type</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {contentTypes.map(type => {
+                    const IconComponent = type.icon;
+                    return (
+                      <Button
+                        key={type.value}
+                        variant={contentType === type.value ? "default" : "outline"}
+                        onClick={() => setContentType(type.value)}
+                        className="justify-start h-auto p-3"
+                      >
+                        <IconComponent className="w-4 h-4 mr-2" />
+                        {type.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Difficulty Level</label>
+                <div className="flex gap-2">
+                  {['beginner', 'intermediate', 'advanced'].map(level => (
+                    <Button
+                      key={level}
+                      variant={difficulty === level ? "default" : "outline"}
+                      onClick={() => setDifficulty(level)}
+                      className="capitalize"
+                    >
+                      {level}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <Button 
+                onClick={handleGenerate}
+                disabled={!topic.trim() || isGenerating}
+                className="w-full"
+                size="lg"
               >
-                <Icon className="w-8 h-8 mb-2" />
-                <span className="text-sm font-medium">{label}</span>
+                {isGenerating ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Brain className="w-4 h-4 mr-2" />
+                    Generate Content
+                  </>
+                )}
               </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="history" className="space-y-6">
+          <div className="grid gap-4">
+            {[...generatedContent, ...sampleContent].map(content => (
+              <Card key={content.id}>
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-2">{content.title}</h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge className={getTypeColor(content.type)}>
+                          {content.type}
+                        </Badge>
+                        <Badge variant="outline" className={getDifficultyColor(content.difficulty)}>
+                          {content.difficulty}
+                        </Badge>
+                        <Badge variant="secondary">
+                          {content.estimatedTime}min
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        Created {content.createdAt.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <pre className="text-sm whitespace-pre-wrap font-mono">
+                      {content.content}
+                    </pre>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-yellow-500" />
-              Content Generation Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Topic/Subject</label>
-              <input
-                type="text"
-                placeholder="Enter the topic you want to generate content for..."
-                value={selectedTopic}
-                onChange={(e) => setSelectedTopic(e.target.value)}
-                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Difficulty Level</label>
-              <select className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Advanced</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Language</label>
-              <select className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                <option>English</option>
-                <option>Bemba</option>
-                <option>Nyanja</option>
-                <option>Tonga</option>
-              </select>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">AI Enhancement Features</h4>
-              <ul className="text-blue-700 text-sm space-y-1">
-                <li>• Zambian context integration</li>
-                <li>• Real-time content adaptation</li>
-                <li>• Multi-language support</li>
-                <li>• Cultural relevance optimization</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Generated Content</CardTitle>
-            <CardDescription>
-              Your AI-generated educational materials
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isGenerating && (
-              <div className="space-y-4">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            )}
-            
-            {generatedContent.length === 0 && !isGenerating && (
-              <div className="text-center py-8 text-gray-500">
-                <Brain className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No content generated yet. Click a button above to start!</p>
-              </div>
-            )}
-            
-            <div className="space-y-4">
-              {generatedContent.map((content) => (
-                <div key={content.id} className="border rounded-lg p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold">{content.title}</h4>
-                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
-                      {content.type}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-3">{content.content}</p>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">Download</Button>
-                    <Button size="sm" variant="outline">Share</Button>
-                    <Button size="sm" variant="outline">Edit</Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
