@@ -1,68 +1,69 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/components/Auth/AuthProvider";
-import ProtectedRoute from "@/components/Auth/ProtectedRoute";
-import MainNavigation from "@/components/Navigation/MainNavigation";
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/components/Auth/AuthProvider';
+import MainNavigation from '@/components/Navigation/MainNavigation';
+import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 
 // Pages
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import ComprehensiveDashboard from "./pages/ComprehensiveDashboard";
-import LandingVersePage from "./pages/LandingVerse";
-import Courses from "./pages/Courses";
-import Profile from "./pages/Profile";
-import SmartRecommendationsPage from "./pages/SmartRecommendations";
-import AdaptiveContent from "./pages/AdaptiveContent";
-import NotFound from "./pages/NotFound";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Instructor from "./pages/Instructor";
-import LearningAnalytics from "./pages/LearningAnalytics";
-import Dashboard from "./pages/Dashboard";
-import Achievements from "./pages/Achievements";
-import AIContentStudio from "./pages/AIContentStudio";
-import AIStudyHelper from "./pages/AIStudyHelper";
-import LiveLearningPage from "./pages/LiveLearningPage";
-import VideoLearningPage from "./pages/VideoLearningPage";
-import SocialFeedPage from "./pages/SocialFeedPage";
-import AcademicProfilePage from "./pages/AcademicProfilePage";
-import StudyGroupsPage from "./pages/StudyGroupsPage";
-import KnowledgeFeedPage from "./pages/KnowledgeFeedPage";
-import MessengerPage from "./pages/MessengerPage";
-import CampusMapPage from "./pages/CampusMapPage";
-import PeerFinderPage from "./pages/PeerFinderPage";
-import MentorshipHubPage from "./pages/MentorshipHubPage";
-import EventsLearningPage from "./pages/EventsLearningPage";
-import AIContentGeneratorPage from "./pages/AIContentGeneratorPage";
-import AcknowledgmentPage from "./pages/AcknowledgmentPage";
+import Index from '@/pages/Index';
+import Login from '@/pages/Login';
+import SignUp from '@/pages/SignUp';
+import Dashboard from '@/pages/Dashboard';
+import Courses from '@/pages/Courses';
+import Profile from '@/pages/Profile';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import AcknowledgmentPage from '@/pages/AcknowledgmentPage';
+import AIStudyHelper from '@/pages/AIStudyHelper';
+import AITutorPage from '@/pages/AITutorPage';
+import LearningAnalytics from '@/pages/LearningAnalytics';
+import Achievements from '@/pages/Achievements';
+import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
+import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
+import LiveLearningPage from '@/pages/LiveLearningPage';
+import VideoLearningPage from '@/pages/VideoLearningPage';
+import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
 
-const queryClient = new QueryClient();
+// Social Pages
+import SocialFeedPage from '@/pages/SocialFeedPage';
+import AcademicProfilePage from '@/pages/AcademicProfilePage';
+import StudyGroupsPage from '@/pages/StudyGroupsPage';
+import MessengerPage from '@/pages/MessengerPage';
+import KnowledgeFeedPage from '@/pages/KnowledgeFeedPage';
+import CampusMapPage from '@/pages/CampusMapPage';
+import PeerFinderPage from '@/pages/PeerFinderPage';
+import MentorshipHubPage from '@/pages/MentorshipHubPage';
+import EventsLearningPage from '@/pages/EventsLearningPage';
 
-const App = () => (
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <div className="min-h-screen bg-gray-50">
-            <MainNavigation />
+// Error Pages
+import NotFound from '@/pages/NotFound';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-background">
+          <MainNavigation />
+          <main className="pt-0">
             <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/acknowledgments" element={<AcknowledgmentPage />} />
-              <Route path="/landing-verse" element={<LandingVersePage />} />
-              <Route path="/courses" element={<Courses />} />
-              
+
               {/* Protected Routes */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
-                  <ComprehensiveDashboard />
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/courses" element={
+                <ProtectedRoute>
+                  <Courses />
                 </ProtectedRoute>
               } />
               <Route path="/profile" element={
@@ -70,19 +71,16 @@ const App = () => (
                   <Profile />
                 </ProtectedRoute>
               } />
-              <Route path="/instructor" element={
+
+              {/* AI & Learning Routes */}
+              <Route path="/ai-study-helper" element={
                 <ProtectedRoute>
-                  <Instructor />
+                  <AIStudyHelper />
                 </ProtectedRoute>
               } />
-              <Route path="/learning-analytics" element={
+              <Route path="/ai-tutor" element={
                 <ProtectedRoute>
-                  <LearningAnalytics />
-                </ProtectedRoute>
-              } />
-              <Route path="/adaptive-content" element={
-                <ProtectedRoute>
-                  <AdaptiveContent />
+                  <AITutorPage />
                 </ProtectedRoute>
               } />
               <Route path="/smart-recommendations" element={
@@ -90,26 +88,9 @@ const App = () => (
                   <SmartRecommendationsPage />
                 </ProtectedRoute>
               } />
-              <Route path="/achievements" element={
+              <Route path="/adaptive-content" element={
                 <ProtectedRoute>
-                  <Achievements />
-                </ProtectedRoute>
-              } />
-
-              {/* AI Features */}
-              <Route path="/ai-content-studio" element={
-                <ProtectedRoute>
-                  <AIContentStudio />
-                </ProtectedRoute>
-              } />
-              <Route path="/ai-study-helper" element={
-                <ProtectedRoute>
-                  <AIStudyHelper />
-                </ProtectedRoute>
-              } />
-              <Route path="/ai-content-generator" element={
-                <ProtectedRoute>
-                  <AIContentGeneratorPage />
+                  <AdaptiveContentPage />
                 </ProtectedRoute>
               } />
               <Route path="/live-learning" element={
@@ -122,8 +103,13 @@ const App = () => (
                   <VideoLearningPage />
                 </ProtectedRoute>
               } />
+              <Route path="/ai-content-generator" element={
+                <ProtectedRoute>
+                  <AIContentGeneratorPage />
+                </ProtectedRoute>
+              } />
 
-              {/* Social Learning Features */}
+              {/* Social Learning Routes */}
               <Route path="/social-feed" element={
                 <ProtectedRoute>
                   <SocialFeedPage />
@@ -139,14 +125,14 @@ const App = () => (
                   <StudyGroupsPage />
                 </ProtectedRoute>
               } />
-              <Route path="/knowledge-feed" element={
-                <ProtectedRoute>
-                  <KnowledgeFeedPage />
-                </ProtectedRoute>
-              } />
               <Route path="/messenger" element={
                 <ProtectedRoute>
                   <MessengerPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/knowledge-feed" element={
+                <ProtectedRoute>
+                  <KnowledgeFeedPage />
                 </ProtectedRoute>
               } />
               <Route path="/campus-map" element={
@@ -170,114 +156,27 @@ const App = () => (
                 </ProtectedRoute>
               } />
 
-              {/* Feature Pages */}
-              <Route path="/discussions" element={
+              {/* Analytics & Progress Routes */}
+              <Route path="/learning-analytics" element={
                 <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Discussion Forums</h1>
-                    <p>Interactive discussion boards and forums - Coming soon</p>
-                  </div>
+                  <LearningAnalytics />
+                </ProtectedRoute>
+              } />
+              <Route path="/achievements" element={
+                <ProtectedRoute>
+                  <Achievements />
                 </ProtectedRoute>
               } />
 
-              {/* Study Groups and Social Features */}
-              <Route path="/homework-help" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Homework Help</h1>
-                    <p>Get help with your homework from AI and peers - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/parent-teacher-conferences" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Parent-Teacher Conferences</h1>
-                    <p>Schedule and manage parent-teacher meetings - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/grade-tracking" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Grade Tracking</h1>
-                    <p>Track and monitor academic progress - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-
-              {/* Teacher Features */}
-              <Route path="/course-creation" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Course Creation</h1>
-                    <p>Create and manage your courses - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/class-management" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Class Management</h1>
-                    <p>Manage your classes and students - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/assessment-tools" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Assessment Tools</h1>
-                    <p>Create and manage assessments and quizzes - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-
-              {/* Parent Features */}
-              <Route path="/parent-dashboard" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Parent Dashboard</h1>
-                    <p>Monitor your child's academic progress - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/child-progress" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Child Progress</h1>
-                    <p>Detailed view of your child's learning journey - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-
-              {/* Admin Features */}
-              <Route path="/admin-dashboard" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-                    <p>Administrative controls and analytics - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-              <Route path="/user-management" element={
-                <ProtectedRoute>
-                  <div className="p-8">
-                    <h1 className="text-3xl font-bold">User Management</h1>
-                    <p>Manage users, roles, and permissions - Coming soon</p>
-                  </div>
-                </ProtectedRoute>
-              } />
-
-              {/* Fallback */}
+              {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
+          </main>
           <Toaster />
-          <Sonner />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </BrowserRouter>
-);
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Send, Phone, Video, MoreVertical, Paperclip, Smile, 
-  Users, Search, Settings, Star, Archive, Bell, Globe
+  Users, Search, Settings, Star, Archive, Bell, Globe, MessageCircle
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -153,7 +154,7 @@ const MessengerChat = () => {
             
             <TabsContent value="chats" className="flex-1 mt-0">
               <ScrollArea className="h-full px-2">
-                {conversations.map((conv) => (
+                {mockConversations.map((conv) => (
                   <div
                     key={conv.id}
                     className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors ${
@@ -180,7 +181,7 @@ const MessengerChat = () => {
             
             <TabsContent value="groups" className="flex-1 mt-0">
               <ScrollArea className="h-full px-2">
-                {studyGroups.map((group) => (
+                {mockStudyGroups.map((group) => (
                   <div key={group.id} className="p-3 rounded-lg mb-2 hover:bg-gray-100 cursor-pointer">
                     <div className="flex items-center space-x-3">
                       <div className="rounded-full bg-green-100 p-2">
