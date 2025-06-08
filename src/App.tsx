@@ -38,6 +38,7 @@ import PeerFinderPage from "./pages/PeerFinderPage";
 import MentorshipHubPage from "./pages/MentorshipHubPage";
 import EventsLearningPage from "./pages/EventsLearningPage";
 import AIContentGeneratorPage from "./pages/AIContentGeneratorPage";
+import AcknowledgmentPage from "./pages/AcknowledgmentPage";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/signup" element={<SignUp />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/acknowledgments" element={<AcknowledgmentPage />} />
               <Route path="/landing-verse" element={<LandingVersePage />} />
               <Route path="/courses" element={<Courses />} />
               

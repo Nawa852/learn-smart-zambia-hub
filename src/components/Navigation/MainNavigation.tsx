@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
@@ -93,6 +92,19 @@ const MainNavigation = () => {
         </Link>
         
         <nav className="hidden lg:flex space-x-6">
+          {!user && (
+            <>
+              <Link to="/about" className="text-gray-600 hover:text-blue-600 transition-colors">
+                About
+              </Link>
+              <Link to="/acknowledgments" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Acknowledgments
+              </Link>
+              <Link to="/contact" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Contact
+              </Link>
+            </>
+          )}
           {user && mainMenuItems.slice(0, 6).map((item) => (
             <Link
               key={item.to}
@@ -197,6 +209,12 @@ const MainNavigation = () => {
                     <Link to="/profile" className="flex items-center">
                       <User className="mr-2 h-4 w-4" />
                       Profile Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/acknowledgments" className="flex items-center">
+                      <Heart className="mr-2 h-4 w-4" />
+                      Acknowledgments
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>

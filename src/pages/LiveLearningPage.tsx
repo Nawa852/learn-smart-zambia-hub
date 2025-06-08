@@ -4,11 +4,15 @@ import LiveLearning from '@/components/Learning/LiveLearning';
 
 const LiveLearningPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Live Learning Sessions</h1>
-          <p className="text-gray-600">Join interactive live classes with AI-moderated discussions and real-time collaboration</p>
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            Live Learning Studio
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Join interactive live sessions, collaborate in real-time, and learn with AI-powered assistance
+          </p>
         </div>
         <LiveLearning />
       </div>
