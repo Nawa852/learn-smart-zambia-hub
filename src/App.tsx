@@ -25,7 +25,7 @@ import LiveLearningPage from '@/pages/LiveLearningPage';
 import VideoLearningPage from '@/pages/VideoLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
 
-// New AI Features Pages
+// AI Features Pages
 import AILearningPathPage from '@/pages/AILearningPathPage';
 import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
 import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
@@ -33,6 +33,10 @@ import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
 import AIFlashcardPage from '@/pages/AIFlashcardPage';
 import SemanticSearchPage from '@/pages/SemanticSearchPage';
 import EmotionDetectionPage from '@/pages/EmotionDetectionPage';
+import MultilingualTranslatorPage from '@/pages/MultilingualTranslatorPage';
+import RealTimeSummarizerPage from '@/pages/RealTimeSummarizerPage';
+import VisualMindMapPage from '@/pages/VisualMindMapPage';
+import TeachBackPage from '@/pages/TeachBackPage';
 
 // Social Pages
 import SocialFeedPage from '@/pages/SocialFeedPage';
@@ -118,7 +122,7 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              {/* New AI Features Routes */}
+              {/* AI Features Routes */}
               <Route path="/ai-learning-paths" element={
                 <ProtectedRoute>
                   <AILearningPathPage />
@@ -152,6 +156,26 @@ function App() {
               <Route path="/emotion-detection" element={
                 <ProtectedRoute>
                   <EmotionDetectionPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/multilingual-translator" element={
+                <ProtectedRoute>
+                  <MultilingualTranslatorPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/real-time-summarizer" element={
+                <ProtectedRoute>
+                  <RealTimeSummarizerPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/visual-mind-map" element={
+                <ProtectedRoute>
+                  <VisualMindMapPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/teach-back-assessment" element={
+                <ProtectedRoute>
+                  <TeachBackPage />
                 </ProtectedRoute>
               } />
 

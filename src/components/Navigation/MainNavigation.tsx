@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
@@ -14,7 +15,8 @@ import {
   User, LogOut, Brain, BookOpen, BarChart3, GraduationCap,
   Users, Calendar, MessageCircle, Award, Settings, Bell,
   Home, Search, Video, FileText, Globe, HelpCircle, Heart,
-  TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb
+  TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb,
+  Languages, GitBranch, Bot
 } from 'lucide-react';
 
 const MainNavigation = () => {
@@ -57,6 +59,17 @@ const MainNavigation = () => {
 
   const aiToolsMenuItems = [
     { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
+    { to: '/ai-learning-paths', label: 'Learning Paths', icon: TrendingUp },
+    { to: '/adaptive-difficulty', label: 'Adaptive Difficulty', icon: Brain },
+    { to: '/claude-journaling', label: 'Claude Journaling', icon: FileText },
+    { to: '/daily-goal-coach', label: 'Goal Coach', icon: Target },
+    { to: '/ai-flashcards', label: 'AI Flashcards', icon: BookOpen },
+    { to: '/semantic-search', label: 'Semantic Search', icon: Search },
+    { to: '/emotion-detection', label: 'Emotion Detection', icon: Heart },
+    { to: '/multilingual-translator', label: 'Translator', icon: Languages },
+    { to: '/real-time-summarizer', label: 'Summarizer', icon: FileText },
+    { to: '/visual-mind-map', label: 'Mind Maps', icon: GitBranch },
+    { to: '/teach-back-assessment', label: 'Teach Back', icon: Bot },
     { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
     { to: '/ai-content-generator', label: 'Content Generator', icon: Lightbulb },
     { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },
