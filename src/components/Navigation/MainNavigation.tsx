@@ -16,7 +16,7 @@ import {
   Users, Calendar, MessageCircle, Award, Settings, Bell,
   Home, Search, Video, FileText, Globe, HelpCircle, Heart,
   TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb,
-  Languages, GitBranch, Bot
+  Languages, GitBranch, Bot, Target
 } from 'lucide-react';
 
 const MainNavigation = () => {
