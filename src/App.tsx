@@ -30,6 +30,9 @@ import AILearningPathPage from '@/pages/AILearningPathPage';
 import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
 import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
 import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
+import AIFlashcardPage from '@/pages/AIFlashcardPage';
+import SemanticSearchPage from '@/pages/SemanticSearchPage';
+import EmotionDetectionPage from '@/pages/EmotionDetectionPage';
 
 // Social Pages
 import SocialFeedPage from '@/pages/SocialFeedPage';
@@ -134,6 +137,21 @@ function App() {
               <Route path="/daily-goal-coach" element={
                 <ProtectedRoute>
                   <DailyGoalCoachPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/ai-flashcards" element={
+                <ProtectedRoute>
+                  <AIFlashcardPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/semantic-search" element={
+                <ProtectedRoute>
+                  <SemanticSearchPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/emotion-detection" element={
+                <ProtectedRoute>
+                  <EmotionDetectionPage />
                 </ProtectedRoute>
               } />
 
