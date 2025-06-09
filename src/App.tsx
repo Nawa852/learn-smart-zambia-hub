@@ -25,6 +25,12 @@ import LiveLearningPage from '@/pages/LiveLearningPage';
 import VideoLearningPage from '@/pages/VideoLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
 
+// New AI Features Pages
+import AILearningPathPage from '@/pages/AILearningPathPage';
+import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
+import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
+import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
+
 // Social Pages
 import SocialFeedPage from '@/pages/SocialFeedPage';
 import AcademicProfilePage from '@/pages/AcademicProfilePage';
@@ -106,6 +112,28 @@ function App() {
               <Route path="/ai-content-generator" element={
                 <ProtectedRoute>
                   <AIContentGeneratorPage />
+                </ProtectedRoute>
+              } />
+
+              {/* New AI Features Routes */}
+              <Route path="/ai-learning-paths" element={
+                <ProtectedRoute>
+                  <AILearningPathPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/adaptive-difficulty" element={
+                <ProtectedRoute>
+                  <AdaptiveDifficultyPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/claude-journaling" element={
+                <ProtectedRoute>
+                  <ClaudeJournalingPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/daily-goal-coach" element={
+                <ProtectedRoute>
+                  <DailyGoalCoachPage />
                 </ProtectedRoute>
               } />
 
