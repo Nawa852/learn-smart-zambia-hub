@@ -1,8 +1,6 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider, useAuth } from '@/components/Auth/AuthProvider';
-import EnhancedNavigation from '@/components/Navigation/EnhancedNavigation';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";

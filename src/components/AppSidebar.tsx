@@ -1,7 +1,12 @@
 
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { GraduationCap, Home, BookOpen, User, LogOut, Settings, BarChart3, Sparkles, Brain, Users, Shield, Award } from "lucide-react";
+import { 
+  GraduationCap, Home, BookOpen, User, LogOut, Settings, BarChart3, 
+  Sparkles, Brain, Users, Shield, Award, Bot, GitBranch, Target, FileText, 
+  BookCopy, Search, Languages, Smile, BrainCircuit, Gamepad2, Rss, MapPin, 
+  UserPlus, Calendar, MessageSquare, Heart 
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -20,19 +25,83 @@ const mainItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Courses", url: "/courses", icon: BookOpen },
   { title: "Analytics", url: "/learning-analytics", icon: BarChart3 },
+  { title: "Achievements", url: "/achievements", icon: Award },
 ];
 
-const aiItems = [
-  { title: "AI Lab", url: "/ai-learning-lab", icon: Sparkles },
-  { title: "Smart AI", url: "/smart-recommendations", icon: Brain },
-  { title: "AI Tutor", url: "/ai-tutor", icon: Brain },
+const aiToolsItems = [
+  { title: "AI Learning Lab", url: "/ai-learning-lab", icon: Sparkles },
+  { title: "Multi-AI Tutor", url: "/multi-ai-tutor", icon: Bot },
+  { title: "AI Study Helper", url: "/ai-study-helper", icon: Brain },
+  { title: "Learning Paths", url: "/ai-learning-paths", icon: GitBranch },
+  { title: "Goal Coach", url: "/daily-goal-coach", icon: Target },
+  { title: "Claude Journaling", url: "/claude-journaling", icon: FileText },
+  { title: "AI Flashcards", url: "/ai-flashcards", icon: BookCopy },
+  { title: "Semantic Search", url: "/semantic-search", icon: Search },
+  { title: "Emotion Detection", url: "/emotion-detection", icon: Smile },
+  { title: "Translator", url: "/multilingual-translator", icon: Languages },
+  { title: "Mind Maps", url: "/visual-mind-map", icon: GitBranch },
+  { title: "Teach Back", url: "/teach-back-assessment", icon: BrainCircuit },
+  { title: "Gameify Vault", url: "/gameify-vault", icon: Gamepad2 },
 ];
 
 const socialItems = [
+  { title: "Social Feed", url: "/social-feed", icon: Heart },
+  { title: "Knowledge Feed", url: "/knowledge-feed", icon: Rss },
   { title: "Study Groups", url: "/study-groups", icon: Users },
-  { title: "Social Feed", url: "/social-feed", icon: Users },
-  { title: "Achievements", url: "/achievements", icon: Award },
+  { title: "Messenger", url: "/messenger", icon: MessageSquare },
+  { title: "Campus Map", url: "/campus-map", icon: MapPin },
+  { title: "Find Peers", url: "/peer-finder", icon: UserPlus },
+  { title: "Mentorship Hub", url: "/mentorship-hub", icon: GraduationCap },
+  { title: "Learning Events", url: "/events-learning", icon: Calendar },
 ];
+
+interface NavItem {
+  title: string;
+  url: string;
+  icon: React.ElementType;
+}
+
+interface NavGroupProps {
+  label: string;
+  items: NavItem[];
+  defaultColorClass: string;
+}
+
+const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) => {
+  const location = useLocation();
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
+        {label}
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu className="space-y-1">
+          {items.map((item) => (
+            <SidebarMenuItem key={item.url}>
+              <SidebarMenuButton
+                asChild
+                isActive={location.pathname === item.url}
+                className={`group hover:bg-gradient-to-r ${defaultColorClass} rounded-lg transition-all duration-200`}
+              >
+                <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-700">
+                  <div className={`p-1.5 rounded-lg transition-all duration-200 ${
+                    location.pathname === item.url
+                      ? 'bg-blue-100 text-blue-600'
+                      : 'group-hover:bg-blue-50 group-hover:text-blue-600'
+                  }`}>
+                    <item.icon className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium">{item.title}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+};
+
 
 export function AppSidebar() {
   const { signOut } = useAuth();
@@ -59,92 +128,16 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent className="px-2 py-4">
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2">
-            Main Navigation
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {mainItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton 
-                    asChild 
-                    isActive={location.pathname === item.url}
-                    className="group hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:border-blue-200/50 rounded-lg transition-all duration-200"
-                  >
-                    <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-700">
-                      <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                        location.pathname === item.url 
-                          ? 'bg-blue-100 text-blue-600' 
-                          : 'group-hover:bg-blue-50 group-hover:text-blue-600'
-                      }`}>
-                        <item.icon className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavGroup label="Main Navigation" items={mainItems} defaultColorClass="hover:from-blue-50 hover:to-purple-50 hover:border-blue-200/50" />
+        <NavGroup label="AI Tools" items={aiToolsItems} defaultColorClass="hover:from-purple-50 hover:to-pink-50 hover:border-purple-200/50" />
+        <NavGroup label="Social & Community" items={socialItems} defaultColorClass="hover:from-green-50 hover:to-blue-50 hover:border-green-200/50" />
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
-            AI Features
+            Account
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {aiItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton 
-                    asChild 
-                    isActive={location.pathname === item.url}
-                    className="group hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:border-purple-200/50 rounded-lg transition-all duration-200"
-                  >
-                    <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-purple-700">
-                      <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                        location.pathname === item.url 
-                          ? 'bg-purple-100 text-purple-600' 
-                          : 'group-hover:bg-purple-50 group-hover:text-purple-600'
-                      }`}>
-                        <item.icon className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
-            Social & Progress
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {socialItems.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton 
-                    asChild 
-                    isActive={location.pathname === item.url}
-                    className="group hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50 hover:border-green-200/50 rounded-lg transition-all duration-200"
-                  >
-                    <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-green-700">
-                      <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                        location.pathname === item.url 
-                          ? 'bg-green-100 text-green-600' 
-                          : 'group-hover:bg-green-50 group-hover:text-green-600'
-                      }`}>
-                        <item.icon className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
               <SidebarMenuItem>
                 <SidebarMenuButton 
                   asChild 
