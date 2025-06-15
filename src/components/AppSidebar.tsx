@@ -19,17 +19,19 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/Auth/AuthProvider";
+import { useProfile } from "@/hooks/useProfile";
 
 const mainItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Dashboard", url: "/dashboard", icon: Home, badge: "New" },
   { title: "Courses", url: "/courses", icon: BookOpen },
   { title: "Analytics", url: "/learning-analytics", icon: BarChart3 },
   { title: "Achievements", url: "/achievements", icon: Award },
 ];
 
 const aiToolsItems = [
-  { title: "AI Learning Lab", url: "/ai-learning-lab", icon: Sparkles },
+  { title: "AI Learning Lab", url: "/ai-learning-lab", icon: Sparkles, badge: "Hot" },
   { title: "Multi-AI Tutor", url: "/multi-ai-tutor", icon: Bot },
   { title: "AI Study Helper", url: "/ai-study-helper", icon: Brain },
   { title: "Learning Paths", url: "/ai-learning-paths", icon: GitBranch },
@@ -48,7 +50,7 @@ const socialItems = [
   { title: "Social Feed", url: "/social-feed", icon: Heart },
   { title: "Knowledge Feed", url: "/knowledge-feed", icon: Rss },
   { title: "Study Groups", url: "/study-groups", icon: Users },
-  { title: "Messenger", url: "/messenger", icon: MessageSquare },
+  { title: "Messenger", url: "/messenger", icon: MessageSquare, badge: "3" },
   { title: "Campus Map", url: "/campus-map", icon: MapPin },
   { title: "Find Peers", url: "/peer-finder", icon: UserPlus },
   { title: "Mentorship Hub", url: "/mentorship-hub", icon: GraduationCap },
@@ -59,6 +61,7 @@ interface NavItem {
   title: string;
   url: string;
   icon: React.ElementType;
+  badge?: string;
 }
 
 interface NavGroupProps {
@@ -69,6 +72,7 @@ interface NavGroupProps {
 
 const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) => {
   const location = useLocation();
+  
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
@@ -81,7 +85,7 @@ const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) 
               <SidebarMenuButton
                 asChild
                 isActive={location.pathname === item.url}
-                className={`group hover:bg-gradient-to-r ${defaultColorClass} rounded-lg transition-all duration-200`}
+                className={`group hover:bg-gradient-to-r ${defaultColorClass} rounded-lg transition-all duration-200 relative`}
               >
                 <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-700">
                   <div className={`p-1.5 rounded-lg transition-all duration-200 ${
@@ -91,7 +95,15 @@ const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) 
                   }`}>
                     <item.icon className="w-4 h-4" />
                   </div>
-                  <span className="font-medium">{item.title}</span>
+                  <span className="font-medium flex-1">{item.title}</span>
+                  {item.badge && (
+                    <Badge 
+                      variant={item.badge === "New" ? "default" : "secondary"} 
+                      className="text-xs h-5 px-1.5"
+                    >
+                      {item.badge}
+                    </Badge>
+                  )}
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -102,9 +114,9 @@ const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) 
   );
 };
 
-
 export function AppSidebar() {
   const { signOut } = useAuth();
+  const { profile } = useProfile();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -125,6 +137,27 @@ export function AppSidebar() {
             <span className="text-xs text-gray-500 font-medium">Learning Platform</span>
           </div>
         </div>
+        
+        {/* User Profile Section */}
+        {profile && (
+          <div className="mb-4 p-3 bg-white/60 rounded-lg border border-blue-100/50">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center shadow-md">
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt="avatar" className="w-10 h-10 rounded-full object-cover" />
+                ) : (
+                  <User className="w-5 h-5 text-white" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {profile.full_name || 'Student'}
+                </p>
+                <p className="text-xs text-gray-500 capitalize">{profile.role || 'student'}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </SidebarHeader>
       
       <SidebarContent className="px-2 py-4">
