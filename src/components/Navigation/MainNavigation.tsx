@@ -59,6 +59,7 @@ const MainNavigation = () => {
 
   const aiToolsMenuItems = [
     { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
+    { to: '/multi-ai-tutor', label: 'Multi-AI Tutor', icon: Bot },
     { to: '/ai-learning-paths', label: 'Learning Paths', icon: TrendingUp },
     { to: '/adaptive-difficulty', label: 'Adaptive Difficulty', icon: Brain },
     { to: '/claude-journaling', label: 'Claude Journaling', icon: FileText },

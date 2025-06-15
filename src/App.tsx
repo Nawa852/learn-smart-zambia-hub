@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
@@ -24,6 +23,7 @@ import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
 import LiveLearningPage from '@/pages/LiveLearningPage';
 import VideoLearningPage from '@/pages/VideoLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
+import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
 // AI Features Pages
 import AILearningPathPage from '@/pages/AILearningPathPage';
@@ -91,34 +91,14 @@ function App() {
                   <AIStudyHelper />
                 </ProtectedRoute>
               } />
+              <Route path="/multi-ai-tutor" element={
+                <ProtectedRoute>
+                  <MultiAITutorPage />
+                </ProtectedRoute>
+              } />
               <Route path="/ai-tutor" element={
                 <ProtectedRoute>
                   <AITutorPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/smart-recommendations" element={
-                <ProtectedRoute>
-                  <SmartRecommendationsPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/adaptive-content" element={
-                <ProtectedRoute>
-                  <AdaptiveContentPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/live-learning" element={
-                <ProtectedRoute>
-                  <LiveLearningPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/video-learning" element={
-                <ProtectedRoute>
-                  <VideoLearningPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/ai-content-generator" element={
-                <ProtectedRoute>
-                  <AIContentGeneratorPage />
                 </ProtectedRoute>
               } />
 
