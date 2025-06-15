@@ -1,5 +1,4 @@
 
-import LandingVerse from "@/components/Pages/LandingVerse";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
@@ -31,7 +30,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <LandingVerse />
+      {/* Removed <LandingVerse /> */}
       <HeroSection />
       <ExpandedFeaturesSection />
       <FeaturesSection />
@@ -42,3 +41,4 @@ const Index = () => {
 };
 
 export default Index;
+
