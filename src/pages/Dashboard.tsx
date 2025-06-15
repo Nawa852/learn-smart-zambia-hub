@@ -1,9 +1,9 @@
 
 import React from 'react';
-import ModernDashboard from '@/components/Dashboard/ModernDashboard';
+import EnhancedDashboard from '@/components/Dashboard/EnhancedDashboard';
 
 const Dashboard = () => {
-  return <ModernDashboard />;
+  return <EnhancedDashboard />;
 };
 
 export default Dashboard;
