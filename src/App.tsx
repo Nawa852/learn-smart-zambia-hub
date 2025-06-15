@@ -80,7 +80,7 @@ function AppContent() {
                     <SidebarTrigger className="hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200" />
                     <div className="flex flex-col">
                       <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Welcome{user ? `, ${user.user_metadata?.full_name || user.email.split('@')[0]}` : ""}
+                        Welcome{user ? `, ${user.user_metadata?.full_name || user.email?.split('@')[0]}` : ""}
                       </span>
                       <span className="text-xs text-gray-500">Ready to learn something new?</span>
                     </div>
@@ -104,7 +104,7 @@ function AppContent() {
                       </div>
                       <div className="hidden md:flex flex-col">
                         <span className="text-sm font-medium text-gray-900">
-                          {user.user_metadata?.full_name || user.email.split('@')[0]}
+                          {user.user_metadata?.full_name || user.email?.split('@')[0]}
                         </span>
                         <span className="text-xs text-gray-500">Student</span>
                       </div>
