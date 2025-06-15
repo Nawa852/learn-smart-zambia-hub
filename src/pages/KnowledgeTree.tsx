@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tree, Star, Lock, CheckCircle, Brain, Sparkles } from 'lucide-react';
+import { Trees, Star, Lock, CheckCircle, Brain, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 interface TreeNode {
@@ -101,7 +100,7 @@ const KnowledgeTree = () => {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mb-6 animate-scale-in">
-            <Tree className="w-10 h-10 text-white" />
+            <Trees className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-5xl font-bold text-white mb-4">
             Knowledge Tree
@@ -248,7 +247,7 @@ const KnowledgeTree = () => {
                   </div>
                 ) : (
                   <div className="text-center text-purple-200 py-12">
-                    <Tree className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <Trees className="w-16 h-16 mx-auto mb-4 opacity-50" />
                     <p>Click on a node in the tree to explore that topic!</p>
                   </div>
                 )}
