@@ -1,7 +1,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/components/Auth/AuthProvider';
+import { AuthProvider, useAuth } from '@/components/Auth/AuthProvider';
 import EnhancedNavigation from '@/components/Navigation/EnhancedNavigation';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -64,29 +64,28 @@ import NotFound from '@/pages/NotFound';
 
 // Component that uses auth
 function AppContent() {
-  const { useAuth } = require('@/components/Auth/AuthProvider');
   const { user } = useAuth();
 
   return (
     <Router>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
-          <AppSidebar />
+          {user && <AppSidebar />}
           <div className="flex-1 flex flex-col min-h-screen">
             {/* Enhanced TopBar */}
-            <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
-              <div className="flex items-center justify-between px-6 py-4">
-                <div className="flex items-center gap-4">
-                  <SidebarTrigger className="hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200" />
-                  <div className="flex flex-col">
-                    <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      Welcome{user ? `, ${user.user_metadata?.full_name || user.email.split('@')[0]}` : ""}
-                    </span>
-                    <span className="text-xs text-gray-500">Ready to learn something new?</span>
+            {user && (
+              <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+                <div className="flex items-center justify-between px-6 py-4">
+                  <div className="flex items-center gap-4">
+                    <SidebarTrigger className="hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200" />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Welcome{user ? `, ${user.user_metadata?.full_name || user.email.split('@')[0]}` : ""}
+                      </span>
+                      <span className="text-xs text-gray-500">Ready to learn something new?</span>
+                    </div>
                   </div>
-                </div>
-                
-                {user && (
+                  
                   <div className="flex items-center gap-4">
                     <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                       <Search className="w-5 h-5 text-gray-600" />
@@ -111,11 +110,11 @@ function AppContent() {
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-            </header>
+                </div>
+              </header>
+            )}
             
-            <main className="p-6 md:p-8 flex-1 bg-gradient-to-br from-blue-50/30 via-white/50 to-purple-50/30">
+            <main className={`flex-1 ${user ? 'p-6 md:p-8 bg-gradient-to-br from-blue-50/30 via-white/50 to-purple-50/30' : ''}`}>
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Index />} />
@@ -289,6 +288,11 @@ function AppContent() {
                 <Route path="/achievements" element={
                   <ProtectedRoute>
                     <Achievements />
+                  </ProtectedRoute>
+                } />
+                <Route path="/smart-recommendations" element={
+                  <ProtectedRoute>
+                    <SmartRecommendationsPage />
                   </ProtectedRoute>
                 } />
 

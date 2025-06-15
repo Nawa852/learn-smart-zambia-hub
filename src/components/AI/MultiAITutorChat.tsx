@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Brain, Send, Bot, Zap, MessageCircle, Sparkles, Cpu } from 'lucide-react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Message {
   id: string;
@@ -21,6 +22,7 @@ interface Message {
 
 const MultiAITutorChat = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -76,12 +78,19 @@ const MultiAITutorChat = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to get AI response');
+      }
+
+      if (!data || !data.response) {
+        throw new Error('No response received from AI');
+      }
 
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response || 'Sorry, I encountered an error processing your request.',
+        content: data.response,
         timestamp: new Date(),
         model: selectedModel
       };
@@ -89,10 +98,17 @@ const MultiAITutorChat = () => {
       setMessages(prev => [...prev, aiResponse]);
     } catch (error) {
       console.error('Error calling AI tutor:', error);
+      
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to get AI response. Please try again.",
+        variant: "destructive",
+      });
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: 'Sorry, I encountered an error. Please try again or try a different AI model.',
         timestamp: new Date(),
         model: selectedModel
       };
