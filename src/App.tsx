@@ -27,6 +27,11 @@ import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
 import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
+// New pages
+import AILearningLab from '@/pages/AILearningLab';
+import KnowledgeTree from '@/pages/KnowledgeTree';
+import GameifyVault from '@/pages/GameifyVault';
+
 // AI Features Pages
 import AILearningPathPage from '@/pages/AILearningPathPage';
 import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
@@ -84,6 +89,23 @@ function App() {
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } />
+
+              {/* New Feature Routes */}
+              <Route path="/ai-learning-lab" element={
+                <ProtectedRoute>
+                  <AILearningLab />
+                </ProtectedRoute>
+              } />
+              <Route path="/knowledge-tree" element={
+                <ProtectedRoute>
+                  <KnowledgeTree />
+                </ProtectedRoute>
+              } />
+              <Route path="/gameify-vault" element={
+                <ProtectedRoute>
+                  <GameifyVault />
                 </ProtectedRoute>
               } />
 
