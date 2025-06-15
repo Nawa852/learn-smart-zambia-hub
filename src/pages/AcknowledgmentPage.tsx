@@ -2,60 +2,88 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Users, Star, Award, Crown, Sparkles } from 'lucide-react';
+import { Heart, Users, Star, Award, Crown, Sparkles, User, BookOpenCheck } from 'lucide-react';
 
-const AcknowledgmentPage = () => {
-  const familyMembers = [
-    {
-      name: "Mrs. Mulope",
-      relation: "Beloved Mother",
-      description: "The foundation of our family, whose love and wisdom guide us every day",
-      icon: <Heart className="w-6 h-6 text-pink-500" />
-    },
-    {
-      name: "Mr. Mulope",
-      relation: "Beloved Father",
-      description: "Our pillar of strength and source of inspiration",
-      icon: <Crown className="w-6 h-6 text-blue-500" />
-    },
-    {
-      name: "Mwalye Mulope",
-      relation: "Dear Sister",
-      description: "A constant source of joy and support in our journey",
-      icon: <Star className="w-6 h-6 text-purple-500" />
-    },
-    {
-      name: "Pezo Mulope",
-      relation: "Dear Sister",
-      description: "Bringing light and laughter to our family",
-      icon: <Sparkles className="w-6 h-6 text-yellow-500" />
-    },
-    {
-      name: "Mulope",
-      relation: "Dear Brother",
-      description: "A true companion and friend through all seasons",
-      icon: <Users className="w-6 h-6 text-green-500" />
-    }
-  ];
+const familyMembers = [
+  {
+    name: "Mr. and Mrs. Mulope",
+    relation: "Beloved Parents",
+    description: "Parents who made this a success with continuous love, wisdom, and sacrifice.",
+    icon: <Heart className="w-6 h-6 text-pink-500" />
+  },
+  {
+    name: "Mwalye Mulope",
+    relation: "Sister",
+    description: "Wonderful sister and big supporter, source of joy and ideas.",
+    icon: <Star className="w-6 h-6 text-purple-500" />
+  },
+  {
+    name: "Pezo Mulope",
+    relation: "Little Sister",
+    description: "Brings light and laughter to the family, an inspiration for a brighter future.",
+    icon: <Sparkles className="w-6 h-6 text-yellow-500" />
+  },
+  {
+    name: "Makawa",
+    relation: "Sister",
+    description: "Thank you for your love and encouragement.",
+    icon: <Star className="w-6 h-6 text-sky-500" />
+  },
+  {
+    name: "Mulope Mulope",
+    relation: "Brother",
+    description: "A true friend and companion on every step of the journey.",
+    icon: <Users className="w-6 h-6 text-green-500" />
+  },
+  {
+    name: "Kalimbwe",
+    relation: "Brother",
+    description: "Thank you for your support, inspiration, and wisdom.",
+    icon: <Users className="w-6 h-6 text-pink-400" />
+  },
+  {
+    name: "Uncle Mushe",
+    relation: "Uncle",
+    description: "For your advice, encouragement, and the spirit you bring to the family.",
+    icon: <Crown className="w-6 h-6 text-blue-300" />
+  },
+  {
+    name: "All Family Members",
+    relation: "Extended Family",
+    description: "Grateful for the extended family, relatives, and those always ready to help.",
+    icon: <Users className="w-6 h-6 text-lime-600" />
+  }
+];
 
-  const mentors = [
-    {
-      name: "Mr. Loza",
-      role: "Mentor & Guide",
-      impact: "Instrumental in shaping academic and professional growth"
-    },
-    {
-      name: "Mwanza",
-      role: "Mentor & Guide",
-      impact: "Provided invaluable guidance and wisdom"
-    },
-    {
-      name: "Katambo",
-      role: "Mentor & Guide",
-      impact: "A source of knowledge and inspiration"
-    }
-  ];
+const mentorsAndFriends = [
+  {
+    name: "Mr. Loza",
+    role: "Teacher",
+    impact: "Mentor, guide, and teacher who shaped academic and life values."
+  },
+  {
+    name: "Fr. Ben",
+    role: "Mentor & Spiritual Guide",
+    impact: "Thank you for your prayers and moral support."
+  },
+  {
+    name: "Katambo",
+    role: "Friend",
+    impact: "Always available to help, offer guidance, and inspire new ideas."
+  },
+  {
+    name: "Theo",
+    role: "Friend",
+    impact: "True friend, motivator, and partner in learning and growth."
+  },
+  {
+    name: "Mwanza",
+    role: "Friend",
+    impact: "A positive influence always offering wisdom and encouragement."
+  }
+];
 
+export default function AcknowledgmentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -115,24 +143,24 @@ const AcknowledgmentPage = () => {
           </div>
         </div>
 
-        {/* Mentors & Guides Section */}
+        {/* Mentors & Friends Section */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-            Mentors & Guides
+            Mentors, Friends & Guides
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {mentors.map((mentor, index) => (
+            {mentorsAndFriends.map((m, index) => (
               <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full mb-4">
                     <Star className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">{mentor.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">{m.name}</h3>
                   <Badge variant="outline" className="mb-3 border-orange-300 text-orange-600">
-                    {mentor.role}
+                    {m.role}
                   </Badge>
                   <p className="text-gray-600 text-sm">
-                    {mentor.impact}
+                    {m.impact}
                   </p>
                 </CardContent>
               </Card>
@@ -150,10 +178,9 @@ const AcknowledgmentPage = () => {
               Extended Family & Community
             </h2>
             <p className="text-gray-600 leading-relaxed max-w-3xl mx-auto">
-              We extend our heartfelt gratitude to all family members, relatives, friends, and community members 
-              who have contributed to our growth and success. Your support, encouragement, and belief in our 
-              vision have been instrumental in making EDU ZAMBIA a reality. Every conversation, every piece of 
-              advice, and every moment of support has helped shape this platform.
+              We extend our heartfelt gratitude to all family, relatives, friends, and community members 
+              who have contributed to our growth and success, including those not individually named here. 
+              Your support, encouragement, and belief in our vision have been instrumental in making EDU ZAMBIA a reality.
             </p>
           </CardContent>
         </Card>
@@ -170,6 +197,4 @@ const AcknowledgmentPage = () => {
       </div>
     </div>
   );
-};
-
-export default AcknowledgmentPage;
+}
