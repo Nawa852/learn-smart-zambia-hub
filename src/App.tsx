@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
-import MainNavigation from '@/components/Navigation/MainNavigation';
+import EnhancedNavigation from '@/components/Navigation/EnhancedNavigation';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 
 // Pages
@@ -64,7 +64,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-background">
-          <MainNavigation />
+          <EnhancedNavigation />
           <main className="pt-0">
             <Routes>
               {/* Public Routes */}
