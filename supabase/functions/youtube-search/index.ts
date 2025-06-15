@@ -1,127 +1,193 @@
 
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'",
+}
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+const isRateLimited = (userId: string): boolean => {
+  const now = Date.now();
+  const userLimit = rateLimitMap.get(userId);
+  
+  if (!userLimit || now > userLimit.resetTime) {
+    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+    return false;
+  }
+  
+  if (userLimit.count >= 5) { // 5 searches per minute
+    return true;
+  }
+  
+  userLimit.count++;
+  return false;
+};
+
+const sanitizeInput = (input: string): string => {
+  if (typeof input !== 'string') return '';
+  return input.trim().slice(0, 100); // Limit search query length
 };
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const { query, gradeLevel, subject, maxResults = 20 } = await req.json();
-    const youtubeApiKey = Deno.env.get('YOUTUBE_API_KEY');
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
+        },
+      }
+    )
 
-    if (!youtubeApiKey) {
-      throw new Error('YouTube API key not configured');
+    // Get the user from the session
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
+    
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Enhance search query with educational context
-    let enhancedQuery = `${query} educational`;
-    if (gradeLevel) enhancedQuery += ` ${gradeLevel}`;
-    if (subject) enhancedQuery += ` ${subject}`;
-    enhancedQuery += ' tutorial lesson';
-
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?` +
-      `part=snippet&` +
-      `q=${encodeURIComponent(enhancedQuery)}&` +
-      `type=video&` +
-      `videoDuration=medium&` +
-      `videoDefinition=high&` +
-      `order=relevance&` +
-      `safeSearch=strict&` +
-      `maxResults=${maxResults}&` +
-      `key=${youtubeApiKey}`;
-
-    const searchResponse = await fetch(searchUrl);
-    const searchData = await searchResponse.json();
-
-    if (!searchResponse.ok) {
-      throw new Error(`YouTube API error: ${searchData.error?.message || 'Unknown error'}`);
+    // Rate limiting
+    if (isRateLimited(user.id)) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Please wait before searching again.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Get video details including statistics
-    const videoIds = searchData.items.map((item: any) => item.id.videoId).join(',');
-    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?` +
-      `part=snippet,statistics,contentDetails&` +
-      `id=${videoIds}&` +
-      `key=${youtubeApiKey}`;
+    const { query, gradeLevel, subject, maxResults = 10 } = await req.json()
 
-    const detailsResponse = await fetch(detailsUrl);
+    // Input validation
+    if (!query || typeof query !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Search query is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const sanitizedQuery = sanitizeInput(query);
+    const sanitizedGradeLevel = sanitizeInput(gradeLevel || '');
+    const sanitizedSubject = sanitizeInput(subject || '');
+
+    if (sanitizedQuery.length === 0) {
+      return new Response(
+        JSON.stringify({ error: 'Search query cannot be empty' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Validate maxResults
+    const validMaxResults = Math.min(Math.max(parseInt(maxResults) || 10, 1), 50);
+
+    const apiKey = Deno.env.get('YOUTUBE_API_KEY')
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ error: 'YouTube API not configured' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Build search query with educational filters
+    let searchQuery = `${sanitizedQuery} educational tutorial lesson`;
+    if (sanitizedGradeLevel) searchQuery += ` ${sanitizedGradeLevel}`;
+    if (sanitizedSubject) searchQuery += ` ${sanitizedSubject}`;
+
+    // YouTube API request
+    const youtubeUrl = new URL('https://www.googleapis.com/youtube/v3/search');
+    youtubeUrl.searchParams.set('part', 'snippet');
+    youtubeUrl.searchParams.set('q', searchQuery);
+    youtubeUrl.searchParams.set('type', 'video');
+    youtubeUrl.searchParams.set('maxResults', validMaxResults.toString());
+    youtubeUrl.searchParams.set('order', 'relevance');
+    youtubeUrl.searchParams.set('safeSearch', 'strict');
+    youtubeUrl.searchParams.set('videoDuration', 'medium');
+    youtubeUrl.searchParams.set('videoDefinition', 'high');
+    youtubeUrl.searchParams.set('key', apiKey);
+
+    const response = await fetch(youtubeUrl.toString());
+
+    if (!response.ok) {
+      console.error('YouTube API error:', response.status, response.statusText);
+      return new Response(
+        JSON.stringify({ error: 'Failed to search videos' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      return new Response(
+        JSON.stringify({ videos: [], message: 'No educational videos found for your search' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Get video details for duration and statistics
+    const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
+    const detailsUrl = new URL('https://www.googleapis.com/youtube/v3/videos');
+    detailsUrl.searchParams.set('part', 'contentDetails,statistics');
+    detailsUrl.searchParams.set('id', videoIds);
+    detailsUrl.searchParams.set('key', apiKey);
+
+    const detailsResponse = await fetch(detailsUrl.toString());
     const detailsData = await detailsResponse.json();
 
-    const videos = detailsData.items.map((item: any) => {
-      const duration = item.contentDetails.duration;
-      // Convert PT4M13S to 4:13 format
-      const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-      const hours = match[1] ? parseInt(match[1]) : 0;
-      const minutes = match[2] ? parseInt(match[2]) : 0;
-      const seconds = match[3] ? parseInt(match[3]) : 0;
+    // Process and format videos
+    const videos = data.items.map((item: any) => {
+      const details = detailsData.items?.find((d: any) => d.id === item.id.videoId);
       
-      let formattedDuration = '';
-      if (hours > 0) formattedDuration += `${hours}:`;
-      formattedDuration += `${minutes.toString().padStart(hours > 0 ? 2 : 1, '0')}:`;
-      formattedDuration += seconds.toString().padStart(2, '0');
-
       return {
-        id: item.id,
+        id: item.id.videoId,
         title: item.snippet.title,
         description: item.snippet.description,
-        thumbnail: item.snippet.thumbnails.medium.url,
-        duration: formattedDuration,
-        viewCount: item.statistics.viewCount || '0',
-        likeCount: item.statistics.likeCount || '0',
+        thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url,
+        duration: formatDuration(details?.contentDetails?.duration || 'PT0S'),
+        viewCount: details?.statistics?.viewCount || '0',
+        likeCount: details?.statistics?.likeCount || '0',
         channelTitle: item.snippet.channelTitle,
         publishedAt: item.snippet.publishedAt,
         tags: item.snippet.tags || []
       };
     });
 
-    // Filter for educational content and appropriate length
-    const educationalVideos = videos.filter((video: any) => {
-      const title = video.title.toLowerCase();
-      const description = video.description.toLowerCase();
-      
-      // Check for educational keywords
-      const educationalKeywords = [
-        'learn', 'tutorial', 'lesson', 'education', 'teaching', 'explain',
-        'how to', 'introduction', 'basics', 'fundamentals', 'course',
-        'lecture', 'study', 'academy', 'school', 'university'
-      ];
-      
-      const hasEducationalContent = educationalKeywords.some(keyword => 
-        title.includes(keyword) || description.includes(keyword)
-      );
-      
-      // Filter out very short (< 2 min) or very long (> 30 min) videos for better learning
-      const durationParts = video.duration.split(':');
-      const totalMinutes = durationParts.length === 3 
-        ? parseInt(durationParts[0]) * 60 + parseInt(durationParts[1])
-        : parseInt(durationParts[0]);
-      
-      return hasEducationalContent && totalMinutes >= 2 && totalMinutes <= 30;
-    });
-
-    return new Response(JSON.stringify({ 
-      videos: educationalVideos,
-      totalResults: educationalVideos.length,
-      query: enhancedQuery
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ videos }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
 
   } catch (error) {
-    console.error('Error in youtube-search function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      videos: []
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error('Error in youtube-search function:', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
   }
-});
+})
+
+function formatDuration(duration: string): string {
+  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+  if (!match) return '0:00';
+
+  const hours = (match[1] || '').replace('H', '');
+  const minutes = (match[2] || '').replace('M', '');
+  const seconds = (match[3] || '').replace('S', '');
+
+  if (hours) {
+    return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+  } else {
+    return `${minutes || '0'}:${seconds.padStart(2, '0')}`;
+  }
+}
