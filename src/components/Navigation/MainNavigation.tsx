@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
@@ -28,6 +27,49 @@ const MainNavigation = () => {
     await signOut();
     navigate('/');
   };
+
+  const navigationItems = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      description: "Your personal learning overview"
+    },
+    {
+      title: "Courses",
+      href: "/courses", 
+      description: "Browse available courses"
+    },
+    {
+      title: "AI Study Helper",
+      href: "/ai-study-helper",
+      description: "Get help with your studies using AI"
+    },
+    {
+      title: "Multi-AI Tutor",
+      href: "/multi-ai-tutor",
+      description: "Chat with multiple AI models for personalized tutoring"
+    },
+    {
+      title: "YouTube Learning",
+      href: "/youtube-learning",
+      description: "Curated educational videos with AI-generated notes"
+    },
+    {
+      title: "Video Learning",
+      href: "/video-learning",
+      description: "Interactive video learning platform"
+    },
+    {
+      title: "Learning Analytics",
+      href: "/learning-analytics",
+      description: "Track your learning progress"
+    },
+    {
+      title: "Achievements",
+      href: "/achievements",
+      description: "View your earned badges and achievements"
+    }
+  ];
 
   const mainMenuItems = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },

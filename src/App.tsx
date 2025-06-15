@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
@@ -22,6 +23,7 @@ import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
 import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
 import LiveLearningPage from '@/pages/LiveLearningPage';
 import VideoLearningPage from '@/pages/VideoLearningPage';
+import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
 import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
