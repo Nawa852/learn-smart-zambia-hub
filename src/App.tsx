@@ -6,7 +6,7 @@ import EnhancedNavigation from '@/components/Navigation/EnhancedNavigation';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { User } from "lucide-react";
+import { User, Bell, Search } from "lucide-react";
 
 // Pages
 import Index from '@/pages/Index';
@@ -70,28 +70,52 @@ function AppContent() {
   return (
     <Router>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full">
+        <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
           <AppSidebar />
-          <div className="flex-1 flex flex-col bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
-            {/* TopBar */}
-            <header className="sticky top-0 z-40 bg-white/70 backdrop-blur border-b flex items-center justify-between px-6 py-3 shadow-sm">
-              <div className="flex items-center gap-2">
-                <SidebarTrigger />
-                <span className="font-bold text-lg gradient-text-cosmic">Welcome{user ? `, ${user.user_metadata?.full_name || user.email}` : ""}</span>
-              </div>
-              {user && (
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-blue-400 bg-gray-200 flex items-center justify-center">
-                    {user.user_metadata?.avatar_url ? (
-                      <img src={user.user_metadata?.avatar_url} alt="avatar" className="object-cover w-9 h-9" />
-                    ) : (
-                      <User className="w-6 h-6 text-blue-500" />
-                    )}
+          <div className="flex-1 flex flex-col min-h-screen">
+            {/* Enhanced TopBar */}
+            <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+              <div className="flex items-center justify-between px-6 py-4">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200" />
+                  <div className="flex flex-col">
+                    <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Welcome{user ? `, ${user.user_metadata?.full_name || user.email.split('@')[0]}` : ""}
+                    </span>
+                    <span className="text-xs text-gray-500">Ready to learn something new?</span>
                   </div>
                 </div>
-              )}
+                
+                {user && (
+                  <div className="flex items-center gap-4">
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                      <Search className="w-5 h-5 text-gray-600" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 relative">
+                      <Bell className="w-5 h-5 text-gray-600" />
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-400/50 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center shadow-md">
+                        {user.user_metadata?.avatar_url ? (
+                          <img src={user.user_metadata?.avatar_url} alt="avatar" className="object-cover w-10 h-10" />
+                        ) : (
+                          <User className="w-6 h-6 text-white" />
+                        )}
+                      </div>
+                      <div className="hidden md:flex flex-col">
+                        <span className="text-sm font-medium text-gray-900">
+                          {user.user_metadata?.full_name || user.email.split('@')[0]}
+                        </span>
+                        <span className="text-xs text-gray-500">Student</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </header>
-            <main className="p-4 md:p-8 flex-1">
+            
+            <main className="p-6 md:p-8 flex-1 bg-gradient-to-br from-blue-50/30 via-white/50 to-purple-50/30">
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Index />} />
