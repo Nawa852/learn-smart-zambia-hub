@@ -14,8 +14,7 @@ import {
   User, LogOut, Brain, BookOpen, BarChart3, GraduationCap,
   Users, Calendar, MessageCircle, Award, Settings, Bell,
   Home, Search, Video, FileText, Globe, HelpCircle, Heart,
-  TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb,
-  Languages, GitBranch, Bot, Target
+  TrendingUp, MessageSquare, UserPlus, Rss, MapPin, Lightbulb
 } from 'lucide-react';
 
 const MainNavigation = () => {
@@ -27,49 +26,6 @@ const MainNavigation = () => {
     await signOut();
     navigate('/');
   };
-
-  const navigationItems = [
-    {
-      title: "Dashboard",
-      href: "/dashboard",
-      description: "Your personal learning overview"
-    },
-    {
-      title: "Courses",
-      href: "/courses", 
-      description: "Browse available courses"
-    },
-    {
-      title: "AI Study Helper",
-      href: "/ai-study-helper",
-      description: "Get help with your studies using AI"
-    },
-    {
-      title: "Multi-AI Tutor",
-      href: "/multi-ai-tutor",
-      description: "Chat with multiple AI models for personalized tutoring"
-    },
-    {
-      title: "YouTube Learning",
-      href: "/youtube-learning",
-      description: "Curated educational videos with AI-generated notes"
-    },
-    {
-      title: "Video Learning",
-      href: "/video-learning",
-      description: "Interactive video learning platform"
-    },
-    {
-      title: "Learning Analytics",
-      href: "/learning-analytics",
-      description: "Track your learning progress"
-    },
-    {
-      title: "Achievements",
-      href: "/achievements",
-      description: "View your earned badges and achievements"
-    }
-  ];
 
   const mainMenuItems = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },
@@ -101,18 +57,6 @@ const MainNavigation = () => {
 
   const aiToolsMenuItems = [
     { to: '/ai-study-helper', label: 'AI Study Helper', icon: Brain },
-    { to: '/multi-ai-tutor', label: 'Multi-AI Tutor', icon: Bot },
-    { to: '/ai-learning-paths', label: 'Learning Paths', icon: TrendingUp },
-    { to: '/adaptive-difficulty', label: 'Adaptive Difficulty', icon: Brain },
-    { to: '/claude-journaling', label: 'Claude Journaling', icon: FileText },
-    { to: '/daily-goal-coach', label: 'Goal Coach', icon: Target },
-    { to: '/ai-flashcards', label: 'AI Flashcards', icon: BookOpen },
-    { to: '/semantic-search', label: 'Semantic Search', icon: Search },
-    { to: '/emotion-detection', label: 'Emotion Detection', icon: Heart },
-    { to: '/multilingual-translator', label: 'Translator', icon: Languages },
-    { to: '/real-time-summarizer', label: 'Summarizer', icon: FileText },
-    { to: '/visual-mind-map', label: 'Mind Maps', icon: GitBranch },
-    { to: '/teach-back-assessment', label: 'Teach Back', icon: Bot },
     { to: '/ai-content-studio', label: 'Content Studio', icon: FileText },
     { to: '/ai-content-generator', label: 'Content Generator', icon: Lightbulb },
     { to: '/smart-recommendations', label: 'AI Tutor', icon: Brain },

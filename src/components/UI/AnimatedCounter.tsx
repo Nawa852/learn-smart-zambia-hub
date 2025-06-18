@@ -1,48 +1,48 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface AnimatedCounterProps {
   end: number;
   duration?: number;
-  prefix?: string;
   suffix?: string;
+  prefix?: string;
   className?: string;
 }
 
-const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
-  end,
-  duration = 2000,
-  prefix = '',
-  suffix = '',
-  className = ''
+const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ 
+  end, 
+  duration = 2000, 
+  suffix = '', 
+  prefix = '', 
+  className = '' 
 }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const startTime = Date.now();
-    const startValue = 0;
+    let startTime: number;
+    let animationFrame: number;
 
-    const updateCount = () => {
-      const now = Date.now();
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percentage = Math.min(progress / duration, 1);
       
       // Easing function for smooth animation
-      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-      const currentValue = Math.floor(startValue + (end - startValue) * easeOutCubic);
-      
-      setCount(currentValue);
+      const easeOutQuart = 1 - Math.pow(1 - percentage, 4);
+      setCount(Math.floor(end * easeOutQuart));
 
-      if (progress < 1) {
-        requestAnimationFrame(updateCount);
+      if (percentage < 1) {
+        animationFrame = requestAnimationFrame(animate);
       }
     };
 
-    const timer = setTimeout(() => {
-      updateCount();
-    }, 100);
+    animationFrame = requestAnimationFrame(animate);
 
-    return () => clearTimeout(timer);
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
   }, [end, duration]);
 
   return (

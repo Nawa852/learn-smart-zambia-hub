@@ -35,12 +35,11 @@
 
     --radius: 0.5rem;
 
-    /* Enhanced Zambian-inspired custom colors */
+    /* Zambian-inspired custom colors */
     --zambia-copper: 29 78% 50%;
     --zambia-emerald: 160 100% 35%;
     --zambia-sunset: 25 95% 60%;
     --zambia-earth: 35 25% 30%;
-    --zambia-sky: 220 100% 70%;
   }
 
   .dark {
@@ -73,7 +72,6 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   }
 }
 
@@ -123,23 +121,11 @@
   }
   
   .animate-rotate-3d {
-    animation: rotate3d 8s linear infinite;
+    animation: rotate3d 4s linear infinite;
   }
   
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s linear infinite;
-  }
-
-  .animate-morph {
-    animation: morph 4s ease-in-out infinite;
-  }
-
-  .animate-levitate {
-    animation: levitate 3s ease-in-out infinite;
   }
   
   @keyframes float {
@@ -154,11 +140,11 @@
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(20px) scale(0.95);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   }
   
@@ -174,89 +160,53 @@
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-8px);
+      transform: translateY(-5px);
     }
   }
   
   @keyframes pulseSlow {
     0%, 100% {
       opacity: 1;
-      transform: scale(1);
     }
     50% {
-      opacity: 0.8;
-      transform: scale(1.05);
+      opacity: 0.7;
     }
   }
   
   @keyframes rotate3d {
     0% {
-      transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+      transform: rotateY(0deg) rotateX(0deg);
     }
-    33% {
-      transform: rotateY(120deg) rotateX(0deg) rotateZ(0deg);
+    25% {
+      transform: rotateY(90deg) rotateX(0deg);
     }
-    66% {
-      transform: rotateY(240deg) rotateX(0deg) rotateZ(0deg);
+    50% {
+      transform: rotateY(180deg) rotateX(0deg);
+    }
+    75% {
+      transform: rotateY(270deg) rotateX(0deg);
     }
     100% {
-      transform: rotateY(360deg) rotateX(0deg) rotateZ(0deg);
+      transform: rotateY(360deg) rotateX(0deg);
     }
   }
   
   @keyframes glow {
     from {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
     }
     to {
-      box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes morph {
-    0%, 100% {
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-    }
-    25% {
-      border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
-    }
-    50% {
-      border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
-    }
-    75% {
-      border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
-    }
-  }
-
-  @keyframes levitate {
-    0%, 100% {
-      transform: translateY(0) rotateY(0deg);
-    }
-    50% {
-      transform: translateY(-15px) rotateY(180deg);
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
     }
   }
   
-  /* Enhanced 3D Transform Utilities */
+  /* 3D Transform Utilities */
   .transform-3d {
     transform-style: preserve-3d;
   }
   
   .perspective {
     perspective: 1000px;
-  }
-  
-  .perspective-origin-center {
-    perspective-origin: center;
   }
   
   .rotate-x-45 {
@@ -266,67 +216,32 @@
   .rotate-y-45 {
     transform: rotateY(45deg);
   }
-
-  .rotate-z-45 {
-    transform: rotateZ(45deg);
-  }
   
   .shadow-3xl {
     box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
   }
-
-  .shadow-glow {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-  }
-
-  .shadow-neon {
-    box-shadow: 0 0 20px currentColor;
-  }
   
-  /* Enhanced Glassmorphism */
+  /* Glassmorphism */
   .glass {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
-
-  .glass-dark {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
   
-  /* Enhanced Interactive Hover Effects */
+  /* Interactive Hover Effects */
   .hover-lift {
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
   }
   
   .hover-lift:hover {
-    transform: translateY(-8px) scale(1.02) rotateX(5deg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  }
-
-  .hover-glow:hover {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-  }
-
-  .hover-float:hover {
-    animation: float 2s ease-in-out infinite;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
   
-  /* Enhanced Gradient Text */
+  /* Gradient Text */
   .gradient-text {
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981, #f59e0b);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 4s ease infinite;
-  }
-
-  .gradient-text-cosmic {
-    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
-    background-size: 400% 400%;
+    background: linear-gradient(45deg, #f97316, #10b981, #3b82f6);
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -337,39 +252,5 @@
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-  }
-
-  /* Particle Effects */
-  .particle-bg {
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-  }
-
-  /* Loading States */
-  .skeleton {
-    background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-
-  /* Scrollbar Styling */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
-    border-radius: 4px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #2563eb, #7c3aed);
   }
 }

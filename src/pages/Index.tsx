@@ -30,7 +30,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Removed <LandingVerse /> */}
       <HeroSection />
       <ExpandedFeaturesSection />
       <FeaturesSection />
@@ -41,4 +40,3 @@ const Index = () => {
 };
 
 export default Index;
-

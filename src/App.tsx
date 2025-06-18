@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
-import EnhancedNavigation from '@/components/Navigation/EnhancedNavigation';
+import MainNavigation from '@/components/Navigation/MainNavigation';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 
 // Pages
@@ -23,16 +23,9 @@ import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
 import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
 import LiveLearningPage from '@/pages/LiveLearningPage';
 import VideoLearningPage from '@/pages/VideoLearningPage';
-import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
 import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
-import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
-// New pages
-import AILearningLab from '@/pages/AILearningLab';
-import KnowledgeTree from '@/pages/KnowledgeTree';
-import GameifyVault from '@/pages/GameifyVault';
-
-// AI Features Pages
+// New AI Features Pages
 import AILearningPathPage from '@/pages/AILearningPathPage';
 import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
 import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
@@ -40,10 +33,6 @@ import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
 import AIFlashcardPage from '@/pages/AIFlashcardPage';
 import SemanticSearchPage from '@/pages/SemanticSearchPage';
 import EmotionDetectionPage from '@/pages/EmotionDetectionPage';
-import MultilingualTranslatorPage from '@/pages/MultilingualTranslatorPage';
-import RealTimeSummarizerPage from '@/pages/RealTimeSummarizerPage';
-import VisualMindMapPage from '@/pages/VisualMindMapPage';
-import TeachBackPage from '@/pages/TeachBackPage';
 
 // Social Pages
 import SocialFeedPage from '@/pages/SocialFeedPage';
@@ -64,7 +53,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-background">
-          <EnhancedNavigation />
+          <MainNavigation />
           <main className="pt-0">
             <Routes>
               {/* Public Routes */}
@@ -92,32 +81,10 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              {/* New Feature Routes */}
-              <Route path="/ai-learning-lab" element={
-                <ProtectedRoute>
-                  <AILearningLab />
-                </ProtectedRoute>
-              } />
-              <Route path="/knowledge-tree" element={
-                <ProtectedRoute>
-                  <KnowledgeTree />
-                </ProtectedRoute>
-              } />
-              <Route path="/gameify-vault" element={
-                <ProtectedRoute>
-                  <GameifyVault />
-                </ProtectedRoute>
-              } />
-
               {/* AI & Learning Routes */}
               <Route path="/ai-study-helper" element={
                 <ProtectedRoute>
                   <AIStudyHelper />
-                </ProtectedRoute>
-              } />
-              <Route path="/multi-ai-tutor" element={
-                <ProtectedRoute>
-                  <MultiAITutorPage />
                 </ProtectedRoute>
               } />
               <Route path="/ai-tutor" element={
@@ -125,8 +92,33 @@ function App() {
                   <AITutorPage />
                 </ProtectedRoute>
               } />
+              <Route path="/smart-recommendations" element={
+                <ProtectedRoute>
+                  <SmartRecommendationsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/adaptive-content" element={
+                <ProtectedRoute>
+                  <AdaptiveContentPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/live-learning" element={
+                <ProtectedRoute>
+                  <LiveLearningPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/video-learning" element={
+                <ProtectedRoute>
+                  <VideoLearningPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/ai-content-generator" element={
+                <ProtectedRoute>
+                  <AIContentGeneratorPage />
+                </ProtectedRoute>
+              } />
 
-              {/* AI Features Routes */}
+              {/* New AI Features Routes */}
               <Route path="/ai-learning-paths" element={
                 <ProtectedRoute>
                   <AILearningPathPage />
@@ -160,26 +152,6 @@ function App() {
               <Route path="/emotion-detection" element={
                 <ProtectedRoute>
                   <EmotionDetectionPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/multilingual-translator" element={
-                <ProtectedRoute>
-                  <MultilingualTranslatorPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/real-time-summarizer" element={
-                <ProtectedRoute>
-                  <RealTimeSummarizerPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/visual-mind-map" element={
-                <ProtectedRoute>
-                  <VisualMindMapPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/teach-back-assessment" element={
-                <ProtectedRoute>
-                  <TeachBackPage />
                 </ProtectedRoute>
               } />
 
