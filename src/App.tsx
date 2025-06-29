@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -50,6 +49,9 @@ import KnowledgeFeedPage from '@/pages/KnowledgeFeedPage';
 import APIFlowchartPage from '@/pages/APIFlowchartPage';
 import GroupCompetitionArenaPage from '@/pages/GroupCompetitionArenaPage';
 import NotFound from '@/pages/NotFound';
+import ComprehensiveAIStudyPage from '@/pages/ComprehensiveAIStudyPage';
+import InteractiveLessons from '@/components/Learning/InteractiveLessons';
+import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 
 const queryClient = new QueryClient();
 
@@ -274,6 +276,25 @@ function App() {
             <Route path="/knowledge-feed" element={
               <ProtectedRoute>
                 <KnowledgeFeedPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* New comprehensive AI features */}
+            <Route path="/comprehensive-ai-study" element={
+              <ProtectedRoute>
+                <ComprehensiveAIStudyPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/interactive-lessons" element={
+              <ProtectedRoute>
+                <InteractiveLessons />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/virtual-classroom" element={
+              <ProtectedRoute>
+                <VirtualClassroom />
               </ProtectedRoute>
             } />
 

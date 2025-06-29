@@ -27,50 +27,82 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener first
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session);
+    let mounted = true;
+
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        }
+
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Session error:', error);
+        if (mounted) {
+          setSession(null);
+          setUser(null);
+          setLoading(false);
+        }
+      }
+    };
+
+    getInitialSession();
+
+    // Set up auth state listener
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session);
+      
+      if (mounted) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        if (event === 'SIGNED_IN') {
-          const providerUsed = session?.user?.app_metadata?.provider;
-          let welcomeMessage = "Welcome to EduZambia!";
-          
-          if (providerUsed === 'google') {
-            welcomeMessage = "Welcome to EduZambia! Successfully signed in with Google.";
-          } else if (providerUsed === 'facebook') {
-            welcomeMessage = "Welcome to EduZambia! Successfully signed in with Facebook.";
-          }
-          
-          toast({
-            title: welcomeMessage,
-            description: "You have successfully signed in to your learning platform.",
-          });
-        } else if (event === 'SIGNED_OUT') {
-          toast({
-            title: "Signed out",
-            description: "You have been signed out successfully.",
-          });
-        } else if (event === 'USER_UPDATED') {
-          toast({
-            title: "Profile Updated",
-            description: "Your profile has been updated successfully.",
-          });
+        // Handle session events
+        switch (event) {
+          case 'SIGNED_IN':
+            const providerUsed = session?.user?.app_metadata?.provider;
+            let welcomeMessage = "Welcome to EduZambia!";
+            
+            if (providerUsed === 'google') {
+              welcomeMessage = "Welcome to EduZambia! Successfully signed in with Google.";
+            } else if (providerUsed === 'facebook') {
+              welcomeMessage = "Welcome to EduZambia! Successfully signed in with Facebook.";
+            }
+            
+            toast({
+              title: welcomeMessage,
+              description: "You have successfully signed in to your learning platform.",
+            });
+            break;
+          case 'SIGNED_OUT':
+            toast({
+              title: "Signed out",
+              description: "You have been signed out successfully.",
+            });
+            break;
+          case 'USER_UPDATED':
+            toast({
+              title: "Profile Updated",
+              description: "Your profile has been updated successfully.",
+            });
+            break;
         }
       }
-    );
-
-    // Then get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [toast]);
 
   const signUp = async (email: string, password: string, fullName?: string, userType?: string, grade?: string) => {
@@ -92,28 +124,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
 
-      // Send custom verification email
       if (data.user && !data.user.email_confirmed_at) {
-        try {
-          await supabase.functions.invoke('send-email-verification', {
-            body: {
-              email: email,
-              confirmationUrl: redirectUrl,
-              fullName: fullName
-            }
-          });
-          
-          toast({
-            title: "Account Created Successfully!",
-            description: "Please check your email for a verification link to complete your registration.",
-          });
-        } catch (emailError) {
-          console.error('Custom email sending failed:', emailError);
-          toast({
-            title: "Account Created",
-            description: "Please check your email for verification link.",
-          });
-        }
+        toast({
+          title: "Account Created Successfully!",
+          description: "Please check your email for a verification link to complete your registration.",
+        });
       }
 
       return { error: null };
@@ -144,6 +159,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         throw error;
       }
+
+      // The auth state change will handle the redirect
     } catch (error) {
       console.error('Sign in error:', error);
       toast({
