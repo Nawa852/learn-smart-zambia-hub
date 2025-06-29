@@ -1,3 +1,4 @@
+
 import React from "react"
 import {
   LayoutDashboard,
@@ -20,11 +21,11 @@ import {
   PenBox,
   BookOpenCheck,
   Languages,
-  MindMap,
+  Network,
   Presentation,
   Gamepad2,
   FileText,
-  ChatBubble,
+  MessageCircle,
   Compass,
 } from "lucide-react"
 
@@ -37,7 +38,7 @@ interface SidebarProps {
 }
 
 export function AppSidebar({ className }: SidebarProps) {
-  const { isOpen } = useSidebar()
+  const { state } = useSidebar()
 
   const sidebarItems = [
     {
@@ -118,7 +119,7 @@ export function AppSidebar({ className }: SidebarProps) {
     {
       title: "Visual Mind Map",
       url: "/visual-mind-map",
-      icon: MindMap,
+      icon: Network,
       description: "Create interactive mind maps with AI assistance",
     },
     {
@@ -163,7 +164,7 @@ export function AppSidebar({ className }: SidebarProps) {
     {
       title: "Social Feed",
       url: "/social-feed",
-      icon: ChatBubble,
+      icon: MessageCircle,
       description: "Connect with peers and share learning experiences",
     },
     {
