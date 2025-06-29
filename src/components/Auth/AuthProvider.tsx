@@ -36,8 +36,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
 
         if (event === 'SIGNED_IN') {
+          const providerUsed = session?.user?.app_metadata?.provider;
+          let welcomeMessage = "Welcome to EduZambia!";
+          
+          if (providerUsed === 'google') {
+            welcomeMessage = "Welcome to EduZambia! Successfully signed in with Google.";
+          } else if (providerUsed === 'facebook') {
+            welcomeMessage = "Welcome to EduZambia! Successfully signed in with Facebook.";
+          }
+          
           toast({
-            title: "Welcome to EduZambia!",
+            title: welcomeMessage,
             description: "You have successfully signed in to your learning platform.",
           });
         } else if (event === 'SIGNED_OUT') {

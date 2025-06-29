@@ -82,6 +82,18 @@ function App() {
                 <AdaptiveDashboard />
               </ProtectedRoute>
             } />
+
+            <Route path="/enhanced-social" element={
+              <ProtectedRoute>
+                <EnhancedSocialFeed />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/mentorship-coaching" element={
+              <ProtectedRoute>
+                <MentorshipGoalCoaching />
+              </ProtectedRoute>
+            } />
             
             {/* AI Features */}
             <Route path="/study-assistant" element={
@@ -115,21 +127,9 @@ function App() {
               </ProtectedRoute>
             } />
             
-            <Route path="/enhanced-social" element={
-              <ProtectedRoute>
-                <EnhancedSocialFeed />
-              </ProtectedRoute>
-            } />
-            
             <Route path="/mentorship-hub" element={
               <ProtectedRoute>
                 <MentorshipHubPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/mentorship-coaching" element={
-              <ProtectedRoute>
-                <MentorshipGoalCoaching />
               </ProtectedRoute>
             } />
             
