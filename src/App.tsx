@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import { SidebarProvider } from '@/components/ui/sidebar';
@@ -48,6 +47,7 @@ import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
 // Layout Components
 import Header from '@/components/Header';
 import { AppSidebar } from '@/components/AppSidebar';
+import StudyAssistantPage from '@/pages/StudyAssistantPage';
 
 function App() {
   return (
@@ -492,6 +492,22 @@ function App() {
                       <Header />
                       <main className="flex-1">
                         <KnowledgeFeedPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/study-assistant" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <StudyAssistantPage />
                       </main>
                     </div>
                   </div>

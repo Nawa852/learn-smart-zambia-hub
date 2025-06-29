@@ -8,12 +8,14 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, fullName?: string, userType?: string, grade?: string) => Promise<{ error: AuthError | null }>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
   signOut: () => Promise<void>;
   resendConfirmation: (email: string) => Promise<void>;
+  sendSMSVerification: (phoneNumber: string) => Promise<void>;
+  verifyPhone: (phoneNumber: string, code: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,13 +37,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (event === 'SIGNED_IN') {
           toast({
-            title: "Welcome!",
-            description: "You have successfully signed in.",
+            title: "Welcome to EduZambia!",
+            description: "You have successfully signed in to your learning platform.",
           });
         } else if (event === 'SIGNED_OUT') {
           toast({
             title: "Signed out",
             description: "You have been signed out successfully.",
+          });
+        } else if (event === 'USER_UPDATED') {
+          toast({
+            title: "Profile Updated",
+            description: "Your profile has been updated successfully.",
           });
         }
       }
@@ -57,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, [toast]);
 
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, userType?: string, grade?: string) => {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`;
       
@@ -68,11 +75,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName,
+            user_type: userType,
+            grade: grade,
           }
         }
       });
 
       if (error) throw error;
+
+      // Send custom verification email
+      if (data.user && !data.user.email_confirmed_at) {
+        try {
+          await supabase.functions.invoke('send-email-verification', {
+            body: {
+              email: email,
+              confirmationUrl: redirectUrl,
+              fullName: fullName
+            }
+          });
+          
+          toast({
+            title: "Account Created Successfully!",
+            description: "Please check your email for a verification link to complete your registration.",
+          });
+        } catch (emailError) {
+          console.error('Custom email sending failed:', emailError);
+          toast({
+            title: "Account Created",
+            description: "Please check your email for verification link.",
+          });
+        }
+      }
+
       return { error: null };
     } catch (error) {
       console.error('Sign up error:', error);
@@ -96,6 +130,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (error.message.includes('Email not confirmed')) {
           throw new Error('Please verify your email address before signing in. Check your inbox for a verification link.');
         }
+        if (error.message.includes('Invalid login credentials')) {
+          throw new Error('Invalid email or password. Please check your credentials and try again.');
+        }
         throw error;
       }
     } catch (error) {
@@ -114,7 +151,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         }
       });
 
@@ -193,6 +234,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const sendSMSVerification = async (phoneNumber: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('send-sms-verification', {
+        body: { phoneNumber }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "SMS Sent",
+        description: "Please check your phone for the verification code.",
+      });
+    } catch (error) {
+      console.error('SMS verification error:', error);
+      toast({
+        title: "SMS Failed",
+        description: "Failed to send SMS verification code.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  const verifyPhone = async (phoneNumber: string, code: string) => {
+    try {
+      const { error } = await supabase.functions.invoke('verify-phone', {
+        body: { phoneNumber, code }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Phone Verified",
+        description: "Your phone number has been verified successfully.",
+      });
+    } catch (error) {
+      console.error('Phone verification error:', error);
+      toast({
+        title: "Verification Failed",
+        description: "Invalid verification code.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
   const value = {
     user,
     session,
@@ -203,6 +290,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signInWithFacebook,
     signOut,
     resendConfirmation,
+    sendSMSVerification,
+    verifyPhone,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

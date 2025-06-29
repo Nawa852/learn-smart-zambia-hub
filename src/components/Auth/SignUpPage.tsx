@@ -45,17 +45,13 @@ const SignUpPage = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, userType, grade);
 
     if (error) {
       if (error.message.includes('User already exists')) {
         setErrors({ ...errors, email: 'A user with this email already exists. Please sign in.' });
       }
-      // AuthProvider shows a toast for other errors.
     } else {
-      // On success, onAuthStateChange will fire with SIGNED_IN event,
-      // setting the user and session, and showing a welcome toast.
-      // We just need to navigate.
       navigate('/dashboard');
     }
 

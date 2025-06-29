@@ -1,175 +1,292 @@
-
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { 
-  GraduationCap, Home, BookOpen, User, LogOut, Settings, BarChart3, 
-  Sparkles, Brain, Users, Shield, Award, Bot, GitBranch, Target, FileText, 
-  BookCopy, Search, Languages, Smile, BrainCircuit, Gamepad2, Rss, MapPin, 
-  UserPlus, Calendar, MessageSquare, Heart 
-} from "lucide-react";
+import React from "react"
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-} from "@/components/ui/sidebar";
-import { useAuth } from "@/components/Auth/AuthProvider";
+  LayoutDashboard,
+  Book,
+  User,
+  Settings,
+  HelpCircle,
+  GraduationCap,
+  Brain,
+  Search,
+  Lightbulb,
+  MessageSquare,
+  Users,
+  MapPin,
+  Handshake,
+  Calendar,
+  Newspaper,
+  Sparkles,
+  Target,
+  PenBox,
+  BookOpenCheck,
+  Languages,
+  MindMap,
+  Presentation,
+  Gamepad2,
+  FileText,
+  ChatBubble,
+  Compass,
+} from "lucide-react"
 
-const mainItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Courses", url: "/courses", icon: BookOpen },
-  { title: "Analytics", url: "/learning-analytics", icon: BarChart3 },
-  { title: "Achievements", url: "/achievements", icon: Award },
-];
+import { NavItem } from "@/components/ui/nav-item"
+import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion"
+import { useSidebar } from "@/components/ui/sidebar"
 
-const aiToolsItems = [
-  { title: "AI Learning Lab", url: "/ai-learning-lab", icon: Sparkles },
-  { title: "Multi-AI Tutor", url: "/multi-ai-tutor", icon: Bot },
-  { title: "AI Study Helper", url: "/ai-study-helper", icon: Brain },
-  { title: "Learning Paths", url: "/ai-learning-paths", icon: GitBranch },
-  { title: "Goal Coach", url: "/daily-goal-coach", icon: Target },
-  { title: "Claude Journaling", url: "/claude-journaling", icon: FileText },
-  { title: "AI Flashcards", url: "/ai-flashcards", icon: BookCopy },
-  { title: "Semantic Search", url: "/semantic-search", icon: Search },
-  { title: "Emotion Detection", url: "/emotion-detection", icon: Smile },
-  { title: "Translator", url: "/multilingual-translator", icon: Languages },
-  { title: "Mind Maps", url: "/visual-mind-map", icon: GitBranch },
-  { title: "Teach Back", url: "/teach-back-assessment", icon: BrainCircuit },
-  { title: "Gameify Vault", url: "/gameify-vault", icon: Gamepad2 },
-];
-
-const socialItems = [
-  { title: "Social Feed", url: "/social-feed", icon: Heart },
-  { title: "Knowledge Feed", url: "/knowledge-feed", icon: Rss },
-  { title: "Study Groups", url: "/study-groups", icon: Users },
-  { title: "Messenger", url: "/messenger", icon: MessageSquare },
-  { title: "Campus Map", url: "/campus-map", icon: MapPin },
-  { title: "Find Peers", url: "/peer-finder", icon: UserPlus },
-  { title: "Mentorship Hub", url: "/mentorship-hub", icon: GraduationCap },
-  { title: "Learning Events", url: "/events-learning", icon: Calendar },
-];
-
-interface NavItem {
-  title: string;
-  url: string;
-  icon: React.ElementType;
+interface SidebarProps {
+  className?: string
 }
 
-interface NavGroupProps {
-  label: string;
-  items: NavItem[];
-  defaultColorClass: string;
-}
+export function AppSidebar({ className }: SidebarProps) {
+  const { isOpen } = useSidebar()
 
-const NavGroup: React.FC<NavGroupProps> = ({ label, items, defaultColorClass }) => {
-  const location = useLocation();
+  const sidebarItems = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
+      description: "Overview of your learning progress and goals",
+    },
+    {
+      title: "Courses",
+      url: "/courses",
+      icon: Book,
+      description: "Explore available courses and learning paths",
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: User,
+      description: "Manage your profile and account settings",
+    },
+    {
+      title: "Learning Analytics",
+      url: "/learning-analytics",
+      icon: Settings,
+      description: "Track your learning progress and performance",
+    },
+    {
+      title: "Achievements",
+      url: "/achievements",
+      icon: HelpCircle,
+      description: "View your achievements and earned rewards",
+    },
+  ]
+
+  const aiFeatures = [
+    {
+      title: "AI Flashcards",
+      url: "/ai-flashcards",
+      icon: GraduationCap,
+      description: "Generate flashcards with AI for efficient learning",
+    },
+    {
+      title: "Multi-AI Tutor",
+      url: "/multi-ai-tutor",
+      icon: Brain,
+      description: "Get help from multiple AI models for different subjects",
+    },
+    {
+      title: "AI Study Helper",
+      url: "/ai-study-helper",
+      icon: Search,
+      description: "Your personal AI tutor, scheduler, and learning companion",
+    },
+    {
+      title: "Smart Recommendations",
+      url: "/smart-recommendations",
+      icon: Lightbulb,
+      description: "AI-powered personalized learning recommendations",
+    },
+    {
+      title: "Semantic Search",
+      url: "/semantic-search",
+      icon: Search,
+      description: "AI-powered intelligent search across learning content",
+    },
+    {
+      title: "Emotion Detection",
+      url: "/emotion-detection",
+      icon: MessageSquare,
+      description: "Analyze emotions in text for better understanding",
+    },
+    {
+      title: "Multilingual Translator",
+      url: "/multilingual-translator",
+      icon: Languages,
+      description: "AI-powered course translation for global learning",
+    },
+    {
+      title: "Visual Mind Map",
+      url: "/visual-mind-map",
+      icon: MindMap,
+      description: "Create interactive mind maps with AI assistance",
+    },
+    {
+      title: "Teach Back Assessment",
+      url: "/teach-back-assessment",
+      icon: Presentation,
+      description: "Demonstrate understanding by teaching concepts to AI",
+    },
+    {
+      title: "Gameify Vault",
+      url: "/gameify-vault",
+      icon: Gamepad2,
+      description: "Gamified learning experiences and rewards",
+    },
+    {
+      title: "AI Learning Paths",
+      url: "/ai-learning-paths",
+      icon: Compass,
+      description: "AI-generated personalized learning paths",
+    },
+    {
+      title: "Daily Goal Coach",
+      url: "/daily-goal-coach",
+      icon: Target,
+      description: "AI-powered daily goal setting and tracking",
+    },
+    {
+      title: "Claude Journaling",
+      url: "/claude-journaling",
+      icon: PenBox,
+      description: "AI-assisted journaling with Claude for reflection",
+    },
+    {
+      title: "Study Assistant",
+      url: "/study-assistant",
+      icon: Brain,
+      description: "24/7 AI tutor with multilingual support"
+    },
+  ];
+
+  const socialFeatures = [
+    {
+      title: "Social Feed",
+      url: "/social-feed",
+      icon: ChatBubble,
+      description: "Connect with peers and share learning experiences",
+    },
+    {
+      title: "Study Groups",
+      url: "/study-groups",
+      icon: Users,
+      description: "Join or create study groups for collaborative learning",
+    },
+    {
+      title: "Messenger",
+      url: "/messenger",
+      icon: MessageSquare,
+      description: "Real-time messaging with peers and mentors",
+    },
+    {
+      title: "Campus Map",
+      url: "/campus-map",
+      icon: MapPin,
+      description: "Explore campus resources and locations",
+    },
+    {
+      title: "Peer Finder",
+      url: "/peer-finder",
+      icon: Search,
+      description: "Find peers with similar interests and goals",
+    },
+    {
+      title: "Mentorship Hub",
+      url: "/mentorship-hub",
+      icon: Handshake,
+      description: "Connect with mentors for guidance and support",
+    },
+    {
+      title: "Events Learning",
+      url: "/events-learning",
+      icon: Calendar,
+      description: "Discover and participate in learning events",
+    },
+    {
+      title: "Knowledge Feed",
+      url: "/knowledge-feed",
+      icon: Newspaper,
+      description: "Stay updated with the latest learning resources",
+    },
+  ]
+
+  const studyMaterials = [
+    {
+      title: "Study Material Repository",
+      url: "/study-materials",
+      icon: FileText,
+      description: "Access shared study materials and resources",
+    },
+  ]
+
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
-        {label}
-      </SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu className="space-y-1">
-          {items.map((item) => (
-            <SidebarMenuItem key={item.url}>
-              <SidebarMenuButton
-                asChild
-                isActive={location.pathname === item.url}
-                className={`group hover:bg-gradient-to-r ${defaultColorClass} rounded-lg transition-all duration-200`}
-              >
-                <a href={item.url} className="flex items-center gap-3 p-3 text-gray-700 hover:text-blue-700">
-                  <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                    location.pathname === item.url
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'group-hover:bg-blue-50 group-hover:text-blue-600'
-                  }`}>
-                    <item.icon className="w-4 h-4" />
-                  </div>
-                  <span className="font-medium">{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  );
-};
-
-
-export function AppSidebar() {
-  const { signOut } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  return (
-    <Sidebar className="min-h-screen shadow-2xl bg-gradient-to-b from-slate-50/95 via-white/98 to-blue-50/95 backdrop-blur-lg border-r border-blue-100/50">
-      <SidebarHeader className="border-b border-blue-100/50 bg-gradient-to-r from-blue-50/80 to-purple-50/80">
-        <div
-          className="flex items-center gap-3 my-4 cursor-pointer group hover:scale-105 transition-all duration-300"
-          onClick={() => navigate("/dashboard")}
-        >
-          <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-              EDU ZAMBIA
-            </span>
-            <span className="text-xs text-gray-500 font-medium">Learning Platform</span>
+    <div className={`hidden border-r bg-gray-100/40 lg:block dark:border-muted/40 ${className}`}>
+      <div className="space-y-4 py-4">
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Platform
+          </h2>
+          <div className="space-y-1">
+            {sidebarItems.map((item) => (
+              <NavItem
+                key={item.title}
+                title={item.title}
+                href={item.url}
+                icon={item.icon}
+                description={item.description}
+              />
+            ))}
           </div>
         </div>
-      </SidebarHeader>
-      
-      <SidebarContent className="px-2 py-4">
-        <NavGroup label="Main Navigation" items={mainItems} defaultColorClass="hover:from-blue-50 hover:to-purple-50 hover:border-blue-200/50" />
-        <NavGroup label="AI Tools" items={aiToolsItems} defaultColorClass="hover:from-purple-50 hover:to-pink-50 hover:border-purple-200/50" />
-        <NavGroup label="Social & Community" items={socialItems} defaultColorClass="hover:from-green-50 hover:to-blue-50 hover:border-green-200/50" />
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-sm font-semibold text-gray-600 mb-3 px-2 mt-6">
-            Account
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              <SidebarMenuItem>
-                <SidebarMenuButton 
-                  asChild 
-                  isActive={location.pathname === "/profile"}
-                  className="group hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:border-gray-200/50 rounded-lg transition-all duration-200"
-                >
-                  <a href="/profile" className="flex items-center gap-3 p-3 text-gray-700 hover:text-gray-900">
-                    <div className={`p-1.5 rounded-lg transition-all duration-200 ${
-                      location.pathname === "/profile" 
-                        ? 'bg-gray-100 text-gray-600' 
-                        : 'group-hover:bg-gray-50 group-hover:text-gray-600'
-                    }`}>
-                      <User className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">Profile</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      
-      <SidebarFooter className="border-t border-blue-100/50 bg-gradient-to-r from-red-50/80 to-orange-50/80 p-4">
-        <button
-          className="w-full flex items-center justify-center gap-3 p-3 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-lg transition-all duration-300 font-medium shadow-sm hover:shadow-md"
-          onClick={() => signOut()}
-        >
-          <LogOut className="w-5 h-5" />
-          <span>Sign Out</span>
-        </button>
-      </SidebarFooter>
-    </Sidebar>
-  );
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            AI Features
+          </h2>
+          <div className="space-y-1">
+            {aiFeatures.map((item) => (
+              <NavItem
+                key={item.title}
+                title={item.title}
+                href={item.url}
+                icon={item.icon}
+                description={item.description}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Social Learning
+          </h2>
+          <div className="space-y-1">
+            {socialFeatures.map((item) => (
+              <NavItem
+                key={item.title}
+                title={item.title}
+                href={item.url}
+                icon={item.icon}
+                description={item.description}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Study Materials
+          </h2>
+          <div className="space-y-1">
+            {studyMaterials.map((item) => (
+              <NavItem
+                key={item.title}
+                title={item.title}
+                href={item.url}
+                icon={item.icon}
+                description={item.description}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
