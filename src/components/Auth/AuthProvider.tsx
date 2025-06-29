@@ -1,9 +1,7 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import RoleSelectionModal from './RoleSelectionModal';
 
 interface AuthContextType {
   user: User | null;
@@ -23,8 +21,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showRoleModal, setShowRoleModal] = useState(false);
-  const [pendingUser, setPendingUser] = useState<User | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,28 +39,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
 
-        if (event === 'SIGNED_IN' && session?.user) {
-          // Check if this is a new Google signup (no profile exists)
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (!profile && session.user.app_metadata.provider === 'google') {
-            // New Google user - show role selection modal
-            setPendingUser(session.user);
-            setShowRoleModal(true);
-          } else {
-            toast({
-              title: "Welcome back!",
-              description: "You have successfully signed in.",
-            });
-          }
+        if (event === 'SIGNED_IN') {
+          toast({
+            title: "Welcome!",
+            description: "You have successfully signed in.",
+          });
         } else if (event === 'SIGNED_OUT') {
           toast({
             title: "Signed out",
             description: "You have been signed out successfully.",
+          });
+        } else if (event === 'USER_UPDATED') {
+          toast({
+            title: "Account created!",
+            description: "Please check your email to verify your account.",
           });
         }
       }
@@ -72,69 +60,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => subscription.unsubscribe();
   }, [toast]);
-
-  const handleRoleSelection = async (roleData: {
-    accountType: string;
-    grade?: string;
-    school?: string;
-    subject?: string;
-  }) => {
-    if (!pendingUser) return;
-
-    try {
-      // Create profile with role information
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: pendingUser.id,
-          email: pendingUser.email,
-          full_name: pendingUser.user_metadata?.full_name || pendingUser.user_metadata?.name,
-          avatar_url: pendingUser.user_metadata?.avatar_url,
-          role: roleData.accountType,
-        });
-
-      if (profileError) throw profileError;
-
-      // Create user preferences
-      const { error: prefsError } = await supabase
-        .from('user_preferences')
-        .insert({
-          user_id: pendingUser.id,
-          learning_style: roleData.accountType === 'student' ? 'visual' : 'mixed',
-        });
-
-      if (prefsError) throw prefsError;
-
-      // Store additional role data in user metadata if needed
-      const additionalData: any = {
-        account_type: roleData.accountType,
-        setup_completed: true,
-      };
-
-      if (roleData.grade) additionalData.grade = roleData.grade;
-      if (roleData.school) additionalData.school = roleData.school;
-      if (roleData.subject) additionalData.subject = roleData.subject;
-
-      await supabase.auth.updateUser({
-        data: additionalData
-      });
-
-      setShowRoleModal(false);
-      setPendingUser(null);
-      
-      toast({
-        title: "Welcome to EduZambia!",
-        description: `Your ${roleData.accountType} account has been set up successfully.`,
-      });
-    } catch (error) {
-      console.error('Error setting up user profile:', error);
-      toast({
-        title: "Setup Error",
-        description: "There was an error setting up your profile. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
@@ -152,6 +77,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) throw error;
+
+      // Send custom verification email
+      if (data.user && !data.user.email_confirmed_at) {
+        try {
+          await supabase.functions.invoke('send-email-verification', {
+            body: {
+              email: data.user.email,
+              confirmationUrl: `${window.location.origin}/auth/confirm?token=${data.user.id}`,
+              fullName: fullName
+            }
+          });
+        } catch (emailError) {
+          console.error('Error sending custom verification email:', emailError);
+        }
+      }
 
       return { error: null };
     } catch (error) {
@@ -195,7 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/study-materials`
+          redirectTo: `${window.location.origin}/dashboard`
         }
       });
 
@@ -216,7 +156,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/study-materials`
+          redirectTo: `${window.location.origin}/dashboard`
         }
       });
 
@@ -286,15 +226,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resendConfirmation,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-      <RoleSelectionModal 
-        open={showRoleModal} 
-        onComplete={handleRoleSelection}
-      />
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
