@@ -31,10 +31,12 @@ export const useStudyMaterials = () => {
   const [popularMaterials, setPopularMaterials] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchMaterials = async (filters: MaterialFilters = {}) => {
     setLoading(true);
+    setError(null);
     try {
       let query = supabase
         .from('study_materials')
@@ -64,9 +66,11 @@ export const useStudyMaterials = () => {
       setMaterials(data || []);
     } catch (error) {
       console.error('Error fetching materials:', error);
+      const errorMessage = 'Failed to fetch study materials';
+      setError(errorMessage);
       toast({
         title: "Error",
-        description: "Failed to fetch study materials",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -90,6 +94,7 @@ export const useStudyMaterials = () => {
 
   const uploadMaterial = async (file: File, metadata: any = {}) => {
     setUploading(true);
+    setError(null);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
@@ -138,9 +143,11 @@ export const useStudyMaterials = () => {
       fetchMaterials(); // Refresh the list
     } catch (error) {
       console.error('Error uploading material:', error);
+      const errorMessage = 'Failed to upload material';
+      setError(errorMessage);
       toast({
         title: "Error",
-        description: "Failed to upload material",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -148,18 +155,18 @@ export const useStudyMaterials = () => {
     }
   };
 
-  const downloadMaterial = async (filePath: string, fileName: string) => {
+  const downloadMaterial = async (material: StudyMaterial) => {
     try {
       const { data, error } = await supabase.storage
         .from('study-materials')
-        .download(filePath);
+        .download(material.file_path);
 
       if (error) throw error;
 
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
-      a.download = fileName;
+      a.download = material.file_name;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -170,7 +177,7 @@ export const useStudyMaterials = () => {
       if (user) {
         await supabase.from('material_access_logs').insert({
           user_id: user.id,
-          material_id: materials.find(m => m.file_path === filePath)?.id,
+          material_id: material.id,
           action: 'download',
         });
       }
@@ -189,19 +196,9 @@ export const useStudyMaterials = () => {
     }
   };
 
-  const searchMaterials = async (query: string, language: string = 'English') => {
+  const searchMaterials = async (filters: MaterialFilters) => {
     try {
-      const { data, error } = await supabase.functions.invoke('ai-material-search', {
-        body: {
-          query,
-          language,
-          userId: (await supabase.auth.getUser()).data.user?.id,
-        },
-      });
-
-      if (error) throw error;
-      setMaterials(data.materials || []);
-      return data;
+      await fetchMaterials(filters);
     } catch (error) {
       console.error('Error searching materials:', error);
       toast({
@@ -209,7 +206,6 @@ export const useStudyMaterials = () => {
         description: "Search failed",
         variant: "destructive",
       });
-      return { materials: [], recommendations: [] };
     }
   };
 
@@ -225,6 +221,7 @@ export const useStudyMaterials = () => {
     popularMaterials,
     loading,
     uploading,
+    error,
     fetchMaterials,
     uploadMaterial,
     downloadMaterial,

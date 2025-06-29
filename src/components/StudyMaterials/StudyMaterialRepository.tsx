@@ -106,8 +106,10 @@ const StudyMaterialRepository = () => {
     try {
       await searchMaterials({
         search: searchQuery,
-        ...filters,
-        grade: filters.grade ? parseInt(filters.grade) : undefined
+        subject: filters.subject || undefined,
+        grade: filters.grade ? parseInt(filters.grade) : undefined,
+        curriculum: filters.curriculum || undefined,
+        language: filters.language || undefined
       });
     } catch (error) {
       toast({
@@ -121,7 +123,7 @@ const StudyMaterialRepository = () => {
   // Handle file download
   const handleDownload = async (material: any) => {
     try {
-      await downloadMaterial(material.id);
+      await downloadMaterial(material);
       toast({
         title: "Download Started",
         description: `Downloading ${material.file_name}...`,
