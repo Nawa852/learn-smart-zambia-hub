@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import * as z from 'z';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,12 +49,21 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
+      console.log('Attempting login with:', { email: data.email });
       await signInWithEmail(data.email, data.password);
       // The redirect will be handled by the AuthProvider
       onSuccess?.();
     } catch (error) {
-      // Error toast is handled in AuthProvider
       console.error('Login failed:', error);
+      // Error toast is handled in AuthProvider, but we can also handle specific form errors here
+      if (error instanceof Error) {
+        if (error.message.includes('Invalid login credentials')) {
+          form.setError('email', { type: 'manual', message: 'Invalid email or password' });
+          form.setError('password', { type: 'manual', message: 'Invalid email or password' });
+        } else if (error.message.includes('Email not confirmed')) {
+          form.setError('email', { type: 'manual', message: 'Please verify your email first' });
+        }
+      }
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +72,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
+      console.log('Attempting Google sign in');
       await signInWithGoogle();
       // The redirect will be handled by the AuthProvider
       onSuccess?.();
@@ -76,6 +86,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const handleFacebookSignIn = async () => {
     setIsFacebookLoading(true);
     try {
+      console.log('Attempting Facebook sign in');
       await signInWithFacebook();
       // The redirect will be handled by the AuthProvider
       onSuccess?.();
@@ -124,6 +135,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
                       size="sm"
                       className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                       onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" aria-hidden="true" />

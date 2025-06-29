@@ -53,17 +53,47 @@ const SecureSignUpForm = ({ onSuccess }: SecureSignUpFormProps) => {
   const onSubmit = async (data: SignUpFormValues) => {
     setIsLoading(true);
     try {
+      console.log('Attempting signup with:', { email: data.email, fullName: data.fullName });
+      
       const { error } = await signUp(data.email, data.password, data.fullName);
-      if (!error) {
-        toast({
-          title: "Account created!",
-          description: "Please check your email to verify your account.",
-        });
+      
+      if (error) {
+        console.error('Signup error:', error);
+        
+        // Handle specific error cases
+        if (error.message?.includes('User already registered')) {
+          form.setError('email', { 
+            type: 'manual', 
+            message: 'An account with this email already exists. Please try signing in instead.' 
+          });
+        } else if (error.message?.includes('Password should be at least')) {
+          form.setError('password', { 
+            type: 'manual', 
+            message: error.message 
+          });
+        } else if (error.message?.includes('Unable to validate email address')) {
+          form.setError('email', { 
+            type: 'manual', 
+            message: 'Please enter a valid email address.' 
+          });
+        } else {
+          toast({
+            title: "Sign up failed",
+            description: error.message || "An unexpected error occurred. Please try again.",
+            variant: "destructive",
+          });
+        }
+      } else {
+        console.log('Signup successful');
         onSuccess?.();
       }
     } catch (error) {
-      // Error toast is handled in AuthProvider
       console.error('Sign up failed:', error);
+      toast({
+        title: "Sign up failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -118,6 +148,7 @@ const SecureSignUpForm = ({ onSuccess }: SecureSignUpFormProps) => {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
@@ -147,6 +178,7 @@ const SecureSignUpForm = ({ onSuccess }: SecureSignUpFormProps) => {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
                   >
                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
