@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { BookOpen, Brain, Award, Target, TrendingUp, Users, Clock, Star, Globe, Zap, Heart, MessageSquare } from 'lucide-react';
+import { BookOpen, Brain, Award, Target, TrendingUp, Users, Clock, Star, Globe, Zap, Heart, MessageSquare, Upload, Calendar, Bell, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const EnhancedDashboard = () => {
@@ -25,11 +25,19 @@ const EnhancedDashboard = () => {
     { title: "Group Study Session - Grade 12 Prep", time: "2 days ago", score: null, type: "group" }
   ];
 
-  const aiFeatures = [
-    { title: "AI Tutor", description: "Get personalized help in local languages", icon: Brain, link: "/multi-ai-tutor", gradient: "from-blue-500 to-purple-600" },
+  const allFeatures = [
+    { title: "AI Study Assistant", description: "Get personalized help in local languages", icon: Brain, link: "/multi-ai-tutor", gradient: "from-blue-500 to-purple-600" },
     { title: "Smart Recommendations", description: "AI-powered ECZ-aligned learning paths", icon: Star, link: "/smart-recommendations", gradient: "from-green-500 to-blue-500" },
     { title: "AI Flashcards", description: "Generate smart flashcards from notes", icon: BookOpen, link: "/ai-flashcards", gradient: "from-purple-500 to-pink-500" },
-    { title: "Study Helper", description: "AI-powered study assistant", icon: Target, link: "/ai-study-helper", gradient: "from-orange-500 to-red-500" }
+    { title: "Study Helper", description: "AI-powered study assistant", icon: Target, link: "/ai-study-helper", gradient: "from-orange-500 to-red-500" },
+    { title: "Study Materials", description: "Upload and access study resources", icon: Upload, link: "/study-materials", gradient: "from-teal-500 to-cyan-500" },
+    { title: "Community Forum", description: "Connect with peers and study together", icon: Users, link: "/social-feed", gradient: "from-indigo-500 to-purple-500" },
+    { title: "Goal Coaching", description: "AI-powered daily goal setting", icon: Calendar, link: "/daily-goal-coach", gradient: "from-pink-500 to-red-500" },
+    { title: "Multilingual Translator", description: "Learn in your preferred language", icon: Globe, link: "/multilingual-translator", gradient: "from-cyan-500 to-blue-500" },
+    { title: "Visual Mind Maps", description: "Create interactive learning maps", icon: Eye, link: "/visual-mind-map", gradient: "from-yellow-500 to-orange-500" },
+    { title: "Study Groups", description: "Join collaborative learning sessions", icon: MessageSquare, link: "/study-groups", gradient: "from-green-500 to-teal-500" },
+    { title: "Semantic Search", description: "Find study materials intelligently", icon: Target, link: "/semantic-search", gradient: "from-purple-500 to-indigo-500" },
+    { title: "Learning Analytics", description: "Track your progress and performance", icon: TrendingUp, link: "/learning-analytics", gradient: "from-blue-500 to-green-500" }
   ];
 
   const zambianFeatures = [
@@ -83,7 +91,7 @@ const EnhancedDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Quick Stats */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {quickStats.map((stat, index) => (
             <Card key={index} className="hover:shadow-lg transition-all duration-300 group border-0 shadow-md">
@@ -104,7 +112,7 @@ const EnhancedDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Enhanced Learning Progress */}
+          {/* Learning Progress */}
           <Card className="lg:col-span-2 border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -137,7 +145,7 @@ const EnhancedDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Enhanced Recent Activities */}
+          {/* Recent Activities */}
           <Card className="border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -168,18 +176,18 @@ const EnhancedDashboard = () => {
           </Card>
         </div>
 
-        {/* Enhanced AI Features Grid */}
+        {/* All AI Features Grid */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Brain className="w-5 h-5 text-purple-600" />
-              AI-Powered Learning Tools
+              Complete AI-Powered Learning Suite
             </CardTitle>
-            <CardDescription>Experience the future of education with advanced AI assistance</CardDescription>
+            <CardDescription>Access all advanced learning tools and features</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {aiFeatures.map((feature, index) => (
+              {allFeatures.map((feature, index) => (
                 <Link key={index} to={feature.link}>
                   <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 bg-gradient-to-br from-white to-gray-50 group">
                     <CardContent className="p-4 text-center">
@@ -196,7 +204,7 @@ const EnhancedDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Zambian-Specific Features */}
+        {/* Zambian Education Features */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -220,14 +228,14 @@ const EnhancedDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Quick Actions */}
+        {/* Quick Actions */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5 text-orange-600" />
               Quick Actions
             </CardTitle>
-            <CardDescription>Jump into your most used features and discover new ones</CardDescription>
+            <CardDescription>Jump into your most used features</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">

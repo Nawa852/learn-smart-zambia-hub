@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -9,14 +10,12 @@ import { AppSidebar } from '@/components/AppSidebar';
 
 // Import all pages
 import Index from '@/pages/Index';
-import EnhancedIndex from '@/pages/EnhancedIndex';
 import LoginPage from '@/components/Auth/LoginPage';
 import SignUpPage from '@/components/Auth/SignUpPage';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import LandingVerse from '@/pages/LandingVerse';
 import Dashboard from '@/pages/Dashboard';
-import AdaptiveDashboard from '@/components/Dashboard/AdaptiveDashboard';
 import StudyAssistantPage from '@/pages/StudyAssistantPage';
 import AIStudyHelper from '@/pages/AIStudyHelper';
 import MultiAITutorPage from '@/pages/MultiAITutorPage';
@@ -75,7 +74,6 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
-            <Route path="/enhanced-home" element={<EnhancedIndex />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/about" element={<About />} />
@@ -91,12 +89,6 @@ function App() {
                     <Dashboard />
                   </main>
                 </SidebarProvider>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/adaptive-dashboard" element={
-              <ProtectedRoute>
-                <AdaptiveDashboard />
               </ProtectedRoute>
             } />
 

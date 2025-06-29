@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { GraduationCap, ArrowRight, Users, BookOpen, Award, Brain, Globe, Zap, Heart, Star } from "lucide-react";
+import { GraduationCap, ArrowRight, Users, BookOpen, Award, Brain, Globe, Zap, Heart, Star, MessageSquare, Target, Calendar, Upload, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -35,10 +35,14 @@ const Index = () => {
   }
 
   const features = [
-    { icon: Brain, title: "AI Study Assistant", description: "24/7 multilingual AI tutor supporting ECZ & Cambridge curricula", color: "from-blue-500 to-purple-600" },
-    { icon: BookOpen, title: "Study Materials", description: "Access thousands of notes, past papers, and resources", color: "from-green-500 to-blue-500" },
-    { icon: Users, title: "Community Learning", description: "Connect with peers, join study groups, find mentors", color: "from-purple-500 to-pink-500" },
-    { icon: Globe, title: "Multilingual Support", description: "Learn in Bemba, Nyanja, Tonga, Lozi, and English", color: "from-orange-500 to-red-500" },
+    { icon: Brain, title: "AI Study Assistant", description: "24/7 multilingual AI tutor supporting ECZ & Cambridge curricula", color: "from-blue-500 to-purple-600", link: "/multi-ai-tutor" },
+    { icon: BookOpen, title: "Study Materials", description: "Access thousands of notes, past papers, and resources", color: "from-green-500 to-blue-500", link: "/study-materials" },
+    { icon: Users, title: "Community Learning", description: "Connect with peers, join study groups, find mentors", color: "from-purple-500 to-pink-500", link: "/social-feed" },
+    { icon: Globe, title: "Multilingual Support", description: "Learn in Bemba, Nyanja, Tonga, Lozi, and English", color: "from-orange-500 to-red-500", link: "/multilingual-translator" },
+    { icon: Target, title: "AI Flashcards", description: "Smart flashcards generated from your notes", color: "from-cyan-500 to-blue-500", link: "/ai-flashcards" },
+    { icon: MessageSquare, title: "Study Groups", description: "Join collaborative learning sessions", color: "from-indigo-500 to-purple-500", link: "/study-groups" },
+    { icon: Calendar, title: "Goal Coaching", description: "AI-powered daily goal setting and tracking", color: "from-pink-500 to-red-500", link: "/daily-goal-coach" },
+    { icon: Upload, title: "Content Upload", description: "Share and discover study materials", color: "from-teal-500 to-green-500", link: "/study-materials-repo" }
   ];
 
   const stats = [
@@ -133,10 +137,10 @@ const Index = () => {
             </Button>
           </div>
 
-          {/* Quick Access Features */}
+          {/* Enhanced Features Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
             {features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 cursor-pointer group">
+              <Card key={index} className="hover:shadow-lg transition-all duration-300 cursor-pointer group" onClick={() => navigate(feature.link)}>
                 <CardContent className="p-4 text-center">
                   <div className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className="w-6 h-6 text-white" />
