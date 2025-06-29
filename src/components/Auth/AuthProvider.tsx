@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,7 +28,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -55,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     getInitialSession();
 
-    // Set up auth state listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -66,39 +63,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle session events with immediate redirect
         switch (event) {
           case 'SIGNED_IN':
             const providerUsed = session?.user?.app_metadata?.provider;
             let welcomeMessage = "Welcome to EduZambia!";
             
             if (providerUsed === 'google') {
-              welcomeMessage = "Welcome to EduZambia! Successfully signed in with Google.";
+              welcomeMessage = "Successfully signed in with Google!";
             } else if (providerUsed === 'facebook') {
-              welcomeMessage = "Welcome to EduZambia! Successfully signed in with Facebook.";
+              welcomeMessage = "Successfully signed in with Facebook!";
+            } else {
+              welcomeMessage = "Successfully signed in!";
             }
             
             toast({
               title: welcomeMessage,
-              description: "Redirecting to your personalized dashboard...",
+              description: "Redirecting to your dashboard...",
             });
             
-            // Immediate redirect without timeout
-            window.location.replace('/dashboard');
+            // Use setTimeout to ensure state updates are processed
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 1000);
             break;
+            
           case 'SIGNED_OUT':
             toast({
               title: "Signed out successfully",
               description: "Thank you for using EduZambia.",
             });
-            // Redirect to home page
-            window.location.replace('/');
-            break;
-          case 'USER_UPDATED':
-            toast({
-              title: "Profile Updated",
-              description: "Your profile has been updated successfully.",
-            });
+            window.location.href = '/';
             break;
         }
       }
@@ -135,12 +129,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           description: "Please check your email for a verification link to complete your registration.",
         });
       } else if (data.user && data.user.email_confirmed_at) {
-        // User is immediately confirmed
         toast({
           title: "Account Created Successfully!",
           description: "Welcome to EduZambia! Redirecting to dashboard...",
         });
-        window.location.replace('/dashboard');
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
       }
 
       return { error: null };
@@ -172,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // Success handling will be done by onAuthStateChange
+      // Success toast and redirect will be handled by onAuthStateChange
     } catch (error) {
       console.error('Sign in error:', error);
       toast({
@@ -190,10 +185,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
         }
       });
 
