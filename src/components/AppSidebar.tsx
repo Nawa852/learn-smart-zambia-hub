@@ -83,20 +83,6 @@ const navMain: NavItem[] = [
     url: "/study-materials",
     icon: FolderOpen,
     isActive: false,
-    items: [
-      {
-        title: "Repository",
-        url: "/study-materials",
-      },
-      {
-        title: "Upload Materials",
-        url: "/study-materials#upload",
-      },
-      {
-        title: "Popular Materials",
-        url: "/study-materials#popular",
-      },
-    ],
   },
   {
     title: "Courses & Tutorials",
@@ -181,7 +167,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isAdmin = false }) => {
   const navigation = isAdmin ? navAdmin : navMain;
 
   return (
-    <div className="flex flex-col w-64 bg-secondary border-r border-muted">
+    <div className="flex flex-col w-64 bg-secondary border-r border-muted min-h-screen">
       <div className="p-4">
         <h1 className="text-lg font-semibold">EduZambia</h1>
       </div>
@@ -191,7 +177,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isAdmin = false }) => {
             <Link
               to={item.url}
               className={cn(
-                "flex items-center space-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground",
+                "flex items-center space-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
                 {
                   "bg-accent text-accent-foreground": location.pathname === item.url,
                 }
@@ -200,19 +186,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isAdmin = false }) => {
               {item.icon && <item.icon className="w-4 h-4" />}
               <span>{item.title}</span>
             </Link>
-            {item.items && location.pathname === item.url && (
-              <div className="ml-4 space-y-1">
-                {item.items.map((subItem) => (
-                  <Link
-                    key={subItem.title}
-                    to={subItem.url}
-                    className="block p-2 rounded-md hover:bg-accent hover:text-accent-foreground"
-                  >
-                    {subItem.title}
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </nav>
