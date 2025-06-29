@@ -107,7 +107,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, fullName?: string, userType?: string, grade?: string) => {
     try {
       setLoading(true);
+      console.log('Starting signup process for:', email);
+      
       const redirectUrl = `${window.location.origin}/dashboard`;
+      console.log('Using redirect URL:', redirectUrl);
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -122,17 +125,68 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
 
+      console.log('Signup response:', { data, error });
+
       if (error) {
-        console.error('Signup error:', error);
+        console.error('Signup error details:', {
+          message: error.message,
+          status: error.status,
+          name: error.name
+        });
+        
+        // Handle specific database errors
+        if (error.message.includes('Database error saving new user')) {
+          console.error('Database trigger failed - this means the user was created in auth.users but profile creation failed');
+          
+          // The user might actually be created in auth but profile creation failed
+          // Let's try to sign them in to see if the auth user exists
+          try {
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+            
+            if (signInData.user && !signInError) {
+              console.log('User exists in auth, trying to create profile manually');
+              
+              // Try to create the profile manually
+              const { error: profileError } = await supabase
+                .from('profiles')
+                .insert({
+                  id: signInData.user.id,
+                  email: email,
+                  full_name: fullName || signInData.user.email?.split('@')[0] || 'User',
+                });
+              
+              if (profileError) {
+                console.error('Manual profile creation failed:', profileError);
+              } else {
+                console.log('Profile created manually, signup successful');
+                toast({
+                  title: "Account Created Successfully!",
+                  description: "Welcome to EduZambia!",
+                });
+                return { error: null };
+              }
+            }
+          } catch (recoveryError) {
+            console.error('Recovery attempt failed:', recoveryError);
+          }
+          
+          throw new Error('Account creation failed due to database configuration issues. Please contact support.');
+        }
+        
         throw error;
       }
 
       if (data.user && !data.user.email_confirmed_at) {
+        console.log('User created, email confirmation required');
         toast({
           title: "Account Created Successfully!",
           description: "Please check your email for a verification link to complete your registration.",
         });
       } else if (data.user && data.user.email_confirmed_at) {
+        console.log('User created and confirmed, redirecting');
         toast({
           title: "Account Created Successfully!",
           description: "Welcome to EduZambia! Redirecting to dashboard...",
