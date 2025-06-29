@@ -47,6 +47,8 @@ import CampusMapPage from '@/pages/CampusMapPage';
 import PeerFinderPage from '@/pages/PeerFinderPage';
 import EventsLearningPage from '@/pages/EventsLearningPage';
 import KnowledgeFeedPage from '@/pages/KnowledgeFeedPage';
+import APIFlowchartPage from '@/pages/APIFlowchartPage';
+import GroupCompetitionArenaPage from '@/pages/GroupCompetitionArenaPage';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -92,6 +94,19 @@ function App() {
             <Route path="/mentorship-coaching" element={
               <ProtectedRoute>
                 <MentorshipGoalCoaching />
+              </ProtectedRoute>
+            } />
+
+            {/* New API Integration Routes */}
+            <Route path="/api-flowchart" element={
+              <ProtectedRoute>
+                <APIFlowchartPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/group-competition-arena" element={
+              <ProtectedRoute>
+                <GroupCompetitionArenaPage />
               </ProtectedRoute>
             } />
             
