@@ -44,7 +44,7 @@ interface NavItem {
   items?: { title: string; url: string }[];
 }
 
-const navAdmin = [
+const navAdmin: NavItem[] = [
   {
     title: "Dashboard",
     url: "/admin",
@@ -65,7 +65,7 @@ const navAdmin = [
   },
 ];
 
-const navMain = [
+const navMain: NavItem[] = [
   {
     title: "Dashboard",
     url: "/dashboard",
