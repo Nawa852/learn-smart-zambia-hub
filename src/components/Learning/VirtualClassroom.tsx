@@ -10,7 +10,7 @@ import {
   VideoOff, 
   Mic, 
   MicOff, 
-  Screen, 
+  Monitor, 
   Users, 
   MessageSquare, 
   Hand, 
@@ -242,7 +242,7 @@ const VirtualClassroom = () => {
                 <div className="aspect-video bg-white border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
                   <div className="text-center text-gray-500">
                     <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Screen className="w-8 h-8" />
+                      <Monitor className="w-8 h-8" />
                     </div>
                     <p>Interactive Whiteboard</p>
                     <p className="text-sm">Draw, write, and collaborate in real-time</p>
@@ -302,7 +302,7 @@ const VirtualClassroom = () => {
                   onClick={() => setIsScreenSharing(!isScreenSharing)}
                   className="flex items-center gap-2"
                 >
-                  <Screen className="w-4 h-4" />
+                  <Monitor className="w-4 h-4" />
                   Share
                 </Button>
                 <Button
