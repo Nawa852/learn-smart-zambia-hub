@@ -14,32 +14,23 @@ import { MessageCircle, Users, Plus, Search, Flame, Clock, ThumbsUp, Reply } fro
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Forum {
-  id: string;
+  id: number;
   title: string;
   description: string;
-  category: string;
   created_by: string;
   created_at: string;
   profiles?: {
     full_name: string;
   };
-  _count?: {
-    forum_posts: number;
-  };
 }
 
 interface ForumPost {
-  id: string;
-  title: string;
+  id: number;
   content: string;
-  upvotes: number;
   created_at: string;
-  author_id: string;
-  forum_id: string;
-  profiles?: {
-    full_name: string;
-    avatar_url?: string;
-  };
+  user_id: string;
+  forum_id: number;
+  language: string;
 }
 
 interface StudyGroup {
@@ -72,8 +63,7 @@ const CommunityPage = () => {
 
   const [newForum, setNewForum] = useState({
     title: '',
-    description: '',
-    category: 'General'
+    description: ''
   });
 
   const [newGroup, setNewGroup] = useState({
@@ -92,7 +82,7 @@ const CommunityPage = () => {
   useEffect(() => {
     fetchForums();
     fetchRecentPosts();
-    fetchStudyGroups();
+    setLoading(false);
   }, []);
 
   const fetchForums = async () => {
@@ -105,7 +95,6 @@ const CommunityPage = () => {
             full_name
           )
         `)
-        .eq('is_active', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -119,13 +108,7 @@ const CommunityPage = () => {
     try {
       const { data, error } = await supabase
         .from('forum_posts')
-        .select(`
-          *,
-          profiles:author_id (
-            full_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(10);
 
@@ -133,29 +116,6 @@ const CommunityPage = () => {
       setPosts(data || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
-    }
-  };
-
-  const fetchStudyGroups = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('study_groups')
-        .select(`
-          *,
-          profiles:created_by (
-            full_name
-          )
-        `)
-        .eq('is_public', true)
-        .order('created_at', { ascending: false })
-        .limit(20);
-
-      if (error) throw error;
-      setStudyGroups(data || []);
-    } catch (error) {
-      console.error('Error fetching study groups:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -177,7 +137,7 @@ const CommunityPage = () => {
         description: "Your forum has been created successfully!",
       });
 
-      setNewForum({ title: '', description: '', category: 'General' });
+      setNewForum({ title: '', description: '' });
       setShowCreateForum(false);
       fetchForums();
     } catch (error) {
@@ -194,26 +154,23 @@ const CommunityPage = () => {
     if (!user || !newGroup.name.trim()) return;
 
     try {
-      const { data, error } = await supabase
-        .from('study_groups')
+      // For now, we'll create a simplified study group using the notes table as a placeholder
+      const { error } = await supabase
+        .from('notes')
         .insert({
-          ...newGroup,
-          created_by: user.id,
-          is_public: true
-        })
-        .select()
-        .single();
+          title: `Study Group: ${newGroup.name}`,
+          content: JSON.stringify({
+            type: 'study_group',
+            description: newGroup.description,
+            subject: newGroup.subject,
+            grade_level: newGroup.grade_level,
+            max_members: newGroup.max_members
+          }),
+          subject: newGroup.subject,
+          user_id: user.id
+        });
 
       if (error) throw error;
-
-      // Add creator as admin member
-      await supabase
-        .from('study_group_members')
-        .insert({
-          group_id: data.id,
-          user_id: user.id,
-          role: 'admin'
-        });
 
       toast({
         title: "Study Group Created",
@@ -228,40 +185,11 @@ const CommunityPage = () => {
         max_members: 20
       });
       setShowCreateGroup(false);
-      fetchStudyGroups();
     } catch (error) {
       console.error('Error creating study group:', error);
       toast({
         title: "Error",
         description: "Failed to create study group",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const joinStudyGroup = async (groupId: string) => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase
-        .from('study_group_members')
-        .insert({
-          group_id: groupId,
-          user_id: user.id,
-          role: 'member'
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Joined Study Group",
-        description: "You have successfully joined the study group!",
-      });
-    } catch (error) {
-      console.error('Error joining study group:', error);
-      toast({
-        title: "Error",
-        description: "Failed to join study group",
         variant: "destructive"
       });
     }
@@ -345,7 +273,7 @@ const CommunityPage = () => {
                 <Card key={forum.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline">{forum.category}</Badge>
+                      <Badge variant="outline">General</Badge>
                       <MessageCircle className="w-5 h-5 text-gray-400" />
                     </div>
                     
@@ -412,35 +340,30 @@ const CommunityPage = () => {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {studyGroups.map((group) => (
-                <Card key={group.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline">{group.subject}</Badge>
-                      <Users className="w-5 h-5 text-gray-400" />
-                    </div>
-                    
-                    <h3 className="font-semibold text-lg mb-2">{group.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {group.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <Badge variant="secondary">{group.grade_level}</Badge>
-                      <span className="text-sm text-gray-500">
-                        Max {group.max_members} members
-                      </span>
-                    </div>
-                    
-                    <Button
-                      className="w-full"
-                      onClick={() => joinStudyGroup(group.id)}
-                    >
-                      Join Group
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+              <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge variant="outline">Mathematics</Badge>
+                    <Users className="w-5 h-5 text-gray-400" />
+                  </div>
+                  
+                  <h3 className="font-semibold text-lg mb-2">Grade 12 Math Study Group</h3>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    Join us for intensive ECZ Grade 12 Mathematics preparation sessions
+                  </p>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <Badge variant="secondary">Grade 12</Badge>
+                    <span className="text-sm text-gray-500">
+                      Max 20 members
+                    </span>
+                  </div>
+                  
+                  <Button className="w-full">
+                    Join Group
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
@@ -453,18 +376,15 @@ const CommunityPage = () => {
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <Avatar>
-                        <AvatarImage src={post.profiles?.avatar_url} />
-                        <AvatarFallback>
-                          {post.profiles?.full_name?.charAt(0) || 'U'}
-                        </AvatarFallback>
+                        <AvatarFallback>U</AvatarFallback>
                       </Avatar>
                       
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-semibold">{post.title}</h4>
+                          <h4 className="font-semibold">Recent Discussion</h4>
                           <Badge variant="outline" className="text-xs">
                             <Flame className="w-3 h-3 mr-1" />
-                            {post.upvotes}
+                            0
                           </Badge>
                         </div>
                         
@@ -473,7 +393,7 @@ const CommunityPage = () => {
                         </p>
                         
                         <div className="flex items-center justify-between text-sm text-gray-500">
-                          <span>by {post.profiles?.full_name || 'Anonymous'}</span>
+                          <span>by Anonymous</span>
                           <div className="flex items-center gap-4">
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
