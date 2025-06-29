@@ -13,7 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const { query, language, userId } = await req.json();
+    const { query, language = 'English', userId } = await req.json();
+    
+    console.log('Search request:', { query, language, userId });
     
     // Initialize Supabase client
     const supabaseClient = createClient(
@@ -26,42 +28,48 @@ serve(async (req) => {
       }
     );
 
-    // If searching in a local language, translate using Qwen
     let translatedQuery = query;
-    const qwenApiKey = Deno.env.get('QWEN_API_KEY');
-    
-    if (language !== 'English' && qwenApiKey) {
-      try {
-        const translateResponse = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${qwenApiKey}`
-          },
-          body: JSON.stringify({
-            model: 'qwen-turbo',
-            input: {
-              messages: [{
-                role: 'user',
-                content: `Translate this search query from ${language} to English for educational material search: "${query}". Only return the English translation.`
-              }]
-            }
-          })
-        });
+    let expandedTerms = [query];
+    let recommendations = [];
 
-        if (translateResponse.ok) {
-          const translateResult = await translateResponse.json();
-          translatedQuery = translateResult.output.text.trim();
+    // Try to translate non-English queries using available APIs
+    if (language !== 'English') {
+      // Try Qwen for translation
+      const qwenApiKey = Deno.env.get('QWEN_API_KEY');
+      if (qwenApiKey) {
+        try {
+          const translateResponse = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${qwenApiKey}`
+            },
+            body: JSON.stringify({
+              model: 'qwen-turbo',
+              input: {
+                messages: [{
+                  role: 'user',
+                  content: `Translate this Zambian ${language} educational search query to English: "${query}". Return only the English translation.`
+                }]
+              }
+            })
+          });
+
+          if (translateResponse.ok) {
+            const translateResult = await translateResponse.json();
+            if (translateResult.output && translateResult.output.text) {
+              translatedQuery = translateResult.output.text.trim();
+              console.log('Translated query:', translatedQuery);
+            }
+          }
+        } catch (error) {
+          console.error('Qwen translation error:', error);
         }
-      } catch (error) {
-        console.error('Translation error:', error);
       }
     }
 
-    // Enhanced search with AI-powered query expansion
-    const openaiApiKey = Deno.env.get('PENAI_API_KEY') || Deno.env.get('OPENAI_API_KEY');
-    let expandedTerms = [translatedQuery];
-
+    // Try to expand search terms using OpenAI
+    const openaiApiKey = Deno.env.get('PENAI_API_KEY');
     if (openaiApiKey) {
       try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -74,86 +82,128 @@ serve(async (req) => {
             model: 'gpt-4o',
             messages: [{
               role: 'user',
-              content: `For the educational search query "${translatedQuery}", suggest related terms and synonyms that might be found in study materials. Focus on academic subjects for Zambian ECZ and Cambridge curricula. Return as a JSON array of strings.`
+              content: `For the educational search query "${translatedQuery}", suggest 3-5 related terms and synonyms for Zambian ECZ and Cambridge curricula. Return as JSON array of strings only.`
             }],
-            max_tokens: 200
+            max_tokens: 200,
+            temperature: 0.3
           })
         });
 
         if (response.ok) {
           const aiResult = await response.json();
-          const suggestions = JSON.parse(aiResult.choices[0].message.content);
-          expandedTerms = [...expandedTerms, ...suggestions];
+          try {
+            const suggestions = JSON.parse(aiResult.choices[0].message.content);
+            if (Array.isArray(suggestions)) {
+              expandedTerms = [translatedQuery, ...suggestions];
+            }
+          } catch {
+            console.log('Failed to parse AI suggestions, using original query');
+          }
         }
       } catch (error) {
-        console.error('Query expansion error:', error);
+        console.error('OpenAI query expansion error:', error);
       }
     }
 
     // Search materials using expanded terms
-    const searchConditions = expandedTerms.map(term => 
-      `file_name.ilike.%${term}%,subject.ilike.%${term}%,metadata->>'topic'.ilike.%${term}%`
-    ).join(',');
-
-    const { data: materials, error } = await supabaseClient
+    const searchTerms = expandedTerms.map(term => term.toLowerCase()).slice(0, 10); // Limit to prevent too complex queries
+    
+    let query_builder = supabaseClient
       .from('study_materials')
       .select('*')
-      .or(searchConditions)
-      .eq('language', language)
+      .eq('language', language);
+
+    // Build OR conditions for different fields
+    const conditions = searchTerms.flatMap(term => [
+      `file_name.ilike.%${term}%`,
+      `subject.ilike.%${term}%`,
+      `metadata->>'topic'.ilike.%${term}%`
+    ]);
+
+    if (conditions.length > 0) {
+      query_builder = query_builder.or(conditions.join(','));
+    }
+
+    const { data: materials, error } = await query_builder
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Search error:', error);
+      throw error;
+    }
 
-    // Use DeepSeek for recommendations based on search history
-    const deepseekApiKey = Deno.env.get('DEEPSEEK_API_KEY');
-    let recommendations = [];
+    console.log(`Found ${materials?.length || 0} materials`);
 
-    if (deepseekApiKey && userId && materials.length > 0) {
-      try {
-        // Get user's recent searches
-        const { data: recentSearches } = await supabaseClient
-          .from('material_access_logs')
-          .select('material_id, study_materials(*)')
-          .eq('user_id', userId)
-          .eq('action', 'download')
-          .order('created_at', { ascending: false })
-          .limit(5);
+    // Try to get recommendations using DeepSeek
+    if (userId) {
+      const deepseekApiKey = Deno.env.get('DEEPSEEK_API_KEY');
+      if (deepseekApiKey && materials && materials.length > 0) {
+        try {
+          // Get user's recent materials
+          const { data: recentAccess } = await supabaseClient
+            .from('material_access_logs')
+            .select(`
+              material_id,
+              study_materials (
+                subject,
+                grade,
+                curriculum
+              )
+            `)
+            .eq('user_id', userId)
+            .eq('action', 'download')
+            .order('created_at', { ascending: false })
+            .limit(5);
 
-        if (recentSearches && recentSearches.length > 0) {
-          const userInterests = recentSearches.map(log => log.study_materials?.subject).filter(Boolean);
-          
-          const recResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${deepseekApiKey}`
-            },
-            body: JSON.stringify({
-              model: 'deepseek-chat',
-              messages: [{
-                role: 'user',
-                content: `Based on a user's interest in subjects: ${userInterests.join(', ')}, and their current search for "${query}", suggest 3 related educational topics they might be interested in. Return as JSON array of strings.`
-              }]
-            })
-          });
+          if (recentAccess && recentAccess.length > 0) {
+            const userInterests = recentAccess
+              .map(log => log.study_materials?.subject)
+              .filter(Boolean)
+              .slice(0, 3);
+            
+            const recResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${deepseekApiKey}`
+              },
+              body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{
+                  role: 'user',
+                  content: `User interested in: ${userInterests.join(', ')}. Current search: "${query}". Suggest 3 related Zambian educational topics. Return JSON array of strings.`
+                }],
+                max_tokens: 150
+              })
+            });
 
-          if (recResponse.ok) {
-            const recResult = await recResponse.json();
-            recommendations = JSON.parse(recResult.choices[0].message.content);
+            if (recResponse.ok) {
+              const recResult = await recResponse.json();
+              try {
+                recommendations = JSON.parse(recResult.choices[0].message.content);
+              } catch {
+                console.log('Failed to parse recommendations');
+              }
+            }
           }
+        } catch (error) {
+          console.error('DeepSeek recommendation error:', error);
         }
-      } catch (error) {
-        console.error('Recommendation error:', error);
       }
     }
 
     return new Response(
       JSON.stringify({ 
-        materials,
+        materials: materials || [],
         recommendations,
         translatedQuery: translatedQuery !== query ? translatedQuery : null,
-        expandedTerms: expandedTerms.length > 1 ? expandedTerms.slice(1) : []
+        expandedTerms: expandedTerms.length > 1 ? expandedTerms.slice(1) : [],
+        searchMetadata: {
+          originalQuery: query,
+          language,
+          resultsCount: materials?.length || 0
+        }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -161,7 +211,11 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in AI material search:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        materials: [],
+        recommendations: []
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

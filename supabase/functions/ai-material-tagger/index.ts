@@ -21,17 +21,10 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    // Get file content for analysis
-    const { data: fileData } = await supabaseClient.storage
-      .from('study-materials')
-      .download(filePath);
+    console.log('Processing material:', { materialId, filePath, fileName });
 
-    if (!fileData) {
-      throw new Error('Could not download file for analysis');
-    }
-
-    // Extract metadata using OpenAI GPT-4o
-    const openaiApiKey = Deno.env.get('PENAI_API_KEY') || Deno.env.get('OPENAI_API_KEY');
+    // Try OpenAI GPT-4o for metadata extraction
+    const openaiApiKey = Deno.env.get('PENAI_API_KEY');
     if (openaiApiKey) {
       try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -44,25 +37,32 @@ serve(async (req) => {
             model: 'gpt-4o',
             messages: [{
               role: 'user',
-              content: `Analyze this file name "${fileName}" and extract educational metadata. Identify:
-              1. Subject (Mathematics, English, Science, Biology, Chemistry, Physics, History, Geography, etc.)
+              content: `Analyze this Zambian educational file name "${fileName}" and extract metadata. Identify:
+              1. Subject (Mathematics, English, Science, Biology, Chemistry, Physics, History, Geography, Bemba, Nyanja, etc.)
               2. Grade level (1-12)
               3. Curriculum type (ECZ or Cambridge)
               4. Topic/chapter if identifiable
               5. Document type (notes, assignment, exam, worksheet)
               
-              Respond with JSON format: {"subject": "", "grade": number, "curriculum": "", "topic": "", "documentType": ""}`
+              Consider Zambian educational context. Respond with JSON: {"subject": "", "grade": number, "curriculum": "", "topic": "", "documentType": ""}`
             }],
-            max_tokens: 300
+            max_tokens: 300,
+            temperature: 0.3
           })
         });
 
         if (response.ok) {
           const aiResult = await response.json();
-          const metadata = JSON.parse(aiResult.choices[0].message.content);
+          let metadata;
+          try {
+            metadata = JSON.parse(aiResult.choices[0].message.content);
+          } catch {
+            // Fallback if JSON parsing fails
+            metadata = extractFallbackMetadata(fileName);
+          }
 
           // Update material with AI-extracted metadata
-          await supabaseClient
+          const { error: updateError } = await supabaseClient
             .from('study_materials')
             .update({
               subject: metadata.subject || null,
@@ -70,10 +70,15 @@ serve(async (req) => {
               curriculum: metadata.curriculum || 'ECZ',
               metadata: {
                 aiAnalysis: metadata,
-                analyzedAt: new Date().toISOString()
+                analyzedAt: new Date().toISOString(),
+                confidence: 'high'
               }
             })
             .eq('id', materialId);
+
+          if (updateError) {
+            console.error('Error updating material:', updateError);
+          }
 
           return new Response(
             JSON.stringify({ 
@@ -90,14 +95,9 @@ serve(async (req) => {
     }
 
     // Fallback: Simple filename-based analysis
-    const fallbackMetadata = {
-      subject: extractSubjectFromFilename(fileName),
-      grade: extractGradeFromFilename(fileName),
-      curriculum: fileName.toLowerCase().includes('cambridge') ? 'Cambridge' : 'ECZ',
-      documentType: extractDocumentType(fileName)
-    };
+    const fallbackMetadata = extractFallbackMetadata(fileName);
 
-    await supabaseClient
+    const { error: updateError } = await supabaseClient
       .from('study_materials')
       .update({
         subject: fallbackMetadata.subject,
@@ -105,10 +105,15 @@ serve(async (req) => {
         curriculum: fallbackMetadata.curriculum,
         metadata: {
           fallbackAnalysis: fallbackMetadata,
-          analyzedAt: new Date().toISOString()
+          analyzedAt: new Date().toISOString(),
+          confidence: 'low'
         }
       })
       .eq('id', materialId);
+
+    if (updateError) {
+      console.error('Error updating material with fallback:', updateError);
+    }
 
     return new Response(
       JSON.stringify({ 
@@ -128,35 +133,46 @@ serve(async (req) => {
   }
 });
 
-function extractSubjectFromFilename(filename: string): string | null {
+function extractFallbackMetadata(filename: string) {
   const subjects = [
     'mathematics', 'math', 'english', 'science', 'biology', 'chemistry', 
     'physics', 'history', 'geography', 'civic', 'religious', 'computer',
-    'business', 'bemba', 'nyanja', 'tonga'
+    'business', 'bemba', 'nyanja', 'tonga', 'lozi'
   ];
   
   const lowerFilename = filename.toLowerCase();
-  for (const subject of subjects) {
-    if (lowerFilename.includes(subject)) {
-      return subject.charAt(0).toUpperCase() + subject.slice(1);
+  
+  // Extract subject
+  let subject = null;
+  for (const subj of subjects) {
+    if (lowerFilename.includes(subj)) {
+      subject = subj.charAt(0).toUpperCase() + subj.slice(1);
+      break;
     }
   }
-  return null;
-}
-
-function extractGradeFromFilename(filename: string): number | null {
+  
+  // Extract grade
+  let grade = null;
   const gradeMatch = filename.match(/grade\s*(\d+)|g(\d+)|(\d+)(?:st|nd|rd|th)?\s*grade/i);
   if (gradeMatch) {
-    return parseInt(gradeMatch[1] || gradeMatch[2] || gradeMatch[3]);
+    grade = parseInt(gradeMatch[1] || gradeMatch[2] || gradeMatch[3]);
   }
-  return null;
-}
-
-function extractDocumentType(filename: string): string {
-  const lowerFilename = filename.toLowerCase();
-  if (lowerFilename.includes('exam') || lowerFilename.includes('test')) return 'exam';
-  if (lowerFilename.includes('assignment') || lowerFilename.includes('homework')) return 'assignment';
-  if (lowerFilename.includes('notes') || lowerFilename.includes('note')) return 'notes';
-  if (lowerFilename.includes('worksheet') || lowerFilename.includes('exercise')) return 'worksheet';
-  return 'document';
+  
+  // Extract curriculum
+  const curriculum = lowerFilename.includes('cambridge') ? 'Cambridge' : 'ECZ';
+  
+  // Extract document type
+  let documentType = 'document';
+  if (lowerFilename.includes('exam') || lowerFilename.includes('test')) documentType = 'exam';
+  else if (lowerFilename.includes('assignment') || lowerFilename.includes('homework')) documentType = 'assignment';
+  else if (lowerFilename.includes('notes') || lowerFilename.includes('note')) documentType = 'notes';
+  else if (lowerFilename.includes('worksheet') || lowerFilename.includes('exercise')) documentType = 'worksheet';
+  
+  return {
+    subject,
+    grade,
+    curriculum,
+    documentType,
+    topic: null
+  };
 }

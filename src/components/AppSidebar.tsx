@@ -1,9 +1,10 @@
+
 import React from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
-  Dashboard,
+  Home,
   Book,
   Calendar,
   Settings,
@@ -25,7 +26,7 @@ const navAdmin = [
   {
     title: "Dashboard",
     url: "/admin",
-    icon: Dashboard,
+    icon: Home,
     isActive: false,
   },
   {
@@ -46,7 +47,7 @@ const navMain = [
   {
     title: "Dashboard",
     url: "/dashboard",
-    icon: Dashboard,
+    icon: Home,
     isActive: false,
   },
   {
@@ -106,7 +107,7 @@ interface AppSidebarProps {
 }
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ isAdmin = false }) => {
-  const pathname = usePathname();
+  const location = useLocation();
   const navigation = isAdmin ? navAdmin : navMain;
 
   return (
@@ -118,23 +119,23 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isAdmin = false }) => {
         {navigation.map((item) => (
           <div key={item.title}>
             <Link
-              href={item.url}
+              to={item.url}
               className={cn(
                 "flex items-center space-x-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground",
                 {
-                  "bg-accent text-accent-foreground": pathname === item.url,
+                  "bg-accent text-accent-foreground": location.pathname === item.url,
                 }
               )}
             >
               {item.icon && <item.icon className="w-4 h-4" />}
               <span>{item.title}</span>
             </Link>
-            {item.items && pathname === item.url && (
+            {item.items && location.pathname === item.url && (
               <div className="ml-4 space-y-1">
                 {item.items.map((subItem) => (
                   <Link
                     key={subItem.title}
-                    href={subItem.url}
+                    to={subItem.url}
                     className="block p-2 rounded-md hover:bg-accent hover:text-accent-foreground"
                   >
                     {subItem.title}
