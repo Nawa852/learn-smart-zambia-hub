@@ -53,6 +53,7 @@ import NotFound from '@/pages/NotFound';
 import ComprehensiveAIStudyPage from '@/pages/ComprehensiveAIStudyPage';
 import InteractiveLessons from '@/components/Learning/InteractiveLessons';
 import VirtualClassroom from '@/components/Learning/VirtualClassroom';
+import EnhancedAITutorPage from '@/pages/EnhancedAITutorPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +70,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Index />} />
             <Route path="/enhanced-home" element={<EnhancedIndex />} />
             <Route path="/login" element={<LoginPage />} />
@@ -77,7 +79,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVerse />} />
             
-            {/* Dashboard Routes */}
+            {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <SidebarProvider>
@@ -95,6 +97,13 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* Enhanced AI Features */}
+            <Route path="/enhanced-ai-tutor" element={
+              <ProtectedRoute>
+                <EnhancedAITutorPage />
+              </ProtectedRoute>
+            } />
+
             <Route path="/enhanced-social" element={
               <ProtectedRoute>
                 <EnhancedSocialFeed />
@@ -107,7 +116,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* New API Integration Routes */}
+            {/* API Integration Routes */}
             <Route path="/api-flowchart" element={
               <ProtectedRoute>
                 <APIFlowchartPage />
@@ -287,7 +296,7 @@ function App() {
               </ProtectedRoute>
             } />
             
-            {/* New comprehensive AI features */}
+            {/* Comprehensive AI features */}
             <Route path="/comprehensive-ai-study" element={
               <ProtectedRoute>
                 <ComprehensiveAIStudyPage />
@@ -306,6 +315,7 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />

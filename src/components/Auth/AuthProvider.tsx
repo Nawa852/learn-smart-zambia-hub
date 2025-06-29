@@ -3,7 +3,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -67,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle session events
+        // Handle session events with immediate redirect
         switch (event) {
           case 'SIGNED_IN':
             const providerUsed = session?.user?.app_metadata?.provider;
@@ -81,23 +80,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             
             toast({
               title: welcomeMessage,
-              description: "You have successfully signed in to your learning platform.",
+              description: "Redirecting to your personalized dashboard...",
             });
             
-            // Redirect to dashboard after successful sign in
-            setTimeout(() => {
-              window.location.href = '/dashboard';
-            }, 1000);
+            // Immediate redirect without timeout
+            window.location.replace('/dashboard');
             break;
           case 'SIGNED_OUT':
             toast({
-              title: "Signed out",
-              description: "You have been signed out successfully.",
+              title: "Signed out successfully",
+              description: "Thank you for using EduZambia.",
             });
-            // Redirect to home page after sign out
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 500);
+            // Redirect to home page
+            window.location.replace('/');
             break;
           case 'USER_UPDATED':
             toast({
@@ -140,14 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           description: "Please check your email for a verification link to complete your registration.",
         });
       } else if (data.user && data.user.email_confirmed_at) {
-        // User is immediately confirmed (like in development)
+        // User is immediately confirmed
         toast({
           title: "Account Created Successfully!",
           description: "Welcome to EduZambia! Redirecting to dashboard...",
         });
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 1000);
+        window.location.replace('/dashboard');
       }
 
       return { error: null };
@@ -179,7 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // Success toast and redirect will be handled by onAuthStateChange
+      // Success handling will be done by onAuthStateChange
     } catch (error) {
       console.error('Sign in error:', error);
       toast({
