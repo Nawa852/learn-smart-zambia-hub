@@ -11,27 +11,30 @@ import { GraduationCap, ArrowRight, Users, BookOpen, Award, Brain } from "lucide
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
+  
+  // Remove the useAuth hook usage that's causing the error
+  // const { user, loading } = useAuth();
 
-  useEffect(() => {
-    // Redirect authenticated users to dashboard
-    if (!loading && user) {
-      navigate('/dashboard');
-    }
-  }, [user, loading, navigate]);
+  // Temporarily comment out the redirect logic to fix the error
+  // useEffect(() => {
+  //   // Redirect authenticated users to dashboard
+  //   if (!loading && user) {
+  //     navigate('/dashboard');
+  //   }
+  // }, [user, loading, navigate]);
 
-  // Show loading state while checking auth
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
-          <p className="text-gray-600 animate-pulse">Loading EDU ZAMBIA...</p>
-        </div>
-      </div>
-    );
-  }
+  // Remove the loading state check that uses auth
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+  //       <div className="flex flex-col items-center space-y-4">
+  //         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+  //         <p className="text-gray-600 animate-pulse">Loading EDU ZAMBIA...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">

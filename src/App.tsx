@@ -1,7 +1,9 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider, useAuth } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+import AuthRedirect from '@/components/Auth/AuthRedirect';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { User, Bell, Search } from "lucide-react";
@@ -115,7 +117,11 @@ function AppContent() {
             <main className={`flex-1 ${user ? 'p-6 md:p-8 bg-gradient-to-br from-blue-50/30 via-white/50 to-purple-50/30' : ''}`}>
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={
+                  <AuthRedirect>
+                    <Index />
+                  </AuthRedirect>
+                } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/about" element={<About />} />
