@@ -1,10 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from '@/components/Auth/AuthProvider';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider, useAuth } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
-import { User, Bell, Search } from "lucide-react";
 
 // Pages
 import Index from '@/pages/Index';
@@ -15,301 +14,497 @@ import Courses from '@/pages/Courses';
 import Profile from '@/pages/Profile';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
-import AcknowledgmentPage from '@/pages/AcknowledgmentPage';
-import AIStudyHelper from '@/pages/AIStudyHelper';
-import AITutorPage from '@/pages/AITutorPage';
-import LearningAnalytics from '@/pages/LearningAnalytics';
+import LearningAnalyticsPage from '@/pages/LearningAnalytics';
 import Achievements from '@/pages/Achievements';
-import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
-import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
-import LiveLearningPage from '@/pages/LiveLearningPage';
-import VideoLearningPage from '@/pages/VideoLearningPage';
-import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
-import AIContentGeneratorPage from '@/pages/AIContentGeneratorPage';
-import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
-// New pages
-import AILearningLab from '@/pages/AILearningLab';
-import KnowledgeTree from '@/pages/KnowledgeTree';
-import GameifyVault from '@/pages/GameifyVault';
-
-// AI Features Pages
-import AILearningPathPage from '@/pages/AILearningPathPage';
-import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
-import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
-import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
+// AI Features
 import AIFlashcardPage from '@/pages/AIFlashcardPage';
+import MultiAITutorPage from '@/pages/MultiAITutorPage';
+import AIStudyHelper from '@/pages/AIStudyHelper';
+import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
 import SemanticSearchPage from '@/pages/SemanticSearchPage';
 import EmotionDetectionPage from '@/pages/EmotionDetectionPage';
 import MultilingualTranslatorPage from '@/pages/MultilingualTranslatorPage';
-import RealTimeSummarizerPage from '@/pages/RealTimeSummarizerPage';
 import VisualMindMapPage from '@/pages/VisualMindMapPage';
 import TeachBackPage from '@/pages/TeachBackPage';
+import GameifyVault from '@/pages/GameifyVault';
+import AILearningPathPage from '@/pages/AILearningPathPage';
+import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
+import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
 
-// Social Pages
+// Social Features
 import SocialFeedPage from '@/pages/SocialFeedPage';
-import AcademicProfilePage from '@/pages/AcademicProfilePage';
 import StudyGroupsPage from '@/pages/StudyGroupsPage';
 import MessengerPage from '@/pages/MessengerPage';
-import KnowledgeFeedPage from '@/pages/KnowledgeFeedPage';
 import CampusMapPage from '@/pages/CampusMapPage';
 import PeerFinderPage from '@/pages/PeerFinderPage';
 import MentorshipHubPage from '@/pages/MentorshipHubPage';
 import EventsLearningPage from '@/pages/EventsLearningPage';
+import KnowledgeFeedPage from '@/pages/KnowledgeFeedPage';
 
-// Error Pages
-import NotFound from '@/pages/NotFound';
+// Study Materials
+import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
 
-// Component that uses auth
-function AppContent() {
-  const { user } = useAuth();
-
-  return (
-    <Router>
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
-          {user && <AppSidebar />}
-          <div className="flex-1 flex flex-col min-h-screen">
-            {/* Enhanced TopBar */}
-            {user && (
-              <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
-                <div className="flex items-center justify-between px-6 py-4">
-                  <div className="flex items-center gap-4">
-                    <SidebarTrigger className="hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200" />
-                    <div className="flex flex-col">
-                      <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        Welcome{user ? `, ${user.user_metadata?.full_name || user.email?.split('@')[0]}` : ""}
-                      </span>
-                      <span className="text-xs text-gray-500">Ready to learn something new?</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                      <Search className="w-5 h-5 text-gray-600" />
-                    </button>
-                    <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 relative">
-                      <Bell className="w-5 h-5 text-gray-600" />
-                      <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-400/50 bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center shadow-md">
-                        {user.user_metadata?.avatar_url ? (
-                          <img src={user.user_metadata?.avatar_url} alt="avatar" className="object-cover w-10 h-10" />
-                        ) : (
-                          <User className="w-6 h-6 text-white" />
-                        )}
-                      </div>
-                      <div className="hidden md:flex flex-col">
-                        <span className="text-sm font-medium text-gray-900">
-                          {user.user_metadata?.full_name || user.email?.split('@')[0]}
-                        </span>
-                        <span className="text-xs text-gray-500">Student</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </header>
-            )}
-            
-            <main className={`flex-1 ${user ? 'p-6 md:p-8 bg-gradient-to-br from-blue-50/30 via-white/50 to-purple-50/30' : ''}`}>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/acknowledgments" element={<AcknowledgmentPage />} />
-
-                {/* Protected Routes */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/courses" element={
-                  <ProtectedRoute>
-                    <Courses />
-                  </ProtectedRoute>
-                } />
-                <Route path="/profile" element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } />
-
-                {/* New Feature Routes */}
-                <Route path="/ai-learning-lab" element={
-                  <ProtectedRoute>
-                    <AILearningLab />
-                  </ProtectedRoute>
-                } />
-                <Route path="/knowledge-tree" element={
-                  <ProtectedRoute>
-                    <KnowledgeTree />
-                  </ProtectedRoute>
-                } />
-                <Route path="/gameify-vault" element={
-                  <ProtectedRoute>
-                    <GameifyVault />
-                  </ProtectedRoute>
-                } />
-
-                {/* AI & Learning Routes */}
-                <Route path="/ai-study-helper" element={
-                  <ProtectedRoute>
-                    <AIStudyHelper />
-                  </ProtectedRoute>
-                } />
-                <Route path="/multi-ai-tutor" element={
-                  <ProtectedRoute>
-                    <MultiAITutorPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/ai-tutor" element={
-                  <ProtectedRoute>
-                    <AITutorPage />
-                  </ProtectedRoute>
-                } />
-
-                {/* AI Features Routes */}
-                <Route path="/ai-learning-paths" element={
-                  <ProtectedRoute>
-                    <AILearningPathPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/adaptive-difficulty" element={
-                  <ProtectedRoute>
-                    <AdaptiveDifficultyPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/claude-journaling" element={
-                  <ProtectedRoute>
-                    <ClaudeJournalingPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/daily-goal-coach" element={
-                  <ProtectedRoute>
-                    <DailyGoalCoachPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/ai-flashcards" element={
-                  <ProtectedRoute>
-                    <AIFlashcardPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/semantic-search" element={
-                  <ProtectedRoute>
-                    <SemanticSearchPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/emotion-detection" element={
-                  <ProtectedRoute>
-                    <EmotionDetectionPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/multilingual-translator" element={
-                  <ProtectedRoute>
-                    <MultilingualTranslatorPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/real-time-summarizer" element={
-                  <ProtectedRoute>
-                    <RealTimeSummarizerPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/visual-mind-map" element={
-                  <ProtectedRoute>
-                    <VisualMindMapPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/teach-back-assessment" element={
-                  <ProtectedRoute>
-                    <TeachBackPage />
-                  </ProtectedRoute>
-                } />
-
-                {/* Social Learning Routes */}
-                <Route path="/social-feed" element={
-                  <ProtectedRoute>
-                    <SocialFeedPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/academic-profile" element={
-                  <ProtectedRoute>
-                    <AcademicProfilePage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/study-groups" element={
-                  <ProtectedRoute>
-                    <StudyGroupsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/messenger" element={
-                  <ProtectedRoute>
-                    <MessengerPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/knowledge-feed" element={
-                  <ProtectedRoute>
-                    <KnowledgeFeedPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/campus-map" element={
-                  <ProtectedRoute>
-                    <CampusMapPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/peer-finder" element={
-                  <ProtectedRoute>
-                    <PeerFinderPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/mentorship-hub" element={
-                  <ProtectedRoute>
-                    <MentorshipHubPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/events-learning" element={
-                  <ProtectedRoute>
-                    <EventsLearningPage />
-                  </ProtectedRoute>
-                } />
-
-                {/* Analytics & Progress Routes */}
-                <Route path="/learning-analytics" element={
-                  <ProtectedRoute>
-                    <LearningAnalytics />
-                  </ProtectedRoute>
-                } />
-                <Route path="/achievements" element={
-                  <ProtectedRoute>
-                    <Achievements />
-                  </ProtectedRoute>
-                } />
-                <Route path="/smart-recommendations" element={
-                  <ProtectedRoute>
-                    <SmartRecommendationsPage />
-                  </ProtectedRoute>
-                } />
-
-                {/* 404 Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-          </div>
-        </div>
-        <Toaster />
-      </SidebarProvider>
-    </Router>
-  );
-}
+// Layout Components
+import Header from '@/components/Header';
+import { AppSidebar } from '@/components/AppSidebar';
 
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            
+            {/* Protected Routes with Sidebar */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <Dashboard />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/courses" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <Courses />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <Profile />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/learning-analytics" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <LearningAnalyticsPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/achievements" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <Achievements />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            {/* AI Features */}
+            <Route path="/ai-flashcards" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <AIFlashcardPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/multi-ai-tutor" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <MultiAITutorPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-helper" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <AIStudyHelper />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/smart-recommendations" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <SmartRecommendationsPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            {/* Study Materials */}
+            <Route path="/study-materials" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <StudyMaterialRepository />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            {/* Additional AI Features - all wrapped with the same layout pattern */}
+            <Route path="/semantic-search" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <SemanticSearchPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/emotion-detection" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <EmotionDetectionPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/multilingual-translator" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <MultilingualTranslatorPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/visual-mind-map" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <VisualMindMapPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/teach-back-assessment" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <TeachBackPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/gameify-vault" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <GameifyVault />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-learning-paths" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <AILearningPathPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/daily-goal-coach" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <DailyGoalCoachPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/claude-journaling" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <ClaudeJournalingPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            {/* Social Features */}
+            <Route path="/social-feed" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <SocialFeedPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/study-groups" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <StudyGroupsPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/messenger" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <MessengerPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/campus-map" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <CampusMapPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/peer-finder" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <PeerFinderPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/mentorship-hub" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <MentorshipHubPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/events-learning" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <EventsLearningPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/knowledge-feed" element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div className="flex min-h-screen">
+                    <AppSidebar />
+                    <div className="flex-1">
+                      <Header />
+                      <main className="flex-1">
+                        <KnowledgeFeedPage />
+                      </main>
+                    </div>
+                  </div>
+                </SidebarProvider>
+              </ProtectedRoute>
+            } />
+
+            {/* Catch all route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Toaster />
+        </div>
+      </Router>
     </AuthProvider>
   );
 }

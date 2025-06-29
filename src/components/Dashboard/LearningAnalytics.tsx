@@ -1,201 +1,271 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { BarChart3, TrendingUp, Clock, Target, Award, Brain } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { Clock, BookOpen, Award, TrendingUp, Target, Brain } from 'lucide-react';
+
+interface LearningData {
+  id: string;
+  activity_type: string;
+  content_id: string | null;
+  duration_minutes: number | null;
+  performance_score: number | null;
+  created_at: string;
+}
 
 const LearningAnalytics = () => {
-  // Mock data for analytics
+  const [analyticsData, setAnalyticsData] = useState<LearningData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, []);
+
+  const fetchAnalyticsData = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('learning_analytics')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+      setAnalyticsData(data || []);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch learning analytics",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Mock data for demonstration since we need actual learning data
   const weeklyProgress = [
-    { day: 'Mon', hours: 2.5, completed: 3 },
-    { day: 'Tue', hours: 1.8, completed: 2 },
-    { day: 'Wed', hours: 3.2, completed: 4 },
-    { day: 'Thu', hours: 2.1, completed: 2 },
-    { day: 'Fri', hours: 4.0, completed: 5 },
-    { day: 'Sat', hours: 3.5, completed: 4 },
-    { day: 'Sun', hours: 2.8, completed: 3 },
+    { day: 'Mon', hours: 2.5, performance: 85 },
+    { day: 'Tue', hours: 3.2, performance: 78 },
+    { day: 'Wed', hours: 1.8, performance: 92 },
+    { day: 'Thu', hours: 4.1, performance: 88 },
+    { day: 'Fri', hours: 2.9, performance: 95 },
+    { day: 'Sat', hours: 3.5, performance: 82 },
+    { day: 'Sun', hours: 2.2, performance: 90 },
   ];
 
-  const subjectProgress = [
-    { subject: 'Mathematics', progress: 85, color: '#3B82F6' },
-    { subject: 'Science', progress: 72, color: '#10B981' },
-    { subject: 'Technology', progress: 94, color: '#8B5CF6' },
-    { subject: 'Languages', progress: 68, color: '#F59E0B' },
-    { subject: 'History', progress: 79, color: '#EF4444' },
+  const subjectDistribution = [
+    { name: 'Mathematics', value: 35, color: '#3B82F6' },
+    { name: 'Physics', value: 25, color: '#10B981' },
+    { name: 'Chemistry', value: 20, color: '#F59E0B' },
+    { name: 'Biology', value: 20, color: '#EF4444' },
   ];
 
-  const learningStyle = [
-    { name: 'Visual', value: 40, color: '#3B82F6' },
-    { name: 'Auditory', value: 30, color: '#10B981' },
-    { name: 'Kinesthetic', value: 20, color: '#F59E0B' },
-    { name: 'Reading/Writing', value: 10, color: '#8B5CF6' },
+  const monthlyTrend = [
+    { month: 'Jan', studyHours: 45, quizScore: 78 },
+    { month: 'Feb', studyHours: 52, quizScore: 82 },
+    { month: 'Mar', studyHours: 48, quizScore: 85 },
+    { month: 'Apr', studyHours: 61, quizScore: 88 },
+    { month: 'May', studyHours: 55, quizScore: 91 },
+    { month: 'Jun', studyHours: 67, quizScore: 89 },
   ];
 
-  const achievements = [
-    { title: 'Fast Learner', description: 'Completed 5 lessons in one day', icon: '⚡', date: '2024-01-15' },
-    { title: 'Math Wizard', description: 'Scored 100% on advanced math quiz', icon: '🧮', date: '2024-01-10' },
-    { title: 'Consistent Learner', description: '7-day learning streak', icon: '🔥', date: '2024-01-08' },
-    { title: 'Course Completion', description: 'Completed Python Basics course', icon: '🎓', date: '2024-01-05' },
+  const stats = [
+    { title: "Total Study Hours", value: "156", icon: Clock, color: "text-blue-600", change: "+12%" },
+    { title: "Average Score", value: "87%", icon: Target, color: "text-green-600", change: "+5%" },
+    { title: "Streak Days", value: "23", icon: TrendingUp, color: "text-purple-600", change: "+3 days" },
+    { title: "Achievements", value: "15", icon: Award, color: "text-yellow-600", change: "+2" },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Study Time</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">47.5 hours</div>
-            <p className="text-xs text-muted-foreground">+12% from last week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Courses Enrolled</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">3 completed this month</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Achievements</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">4 earned this week</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">AI Learning Score</CardTitle>
-            <Brain className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">89%</div>
-            <p className="text-xs text-muted-foreground">Excellent progress</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Weekly Progress Chart */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <TrendingUp className="mr-2 h-5 w-5" />
-              Weekly Learning Activity
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-6 w-6 text-blue-600" />
+              Learning Analytics Dashboard
             </CardTitle>
-            <CardDescription>Your daily study hours and lesson completions</CardDescription>
+            <CardDescription>
+              Track your learning progress and performance insights
+            </CardDescription>
+          </CardHeader>
+        </Card>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-green-600 font-medium">{stat.change}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Weekly Progress Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly Study Pattern</CardTitle>
+              <CardDescription>Hours studied and performance this week</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={weeklyProgress}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Bar yAxisId="left" dataKey="hours" fill="#3B82F6" name="Hours" />
+                  <Line yAxisId="right" type="monotone" dataKey="performance" stroke="#10B981" strokeWidth={2} name="Performance %" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Subject Distribution */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Subject Focus Distribution</CardTitle>
+              <CardDescription>Time allocation across subjects</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={subjectDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {subjectDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Monthly Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle>6-Month Learning Trend</CardTitle>
+            <CardDescription>Study hours and quiz performance over time</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={weeklyProgress}>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={monthlyTrend}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
+                <XAxis dataKey="month" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
                 <Tooltip />
-                <Line type="monotone" dataKey="hours" stroke="#3B82F6" strokeWidth={2} name="Study Hours" />
-                <Line type="monotone" dataKey="completed" stroke="#10B981" strokeWidth={2} name="Lessons Completed" />
+                <Bar yAxisId="left" dataKey="studyHours" fill="#3B82F6" name="Study Hours" />
+                <Line yAxisId="right" type="monotone" dataKey="quizScore" stroke="#EF4444" strokeWidth={3} name="Quiz Score %" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Learning Style Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Brain className="mr-2 h-5 w-5" />
-              Learning Style Analysis
-            </CardTitle>
-            <CardDescription>AI-detected learning preferences</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={learningStyle}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {learningStyle.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        {/* Learning Insights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                AI Insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900">Strength Areas</h4>
+                <p className="text-sm text-blue-700 mt-1">
+                  You excel in Chemistry with 91% average score. Your consistent daily study habit is paying off!
+                </p>
+              </div>
+              <div className="p-4 bg-yellow-50 rounded-lg">
+                <h4 className="font-medium text-yellow-900">Areas for Improvement</h4>
+                <p className="text-sm text-yellow-700 mt-1">
+                  Consider increasing Physics study time. Your performance could improve with more practice problems.
+                </p>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h4 className="font-medium text-green-900">Recommendations</h4>
+                <p className="text-sm text-green-700 mt-1">
+                  Your learning pattern shows peak performance on Fridays. Schedule important topics for Thursday-Friday sessions.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Learning Goals Progress</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Complete Calculus Course</span>
+                  <span>75%</span>
+                </div>
+                <Progress value={75} className="h-2" />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Master Organic Chemistry</span>
+                  <span>60%</span>
+                </div>
+                <Progress value={60} className="h-2" />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Physics Problem Solving</span>
+                  <span>45%</span>
+                </div>
+                <Progress value={45} className="h-2" />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Study Streak Goal (30 days)</span>
+                  <span>77%</span>
+                </div>
+                <Progress value={77} className="h-2" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      {/* Subject Progress */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Target className="mr-2 h-5 w-5" />
-            Subject Progress
-          </CardTitle>
-          <CardDescription>Your mastery level across different subjects</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {subjectProgress.map((subject) => (
-              <div key={subject.subject} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">{subject.subject}</span>
-                  <Badge variant="outline">{subject.progress}%</Badge>
-                </div>
-                <Progress value={subject.progress} className="h-2" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Achievements */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Award className="mr-2 h-5 w-5" />
-            Recent Achievements
-          </CardTitle>
-          <CardDescription>Your latest learning milestones</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {achievements.map((achievement, index) => (
-              <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg">
-                <div className="text-2xl">{achievement.icon}</div>
-                <div className="flex-1">
-                  <h4 className="font-semibold">{achievement.title}</h4>
-                  <p className="text-sm text-gray-600">{achievement.description}</p>
-                  <p className="text-xs text-gray-500 mt-1">{achievement.date}</p>
-                </div>
-                <Badge variant="secondary">New</Badge>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

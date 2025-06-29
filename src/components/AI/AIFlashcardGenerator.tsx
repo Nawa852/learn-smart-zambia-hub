@@ -1,286 +1,322 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Brain, RotateCcw, CheckCircle, X, 
-  Shuffle, BookOpen, Zap, Target
-} from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { Brain, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Flashcard {
   id: string;
-  front: string;
-  back: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  topic: string;
-  confidence: number;
-  reviewCount: number;
-  lastReviewed: Date;
+  front_content: string;
+  back_content: string;
+  subject: string | null;
+  difficulty_level: string | null;
+  tags: string[] | null;
+  created_at: string;
 }
 
 const AIFlashcardGenerator = () => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [studyMode, setStudyMode] = useState<'review' | 'learn' | 'quiz'>('review');
-  const [sessionProgress, setSessionProgress] = useState(0);
-
-  const mockFlashcards: Flashcard[] = [
-    {
-      id: '1',
-      front: 'What is React useState hook?',
-      back: 'useState is a React Hook that lets you add state to functional components. It returns an array with the current state value and a function to update it.',
-      difficulty: 'medium',
-      topic: 'React Hooks',
-      confidence: 75,
-      reviewCount: 3,
-      lastReviewed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-    },
-    {
-      id: '2',
-      front: 'Explain the difference between let, const, and var in JavaScript',
-      back: 'var has function scope and is hoisted; let has block scope and is not hoisted; const has block scope, is not hoisted, and cannot be reassigned.',
-      difficulty: 'hard',
-      topic: 'JavaScript Fundamentals',
-      confidence: 60,
-      reviewCount: 1,
-      lastReviewed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
-    },
-    {
-      id: '3',
-      front: 'What is the purpose of useEffect in React?',
-      back: 'useEffect lets you perform side effects in functional components, such as data fetching, subscriptions, or manually changing the DOM.',
-      difficulty: 'medium',
-      topic: 'React Hooks',
-      confidence: 85,
-      reviewCount: 5,
-      lastReviewed: new Date()
-    }
-  ];
+  const [currentCard, setCurrentCard] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [newCard, setNewCard] = useState({
+    front_content: '',
+    back_content: '',
+    subject: '',
+    difficulty_level: 'medium',
+    tags: ''
+  });
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
-    setFlashcards(mockFlashcards);
+    fetchFlashcards();
   }, []);
 
-  const generateFlashcards = async () => {
-    setIsGenerating(true);
-    
-    setTimeout(() => {
-      const newFlashcards: Flashcard[] = [
-        {
-          id: Date.now().toString(),
-          front: 'What is the virtual DOM in React?',
-          back: 'The virtual DOM is a JavaScript representation of the actual DOM. React uses it to optimize rendering by calculating the most efficient way to update the UI.',
-          difficulty: 'medium',
-          topic: 'React Concepts',
-          confidence: 0,
-          reviewCount: 0,
-          lastReviewed: new Date()
-        },
-        {
-          id: (Date.now() + 1).toString(),
-          front: 'Explain JavaScript closures',
-          back: 'A closure is a function that has access to variables in its outer (enclosing) scope even after the outer function has returned.',
-          difficulty: 'hard',
-          topic: 'JavaScript Advanced',
-          confidence: 0,
-          reviewCount: 0,
-          lastReviewed: new Date()
-        }
-      ];
-      
-      setFlashcards(prev => [...newFlashcards, ...prev]);
-      setIsGenerating(false);
-    }, 2000);
+  const fetchFlashcards = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('flashcards')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setFlashcards(data || []);
+    } catch (error) {
+      console.error('Error fetching flashcards:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch flashcards",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleConfidenceUpdate = (confidence: 'low' | 'medium' | 'high') => {
-    const confidenceValue = confidence === 'low' ? 25 : confidence === 'medium' ? 60 : 90;
-    
-    setFlashcards(prev => prev.map((card, index) => 
-      index === currentCardIndex 
-        ? { 
-            ...card, 
-            confidence: confidenceValue,
-            reviewCount: card.reviewCount + 1,
-            lastReviewed: new Date()
-          }
-        : card
-    ));
-    
-    nextCard();
+  const createFlashcard = async () => {
+    try {
+      if (!user) throw new Error('Must be logged in');
+      if (!newCard.front_content || !newCard.back_content) {
+        toast({
+          title: "Error",
+          description: "Please fill in both front and back content",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLoading(true);
+      const { error } = await supabase
+        .from('flashcards')
+        .insert({
+          user_id: user.id,
+          front_content: newCard.front_content,
+          back_content: newCard.back_content,
+          subject: newCard.subject || null,
+          difficulty_level: newCard.difficulty_level,
+          tags: newCard.tags ? newCard.tags.split(',').map(tag => tag.trim()) : null
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Flashcard created successfully",
+      });
+
+      setNewCard({
+        front_content: '',
+        back_content: '',
+        subject: '',
+        difficulty_level: 'medium',
+        tags: ''
+      });
+
+      fetchFlashcards();
+    } catch (error) {
+      console.error('Error creating flashcard:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create flashcard",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteFlashcard = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('flashcards')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Flashcard deleted successfully",
+      });
+
+      fetchFlashcards();
+      if (currentCard >= flashcards.length - 1) {
+        setCurrentCard(Math.max(0, flashcards.length - 2));
+      }
+    } catch (error) {
+      console.error('Error deleting flashcard:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete flashcard",
+        variant: "destructive",
+      });
+    }
   };
 
   const nextCard = () => {
-    setShowAnswer(false);
-    setCurrentCardIndex(prev => (prev + 1) % flashcards.length);
-    setSessionProgress(prev => Math.min(100, prev + (100 / flashcards.length)));
+    setCurrentCard((prev) => (prev + 1) % flashcards.length);
+    setIsFlipped(false);
   };
 
-  const shuffleCards = () => {
-    const shuffled = [...flashcards].sort(() => Math.random() - 0.5);
-    setFlashcards(shuffled);
-    setCurrentCardIndex(0);
-    setShowAnswer(false);
+  const prevCard = () => {
+    setCurrentCard((prev) => (prev - 1 + flashcards.length) % flashcards.length);
+    setIsFlipped(false);
   };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const currentCard = flashcards[currentCardIndex];
 
   return (
-    <div className="space-y-6">
-      <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Brain className="w-8 h-8" />
-            AI Flashcard Generator
-          </CardTitle>
-          <p className="text-blue-100">
-            AI-generated flashcards from your lessons with adaptive spaced repetition
-          </p>
-        </CardHeader>
-      </Card>
-
-      {/* Controls */}
-      <div className="grid md:grid-cols-2 gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Study Session</h3>
-              <Badge variant="outline">{flashcards.length} cards</Badge>
-            </div>
-            <Progress value={sessionProgress} className="mb-4" />
-            <div className="flex gap-2">
-              <Button onClick={shuffleCards} variant="outline" size="sm">
-                <Shuffle className="w-4 h-4 mr-2" />
-                Shuffle
-              </Button>
-              <Button onClick={() => setCurrentCardIndex(0)} variant="outline" size="sm">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
-              </Button>
-            </div>
-          </CardContent>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="h-6 w-6 text-purple-600" />
+              AI Flashcard Generator
+            </CardTitle>
+            <CardDescription>
+              Create and study with intelligent flashcards
+            </CardDescription>
+          </CardHeader>
         </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Generate New Cards</h3>
-              <Target className="w-5 h-5 text-purple-600" />
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              AI will analyze your recent lessons and create personalized flashcards
-            </p>
-            <Button 
-              onClick={generateFlashcards}
-              disabled={isGenerating}
-              className="w-full"
-            >
-              {isGenerating ? (
-                <>
-                  <Zap className="w-4 h-4 mr-2 animate-spin" />
-                  Generating cards...
-                </>
-              ) : (
-                <>
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Generate AI Flashcards
-                </>
-              )}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Flashcard Display */}
-      {currentCard && (
-        <Card className="mx-auto max-w-2xl">
-          <CardContent className="p-8">
-            <div className="text-center mb-6">
-              <Badge className={getDifficultyColor(currentCard.difficulty)}>
-                {currentCard.difficulty}
-              </Badge>
-              <Badge variant="outline" className="ml-2">
-                {currentCard.topic}
-              </Badge>
-              <div className="text-sm text-gray-500 mt-2">
-                Card {currentCardIndex + 1} of {flashcards.length}
-              </div>
-            </div>
-            
-            <div className="min-h-[200px] flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-lg font-medium mb-4">
-                  {showAnswer ? 'Answer:' : 'Question:'}
-                </div>
-                <div className="text-xl leading-relaxed">
-                  {showAnswer ? currentCard.back : currentCard.front}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex justify-center mt-6">
-              {!showAnswer ? (
-                <Button 
-                  onClick={() => setShowAnswer(true)}
-                  size="lg"
-                  className="px-8"
-                >
-                  Show Answer
-                </Button>
-              ) : (
-                <div className="flex gap-3">
-                  <Button 
-                    onClick={() => handleConfidenceUpdate('low')}
-                    variant="outline"
-                    className="text-red-600 border-red-600 hover:bg-red-50"
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Hard
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Flashcard Study Area */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Study Mode</h2>
+            {flashcards.length > 0 ? (
+              <div className="space-y-4">
+                <Card className="min-h-80">
+                  <CardContent className="p-6">
+                    <div className="text-center space-y-4">
+                      <div className="text-sm text-gray-500">
+                        Card {currentCard + 1} of {flashcards.length}
+                      </div>
+                      <div 
+                        className="cursor-pointer min-h-40 flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg"
+                        onClick={() => setIsFlipped(!isFlipped)}
+                      >
+                        <div className="text-center">
+                          <p className="text-lg font-medium mb-2">
+                            {isFlipped ? 'Answer:' : 'Question:'}
+                          </p>
+                          <p className="text-gray-800">
+                            {isFlipped 
+                              ? flashcards[currentCard].back_content 
+                              : flashcards[currentCard].front_content
+                            }
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {flashcards[currentCard].subject && (
+                          <Badge variant="secondary">
+                            {flashcards[currentCard].subject}
+                          </Badge>
+                        )}
+                        {flashcards[currentCard].difficulty_level && (
+                          <Badge variant="outline">
+                            {flashcards[currentCard].difficulty_level}
+                          </Badge>
+                        )}
+                        {flashcards[currentCard].tags?.map((tag, index) => (
+                          <Badge key={index} variant="outline">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <div className="flex gap-2 justify-center">
+                  <Button onClick={prevCard} variant="outline">
+                    Previous
+                  </Button>
+                  <Button onClick={() => setIsFlipped(!isFlipped)} variant="outline">
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Flip
+                  </Button>
+                  <Button onClick={nextCard} variant="outline">
+                    Next
                   </Button>
                   <Button 
-                    onClick={() => handleConfidenceUpdate('medium')}
+                    onClick={() => deleteFlashcard(flashcards[currentCard].id)}
                     variant="outline"
-                    className="text-yellow-600 border-yellow-600 hover:bg-yellow-50"
+                    className="text-red-600 hover:text-red-700"
                   >
-                    Medium
+                    <Trash2 className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    onClick={() => handleConfidenceUpdate('high')}
-                    variant="outline"
-                    className="text-green-600 border-green-600 hover:bg-green-50"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Easy
-                  </Button>
-                </div>
-              )}
-            </div>
-            
-            {showAnswer && (
-              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm text-gray-600">
-                  <div>Confidence: {currentCard.confidence}%</div>
-                  <div>Reviews: {currentCard.reviewCount}</div>
-                  <div>Last reviewed: {currentCard.lastReviewed.toLocaleDateString()}</div>
                 </div>
               </div>
+            ) : (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No flashcards yet</h3>
+                  <p className="text-gray-600">Create your first flashcard to start studying</p>
+                </CardContent>
+              </Card>
             )}
-          </CardContent>
-        </Card>
-      )}
+          </div>
+
+          {/* Create New Flashcard */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Create New Flashcard</h2>
+            <Card>
+              <CardContent className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Front (Question)</label>
+                  <Textarea
+                    placeholder="Enter the question or prompt..."
+                    value={newCard.front_content}
+                    onChange={(e) => setNewCard({...newCard, front_content: e.target.value})}
+                    className="min-h-24"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Back (Answer)</label>
+                  <Textarea
+                    placeholder="Enter the answer or explanation..."
+                    value={newCard.back_content}
+                    onChange={(e) => setNewCard({...newCard, back_content: e.target.value})}
+                    className="min-h-24"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Subject</label>
+                  <Input
+                    placeholder="e.g., Mathematics, Physics..."
+                    value={newCard.subject}
+                    onChange={(e) => setNewCard({...newCard, subject: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Difficulty</label>
+                  <Select 
+                    value={newCard.difficulty_level} 
+                    onValueChange={(value) => setNewCard({...newCard, difficulty_level: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="easy">Easy</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="hard">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Tags (comma-separated)</label>
+                  <Input
+                    placeholder="e.g., algebra, equations, chapter-5..."
+                    value={newCard.tags}
+                    onChange={(e) => setNewCard({...newCard, tags: e.target.value})}
+                  />
+                </div>
+                
+                <Button onClick={createFlashcard} disabled={loading} className="w-full">
+                  <Plus className="h-4 w-4 mr-2" />
+                  {loading ? 'Creating...' : 'Create Flashcard'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

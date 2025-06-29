@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,14 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    // Listen for auth changes
+    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session);
@@ -49,21 +43,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             title: "Signed out",
             description: "You have been signed out successfully.",
           });
-        } else if (event === 'USER_UPDATED') {
-          toast({
-            title: "Account created!",
-            description: "Please check your email to verify your account.",
-          });
         }
       }
     );
+
+    // Then get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     return () => subscription.unsubscribe();
   }, [toast]);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/dashboard`;
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -77,22 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) throw error;
-
-      // Send custom verification email
-      if (data.user && !data.user.email_confirmed_at) {
-        try {
-          await supabase.functions.invoke('send-email-verification', {
-            body: {
-              email: data.user.email,
-              confirmationUrl: `${window.location.origin}/auth/confirm?token=${data.user.id}`,
-              fullName: fullName
-            }
-          });
-        } catch (emailError) {
-          console.error('Error sending custom verification email:', emailError);
-        }
-      }
-
       return { error: null };
     } catch (error) {
       console.error('Sign up error:', error);
@@ -118,7 +98,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         throw error;
       }
-
     } catch (error) {
       console.error('Sign in error:', error);
       toast({
@@ -193,7 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         type: 'signup',
         email: email,
         options: {
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
 
