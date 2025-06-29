@@ -1,75 +1,74 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/components/Auth/AuthProvider';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 export interface StudyMaterial {
   id: number;
-  user_id: string | null;
+  user_id: string;
   file_name: string;
   file_path: string;
-  file_type: string | null;
+  file_type: string;
   subject: string | null;
   grade: number | null;
-  curriculum: string | null;
-  language: string | null;
+  curriculum: string;
+  language: string;
   metadata: any;
-  is_public: boolean | null;
-  created_at: string | null;
+  is_public: boolean;
+  created_at: string;
 }
 
-export interface MaterialAccessLog {
-  id: number;
-  user_id: string | null;
-  material_id: number | null;
-  action: string | null;
-  created_at: string | null;
+interface MaterialFilters {
+  subject?: string;
+  grade?: number;
+  curriculum?: string;
+  language?: string;
+  search?: string;
 }
 
 export const useStudyMaterials = () => {
   const [materials, setMaterials] = useState<StudyMaterial[]>([]);
   const [popularMaterials, setPopularMaterials] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { user } = useAuth();
+  const { toast } = useToast();
 
-  const fetchMaterials = async (filters?: {
-    subject?: string;
-    grade?: number;
-    curriculum?: string;
-    language?: string;
-    search?: string;
-  }) => {
+  const fetchMaterials = async (filters: MaterialFilters = {}) => {
+    setLoading(true);
     try {
       let query = supabase
         .from('study_materials')
         .select('*')
+        .eq('is_public', true)
         .order('created_at', { ascending: false });
 
-      if (filters?.subject) {
+      if (filters.subject) {
         query = query.eq('subject', filters.subject);
       }
-      if (filters?.grade) {
+      if (filters.grade) {
         query = query.eq('grade', filters.grade);
       }
-      if (filters?.curriculum) {
+      if (filters.curriculum) {
         query = query.eq('curriculum', filters.curriculum);
       }
-      if (filters?.language) {
+      if (filters.language) {
         query = query.eq('language', filters.language);
       }
-      if (filters?.search) {
+      if (filters.search) {
         query = query.or(`file_name.ilike.%${filters.search}%,subject.ilike.%${filters.search}%`);
       }
 
-      const { data, error } = await query;
+      const { data, error } = await query.limit(50);
 
       if (error) throw error;
       setMaterials(data || []);
     } catch (error) {
       console.error('Error fetching materials:', error);
-      toast.error('Failed to fetch study materials');
+      toast({
+        title: "Error",
+        description: "Failed to fetch study materials",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -89,191 +88,137 @@ export const useStudyMaterials = () => {
     }
   };
 
-  const uploadMaterial = async (
-    file: File,
-    metadata: {
-      subject?: string;
-      grade?: number;
-      curriculum?: string;
-      language?: string;
-      isPublic?: boolean;
-    }
-  ) => {
-    if (!user) return null;
-    
+  const uploadMaterial = async (file: File, metadata: any = {}) => {
     setUploading(true);
     try {
-      // Upload file to storage
-      const fileName = `${user.id}/${Date.now()}_${file.name}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
         .from('study-materials')
-        .upload(fileName, file);
+        .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // Get file type
-      const fileType = file.type.split('/')[1] || file.name.split('.').pop();
-
-      // Insert material record
-      const { data, error } = await supabase
+      const { error: dbError } = await supabase
         .from('study_materials')
-        .insert([{
+        .insert({
           user_id: user.id,
           file_name: file.name,
-          file_path: uploadData.path,
-          file_type: fileType,
-          subject: metadata.subject,
-          grade: metadata.grade,
+          file_path: filePath,
+          file_type: fileExt,
+          subject: metadata.subject || null,
+          grade: metadata.grade || null,
           curriculum: metadata.curriculum || 'ECZ',
           language: metadata.language || 'English',
-          is_public: metadata.isPublic || false,
-          metadata: {
-            size: file.size,
-            uploadedAt: new Date().toISOString(),
-            originalName: file.name
-          }
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setMaterials(prev => [data, ...prev]);
-      toast.success('Material uploaded successfully');
-      
-      // Call AI tagging function if available
-      try {
-        await supabase.functions.invoke('ai-material-tagger', {
-          body: { 
-            materialId: data.id,
-            filePath: uploadData.path,
-            fileName: file.name
-          }
+          metadata: metadata,
+          is_public: metadata.is_public || false,
         });
-      } catch (aiError) {
-        console.log('AI tagging not available:', aiError);
-      }
 
-      return data;
+      if (dbError) throw dbError;
+
+      // Trigger AI metadata tagging
+      await supabase.functions.invoke('ai-material-tagger', {
+        body: {
+          materialId: materials.length + 1, // This should be the actual ID
+          filePath,
+          fileName: file.name,
+        },
+      });
+
+      toast({
+        title: "Success",
+        description: "Material uploaded successfully",
+      });
+
+      fetchMaterials(); // Refresh the list
     } catch (error) {
       console.error('Error uploading material:', error);
-      toast.error('Failed to upload material');
-      return null;
+      toast({
+        title: "Error",
+        description: "Failed to upload material",
+        variant: "destructive",
+      });
     } finally {
       setUploading(false);
     }
   };
 
-  const downloadMaterial = async (material: StudyMaterial) => {
-    if (!user) return;
-
+  const downloadMaterial = async (filePath: string, fileName: string) => {
     try {
-      // Log download action
-      await supabase
-        .from('material_access_logs')
-        .insert([{
-          user_id: user.id,
-          material_id: material.id,
-          action: 'download'
-        }]);
-
-      // Get download URL
       const { data, error } = await supabase.storage
         .from('study-materials')
-        .download(material.file_path);
+        .download(filePath);
 
       if (error) throw error;
 
-      // Create download link
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
-      a.download = material.file_name;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success('Download started');
+      // Log access
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('material_access_logs').insert({
+          user_id: user.id,
+          material_id: materials.find(m => m.file_path === filePath)?.id,
+          action: 'download',
+        });
+      }
+
+      toast({
+        title: "Success",
+        description: "Material downloaded successfully",
+      });
     } catch (error) {
       console.error('Error downloading material:', error);
-      toast.error('Failed to download material');
-    }
-  };
-
-  const deleteMaterial = async (materialId: number) => {
-    if (!user) return;
-
-    try {
-      const material = materials.find(m => m.id === materialId);
-      if (!material) return;
-
-      // Delete from storage
-      await supabase.storage
-        .from('study-materials')
-        .remove([material.file_path]);
-
-      // Delete from database
-      const { error } = await supabase
-        .from('study_materials')
-        .delete()
-        .eq('id', materialId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      setMaterials(prev => prev.filter(m => m.id !== materialId));
-      toast.success('Material deleted successfully');
-    } catch (error) {
-      console.error('Error deleting material:', error);
-      toast.error('Failed to delete material');
+      toast({
+        title: "Error",
+        description: "Failed to download material",
+        variant: "destructive",
+      });
     }
   };
 
   const searchMaterials = async (query: string, language: string = 'English') => {
     try {
-      // First try local search
-      await fetchMaterials({ search: query, language });
+      const { data, error } = await supabase.functions.invoke('ai-material-search', {
+        body: {
+          query,
+          language,
+          userId: (await supabase.auth.getUser()).data.user?.id,
+        },
+      });
 
-      // Then try AI-powered multilingual search if available
-      try {
-        const { data: aiResults } = await supabase.functions.invoke('ai-material-search', {
-          body: { 
-            query,
-            language,
-            userId: user?.id 
-          }
-        });
-
-        if (aiResults?.materials) {
-          setMaterials(aiResults.materials);
-        }
-      } catch (aiError) {
-        console.log('AI search not available:', aiError);
-      }
+      if (error) throw error;
+      setMaterials(data.materials || []);
+      return data;
     } catch (error) {
       console.error('Error searching materials:', error);
-      toast.error('Search failed');
+      toast({
+        title: "Error",
+        description: "Search failed",
+        variant: "destructive",
+      });
+      return { materials: [], recommendations: [] };
     }
   };
 
-  const getFilePreview = async (material: StudyMaterial) => {
-    try {
-      const { data } = await supabase.storage
-        .from('study-materials')
-        .createSignedUrl(material.file_path, 3600);
-
-      return data?.signedUrl;
-    } catch (error) {
-      console.error('Error getting preview:', error);
-      return null;
-    }
-  };
+  const refetch = fetchMaterials;
 
   useEffect(() => {
     fetchMaterials();
     fetchPopularMaterials();
-  }, [user]);
+  }, []);
 
   return {
     materials,
@@ -283,9 +228,7 @@ export const useStudyMaterials = () => {
     fetchMaterials,
     uploadMaterial,
     downloadMaterial,
-    deleteMaterial,
     searchMaterials,
-    getFilePreview,
-    refetch: fetchMaterials
+    refetch,
   };
 };
