@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               title: "Signed out successfully",
               description: "Thank you for using EduZambia.",
             });
-            window.location.href = '/';
+            window.location.href = '/landing-verse';
             break;
         }
       }
