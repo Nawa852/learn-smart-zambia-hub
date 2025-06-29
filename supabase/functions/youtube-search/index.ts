@@ -5,10 +5,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'",
 }
 
-// Rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 const isRateLimited = (userId: string): boolean => {
@@ -20,17 +18,12 @@ const isRateLimited = (userId: string): boolean => {
     return false;
   }
   
-  if (userLimit.count >= 5) { // 5 searches per minute
+  if (userLimit.count >= 10) {
     return true;
   }
   
   userLimit.count++;
   return false;
-};
-
-const sanitizeInput = (input: string): string => {
-  if (typeof input !== 'string') return '';
-  return input.trim().slice(0, 100); // Limit search query length
 };
 
 serve(async (req) => {
@@ -49,7 +42,6 @@ serve(async (req) => {
       }
     )
 
-    // Get the user from the session
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
     
     if (userError || !user) {
@@ -59,37 +51,21 @@ serve(async (req) => {
       )
     }
 
-    // Rate limiting
     if (isRateLimited(user.id)) {
       return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded. Please wait before searching again.' }),
+        JSON.stringify({ error: 'Rate limit exceeded' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     const { query, gradeLevel, subject, maxResults = 10 } = await req.json()
 
-    // Input validation
-    if (!query || typeof query !== 'string') {
+    if (!query) {
       return new Response(
         JSON.stringify({ error: 'Search query is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    const sanitizedQuery = sanitizeInput(query);
-    const sanitizedGradeLevel = sanitizeInput(gradeLevel || '');
-    const sanitizedSubject = sanitizeInput(subject || '');
-
-    if (sanitizedQuery.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Search query cannot be empty' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    // Validate maxResults
-    const validMaxResults = Math.min(Math.max(parseInt(maxResults) || 10, 1), 50);
 
     const apiKey = Deno.env.get('YOUTUBE_API_KEY')
     if (!apiKey) {
@@ -99,27 +75,24 @@ serve(async (req) => {
       )
     }
 
-    // Build search query with educational filters
-    let searchQuery = `${sanitizedQuery} educational tutorial lesson`;
-    if (sanitizedGradeLevel) searchQuery += ` ${sanitizedGradeLevel}`;
-    if (sanitizedSubject) searchQuery += ` ${sanitizedSubject}`;
+    let searchQuery = `${query} educational tutorial lesson`;
+    if (gradeLevel) searchQuery += ` ${gradeLevel}`;
+    if (subject) searchQuery += ` ${subject}`;
 
-    // YouTube API request
     const youtubeUrl = new URL('https://www.googleapis.com/youtube/v3/search');
     youtubeUrl.searchParams.set('part', 'snippet');
     youtubeUrl.searchParams.set('q', searchQuery);
     youtubeUrl.searchParams.set('type', 'video');
-    youtubeUrl.searchParams.set('maxResults', validMaxResults.toString());
+    youtubeUrl.searchParams.set('maxResults', Math.min(maxResults, 50).toString());
     youtubeUrl.searchParams.set('order', 'relevance');
     youtubeUrl.searchParams.set('safeSearch', 'strict');
     youtubeUrl.searchParams.set('videoDuration', 'medium');
-    youtubeUrl.searchParams.set('videoDefinition', 'high');
     youtubeUrl.searchParams.set('key', apiKey);
 
     const response = await fetch(youtubeUrl.toString());
 
     if (!response.ok) {
-      console.error('YouTube API error:', response.status, response.statusText);
+      console.error('YouTube API error:', response.status);
       return new Response(
         JSON.stringify({ error: 'Failed to search videos' }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -130,12 +103,11 @@ serve(async (req) => {
 
     if (!data.items || data.items.length === 0) {
       return new Response(
-        JSON.stringify({ videos: [], message: 'No educational videos found for your search' }),
+        JSON.stringify({ videos: [], message: 'No educational videos found' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Get video details for duration and statistics
     const videoIds = data.items.map((item: any) => item.id.videoId).join(',');
     const detailsUrl = new URL('https://www.googleapis.com/youtube/v3/videos');
     detailsUrl.searchParams.set('part', 'contentDetails,statistics');
@@ -145,7 +117,6 @@ serve(async (req) => {
     const detailsResponse = await fetch(detailsUrl.toString());
     const detailsData = await detailsResponse.json();
 
-    // Process and format videos
     const videos = data.items.map((item: any) => {
       const details = detailsData.items?.find((d: any) => d.id === item.id.videoId);
       
@@ -159,7 +130,6 @@ serve(async (req) => {
         likeCount: details?.statistics?.likeCount || '0',
         channelTitle: item.snippet.channelTitle,
         publishedAt: item.snippet.publishedAt,
-        tags: item.snippet.tags || []
       };
     });
 

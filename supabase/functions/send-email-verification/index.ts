@@ -71,9 +71,11 @@ const handler = async (req: Request): Promise<Response> => {
               <li>AI-powered personalized learning plans</li>
               <li>Interactive homework help and tutoring</li>
               <li>Study groups and collaboration tools</li>
-              <li>Parent-teacher conference scheduling</li>
+              <li>YouTube learning hub with curated content</li>
               <li>Real-time progress tracking and analytics</li>
-              <li>Course creation and content generation tools</li>
+              <li>Multi-AI tutor support (OpenAI, Claude, DeepSeek)</li>
+              <li>Automated flashcard generation</li>
+              <li>Smart learning recommendations</li>
             </ul>
           </div>
           
@@ -89,7 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
               <a href="mailto:support@eduzambia.com" style="color: #2563eb;">support@eduzambia.com</a>
             </p>
             <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-              © 2024 EDU ZAMBIA. Revolutionizing education across Zambia with AI.
+              © 2025 EDU ZAMBIA. Revolutionizing education across Zambia with AI.
             </p>
           </div>
         </div>

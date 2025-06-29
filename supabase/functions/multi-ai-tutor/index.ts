@@ -5,7 +5,6 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
 }
 
 // Rate limiting map
@@ -16,21 +15,16 @@ const isRateLimited = (userId: string): boolean => {
   const userLimit = rateLimitMap.get(userId);
   
   if (!userLimit || now > userLimit.resetTime) {
-    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 }); // 1 minute window
+    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
     return false;
   }
   
-  if (userLimit.count >= 10) { // 10 requests per minute
+  if (userLimit.count >= 20) {
     return true;
   }
   
   userLimit.count++;
   return false;
-};
-
-const sanitizeInput = (input: string): string => {
-  if (typeof input !== 'string') return '';
-  return input.trim().slice(0, 2000); // Limit input length
 };
 
 serve(async (req) => {
@@ -49,7 +43,6 @@ serve(async (req) => {
       }
     )
 
-    // Get the user from the session
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
     
     if (userError || !user) {
@@ -59,17 +52,15 @@ serve(async (req) => {
       )
     }
 
-    // Rate limiting
     if (isRateLimited(user.id)) {
       return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded. Please wait before making another request.' }),
+        JSON.stringify({ error: 'Rate limit exceeded' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     const { message, model, systemPrompt } = await req.json()
 
-    // Input validation
     if (!message || !model) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
@@ -77,39 +68,39 @@ serve(async (req) => {
       )
     }
 
-    const sanitizedMessage = sanitizeInput(message);
-    const sanitizedSystemPrompt = sanitizeInput(systemPrompt || '');
-
-    if (sanitizedMessage.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Message cannot be empty' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
     let response = '';
 
-    // Route to appropriate AI model
     try {
       switch (model) {
         case 'openai':
-          response = await callOpenAI(sanitizedMessage, sanitizedSystemPrompt);
+          response = await callOpenAI(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
         case 'claude':
-          response = await callClaude(sanitizedMessage, sanitizedSystemPrompt);
+          response = await callClaude(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
         case 'deepseek':
-          response = await callDeepSeek(sanitizedMessage, sanitizedSystemPrompt);
+          response = await callDeepSeek(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
-        case 'qwen':
-          response = await callQwen(sanitizedMessage, sanitizedSystemPrompt);
+        case 'gemini':
+          response = await callGemini(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
         case 'llama':
-          response = await callLlama(sanitizedMessage, sanitizedSystemPrompt);
+          response = await callLlama(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
         default:
           throw new Error('Unsupported AI model');
       }
+
+      // Store chat history
+      await supabaseClient
+        .from('ai_chat_history')
+        .insert([{
+          user_id: user.id,
+          message: message,
+          response: response,
+          ai_model: model
+        }]);
+
     } catch (error) {
       console.error(`Error calling ${model}:`, error);
       return new Response(
@@ -133,7 +124,7 @@ serve(async (req) => {
 })
 
 async function callOpenAI(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('open ai')
+  const apiKey = Deno.env.get('PENAI_API_KEY')
   if (!apiKey) throw new Error('OpenAI API key not configured')
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -189,7 +180,7 @@ async function callClaude(message: string, systemPrompt: string): Promise<string
 }
 
 async function callDeepSeek(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('deep seek')
+  const apiKey = Deno.env.get('DEEPSEEK_API_KEY')
   if (!apiKey) throw new Error('DeepSeek API key not configured')
 
   const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
@@ -217,37 +208,34 @@ async function callDeepSeek(message: string, systemPrompt: string): Promise<stri
   return data.choices[0]?.message?.content || 'No response generated'
 }
 
-async function callQwen(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('QWEN_API_KEY')
-  if (!apiKey) throw new Error('Qwen API key not configured')
+async function callGemini(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('GEMINI_API_KEY')
+  if (!apiKey) throw new Error('Gemini API key not configured')
 
-  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'qwen-turbo',
-      input: {
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ]
-      },
-      parameters: {
-        max_tokens: 1000,
+      contents: [{
+        parts: [{
+          text: `${systemPrompt}\n\nUser: ${message}`
+        }]
+      }],
+      generationConfig: {
         temperature: 0.7,
-      },
+        maxOutputTokens: 1000,
+      }
     }),
   })
 
   if (!response.ok) {
-    throw new Error(`Qwen API error: ${response.status}`)
+    throw new Error(`Gemini API error: ${response.status}`)
   }
 
   const data = await response.json()
-  return data.output?.text || 'No response generated'
+  return data.candidates[0]?.content?.parts[0]?.text || 'No response generated'
 }
 
 async function callLlama(message: string, systemPrompt: string): Promise<string> {

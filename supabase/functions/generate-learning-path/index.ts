@@ -1,6 +1,7 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,8 +14,27 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, gradeLevel, subject, userId } = await req.json();
-    const openaiApiKey = Deno.env.get('open ai');
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
+        },
+      }
+    )
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
+    
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const { topic, gradeLevel, subject } = await req.json();
+    const openaiApiKey = Deno.env.get('PENAI_API_KEY');
     const youtubeApiKey = Deno.env.get('YOUTUBE_API_KEY');
 
     if (!openaiApiKey || !youtubeApiKey) {
@@ -33,28 +53,19 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are an educational curriculum designer. Create a structured learning path for students in Zambia. Consider the local context and curriculum when possible.`
+            content: `You are an educational curriculum designer for Zambian students. Create structured learning paths.`
           },
           {
             role: 'user',
-            content: `Create a learning path for "${topic}" suitable for ${gradeLevel} level in ${subject}. 
+            content: `Create a learning path for "${topic}" suitable for ${gradeLevel} in ${subject}. 
             
-            Provide 8-12 specific video topics that should be learned in sequence, from basic to advanced. 
-            Each topic should be:
-            1. Specific and searchable on YouTube
-            2. Appropriate for the grade level
-            3. Building upon previous concepts
-            4. Relevant to Zambian curriculum when applicable
-            
-            Format as JSON array of objects with properties: "title", "description", "keywords", "difficulty"
-            
-            Example format:
+            Provide 8-12 specific video topics in sequence. Format as JSON array:
             [
               {
-                "title": "Introduction to Fractions",
-                "description": "Basic concept of parts of a whole",
-                "keywords": "fractions basics introduction elementary",
-                "difficulty": "beginner"
+                "title": "Topic Title",
+                "description": "Brief description",
+                "keywords": "search keywords",
+                "difficulty": "beginner/intermediate/advanced"
               }
             ]`
           }
@@ -70,26 +81,18 @@ serve(async (req) => {
     try {
       learningTopics = JSON.parse(openaiData.choices[0].message.content);
     } catch (parseError) {
-      console.error('Error parsing OpenAI response:', parseError);
-      // Fallback to basic learning path
       learningTopics = [
         {
           title: `Introduction to ${topic}`,
-          description: `Basic concepts and overview of ${topic}`,
+          description: `Basic concepts of ${topic}`,
           keywords: `${topic} introduction basics`,
           difficulty: 'beginner'
         },
         {
           title: `${topic} Fundamentals`,
-          description: `Core principles and foundations`,
-          keywords: `${topic} fundamentals principles`,
+          description: `Core principles`,
+          keywords: `${topic} fundamentals`,
           difficulty: 'intermediate'
-        },
-        {
-          title: `Advanced ${topic}`,
-          description: `Advanced concepts and applications`,
-          keywords: `${topic} advanced applications`,
-          difficulty: 'advanced'
         }
       ];
     }
@@ -115,10 +118,8 @@ serve(async (req) => {
         const searchData = await searchResponse.json();
 
         if (searchData.items && searchData.items.length > 0) {
-          // Get the best video for this topic
           const bestVideo = searchData.items[0];
           
-          // Get detailed video info
           const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?` +
             `part=snippet,statistics,contentDetails&` +
             `id=${bestVideo.id.videoId}&` +
@@ -130,7 +131,6 @@ serve(async (req) => {
           if (detailsData.items && detailsData.items.length > 0) {
             const videoDetails = detailsData.items[0];
             
-            // Format duration
             const duration = videoDetails.contentDetails.duration;
             const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
             const hours = match[1] ? parseInt(match[1]) : 0;
@@ -152,7 +152,6 @@ serve(async (req) => {
               likeCount: videoDetails.statistics.likeCount || '0',
               channelTitle: videoDetails.snippet.channelTitle,
               publishedAt: videoDetails.snippet.publishedAt,
-              tags: videoDetails.snippet.tags || [],
               learningTopic: learningTopic.title,
               difficulty: learningTopic.difficulty
             });
