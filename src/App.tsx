@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -54,6 +53,10 @@ import ComprehensiveAIStudyPage from '@/pages/ComprehensiveAIStudyPage';
 import InteractiveLessons from '@/components/Learning/InteractiveLessons';
 import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 import EnhancedAITutorPage from '@/pages/EnhancedAITutorPage';
+import StudyMaterialsPageWrapper from '@/pages/StudyMaterialsPage';
+import CommunityPageWrapper from '@/pages/CommunityPage';
+import MealPlannerPageWrapper from '@/pages/MealPlannerPage';
+import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,6 +100,13 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* Onboarding */}
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <OnboardingFlow onComplete={() => window.location.href = '/dashboard'} />
+              </ProtectedRoute>
+            } />
+
             {/* Enhanced AI Features */}
             <Route path="/enhanced-ai-tutor" element={
               <ProtectedRoute>
@@ -113,6 +123,25 @@ function App() {
             <Route path="/mentorship-coaching" element={
               <ProtectedRoute>
                 <MentorshipGoalCoaching />
+              </ProtectedRoute>
+            } />
+
+            {/* New Core Features */}
+            <Route path="/study-materials-repo" element={
+              <ProtectedRoute>
+                <StudyMaterialsPageWrapper />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/community-collaboration" element={
+              <ProtectedRoute>
+                <CommunityPageWrapper />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/meal-planner" element={
+              <ProtectedRoute>
+                <MealPlannerPageWrapper />
               </ProtectedRoute>
             } />
 
