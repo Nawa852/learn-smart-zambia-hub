@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -82,12 +83,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               title: welcomeMessage,
               description: "You have successfully signed in to your learning platform.",
             });
+            
+            // Redirect to dashboard after successful sign in
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 1000);
             break;
           case 'SIGNED_OUT':
             toast({
               title: "Signed out",
               description: "You have been signed out successfully.",
             });
+            // Redirect to home page after sign out
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 500);
             break;
           case 'USER_UPDATED':
             toast({
@@ -129,6 +139,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           title: "Account Created Successfully!",
           description: "Please check your email for a verification link to complete your registration.",
         });
+      } else if (data.user && data.user.email_confirmed_at) {
+        // User is immediately confirmed (like in development)
+        toast({
+          title: "Account Created Successfully!",
+          description: "Welcome to EduZambia! Redirecting to dashboard...",
+        });
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
       }
 
       return { error: null };
@@ -160,7 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // The auth state change will handle the redirect
+      // Success toast and redirect will be handled by onAuthStateChange
     } catch (error) {
       console.error('Sign in error:', error);
       toast({

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -23,13 +24,14 @@ interface EnhancedLoginFormProps {
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { signInWithEmail, signInWithGoogle, signInWithFacebook } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,13 +50,10 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
     setIsLoading(true);
     try {
       await signInWithEmail(data.email, data.password);
-      toast({
-        title: "Success",
-        description: "Logged in successfully.",
-      });
+      // The redirect will be handled by the AuthProvider
       onSuccess?.();
     } catch (error) {
-      // Error toast is handled in AuthProvider, no need to show another one here.
+      // Error toast is handled in AuthProvider
       console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
@@ -65,10 +64,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
     setIsGoogleLoading(true);
     try {
       await signInWithGoogle();
-      toast({
-        title: "Success",
-        description: "Signed in with Google successfully.",
-      });
+      // The redirect will be handled by the AuthProvider
       onSuccess?.();
     } catch (error) {
       console.error('Google sign in failed:', error);
@@ -81,10 +77,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
     setIsFacebookLoading(true);
     try {
       await signInWithFacebook();
-      toast({
-        title: "Success",
-        description: "Signed in with Facebook successfully.",
-      });
+      // The redirect will be handled by the AuthProvider
       onSuccess?.();
     } catch (error) {
       console.error('Facebook sign in failed:', error);
@@ -151,7 +144,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           <Button 
             type="submit" 
             className="w-full bg-blue-600 hover:bg-blue-700" 
-            disabled={isLoading}
+            disabled={isLoading || isGoogleLoading || isFacebookLoading}
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
           </Button>
@@ -173,7 +166,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
         <Button
           variant="outline"
           onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading || isLoading}
+          disabled={isGoogleLoading || isLoading || isFacebookLoading}
           className="w-full"
         >
           {isGoogleLoading ? (
@@ -192,7 +185,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
         <Button
           variant="outline"
           onClick={handleFacebookSignIn}
-          disabled={isFacebookLoading || isLoading}
+          disabled={isFacebookLoading || isLoading || isGoogleLoading}
           className="w-full"
         >
           {isFacebookLoading ? (
