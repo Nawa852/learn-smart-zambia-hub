@@ -9,6 +9,94 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assignment_submissions: {
+        Row: {
+          assignment_id: string
+          content: string | null
+          feedback: string | null
+          file_url: string | null
+          grade: number | null
+          graded_at: string | null
+          graded_by: string | null
+          id: string
+          submitted_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assignment_id: string
+          content?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          graded_at?: string | null
+          graded_by?: string | null
+          id?: string
+          submitted_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assignment_id?: string
+          content?: string | null
+          feedback?: string | null
+          file_url?: string | null
+          grade?: number | null
+          graded_at?: string | null
+          graded_by?: string | null
+          id?: string
+          submitted_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignment_submissions_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assignments: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          points: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          points?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          points?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certificates: {
         Row: {
           certificate_url: string | null
@@ -694,6 +782,36 @@ export type Database = {
           },
         ]
       }
+      notes: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          subject: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          subject?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          subject?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null
@@ -1210,6 +1328,44 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          duration_minutes: number
+          id: string
+          notes: string | null
+          subject: string | null
+          user_id: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          duration_minutes: number
+          id?: string
+          notes?: string | null
+          subject?: string | null
+          user_id: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          notes?: string | null
+          subject?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       teacher_training: {
         Row: {
