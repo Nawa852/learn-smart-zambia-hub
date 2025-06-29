@@ -11,24 +11,18 @@ import { Search, Upload, Download, Star, Eye, Filter, BookOpen, FileText, Video,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StudyMaterial {
-  id: string;
-  title: string;
-  description: string;
+  id: number;
+  file_name: string;
+  file_path: string;
   subject: string;
-  grade_level: string;
+  grade: number;
   curriculum: string;
-  file_url: string;
   file_type: string;
-  tags: string[];
-  rating: number;
-  download_count: number;
-  is_premium: boolean;
-  price: number;
+  language: string;
+  user_id: string;
+  is_public: boolean;
   created_at: string;
-  uploader_id: string;
-  profiles?: {
-    full_name: string;
-  };
+  metadata?: any;
 }
 
 const StudyMaterialsPage = () => {
@@ -60,25 +54,22 @@ const StudyMaterialsPage = () => {
     try {
       let query = supabase
         .from('study_materials')
-        .select(`
-          *,
-          profiles:uploader_id (
-            full_name
-          )
-        `)
+        .select('*')
+        .eq('is_public', true)
         .order('created_at', { ascending: false });
 
       if (subjectFilter !== 'all') {
         query = query.eq('subject', subjectFilter);
       }
       if (gradeFilter !== 'all') {
-        query = query.eq('grade_level', gradeFilter);
+        const gradeNumber = parseInt(gradeFilter.replace('Grade ', ''));
+        query = query.eq('grade', gradeNumber);
       }
       if (curriculumFilter !== 'all') {
         query = query.eq('curriculum', curriculumFilter);
       }
       if (searchTerm) {
-        query = query.or(`title.ilike.%${searchTerm}%, description.ilike.%${searchTerm}%`);
+        query = query.or(`file_name.ilike.%${searchTerm}%, subject.ilike.%${searchTerm}%`);
       }
 
       const { data, error } = await query;
@@ -110,18 +101,12 @@ const StudyMaterialsPage = () => {
 
   const handleDownload = async (material: StudyMaterial) => {
     try {
-      // Update download count
-      await supabase
-        .from('study_materials')
-        .update({ download_count: material.download_count + 1 })
-        .eq('id', material.id);
-
       // Open file URL
-      window.open(material.file_url, '_blank');
+      window.open(material.file_path, '_blank');
 
       toast({
         title: "Download Started",
-        description: `${material.title} is being downloaded`,
+        description: `${material.file_name} is being downloaded`,
       });
     } catch (error) {
       console.error('Error downloading material:', error);
@@ -232,42 +217,31 @@ const StudyMaterialsPage = () => {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     {getFileIcon(material.file_type)}
-                    {material.is_premium && (
-                      <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                        Premium
-                      </Badge>
-                    )}
+                    <Badge variant="outline" className="text-xs">
+                      {material.curriculum}
+                    </Badge>
                   </div>
                   
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                    {material.title}
+                    {material.file_name}
                   </h3>
-                  
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                    {material.description}
-                  </p>
                   
                   <div className="flex flex-wrap gap-1 mb-3">
                     <Badge variant="outline" className="text-xs">
                       {material.subject}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
-                      {material.grade_level}
+                      Grade {material.grade}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
-                      {material.curriculum}
+                      {material.language}
                     </Badge>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span>{material.rating.toFixed(1)}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Download className="w-4 h-4" />
-                      <span>{material.download_count}</span>
-                    </div>
+                    <span>
+                      {new Date(material.created_at).toLocaleDateString()}
+                    </span>
                   </div>
                   
                   <div className="flex gap-2">
@@ -289,12 +263,6 @@ const StudyMaterialsPage = () => {
                       Download
                     </Button>
                   </div>
-                  
-                  {material.is_premium && material.price > 0 && (
-                    <p className="text-center text-sm font-semibold text-green-600 mt-2">
-                      K{material.price}
-                    </p>
-                  )}
                 </CardContent>
               </Card>
             ))

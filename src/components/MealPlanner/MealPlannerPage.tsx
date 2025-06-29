@@ -33,23 +33,12 @@ interface Recipe {
 }
 
 interface MealPlan {
-  id: string;
-  week_start_date: string;
-  meals: {
-    [day: string]: {
-      breakfast?: Recipe;
-      lunch?: Recipe;
-      dinner?: Recipe;
-      snacks?: Recipe[];
-    };
-  };
-  shopping_list: string[];
-  nutritional_analysis: {
-    dailyCalories: number;
-    weeklyProtein: number;
-    weeklyCarbs: number;
-    weeklyFat: number;
-  };
+  id: number;
+  plan_name: string;
+  user_id: string;
+  recipes: any;
+  nutritional_info: any;
+  created_at: string;
 }
 
 const MealPlannerPage = () => {
@@ -139,13 +128,13 @@ const MealPlannerPage = () => {
 
   const fetchMealPlan = async () => {
     try {
-      const startOfWeek = getStartOfWeek(new Date());
       const { data, error } = await supabase
         .from('meal_plans')
         .select('*')
         .eq('user_id', user?.id)
-        .eq('week_start_date', startOfWeek.toISOString().split('T')[0])
-        .single();
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching meal plan:', error);
@@ -153,7 +142,7 @@ const MealPlannerPage = () => {
         setCurrentPlan(data);
       } else {
         // Create default meal plan
-        createDefaultMealPlan(startOfWeek);
+        createDefaultMealPlan();
       }
     } catch (error) {
       console.error('Error fetching meal plan:', error);
@@ -162,24 +151,15 @@ const MealPlannerPage = () => {
     }
   };
 
-  const getStartOfWeek = (date: Date) => {
-    const startOfWeek = new Date(date);
-    const day = startOfWeek.getDay();
-    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
-    startOfWeek.setDate(diff);
-    return startOfWeek;
-  };
-
-  const createDefaultMealPlan = async (startDate: Date) => {
+  const createDefaultMealPlan = async () => {
     const defaultPlan = {
       user_id: user?.id,
-      week_start_date: startDate.toISOString().split('T')[0],
-      meals: days.reduce((acc, day) => ({
+      plan_name: `Week of ${new Date().toLocaleDateString()}`,
+      recipes: days.reduce((acc, day) => ({
         ...acc,
         [day]: {}
       }), {}),
-      shopping_list: [],
-      nutritional_analysis: {
+      nutritional_info: {
         dailyCalories: 0,
         weeklyProtein: 0,
         weeklyCarbs: 0,
@@ -204,10 +184,10 @@ const MealPlannerPage = () => {
   const addMealToDay = async (day: string, mealType: string, recipe: Recipe) => {
     if (!currentPlan) return;
 
-    const updatedMeals = {
-      ...currentPlan.meals,
+    const updatedRecipes = {
+      ...currentPlan.recipes,
       [day]: {
-        ...currentPlan.meals[day],
+        ...currentPlan.recipes[day],
         [mealType]: recipe
       }
     };
@@ -215,14 +195,14 @@ const MealPlannerPage = () => {
     try {
       const { error } = await supabase
         .from('meal_plans')
-        .update({ meals: updatedMeals })
+        .update({ recipes: updatedRecipes })
         .eq('id', currentPlan.id);
 
       if (error) throw error;
 
       setCurrentPlan({
         ...currentPlan,
-        meals: updatedMeals
+        recipes: updatedRecipes
       });
 
       toast({
@@ -244,10 +224,10 @@ const MealPlannerPage = () => {
 
     const ingredients = new Set<string>();
     
-    Object.values(currentPlan.meals).forEach(dayMeals => {
-      Object.values(dayMeals).forEach(meal => {
-        if (meal && 'ingredients' in meal) {
-          (meal as Recipe).ingredients.forEach(ingredient => {
+    Object.values(currentPlan.recipes).forEach((dayMeals: any) => {
+      Object.values(dayMeals).forEach((meal: any) => {
+        if (meal && meal.ingredients) {
+          meal.ingredients.forEach((ingredient: Ingredient) => {
             ingredients.add(`${ingredient.quantity} ${ingredient.unit} ${ingredient.name}`);
           });
         }
@@ -256,26 +236,10 @@ const MealPlannerPage = () => {
 
     const shoppingList = Array.from(ingredients);
 
-    try {
-      const { error } = await supabase
-        .from('meal_plans')
-        .update({ shopping_list: shoppingList })
-        .eq('id', currentPlan.id);
-
-      if (error) throw error;
-
-      setCurrentPlan({
-        ...currentPlan,
-        shopping_list: shoppingList
-      });
-
-      toast({
-        title: "Shopping List Generated",
-        description: `${shoppingList.length} items added to your shopping list`,
-      });
-    } catch (error) {
-      console.error('Error generating shopping list:', error);
-    }
+    toast({
+      title: "Shopping List Generated",
+      description: `${shoppingList.length} items identified`,
+    });
   };
 
   const recognizeIngredients = async () => {
@@ -340,13 +304,13 @@ const MealPlannerPage = () => {
                         <h4 className="font-medium text-sm capitalize mb-2">
                           {mealType}
                         </h4>
-                        {currentPlan?.meals[day]?.[mealType] ? (
+                        {currentPlan?.recipes[day]?.[mealType] ? (
                           <div className="text-xs">
                             <p className="font-medium">
-                              {currentPlan.meals[day][mealType].name}
+                              {currentPlan.recipes[day][mealType].name}
                             </p>
                             <p className="text-gray-600">
-                              {currentPlan.meals[day][mealType].nutrition.calories} cal
+                              {currentPlan.recipes[day][mealType].nutrition?.calories || 0} cal
                             </p>
                           </div>
                         ) : (
@@ -433,36 +397,21 @@ const MealPlannerPage = () => {
               <h2 className="text-2xl font-bold">Shopping List</h2>
               <Button onClick={generateShoppingList}>
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                Refresh List
+                Generate List
               </Button>
             </div>
 
             <Card className="border-0 shadow-md">
               <CardContent className="p-6">
-                {currentPlan?.shopping_list && currentPlan.shopping_list.length > 0 ? (
-                  <div className="space-y-2">
-                    {currentPlan.shopping_list.map((item, index) => (
-                      <div key={index} className="flex items-center gap-3 p-2 border rounded">
-                        <input type="checkbox" className="rounded" />
-                        <span className="flex-1">{item}</span>
-                        <Badge variant="outline" className="text-xs">
-                          <Leaf className="w-3 h-3 mr-1" />
-                          Local
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      No shopping list yet
-                    </h3>
-                    <p className="text-gray-600">
-                      Add meals to your weekly plan to generate a shopping list
-                    </p>
-                  </div>
-                )}
+                <div className="text-center py-8">
+                  <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Shopping List
+                  </h3>
+                  <p className="text-gray-600">
+                    Add meals to your weekly plan to generate a shopping list
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -9,14 +9,9 @@ interface Profile {
   full_name?: string;
   avatar_url?: string;
   role: string;
-  grade_level?: string;
-  curriculum: string;
-  preferred_language: string;
-  learning_style?: string;
-  phone_number?: string;
-  location?: string;
-  school_name?: string;
-  parent_contact?: string;
+  country: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export const useProfile = () => {
