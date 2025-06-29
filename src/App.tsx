@@ -99,58 +99,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Enhanced AI Features */}
-            <Route path="/enhanced-ai-tutor" element={
-              <ProtectedRoute>
-                <EnhancedAITutorPage />
-              </ProtectedRoute>
-            } />
-
-            <Route path="/enhanced-social" element={
-              <ProtectedRoute>
-                <EnhancedSocialFeed />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/mentorship-coaching" element={
-              <ProtectedRoute>
-                <MentorshipGoalCoaching />
-              </ProtectedRoute>
-            } />
-
-            {/* New Core Features */}
-            <Route path="/study-materials-repo" element={
-              <ProtectedRoute>
-                <StudyMaterialsPageWrapper />
-              </ProtectedRoute>
-            } />
-
-            <Route path="/community-collaboration" element={
-              <ProtectedRoute>
-                <CommunityPageWrapper />
-              </ProtectedRoute>
-            } />
-
-            <Route path="/meal-planner" element={
-              <ProtectedRoute>
-                <MealPlannerPageWrapper />
-              </ProtectedRoute>
-            } />
-
-            {/* API Integration Routes */}
-            <Route path="/api-flowchart" element={
-              <ProtectedRoute>
-                <APIFlowchartPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/group-competition-arena" element={
-              <ProtectedRoute>
-                <GroupCompetitionArenaPage />
-              </ProtectedRoute>
-            } />
-            
-            {/* AI Features */}
+            {/* Enhanced AI Features - Core Learning */}
             <Route path="/study-assistant" element={
               <ProtectedRoute>
                 <StudyAssistantPage />
@@ -175,58 +124,19 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Social Features */}
-            <Route path="/social-feed" element={
+            <Route path="/comprehensive-ai-study" element={
               <ProtectedRoute>
-                <SocialFeedPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/mentorship-hub" element={
-              <ProtectedRoute>
-                <MentorshipHubPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/study-groups" element={
-              <ProtectedRoute>
-                <StudyGroupsPage />
+                <ComprehensiveAIStudyPage />
               </ProtectedRoute>
             } />
 
-            {/* Core Features */}
-            <Route path="/courses" element={
+            <Route path="/enhanced-ai-tutor" element={
               <ProtectedRoute>
-                <Courses />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/learning-analytics" element={
-              <ProtectedRoute>
-                <LearningAnalytics />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/achievements" element={
-              <ProtectedRoute>
-                <Achievements />
+                <EnhancedAITutorPage />
               </ProtectedRoute>
             } />
 
-            {/* Study Materials */}
-            <Route path="/study-materials" element={
-              <ProtectedRoute>
-                <StudyMaterialRepository />
-              </ProtectedRoute>
-            } />
-
-            {/* AI Tools */}
+            {/* AI-Powered Tools */}
             <Route path="/semantic-search" element={
               <ProtectedRoute>
                 <SemanticSearchPage />
@@ -257,12 +167,6 @@ function App() {
               </ProtectedRoute>
             } />
             
-            <Route path="/gameify-vault" element={
-              <ProtectedRoute>
-                <GameifyVault />
-              </ProtectedRoute>
-            } />
-            
             <Route path="/ai-learning-paths" element={
               <ProtectedRoute>
                 <AILearningPathPage />
@@ -286,7 +190,38 @@ function App() {
                 <SmartRecommendationsPage />
               </ProtectedRoute>
             } />
+
+            {/* Social & Community Features */}
+            <Route path="/social-feed" element={
+              <ProtectedRoute>
+                <SocialFeedPage />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/enhanced-social" element={
+              <ProtectedRoute>
+                <EnhancedSocialFeed />
+              </ProtectedRoute>
+            } />
             
+            <Route path="/mentorship-hub" element={
+              <ProtectedRoute>
+                <MentorshipHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/mentorship-coaching" element={
+              <ProtectedRoute>
+                <MentorshipGoalCoaching />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/study-groups" element={
+              <ProtectedRoute>
+                <StudyGroupsPage />
+              </ProtectedRoute>
+            } />
+
             <Route path="/messenger" element={
               <ProtectedRoute>
                 <MessengerPage />
@@ -316,11 +251,38 @@ function App() {
                 <KnowledgeFeedPage />
               </ProtectedRoute>
             } />
-            
-            {/* Comprehensive AI features */}
-            <Route path="/comprehensive-ai-study" element={
+
+            {/* Study Materials & Resources */}
+            <Route path="/study-materials" element={
               <ProtectedRoute>
-                <ComprehensiveAIStudyPage />
+                <StudyMaterialRepository />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/study-materials-repo" element={
+              <ProtectedRoute>
+                <StudyMaterialsPageWrapper />
+              </ProtectedRoute>
+            } />
+
+            {/* Community & Collaboration */}
+            <Route path="/community-collaboration" element={
+              <ProtectedRoute>
+                <CommunityPageWrapper />
+              </ProtectedRoute>
+            } />
+
+            {/* Health & Wellness */}
+            <Route path="/meal-planner" element={
+              <ProtectedRoute>
+                <MealPlannerPageWrapper />
+              </ProtectedRoute>
+            } />
+
+            {/* Core Academic Features */}
+            <Route path="/courses" element={
+              <ProtectedRoute>
+                <Courses />
               </ProtectedRoute>
             } />
             
@@ -333,6 +295,46 @@ function App() {
             <Route path="/virtual-classroom" element={
               <ProtectedRoute>
                 <VirtualClassroom />
+              </ProtectedRoute>
+            } />
+
+            {/* Analytics & Progress */}
+            <Route path="/learning-analytics" element={
+              <ProtectedRoute>
+                <LearningAnalytics />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/achievements" element={
+              <ProtectedRoute>
+                <Achievements />
+              </ProtectedRoute>
+            } />
+
+            {/* Gamification */}
+            <Route path="/gameify-vault" element={
+              <ProtectedRoute>
+                <GameifyVault />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/group-competition-arena" element={
+              <ProtectedRoute>
+                <GroupCompetitionArenaPage />
+              </ProtectedRoute>
+            } />
+
+            {/* Technical & Developer */}
+            <Route path="/api-flowchart" element={
+              <ProtectedRoute>
+                <APIFlowchartPage />
+              </ProtectedRoute>
+            } />
+
+            {/* User Management */}
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } />
 
