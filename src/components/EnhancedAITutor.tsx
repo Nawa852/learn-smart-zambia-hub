@@ -7,6 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { Brain, Send, Mic, MicOff, Globe, BookOpen, Zap, Star, Volume2 } from 'lucide-react';
 
+// Type declarations for Web Speech API
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+    SpeechRecognition: any;
+  }
+}
+
 interface Message {
   id: string;
   text: string;
@@ -138,8 +146,10 @@ const EnhancedAITutor = () => {
   };
 
   const handleVoiceInput = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    // Check if speech recognition is supported
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       
       recognition.continuous = false;
@@ -150,7 +160,7 @@ const EnhancedAITutor = () => {
         setIsListening(true);
       };
       
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInputText(transcript);
       };
