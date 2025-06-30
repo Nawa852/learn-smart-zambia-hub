@@ -425,22 +425,7 @@ export type Database = {
           rating?: number | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "feedback_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "feedback_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       flashcards: {
         Row: {
@@ -519,20 +504,6 @@ export type Database = {
             referencedRelation: "forums"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "forum_posts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "forum_posts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       forums: {
@@ -557,22 +528,7 @@ export type Database = {
           id?: number
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "forums_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "forums_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       learning_analytics: {
         Row: {
@@ -803,20 +759,6 @@ export type Database = {
             referencedRelation: "study_materials"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "material_access_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "material_access_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       meal_plans: {
@@ -844,22 +786,7 @@ export type Database = {
           recipes?: Json | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "meal_plans_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "meal_plans_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       mentorship: {
         Row: {
@@ -883,36 +810,7 @@ export type Database = {
           mentor_id?: string | null
           student_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "mentorship_mentor_id_fkey"
-            columns: ["mentor_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "mentorship_mentor_id_fkey"
-            columns: ["mentor_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mentorship_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "mentorship_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       mentorship_sessions: {
         Row: {
@@ -1012,22 +910,7 @@ export type Database = {
           type?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -1258,20 +1141,6 @@ export type Database = {
             referencedRelation: "scholarships"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "scholarship_applications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "scholarship_applications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       scholarships: {
@@ -1341,22 +1210,7 @@ export type Database = {
           response?: Json | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "study_assistant_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "study_assistant_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       study_goals: {
         Row: {
@@ -1445,22 +1299,7 @@ export type Database = {
           subject?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "study_materials_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "study_materials_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       study_materials_cambridge: {
         Row: {
@@ -1625,22 +1464,7 @@ export type Database = {
           instructor_id?: string | null
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "teacher_training_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "student_performance"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "teacher_training_instructor_id_fkey"
-            columns: ["instructor_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_achievements: {
         Row: {
@@ -1717,39 +1541,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      users: {
-        Row: {
-          created_at: string | null
-          email: string | null
-          email_encrypted: string | null
-          full_name: string | null
-          id: string
-          language: string | null
-          role: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email?: string | null
-          email_encrypted?: string | null
-          full_name?: string | null
-          id: string
-          language?: string | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string | null
-          email_encrypted?: string | null
-          full_name?: string | null
-          id?: string
-          language?: string | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
       }
       "Users Table": {
         Row: {
@@ -1852,26 +1643,6 @@ export type Database = {
           subject: string | null
         }
         Relationships: []
-      }
-      student_performance: {
-        Row: {
-          completion_percentage: number | null
-          course_id: string | null
-          course_title: string | null
-          full_name: string | null
-          quiz_score: number | null
-          time_spent_minutes: number | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "progress_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Functions: {

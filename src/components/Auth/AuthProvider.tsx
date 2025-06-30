@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -133,48 +134,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           status: error.status,
           name: error.name
         });
-        
-        // Handle specific database errors
-        if (error.message.includes('Database error saving new user')) {
-          console.error('Database trigger failed - this means the user was created in auth.users but profile creation failed');
-          
-          // The user might actually be created in auth but profile creation failed
-          // Let's try to sign them in to see if the auth user exists
-          try {
-            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-              email,
-              password,
-            });
-            
-            if (signInData.user && !signInError) {
-              console.log('User exists in auth, trying to create profile manually');
-              
-              // Try to create the profile manually
-              const { error: profileError } = await supabase
-                .from('profiles')
-                .insert({
-                  id: signInData.user.id,
-                  email: email,
-                  full_name: fullName || signInData.user.email?.split('@')[0] || 'User',
-                });
-              
-              if (profileError) {
-                console.error('Manual profile creation failed:', profileError);
-              } else {
-                console.log('Profile created manually, signup successful');
-                toast({
-                  title: "Account Created Successfully!",
-                  description: "Welcome to EduZambia!",
-                });
-                return { error: null };
-              }
-            }
-          } catch (recoveryError) {
-            console.error('Recovery attempt failed:', recoveryError);
-          }
-          
-          throw new Error('Account creation failed due to database configuration issues. Please contact support.');
-        }
         
         throw error;
       }
