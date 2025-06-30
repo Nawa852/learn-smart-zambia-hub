@@ -91,16 +91,23 @@ const CommunityPage = () => {
         .from('forums')
         .select(`
           *,
-          profiles:created_by (
+          profiles!forums_created_by_fkey (
             full_name
           )
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching forums:', error);
+        // Set empty array on error to prevent type issues
+        setForums([]);
+        return;
+      }
+      
       setForums(data || []);
     } catch (error) {
       console.error('Error fetching forums:', error);
+      setForums([]);
     }
   };
 
