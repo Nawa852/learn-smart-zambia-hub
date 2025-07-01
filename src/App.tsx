@@ -49,6 +49,7 @@ import APIFlowchartPage from '@/pages/APIFlowchartPage';
 import GroupCompetitionArenaPage from '@/pages/GroupCompetitionArenaPage';
 import NotFound from '@/pages/NotFound';
 import ComprehensiveAIStudyPage from '@/pages/ComprehensiveAIStudyPage';
+import ComprehensiveAIPage from '@/pages/ComprehensiveAIPage';
 import InteractiveLessons from '@/components/Learning/InteractiveLessons';
 import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 import EnhancedAITutorPage from '@/pages/EnhancedAITutorPage';
@@ -96,6 +97,13 @@ function App() {
             <Route path="/onboarding" element={
               <ProtectedRoute>
                 <OnboardingFlow onComplete={() => window.location.href = '/dashboard'} />
+              </ProtectedRoute>
+            } />
+
+            {/* Comprehensive AI Hub - NEW MAIN FEATURE */}
+            <Route path="/comprehensive-ai-hub" element={
+              <ProtectedRoute>
+                <ComprehensiveAIPage />
               </ProtectedRoute>
             } />
 

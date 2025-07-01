@@ -18,7 +18,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     full_name: '',
-    country: 'Zambia',
+    grade_level: '',
     learning_style: 'visual'
   });
 
@@ -43,7 +43,7 @@ const Profile = () => {
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
-        .from('user_achievements')
+        .from('achievements')
         .select('*')
         .eq('user_id', user.id);
       
@@ -53,16 +53,13 @@ const Profile = () => {
     enabled: !!user?.id
   });
 
-  const { data: enrollments } = useQuery({
-    queryKey: ['user-enrollments', user?.id],
+  const { data: studySessions } = useQuery({
+    queryKey: ['study-sessions', user?.id],
     queryFn: async () => {
       if (!user?.id) return [];
       const { data, error } = await supabase
-        .from('enrollments')
-        .select(`
-          *,
-          courses:course_id(title, thumbnail_url)
-        `)
+        .from('study_sessions')
+        .select('*')
         .eq('user_id', user.id);
       
       if (error) throw error;
@@ -72,9 +69,9 @@ const Profile = () => {
   });
 
   const learningStats = {
-    totalCourses: enrollments?.length || 0,
-    completedCourses: enrollments?.filter(e => e.completed_at)?.length || 0,
-    totalHours: 47,
+    totalCourses: studySessions?.length || 0,
+    completedCourses: studySessions?.filter(s => s.duration > 30)?.length || 0,
+    totalHours: studySessions?.reduce((sum, session) => sum + (session.duration || 0), 0) || 0,
     currentStreak: 12,
     skillsLearned: achievements?.length || 0
   };
@@ -109,7 +106,7 @@ const Profile = () => {
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative">
-                <div className="w-32 h-32 bg-gradient-to-br from-zambia-copper to-orange-500 rounded-full flex items-center justify-center">
+                <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                   {profile?.avatar_url ? (
                     <img 
                       src={profile.avatar_url} 
@@ -143,7 +140,7 @@ const Profile = () => {
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <Badge variant="secondary">
                     <Globe className="w-3 h-3 mr-1" />
-                    {profile?.country}
+                    {profile?.grade_level || 'Not Set'}
                   </Badge>
                   <Badge variant="secondary">Student</Badge>
                   <Badge className="bg-green-100 text-green-800">Active Learner</Badge>
@@ -152,11 +149,11 @@ const Profile = () => {
               
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-zambia-copper">{learningStats.currentStreak}</div>
+                  <div className="text-2xl font-bold text-blue-600">{learningStats.currentStreak}</div>
                   <div className="text-sm text-gray-600">Day Streak</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-zambia-emerald">{learningStats.skillsLearned}</div>
+                  <div className="text-2xl font-bold text-green-600">{learningStats.skillsLearned}</div>
                   <div className="text-sm text-gray-600">Skills</div>
                 </div>
               </div>
@@ -181,14 +178,14 @@ const Profile = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-600">{learningStats.totalCourses}</div>
-                    <div className="text-sm text-gray-600">Enrolled Courses</div>
+                    <div className="text-sm text-gray-600">Study Sessions</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">{learningStats.completedCourses}</div>
                     <div className="text-sm text-gray-600">Completed</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">{learningStats.totalHours}</div>
+                    <div className="text-2xl font-bold text-purple-600">{Math.round(learningStats.totalHours / 60)}</div>
                     <div className="text-sm text-gray-600">Hours Learned</div>
                   </div>
                   <div className="text-center">
@@ -197,23 +194,28 @@ const Profile = () => {
                   </div>
                 </div>
                 
-                {/* Recent Courses */}
+                {/* Recent Sessions */}
                 <div className="space-y-3">
-                  <h4 className="font-semibold">Current Courses</h4>
-                  {enrollments?.slice(0, 3).map((enrollment) => (
-                    <div key={enrollment.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <h4 className="font-semibold">Recent Study Sessions</h4>
+                  {studySessions?.slice(0, 3).map((session) => (
+                    <div key={session.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                       <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                         <BookOpen className="w-6 h-6 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <h5 className="font-medium">{enrollment.courses?.title}</h5>
-                        <Progress value={enrollment.progress_percentage} className="mt-1" />
+                        <h5 className="font-medium">{session.subject}</h5>
+                        <p className="text-sm text-gray-600">{session.duration} minutes</p>
                       </div>
                       <div className="text-sm text-gray-600">
-                        {enrollment.progress_percentage}%
+                        {new Date(session.created_at).toLocaleDateString()}
                       </div>
                     </div>
-                  ))}
+                  )) || (
+                    <div className="text-center py-4 text-gray-500">
+                      <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">Start studying to see your progress!</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -261,7 +263,7 @@ const Profile = () => {
                   {achievements?.slice(0, 6).map((achievement, index) => (
                     <div key={index} className="text-center p-3 bg-yellow-50 rounded-lg">
                       <Award className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                      <div className="text-xs font-medium">{achievement.achievement_type}</div>
+                      <div className="text-xs font-medium">{achievement.title}</div>
                     </div>
                   ))}
                   {(!achievements || achievements.length === 0) && (

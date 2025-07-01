@@ -8,8 +8,8 @@ interface Profile {
   email?: string;
   full_name?: string;
   avatar_url?: string;
-  role: string;
-  country: string;
+  user_type: string;
+  grade_level?: string;
   created_at: string;
   updated_at: string;
 }

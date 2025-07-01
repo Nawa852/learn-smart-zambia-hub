@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 
 interface ProtectedRouteProps {
@@ -9,6 +9,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -19,7 +20,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Avoid redirect loops by checking current path
+    if (location.pathname === '/login' || location.pathname === '/signup') {
+      return <>{children}</>;
+    }
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  // If user is authenticated and trying to access login/signup, redirect to dashboard
+  if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
