@@ -11,16 +11,17 @@ import { Upload, Search, Filter, Download, FileText, Video, Image, Music } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StudyMaterial {
-  id: number;
+  id: string;
   file_name: string;
   file_path: string;
-  file_type: string | null;
+  file_type: string;
   subject: string | null;
-  grade: number | null;
+  grade: string | null;
   curriculum: string | null;
-  language: string | null;
-  is_public: boolean | null;
-  created_at: string | null;
+  upload_date: string | null;
+  user_id: string | null;
+  file_size: number | null;
+  metadata: any;
 }
 
 const StudyMaterialRepository = () => {
@@ -39,10 +40,11 @@ const StudyMaterialRepository = () => {
   const fetchMaterials = async () => {
     try {
       setLoading(true);
+      // Use generic query since study_materials table may not be in types yet
       const { data, error } = await supabase
         .from('study_materials')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('upload_date', { ascending: false });
 
       if (error) throw error;
       setMaterials(data || []);
@@ -66,7 +68,6 @@ const StudyMaterialRepository = () => {
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
 
-      // Upload file to Supabase Storage (when storage is set up)
       // For now, we'll just store the metadata
       const { error } = await supabase
         .from('study_materials')
@@ -78,8 +79,8 @@ const StudyMaterialRepository = () => {
           subject: metadata.subject,
           grade: metadata.grade,
           curriculum: metadata.curriculum,
-          language: metadata.language,
-          is_public: metadata.isPublic
+          file_size: file.size,
+          metadata: metadata
         });
 
       if (error) throw error;
@@ -113,13 +114,13 @@ const StudyMaterialRepository = () => {
     const matchesSearch = material.file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          material.subject?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSubject = selectedSubject === 'all' || material.subject === selectedSubject;
-    const matchesGrade = selectedGrade === 'all' || material.grade?.toString() === selectedGrade;
+    const matchesGrade = selectedGrade === 'all' || material.grade === selectedGrade;
     
     return matchesSearch && matchesSubject && matchesGrade;
   });
 
   const subjects = [...new Set(materials.map(m => m.subject).filter(Boolean))];
-  const grades = [...new Set(materials.map(m => m.grade).filter(Boolean))].sort((a, b) => (a || 0) - (b || 0));
+  const grades = [...new Set(materials.map(m => m.grade).filter(Boolean))];
 
   if (loading) {
     return (
@@ -178,7 +179,7 @@ const StudyMaterialRepository = () => {
                 <SelectContent>
                   <SelectItem value="all">All Grades</SelectItem>
                   {grades.map((grade) => (
-                    <SelectItem key={grade} value={grade?.toString() || ''}>{grade}</SelectItem>
+                    <SelectItem key={grade} value={grade || ''}>{grade}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -219,12 +220,12 @@ const StudyMaterialRepository = () => {
                     <span>{material.curriculum || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
-                    <span>Language:</span>
-                    <span>{material.language || 'N/A'}</span>
+                    <span>Size:</span>
+                    <span>{material.file_size ? `${Math.round(material.file_size / 1024)} KB` : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Uploaded:</span>
-                    <span>{material.created_at ? new Date(material.created_at).toLocaleDateString() : 'N/A'}</span>
+                    <span>{material.upload_date ? new Date(material.upload_date).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">

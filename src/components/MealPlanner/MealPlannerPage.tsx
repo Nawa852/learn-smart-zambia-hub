@@ -1,496 +1,286 @@
-
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Camera, Plus, Utensils, ShoppingCart, Calendar, Leaf, Heart } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface Ingredient {
-  name: string;
-  quantity: string;
-  unit: string;
-}
-
-interface Recipe {
-  id: string;
-  name: string;
-  ingredients: Ingredient[];
-  instructions: string[];
-  nutrition: {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-  };
-  category: string;
-  cookingTime: number;
-  servings: number;
-}
+import { ChefHat, Plus, Utensils, Calendar, Sparkles } from 'lucide-react';
 
 interface MealPlan {
-  id: number;
+  id: string;
   plan_name: string;
-  user_id: string;
   recipes: any;
   nutritional_info: any;
   created_at: string;
+  user_id: string;
 }
 
 const MealPlannerPage = () => {
-  const [currentPlan, setCurrentPlan] = useState<MealPlan | null>(null);
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDay, setSelectedDay] = useState('monday');
-  const [ingredientInput, setIngredientInput] = useState('');
+  const [currentPlan, setCurrentPlan] = useState<MealPlan | null>(null);
+  const [planName, setPlanName] = useState('');
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const zambianRecipes: Recipe[] = [
-    {
-      id: '1',
-      name: 'Nshima with Kapenta',
-      ingredients: [
-        { name: 'Mealie meal', quantity: '2', unit: 'cups' },
-        { name: 'Kapenta', quantity: '200', unit: 'g' },
-        { name: 'Tomatoes', quantity: '3', unit: 'pieces' },
-        { name: 'Onions', quantity: '1', unit: 'piece' },
-        { name: 'Cooking oil', quantity: '2', unit: 'tbsp' }
-      ],
-      instructions: [
-        'Boil water in a pot',
-        'Gradually add mealie meal while stirring',
-        'Cook until thick and smooth',
-        'Fry kapenta with onions and tomatoes',
-        'Serve nshima with kapenta relish'
-      ],
-      nutrition: { calories: 450, protein: 25, carbs: 65, fat: 12 },
-      category: 'Traditional',
-      cookingTime: 45,
-      servings: 4
-    },
-    {
-      id: '2',
-      name: 'Ifisashi (Groundnut Vegetables)',
-      ingredients: [
-        { name: 'Groundnuts', quantity: '1', unit: 'cup' },
-        { name: 'Pumpkin leaves', quantity: '2', unit: 'cups' },
-        { name: 'Sweet potato leaves', quantity: '1', unit: 'cup' },
-        { name: 'Salt', quantity: '1', unit: 'tsp' }
-      ],
-      instructions: [
-        'Pound groundnuts into paste',
-        'Boil vegetables until tender',
-        'Add groundnut paste and simmer',
-        'Season with salt',
-        'Serve with nshima'
-      ],
-      nutrition: { calories: 380, protein: 18, carbs: 35, fat: 22 },
-      category: 'Traditional',
-      cookingTime: 30,
-      servings: 4
-    },
-    {
-      id: '3',
-      name: 'Chikanda (African Polony)',
-      ingredients: [
-        { name: 'Wild orchid tubers', quantity: '500', unit: 'g' },
-        { name: 'Groundnuts', quantity: '200', unit: 'g' },
-        { name: 'Baking soda', quantity: '1', unit: 'tsp' },
-        { name: 'Salt', quantity: '1', unit: 'tsp' }
-      ],
-      instructions: [
-        'Soak tubers overnight',
-        'Pound into paste',
-        'Mix with ground nuts',
-        'Add baking soda and salt',
-        'Steam for 2 hours'
-      ],
-      nutrition: { calories: 320, protein: 15, carbs: 45, fat: 12 },
-      category: 'Traditional',
-      cookingTime: 150,
-      servings: 6
-    }
-  ];
-
-  const days = [
-    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
-  ];
-
   useEffect(() => {
-    if (user) {
-      fetchMealPlan();
-    }
-  }, [user]);
+    fetchMealPlans();
+  }, []);
 
-  const fetchMealPlan = async () => {
+  const fetchMealPlans = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('meal_plans')
         .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching meal plan:', error);
-      } else if (data) {
-        setCurrentPlan(data);
-      } else {
-        // Create default meal plan
-        createDefaultMealPlan();
-      }
+      if (error) throw error;
+      setMealPlans(data || []);
     } catch (error) {
-      console.error('Error fetching meal plan:', error);
+      console.error('Error fetching meal plans:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch meal plans",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const createDefaultMealPlan = async () => {
-    const defaultPlan = {
-      user_id: user?.id,
-      plan_name: `Week of ${new Date().toLocaleDateString()}`,
-      recipes: days.reduce((acc, day) => ({
-        ...acc,
-        [day]: {}
-      }), {}),
-      nutritional_info: {
-        dailyCalories: 0,
-        weeklyProtein: 0,
-        weeklyCarbs: 0,
-        weeklyFat: 0
-      }
-    };
+  const generateMealPlan = async () => {
+    if (!planName) {
+      toast({
+        title: "Error",
+        description: "Please enter a plan name",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
+      const sampleRecipes = [
+        {
+          day: 'Monday',
+          breakfast: 'Oatmeal with berries',
+          lunch: 'Grilled chicken salad',
+          dinner: 'Baked salmon with vegetables'
+        },
+        {
+          day: 'Tuesday',
+          breakfast: 'Greek yogurt with granola',
+          lunch: 'Quinoa bowl',
+          dinner: 'Lean beef stir-fry'
+        }
+      ];
+
+      const nutritionalInfo = {
+        calories: 2000,
+        protein: 150,
+        carbs: 200,
+        fat: 70
+      };
+
       const { data, error } = await supabase
         .from('meal_plans')
-        .insert(defaultPlan)
+        .insert({
+          plan_name: planName,
+          recipes: sampleRecipes,
+          nutritional_info: nutritionalInfo,
+          user_id: user?.id
+        })
         .select()
         .single();
 
       if (error) throw error;
+
       setCurrentPlan(data);
+      setPlanName('');
+      fetchMealPlans();
+
+      toast({
+        title: "Success",
+        description: "Meal plan generated successfully!",
+      });
     } catch (error) {
-      console.error('Error creating meal plan:', error);
+      console.error('Error generating meal plan:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate meal plan",
+        variant: "destructive",
+      });
     }
   };
 
-  const addMealToDay = async (day: string, mealType: string, recipe: Recipe) => {
-    if (!currentPlan) return;
-
-    const updatedRecipes = {
-      ...currentPlan.recipes,
-      [day]: {
-        ...currentPlan.recipes[day],
-        [mealType]: recipe
-      }
-    };
-
+  const deleteMealPlan = async (id: string) => {
     try {
       const { error } = await supabase
         .from('meal_plans')
-        .update({ recipes: updatedRecipes })
-        .eq('id', currentPlan.id);
+        .delete()
+        .eq('id', id);
 
       if (error) throw error;
 
-      setCurrentPlan({
-        ...currentPlan,
-        recipes: updatedRecipes
-      });
+      fetchMealPlans();
+      if (currentPlan?.id === id) {
+        setCurrentPlan(null);
+      }
 
       toast({
-        title: "Meal Added",
-        description: `${recipe.name} added to ${day} ${mealType}`,
+        title: "Success",
+        description: "Meal plan deleted successfully",
       });
     } catch (error) {
-      console.error('Error updating meal plan:', error);
+      console.error('Error deleting meal plan:', error);
       toast({
         title: "Error",
-        description: "Failed to add meal",
-        variant: "destructive"
+        description: "Failed to delete meal plan",
+        variant: "destructive",
       });
     }
   };
 
-  const generateShoppingList = async () => {
-    if (!currentPlan) return;
-
-    const ingredients = new Set<string>();
-    
-    Object.values(currentPlan.recipes).forEach((dayMeals: any) => {
-      Object.values(dayMeals).forEach((meal: any) => {
-        if (meal && meal.ingredients) {
-          meal.ingredients.forEach((ingredient: Ingredient) => {
-            ingredients.add(`${ingredient.quantity} ${ingredient.unit} ${ingredient.name}`);
-          });
-        }
-      });
-    });
-
-    const shoppingList = Array.from(ingredients);
-
-    toast({
-      title: "Shopping List Generated",
-      description: `${shoppingList.length} items identified`,
-    });
-  };
-
-  const recognizeIngredients = async () => {
-    // Simulate AI ingredient recognition
-    const commonZambianIngredients = [
-      'Mealie meal', 'Kapenta', 'Sweet potatoes', 'Pumpkin leaves',
-      'Groundnuts', 'Beans', 'Tomatoes', 'Onions', 'Cabbage'
-    ];
-
-    setIngredientInput(commonZambianIngredients.join(', '));
-    
-    toast({
-      title: "Ingredients Recognized",
-      description: "AI has identified common Zambian ingredients",
-    });
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-green-600 to-orange-600 text-white">
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-3xl">
-              <Utensils className="w-8 h-8" />
-              Zambian Meal Planner & Nutrition
+            <CardTitle className="flex items-center gap-2">
+              <ChefHat className="h-6 w-6 text-green-600" />
+              AI Meal Planner
             </CardTitle>
-            <p className="text-green-100">
-              Plan healthy, affordable meals using local Zambian ingredients
-            </p>
+            <CardDescription>
+              Generate personalized meal plans for healthy eating
+            </CardDescription>
           </CardHeader>
         </Card>
 
-        <Tabs defaultValue="planner" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="planner">Meal Planner</TabsTrigger>
-            <TabsTrigger value="recipes">Recipes</TabsTrigger>
-            <TabsTrigger value="shopping">Shopping List</TabsTrigger>
-            <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="planner" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Weekly Meal Plan</h2>
-              <Button onClick={generateShoppingList}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Generate Shopping List
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle>Create New Plan</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input
+                placeholder="Plan name"
+                value={planName}
+                onChange={(e) => setPlanName(e.target.value)}
+              />
+              <Button onClick={generateMealPlan} className="w-full">
+                <Plus className="h-4 w-4 mr-2" />
+                Generate Plan
               </Button>
-            </div>
+            </CardContent>
+          </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
-              {days.map((day) => (
-                <Card key={day} className="border-0 shadow-md">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-center text-lg capitalize">
-                      {day}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {['breakfast', 'lunch', 'dinner'].map((mealType) => (
-                      <div key={mealType} className="border rounded-lg p-3">
-                        <h4 className="font-medium text-sm capitalize mb-2">
-                          {mealType}
-                        </h4>
-                        {currentPlan?.recipes[day]?.[mealType] ? (
-                          <div className="text-xs">
-                            <p className="font-medium">
-                              {currentPlan.recipes[day][mealType].name}
-                            </p>
-                            <p className="text-gray-600">
-                              {currentPlan.recipes[day][mealType].nutrition?.calories || 0} cal
-                            </p>
-                          </div>
-                        ) : (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Your Meal Plans</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="animate-pulse space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-20 bg-gray-200 rounded"></div>
+                  ))}
+                </div>
+              ) : mealPlans.length === 0 ? (
+                <p className="text-gray-500 text-center">No meal plans yet. Create your first plan!</p>
+              ) : (
+                <div className="space-y-4">
+                  {mealPlans.map((plan) => (
+                    <div key={plan.id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{plan.plan_name}</h3>
+                          <p className="text-sm text-gray-500">
+                            Created: {new Date(plan.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="w-full h-8 text-xs"
-                            onClick={() => addMealToDay(day, mealType, zambianRecipes[0])}
+                            onClick={() => setCurrentPlan(plan)}
                           >
-                            <Plus className="w-3 h-3 mr-1" />
-                            Add
+                            View
                           </Button>
-                        )}
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteMealPlan(plan.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-          <TabsContent value="recipes" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Zambian Recipes</h2>
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={recognizeIngredients}>
-                  <Camera className="w-4 h-4 mr-2" />
-                  Scan Ingredients
-                </Button>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Recipe
-                </Button>
+        {currentPlan && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Utensils className="h-5 w-5" />
+                {currentPlan.plan_name}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-2">Weekly Menu</h4>
+                  {currentPlan.recipes && Array.isArray(currentPlan.recipes) ? (
+                    <div className="space-y-2">
+                      {currentPlan.recipes.map((day: any, index: number) => (
+                        <div key={index} className="border rounded p-3">
+                          <h5 className="font-medium">{day.day}</h5>
+                          <p className="text-sm text-gray-600">Breakfast: {day.breakfast}</p>
+                          <p className="text-sm text-gray-600">Lunch: {day.lunch}</p>
+                          <p className="text-sm text-gray-600">Dinner: {day.dinner}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No recipes available</p>
+                  )}
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Nutritional Info</h4>
+                  {currentPlan.nutritional_info ? (
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Calories:</span>
+                        <Badge variant="outline">{currentPlan.nutritional_info.calories || 'N/A'}</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Protein:</span>
+                        <Badge variant="outline">{currentPlan.nutritional_info.protein || 'N/A'}g</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Carbs:</span>
+                        <Badge variant="outline">{currentPlan.nutritional_info.carbs || 'N/A'}g</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Fat:</span>
+                        <Badge variant="outline">{currentPlan.nutritional_info.fat || 'N/A'}g</Badge>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No nutritional info available</p>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {zambianRecipes.map((recipe) => (
-                <Card key={recipe.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline">{recipe.category}</Badge>
-                      <Utensils className="w-5 h-5 text-gray-400" />
-                    </div>
-                    
-                    <h3 className="font-semibold text-lg mb-2">{recipe.name}</h3>
-                    
-                    <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span>{recipe.cookingTime} min</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-4 h-4 text-red-400" />
-                        <span>{recipe.nutrition.calories} cal</span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 mb-4">
-                      <h4 className="font-medium text-sm">Ingredients:</h4>
-                      <div className="text-xs text-gray-600 space-y-1">
-                        {recipe.ingredients.slice(0, 3).map((ingredient, i) => (
-                          <p key={i}>
-                            {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                          </p>
-                        ))}
-                        {recipe.ingredients.length > 3 && (
-                          <p className="text-blue-600">+{recipe.ingredients.length - 3} more</p>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <Button className="w-full" size="sm">
-                      View Recipe
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="shopping" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Shopping List</h2>
-              <Button onClick={generateShoppingList}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Generate List
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-md">
-              <CardContent className="p-6">
-                <div className="text-center py-8">
-                  <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Shopping List
-                  </h3>
-                  <p className="text-gray-600">
-                    Add meals to your weekly plan to generate a shopping list
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="nutrition" className="space-y-6">
-            <h2 className="text-2xl font-bold">Nutritional Analysis</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="border-0 shadow-md">
-                <CardContent className="p-6 text-center">
-                  <Heart className="w-8 h-8 mx-auto mb-3 text-red-500" />
-                  <h3 className="font-semibold text-2xl mb-1">1,850</h3>
-                  <p className="text-gray-600">Daily Calories</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-0 shadow-md">
-                <CardContent className="p-6 text-center">
-                  <div className="w-8 h-8 mx-auto mb-3 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">P</span>
-                  </div>
-                  <h3 className="font-semibold text-2xl mb-1">85g</h3>
-                  <p className="text-gray-600">Protein</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-0 shadow-md">
-                <CardContent className="p-6 text-center">
-                  <div className="w-8 h-8 mx-auto mb-3 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">C</span>
-                  </div>
-                  <h3 className="font-semibold text-2xl mb-1">245g</h3>
-                  <p className="text-gray-600">Carbohydrates</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="border-0 shadow-md">
-                <CardContent className="p-6 text-center">
-                  <div className="w-8 h-8 mx-auto mb-3 bg-yellow-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">F</span>
-                  </div>
-                  <h3 className="font-semibold text-2xl mb-1">62g</h3>
-                  <p className="text-gray-600">Fats</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card className="border-0 shadow-md">
-              <CardHeader>
-                <CardTitle>Nutritional Recommendations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <h4 className="font-medium text-green-800 mb-2">
-                      <Leaf className="inline w-4 h-4 mr-1" />
-                      Rich in Local Nutrients
-                    </h4>
-                    <p className="text-green-700 text-sm">
-                      Your meal plan includes plenty of groundnuts (protein), sweet potato leaves (vitamins), 
-                      and kapenta (omega-3 fatty acids) - all excellent sources of nutrition available locally in Zambia.
-                    </p>
-                  </div>
-                  
-                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-medium text-blue-800 mb-2">
-                      <Heart className="inline w-4 h-4 mr-1" />
-                      Balanced Macronutrients
-                    </h4>
-                    <p className="text-blue-700 text-sm">
-                      Your current plan provides a good balance of carbohydrates from nshima and sweet potatoes, 
-                      protein from fish and groundnuts, and healthy fats from traditional cooking methods.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

@@ -198,7 +198,12 @@ export type Database = {
         Row: {
           activity_type: string
           completed_at: string | null
+          content_id: string | null
+          created_at: string | null
+          duration_minutes: number | null
           id: string
+          metadata: Json | null
+          performance_score: number | null
           score: number | null
           subject: string
           time_spent: number | null
@@ -207,7 +212,12 @@ export type Database = {
         Insert: {
           activity_type: string
           completed_at?: string | null
+          content_id?: string | null
+          created_at?: string | null
+          duration_minutes?: number | null
           id?: string
+          metadata?: Json | null
+          performance_score?: number | null
           score?: number | null
           subject: string
           time_spent?: number | null
@@ -216,7 +226,12 @@ export type Database = {
         Update: {
           activity_type?: string
           completed_at?: string | null
+          content_id?: string | null
+          created_at?: string | null
+          duration_minutes?: number | null
           id?: string
+          metadata?: Json | null
+          performance_score?: number | null
           score?: number | null
           subject?: string
           time_spent?: number | null
@@ -373,6 +388,41 @@ export type Database = {
           },
         ]
       }
+      study_assistant_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          language: string | null
+          query: string
+          response: Json
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          language?: string | null
+          query: string
+          response: Json
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          language?: string | null
+          query?: string
+          response?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_assistant_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_goals: {
         Row: {
           created_at: string | null
@@ -404,6 +454,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "study_goals_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_materials: {
+        Row: {
+          curriculum: string | null
+          file_name: string
+          file_path: string
+          file_size: number | null
+          file_type: string
+          grade: string | null
+          id: string
+          metadata: Json | null
+          subject: string | null
+          upload_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          curriculum?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          file_type: string
+          grade?: string | null
+          id?: string
+          metadata?: Json | null
+          subject?: string | null
+          upload_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          curriculum?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          file_type?: string
+          grade?: string | null
+          id?: string
+          metadata?: Json | null
+          subject?: string | null
+          upload_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_materials_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"

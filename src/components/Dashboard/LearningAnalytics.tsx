@@ -12,10 +12,12 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 interface LearningData {
   id: string;
   activity_type: string;
-  content_id: string | null;
-  duration_minutes: number | null;
-  performance_score: number | null;
-  created_at: string;
+  subject: string;
+  score: number | null;
+  time_spent: number | null;
+  completed_at: string | null;
+  user_id: string | null;
+  metadata?: any;
 }
 
 const LearningAnalytics = () => {
@@ -34,7 +36,7 @@ const LearningAnalytics = () => {
       const { data, error } = await supabase
         .from('learning_analytics')
         .select('*')
-        .order('created_at', { ascending: false })
+        .order('completed_at', { ascending: false })
         .limit(100);
 
       if (error) throw error;
