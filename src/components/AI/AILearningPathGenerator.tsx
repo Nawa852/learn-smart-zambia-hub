@@ -1,247 +1,382 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/Auth/AuthProvider';
 import { 
-  Brain, Target, BookOpen, Clock, Star, 
-  ArrowRight, Lightbulb, TrendingUp, Zap
+  BookOpen, 
+  Play, 
+  Clock, 
+  Eye, 
+  ThumbsUp, 
+  Calendar,
+  Brain,
+  Target,
+  Sparkles,
+  Loader2
 } from 'lucide-react';
 
-interface LearningPath {
+interface Video {
   id: string;
   title: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  estimatedTime: string;
-  modules: string[];
-  prerequisites: string[];
-  aiConfidence: number;
-  adaptiveLevel: number;
+  thumbnail: string;
+  duration: string;
+  viewCount: string;
+  likeCount: string;
+  channelTitle: string;
+  publishedAt: string;
+  learningTopic?: string;
+  difficulty?: string;
+}
+
+interface LearningTopic {
+  title: string;
+  description: string;
+  keywords: string;
+  difficulty: string;
+}
+
+interface PathMetadata {
+  topic: string;
+  gradeLevel: string;
+  subject: string;
+  totalVideos: number;
+  estimatedHours: number;
 }
 
 const AILearningPathGenerator = () => {
-  const [learningPaths, setLearningPaths] = useState<LearningPath[]>([]);
-  const [selectedGoal, setSelectedGoal] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [currentSkillLevel, setCurrentSkillLevel] = useState('intermediate');
+  const [topic, setTopic] = useState('');
+  const [gradeLevel, setGradeLevel] = useState('');
+  const [subject, setSubject] = useState('');
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [learningTopics, setLearningTopics] = useState<LearningTopic[]>([]);
+  const [pathMetadata, setPathMetadata] = useState<PathMetadata | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+  const { user } = useAuth();
 
-  const mockPaths: LearningPath[] = [
-    {
-      id: '1',
-      title: 'AI-Powered Full Stack Development',
-      description: 'Master modern web development with AI tools and methodologies',
-      difficulty: 'intermediate',
-      estimatedTime: '12 weeks',
-      modules: ['React Fundamentals', 'AI-Assisted Coding', 'Backend APIs', 'Database Design', 'Deployment'],
-      prerequisites: ['Basic Programming', 'JavaScript'],
-      aiConfidence: 94,
-      adaptiveLevel: 85
-    },
-    {
-      id: '2',
-      title: 'Data Science for Zambian Agriculture',
-      description: 'Apply data science to solve agricultural challenges in Zambia',
-      difficulty: 'advanced',
-      estimatedTime: '16 weeks',
-      modules: ['Python Basics', 'Data Analysis', 'Machine Learning', 'Agricultural Data', 'Policy Impact'],
-      prerequisites: ['Statistics', 'Basic Math'],
-      aiConfidence: 88,
-      adaptiveLevel: 78
-    },
-    {
-      id: '3',
-      title: 'Digital Marketing with AI Tools',
-      description: 'Leverage AI for modern marketing strategies and automation',
-      difficulty: 'beginner',
-      estimatedTime: '8 weeks',
-      modules: ['Marketing Basics', 'AI Content Creation', 'Social Media', 'Analytics', 'Automation'],
-      prerequisites: [],
-      aiConfidence: 91,
-      adaptiveLevel: 92
+  const generateLearningPath = async () => {
+    if (!topic.trim() || !gradeLevel || !subject) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all fields to generate a learning path.",
+        variant: "destructive",
+      });
+      return;
     }
-  ];
 
-  useEffect(() => {
-    setLearningPaths(mockPaths);
-  }, []);
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to generate learning paths.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  const generateNewPath = async () => {
-    setIsGenerating(true);
-    
-    // Simulate AI path generation
-    setTimeout(() => {
-      const newPath: LearningPath = {
-        id: Date.now().toString(),
-        title: `Personalized ${selectedGoal} Learning Journey`,
-        description: `Custom AI-generated path based on your goals and current skill level`,
-        difficulty: currentSkillLevel as any,
-        estimatedTime: '10-14 weeks',
-        modules: ['Foundation', 'Intermediate Concepts', 'Advanced Applications', 'Real-world Projects'],
-        prerequisites: currentSkillLevel === 'beginner' ? [] : ['Basic Knowledge'],
-        aiConfidence: Math.floor(Math.random() * 20) + 80,
-        adaptiveLevel: Math.floor(Math.random() * 30) + 70
-      };
+    setLoading(true);
+    try {
+      console.log('Generating learning path for:', { topic, gradeLevel, subject });
       
-      setLearningPaths(prev => [newPath, ...prev]);
-      setIsGenerating(false);
-    }, 2000);
+      const { data, error } = await supabase.functions.invoke('generate-learning-path', {
+        body: {
+          topic,
+          gradeLevel,
+          subject
+        }
+      });
+
+      if (error) {
+        console.error('Learning path generation error:', error);
+        throw error;
+      }
+
+      console.log('Learning path generated:', data);
+      
+      if (data.videos) {
+        setVideos(data.videos);
+      }
+      
+      if (data.learningTopics) {
+        setLearningTopics(data.learningTopics);
+      }
+      
+      if (data.pathMetadata) {
+        setPathMetadata(data.pathMetadata);
+      }
+
+      toast({
+        title: "Learning Path Generated!",
+        description: `Found ${data.videos?.length || 0} educational videos for your learning journey.`,
+      });
+
+    } catch (error: any) {
+      console.error('Error generating learning path:', error);
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate learning path. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
+  const formatViewCount = (count: string) => {
+    const num = parseInt(count);
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return count;
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   return (
     <div className="space-y-6">
-      <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Brain className="w-8 h-8" />
-            AI Learning Path Generator
-          </CardTitle>
-          <p className="text-purple-100">
-            Personalized learning journeys powered by advanced AI algorithms
-          </p>
-        </CardHeader>
-      </Card>
-
-      {/* Path Generation Controls */}
+      {/* Input Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="w-6 h-6 text-blue-600" />
-            Generate New Learning Path
+            <Brain className="h-6 w-6 text-purple-600" />
+            AI Learning Path Generator
           </CardTitle>
+          <CardDescription>
+            Generate personalized learning paths with curated educational videos
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Learning Goal</label>
-            <input
-              type="text"
-              placeholder="e.g., Web Development, Data Science, AI/ML"
-              value={selectedGoal}
-              onChange={(e) => setSelectedGoal(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-2">Current Skill Level</label>
-            <div className="flex gap-2">
-              {['beginner', 'intermediate', 'advanced'].map(level => (
-                <Button
-                  key={level}
-                  variant={currentSkillLevel === level ? "default" : "outline"}
-                  onClick={() => setCurrentSkillLevel(level)}
-                  className="capitalize"
-                >
-                  {level}
-                </Button>
-              ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="topic">Learning Topic</Label>
+              <Input
+                id="topic"
+                placeholder="e.g., Algebra, Biology, History"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="grade">Grade Level</Label>
+              <Select value={gradeLevel} onValueChange={setGradeLevel}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select grade" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((grade) => (
+                    <SelectItem key={grade} value={`Grade ${grade}`}>
+                      Grade {grade}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="University">University</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="subject">Subject Area</Label>
+              <Select value={subject} onValueChange={setSubject}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Mathematics">Mathematics</SelectItem>
+                  <SelectItem value="Science">Science</SelectItem>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="History">History</SelectItem>
+                  <SelectItem value="Geography">Geography</SelectItem>
+                  <SelectItem value="Physics">Physics</SelectItem>
+                  <SelectItem value="Chemistry">Chemistry</SelectItem>
+                  <SelectItem value="Biology">Biology</SelectItem>
+                  <SelectItem value="Computer Science">Computer Science</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
           <Button 
-            onClick={generateNewPath}
-            disabled={!selectedGoal.trim() || isGenerating}
+            onClick={generateLearningPath}
+            disabled={loading}
             className="w-full"
-            size="lg"
           >
-            {isGenerating ? (
+            {loading ? (
               <>
-                <Zap className="w-4 h-4 mr-2 animate-spin" />
-                AI is generating your path...
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating Learning Path...
               </>
             ) : (
               <>
-                <Lightbulb className="w-4 h-4 mr-2" />
-                Generate AI Learning Path
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generate Learning Path
               </>
             )}
           </Button>
         </CardContent>
       </Card>
 
-      {/* Generated Learning Paths */}
-      <div className="grid gap-6">
-        {learningPaths.map((path) => (
-          <Card key={path.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2">{path.title}</h3>
-                  <p className="text-gray-600 mb-3">{path.description}</p>
-                  
-                  <div className="flex items-center gap-4 mb-4">
-                    <Badge className={getDifficultyColor(path.difficulty)}>
-                      {path.difficulty}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-sm text-gray-600">
-                      <Clock className="w-4 h-4" />
-                      {path.estimatedTime}
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-gray-600">
-                      <TrendingUp className="w-4 h-4" />
-                      {path.aiConfidence}% AI match
-                    </div>
-                  </div>
-                </div>
+      {/* Path Overview */}
+      {pathMetadata && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5 text-green-600" />
+              Learning Path Overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{pathMetadata.totalVideos}</div>
+                <div className="text-sm text-gray-600">Videos</div>
               </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold mb-2">Learning Modules</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {path.modules.map((module, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {index + 1}. {module}
-                      </Badge>
-                    ))}
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">{pathMetadata.estimatedHours}h</div>
+                <div className="text-sm text-gray-600">Study Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{pathMetadata.gradeLevel}</div>
+                <div className="text-sm text-gray-600">Level</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600">{pathMetadata.subject}</div>
+                <div className="text-sm text-gray-600">Subject</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Learning Topics */}
+      {learningTopics.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Learning Journey</CardTitle>
+            <CardDescription>
+              Topics covered in your personalized learning path
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3">
+              {learningTopics.map((topic, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
+                  <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-semibold text-blue-600">{index + 1}</span>
                   </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium">{topic.title}</h4>
+                    <p className="text-sm text-gray-600">{topic.description}</p>
+                  </div>
+                  <Badge variant="outline">{topic.difficulty}</Badge>
                 </div>
-                
-                {path.prerequisites.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold mb-2">Prerequisites</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {path.prerequisites.map((prereq, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {prereq}
-                        </Badge>
-                      ))}
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Video Results */}
+      {videos.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <Play className="h-5 w-5 text-red-600" />
+            Curated Learning Videos ({videos.length})
+          </h3>
+          
+          <div className="grid gap-4">
+            {videos.map((video) => (
+              <Card key={video.id} className="overflow-hidden">
+                <div className="flex flex-col md:flex-row">
+                  <div className="md:w-1/3">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full h-48 md:h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 p-4">
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between">
+                        <h4 className="font-semibold text-lg line-clamp-2">
+                          {video.title}
+                        </h4>
+                        {video.difficulty && (
+                          <Badge variant="secondary">{video.difficulty}</Badge>
+                        )}
+                      </div>
+                      
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {video.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="h-4 w-4" />
+                          {video.channelTitle}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          {video.duration}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Eye className="h-4 w-4" />
+                          {formatViewCount(video.viewCount)} views
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <ThumbsUp className="h-4 w-4" />
+                          {formatViewCount(video.likeCount)}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-sm text-gray-500">
+                          <Calendar className="h-4 w-4" />
+                          {formatDate(video.publishedAt)}
+                        </div>
+                        
+                        <Button
+                          onClick={() => window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank')}
+                          size="sm"
+                        >
+                          <Play className="w-4 h-4 mr-1" />
+                          Watch Video
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                )}
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Adaptive Learning Level</span>
-                    <span className="text-sm text-gray-600">{path.adaptiveLevel}%</span>
-                  </div>
-                  <Progress value={path.adaptiveLevel} className="h-2" />
                 </div>
-                
-                <div className="flex gap-3 pt-4">
-                  <Button className="flex-1">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Start Learning Path
-                  </Button>
-                  <Button variant="outline">
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && videos.length === 0 && pathMetadata === null && (
+        <Card>
+          <CardContent className="text-center py-12">
+            <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Ready to Generate Your Learning Path?
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Enter your learning topic, grade level, and subject to get started with AI-powered educational content.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
