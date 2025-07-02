@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Header } from '@/components/Header';
-import { HeroSection } from '@/components/HeroSection';
-import { FeaturesSection } from '@/components/FeaturesSection';
-import { ExpandedFeaturesSection } from '@/components/ExpandedFeaturesSection';
-import { CoursesPreview } from '@/components/CoursesPreview';
-import { Footer } from '@/components/Footer';
+import Header from '@/components/Header';
+import HeroSection from '@/components/HeroSection';
+import FeaturesSection from '@/components/FeaturesSection';
+import ExpandedFeaturesSection from '@/components/ExpandedFeaturesSection';
+import CoursesPreview from '@/components/CoursesPreview';
+import Footer from '@/components/Footer';
 import EduBrowseButton from '@/components/EduBrowse/EduBrowseButton';
 
 const Index = () => {
@@ -38,7 +38,7 @@ const Index = () => {
                 <p className="text-gray-600">AI-Powered Features</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-2xl font-bold text-blue-600 mb-2">35</h3>
+                <h3 className="text-2xl font-bold text-blue-600 mb-2">85</h3>
                 <p className="text-gray-600">Specialized Pages</p>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-md">

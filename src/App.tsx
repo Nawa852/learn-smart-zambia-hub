@@ -62,6 +62,10 @@ import CommunityPageWrapper from '@/pages/CommunityPage';
 import MealPlannerPageWrapper from '@/pages/MealPlannerPage';
 import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
 
+// New 50 Pages - AI-Powered Features
+import AICurriculumMapperPage from '@/pages/AICurriculumMapperPage';
+import VirtualStudyRoomPage from '@/pages/VirtualStudyRoomPage';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -177,7 +181,7 @@ function App() {
             <Route path="/teach-back-assessment" element={
               <ProtectedRoute>
                 <TeachBackPage />
-              </ProtectedRoute>
+              }</ProtectedRoute>
             } />
             
             <Route path="/ai-learning-paths" element={
@@ -342,6 +346,19 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+
+            {/* New 50 Pages - AI-Powered Features */}
+            <Route path="/ai-curriculum-mapper" element={
+              <ProtectedRoute>
+                <AICurriculumMapperPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/virtual-study-room" element={
+              <ProtectedRoute>
+                <VirtualStudyRoomPage />
               </ProtectedRoute>
             } />
 

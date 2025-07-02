@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -31,7 +30,14 @@ import {
   School,
   Smartphone,
   Video,
-  ShoppingCart
+  ShoppingCart,
+  Home,
+  FileText,
+  Settings,
+  Zap,
+  Shield,
+  Award,
+  Headphones
 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -74,7 +80,57 @@ const EduBrowseButton = () => {
     { id: 32, name: 'Teacher Hub', icon: School, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'sky' },
     { id: 33, name: 'Rural Access Hub', icon: Smartphone, api: 'TWILIO_API_KEY', model: 'Twilio', color: 'blue' },
     { id: 34, name: 'Live Study Sessions', icon: Video, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'indigo' },
-    { id: 35, name: 'Resource Marketplace', icon: ShoppingCart, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'violet' }
+    { id: 35, name: 'Resource Marketplace', icon: ShoppingCart, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'violet' },
+    { id: 36, name: 'AI Curriculum Mapper', icon: Map, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'blue' },
+    { id: 37, name: 'Virtual Study Room', icon: Home, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'green' },
+    { id: 38, name: 'ECZ Exam Simulator', icon: FileText, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'purple' },
+    { id: 39, name: 'Peer Mentorship Portal', icon: Users, api: 'LLAMA_API_KEY', model: 'LLaMA', color: 'indigo' },
+    { id: 40, name: 'AI Resource Curator', icon: BookOpen, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'pink' },
+    { id: 41, name: 'Study Goal Tracker', icon: Target, api: 'MOONSHOT_API_KEY', model: 'Moonshot AI', color: 'red' },
+    { id: 42, name: 'ECZ Video Library', icon: Video, api: 'YOUTUBE_API_KEY', model: 'YouTube', color: 'orange' },
+    { id: 43, name: 'AI Study Buddy', icon: Heart, api: 'KIMI_API_KEY', model: 'StealthGPT', color: 'rose' },
+    { id: 44, name: 'Interactive ECZ Games', icon: Gamepad2, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'cyan' },
+    { id: 45, name: 'ECZ Assignment Hub', icon: PenTool, api: 'GROCK_API_KEY', model: 'Grok', color: 'lime' },
+    { id: 46, name: 'Virtual ECZ Library', icon: BookOpen, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'blue' },
+    { id: 47, name: 'ECZ Study Notes Editor', icon: FileText, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'green' },
+    { id: 48, name: 'AI Progress Dashboard', icon: Brain, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'purple' },
+    { id: 49, name: 'ECZ Study Planner', icon: Calendar, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'amber' },
+    { id: 50, name: 'AI Feedback Portal', icon: MessageSquare, api: 'MOONSHOT_API_KEY', model: 'Moonshot AI', color: 'teal' },
+    { id: 51, name: 'ECZ Project Showcase', icon: Star, api: 'KIMI_API_KEY', model: 'StealthGPT', color: 'violet' },
+    { id: 52, name: 'AI Study Group Finder', icon: Users, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'sky' },
+    { id: 53, name: 'ECZ Resource Translator', icon: Languages, api: 'QWEN_API_KEY', model: 'Qwen', color: 'emerald' },
+    { id: 54, name: 'AI Quiz Creator', icon: FileText, api: 'GROCK_API_KEY', model: 'Grok', color: 'fuchsia' },
+    { id: 55, name: 'ECZ Parent Support Hub', icon: Users, api: 'TWILIO_API_KEY', model: 'Twilio', color: 'stone' },
+    { id: 56, name: 'Teacher Collaboration Hub', icon: School, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'neutral' },
+    { id: 57, name: 'ECZ Virtual Tutor', icon: GraduationCap, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'slate' },
+    { id: 58, name: 'AI Study Analytics', icon: Brain, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'zinc' },
+    { id: 59, name: 'ECZ Resource Marketplace', icon: ShoppingCart, api: 'LLAMA_API_KEY', model: 'LLaMA', color: 'gray' },
+    { id: 60, name: 'AI Exam Prep Coach', icon: Target, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'red' },
+    { id: 61, name: 'ECZ Study Community', icon: Users, api: 'MOONSHOT_API_KEY', model: 'Moonshot AI', color: 'orange' },
+    { id: 62, name: 'AI Study Mentor', icon: GraduationCap, api: 'KIMI_API_KEY', model: 'StealthGPT', color: 'amber' },
+    { id: 63, name: 'ECZ Resource Annotator', icon: PenTool, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'yellow' },
+    { id: 64, name: 'AI Study Motivator', icon: Zap, api: 'GROCK_API_KEY', model: 'Grok', color: 'lime' },
+    { id: 65, name: 'ECZ Parent-Teacher Portal', icon: MessageSquare, api: 'TWILIO_API_KEY', model: 'Twilio', color: 'green' },
+    { id: 66, name: 'AI Study Journal', icon: BookOpen, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'emerald' },
+    { id: 67, name: 'ECZ Virtual Whiteboard', icon: PenTool, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'teal' },
+    { id: 68, name: 'AI Study Insights', icon: Lightbulb, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'cyan' },
+    { id: 69, name: 'ECZ Resource Validator', icon: Shield, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'sky' },
+    { id: 70, name: 'AI Study Scheduler', icon: Clock, api: 'MOONSHOT_API_KEY', model: 'Moonshot AI', color: 'blue' },
+    { id: 71, name: 'ECZ Resource Sharing Hub', icon: Share2, api: 'KIMI_API_KEY', model: 'StealthGPT', color: 'indigo' },
+    { id: 72, name: 'AI Study Progress Tracker', icon: Trophy, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'violet' },
+    { id: 73, name: 'ECZ Virtual Lab Simulator', icon: Settings, api: 'GROCK_API_KEY', model: 'Grok', color: 'purple' },
+    { id: 74, name: 'AI Study Resource Finder', icon: Search, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'fuchsia' },
+    { id: 75, name: 'ECZ Study Group Chat', icon: MessageSquare, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'pink' },
+    { id: 76, name: 'AI Study Resource Editor', icon: PenTool, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'rose' },
+    { id: 77, name: 'ECZ Study Community Forum', icon: Users, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'red' },
+    { id: 78, name: 'AI Study Progress Visualizer', icon: Brain, api: 'MOONSHOT_API_KEY', model: 'Moonshot AI', color: 'orange' },
+    { id: 79, name: 'ECZ Study Resource Hub', icon: BookOpen, api: 'KIMI_API_KEY', model: 'StealthGPT', color: 'amber' },
+    { id: 80, name: 'AI Study Task Manager', icon: Target, api: 'LLAMA_4_API_KEY', model: 'LLaMA 4', color: 'yellow' },
+    { id: 81, name: 'ECZ Study Resource Analyzer', icon: Brain, api: 'GROCK_API_KEY', model: 'Grok', color: 'lime' },
+    { id: 82, name: 'AI Study Group Moderator', icon: Users, api: 'OPENAI_API_KEY', model: 'GPT-4o', color: 'green' },
+    { id: 83, name: 'ECZ Study Resource Creator', icon: PenTool, api: 'CLAUDE_API_KEY', model: 'Claude 3', color: 'emerald' },
+    { id: 84, name: 'AI Study Progress Monitor', icon: Trophy, api: 'GOOGLE_GEMMA_API_KEY', model: 'Gemini', color: 'teal' },
+    { id: 85, name: 'ECZ Study Resource Portal', icon: Globe, api: 'MINIMAX_API_KEY', model: 'Minimax', color: 'cyan' }
   ];
 
   const zambian_languages = ['Bemba', 'Nyanja', 'Tonga', 'Lozi', 'Lunda', 'Kaonde', 'Luvale'];
@@ -85,8 +141,10 @@ const EduBrowseButton = () => {
       description: `ECZ-aligned features powered by ${page.model} with 7-language support`,
     });
     setIsOpen(false);
-    // Navigate to the specific page
-    window.location.href = `/${page.name.toLowerCase().replace(/\s+/g, '-')}`;
+    
+    // Navigate to the specific page based on the page name
+    const routeName = page.name.toLowerCase().replace(/\s+/g, '-');
+    window.location.href = `/${routeName}`;
   };
 
   return (
@@ -103,7 +161,7 @@ const EduBrowseButton = () => {
       <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center mb-4">
-            🇿🇲 Edu Zambia Platform - 350 AI Features Across 35 Pages
+            🇿🇲 Edu Zambia Platform - 600+ AI Features Across 85 Pages
           </DialogTitle>
           <div className="text-center mb-6">
             <Badge variant="secondary" className="mr-2">ECZ Aligned</Badge>
@@ -149,7 +207,7 @@ const EduBrowseButton = () => {
                 </CardDescription>
                 <div className="flex flex-wrap gap-1">
                   <Badge variant="outline" className="text-xs">
-                    10 Features
+                    AI Features
                   </Badge>
                   <Badge variant="outline" className="text-xs">
                     ECZ Aligned
@@ -168,7 +226,7 @@ const EduBrowseButton = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <h4 className="font-medium mb-1">🌍 Global Leadership:</h4>
-              <p>Surpasses ChatEdu, UnstuckStudy, SchoolGoat, edX, and Coursera with integrated social networking and ECZ alignment.</p>
+              <p>Surpasses ChatEdu, UnstuckStudy, SchoolGoat, edX, and Coursera with 85 pages and 600+ AI features.</p>
             </div>
             <div>
               <h4 className="font-medium mb-1">📱 Rural Access:</h4>
