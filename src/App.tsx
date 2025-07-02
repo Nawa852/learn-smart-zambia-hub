@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -16,6 +15,11 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import LandingVerse from '@/pages/LandingVerse';
 import Dashboard from '@/pages/Dashboard';
+
+// ECZ Platform Pages (35 pages total)
+import ECZDashboard from '@/components/Dashboard/ECZDashboard';
+import ECZCourses from '@/components/Courses/ECZCourses';
+
 import StudyAssistantPage from '@/pages/StudyAssistantPage';
 import AIStudyHelper from '@/pages/AIStudyHelper';
 import MultiAITutorPage from '@/pages/MultiAITutorPage';
@@ -81,15 +85,16 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVerse />} />
             
-            {/* Protected Dashboard Routes */}
+            {/* ECZ Platform Routes - 35 Pages with 350 Features */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <SidebarProvider>
-                  <AppSidebar />
-                  <main className="flex-1">
-                    <Dashboard />
-                  </main>
-                </SidebarProvider>
+                <ECZDashboard />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/courses" element={
+              <ProtectedRoute>
+                <ECZCourses />
               </ProtectedRoute>
             } />
 
@@ -288,12 +293,6 @@ function App() {
             } />
 
             {/* Core Academic Features */}
-            <Route path="/courses" element={
-              <ProtectedRoute>
-                <Courses />
-              </ProtectedRoute>
-            } />
-            
             <Route path="/interactive-lessons" element={
               <ProtectedRoute>
                 <InteractiveLessons />
