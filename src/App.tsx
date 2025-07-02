@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,11 +16,6 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import LandingVerse from '@/pages/LandingVerse';
 import Dashboard from '@/pages/Dashboard';
-
-// ECZ Platform Pages (35 pages total)
-import ECZDashboard from '@/components/Dashboard/ECZDashboard';
-import ECZCourses from '@/components/Courses/ECZCourses';
-
 import StudyAssistantPage from '@/pages/StudyAssistantPage';
 import AIStudyHelper from '@/pages/AIStudyHelper';
 import MultiAITutorPage from '@/pages/MultiAITutorPage';
@@ -62,10 +58,6 @@ import CommunityPageWrapper from '@/pages/CommunityPage';
 import MealPlannerPageWrapper from '@/pages/MealPlannerPage';
 import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
 
-// New 50 Pages - AI-Powered Features
-import AICurriculumMapperPage from '@/pages/AICurriculumMapperPage';
-import VirtualStudyRoomPage from '@/pages/VirtualStudyRoomPage';
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -89,16 +81,15 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVerse />} />
             
-            {/* ECZ Platform Routes - 35 Pages with 350 Features */}
+            {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <ECZDashboard />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/courses" element={
-              <ProtectedRoute>
-                <ECZCourses />
+                <SidebarProvider>
+                  <AppSidebar />
+                  <main className="flex-1">
+                    <Dashboard />
+                  </main>
+                </SidebarProvider>
               </ProtectedRoute>
             } />
 
@@ -181,7 +172,7 @@ function App() {
             <Route path="/teach-back-assessment" element={
               <ProtectedRoute>
                 <TeachBackPage />
-              }</ProtectedRoute>
+              </ProtectedRoute>
             } />
             
             <Route path="/ai-learning-paths" element={
@@ -297,6 +288,12 @@ function App() {
             } />
 
             {/* Core Academic Features */}
+            <Route path="/courses" element={
+              <ProtectedRoute>
+                <Courses />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/interactive-lessons" element={
               <ProtectedRoute>
                 <InteractiveLessons />
@@ -346,19 +343,6 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
-              </ProtectedRoute>
-            } />
-
-            {/* New 50 Pages - AI-Powered Features */}
-            <Route path="/ai-curriculum-mapper" element={
-              <ProtectedRoute>
-                <AICurriculumMapperPage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/virtual-study-room" element={
-              <ProtectedRoute>
-                <VirtualStudyRoomPage />
               </ProtectedRoute>
             } />
 
