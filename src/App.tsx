@@ -58,6 +58,58 @@ import CommunityPageWrapper from '@/pages/CommunityPage';
 import MealPlannerPageWrapper from '@/pages/MealPlannerPage';
 import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
 
+// Import all 50 new AI-powered pages
+import AICurriculumMapperPage from '@/pages/AICurriculumMapperPage';
+import VirtualStudyRoomPage from '@/pages/VirtualStudyRoomPage';
+import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
+import PeerMentorshipPortalPage from '@/pages/PeerMentorshipPortalPage';
+import AIResourceCuratorPage from '@/pages/AIResourceCuratorPage';
+import StudyGoalTrackerPage from '@/pages/StudyGoalTrackerPage';
+import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
+import AIStudyBuddyPage from '@/pages/AIStudyBuddyPage';
+import InteractiveECZGamesPage from '@/pages/InteractiveECZGamesPage';
+import ECZAssignmentHubPage from '@/pages/ECZAssignmentHubPage';
+import VirtualECZLibraryPage from '@/pages/VirtualECZLibraryPage';
+import ECZStudyNotesEditorPage from '@/pages/ECZStudyNotesEditorPage';
+import AIProgressDashboardPage from '@/pages/AIProgressDashboardPage';
+import ECZStudyPlannerPage from '@/pages/ECZStudyPlannerPage';
+import AIFeedbackPortalPage from '@/pages/AIFeedbackPortalPage';
+import ECZProjectShowcasePage from '@/pages/ECZProjectShowcasePage';
+import AIStudyGroupFinderPage from '@/pages/AIStudyGroupFinderPage';
+import ECZResourceTranslatorPage from '@/pages/ECZResourceTranslatorPage';
+import AIQuizCreatorPage from '@/pages/AIQuizCreatorPage';
+import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
+import TeacherCollaborationHubPage from '@/pages/TeacherCollaborationHubPage';
+import ECZVirtualTutorPage from '@/pages/ECZVirtualTutorPage';
+import AIStudyAnalyticsPage from '@/pages/AIStudyAnalyticsPage';
+import ECZResourceMarketplacePage from '@/pages/ECZResourceMarketplacePage';
+import AIExamPrepCoachPage from '@/pages/AIExamPrepCoachPage';
+import ECZStudyCommunityPage from '@/pages/ECZStudyCommunityPage';
+import AIStudyMentorPage from '@/pages/AIStudyMentorPage';
+import ECZResourceAnnotatorPage from '@/pages/ECZResourceAnnotatorPage';
+import AIStudyMotivatorPage from '@/pages/AIStudyMotivatorPage';
+import ECZParentTeacherPortalPage from '@/pages/ECZParentTeacherPortalPage';
+import AIStudyJournalPage from '@/pages/AIStudyJournalPage';
+import ECZVirtualWhiteboardPage from '@/pages/ECZVirtualWhiteboardPage';
+import AIStudyInsightsPage from '@/pages/AIStudyInsightsPage';
+import ECZResourceValidatorPage from '@/pages/ECZResourceValidatorPage';
+import AIStudySchedulerPage from '@/pages/AIStudySchedulerPage';
+import ECZResourceSharingHubPage from '@/pages/ECZResourceSharingHubPage';
+import AIStudyProgressTrackerPage from '@/pages/AIStudyProgressTrackerPage';
+import ECZVirtualLabSimulatorPage from '@/pages/ECZVirtualLabSimulatorPage';
+import AIStudyResourceFinderPage from '@/pages/AIStudyResourceFinderPage';
+import ECZStudyGroupChatPage from '@/pages/ECZStudyGroupChatPage';
+import AIStudyResourceEditorPage from '@/pages/AIStudyResourceEditorPage';
+import ECZStudyCommunityForumPage from '@/pages/ECZStudyCommunityForumPage';
+import AIStudyProgressVisualizerPage from '@/pages/AIStudyProgressVisualizerPage';
+import ECZStudyResourceHubPage from '@/pages/ECZStudyResourceHubPage';
+import AIStudyTaskManagerPage from '@/pages/AIStudyTaskManagerPage';
+import ECZStudyResourceAnalyzerPage from '@/pages/ECZStudyResourceAnalyzerPage';
+import AIStudyGroupModeratorPage from '@/pages/AIStudyGroupModeratorPage';
+import ECZStudyResourceCreatorPage from '@/pages/ECZStudyResourceCreatorPage';
+import AIStudyProgressMonitorPage from '@/pages/AIStudyProgressMonitorPage';
+import ECZStudyResourcePortalPage from '@/pages/ECZStudyResourcePortalPage';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -343,6 +395,307 @@ function App() {
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            } />
+
+            {/* 50 NEW AI-POWERED PAGES */}
+            <Route path="/ai-curriculum-mapper" element={
+              <ProtectedRoute>
+                <AICurriculumMapperPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/virtual-study-room" element={
+              <ProtectedRoute>
+                <VirtualStudyRoomPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-exam-simulator" element={
+              <ProtectedRoute>
+                <ECZExamSimulatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/peer-mentorship-portal" element={
+              <ProtectedRoute>
+                <PeerMentorshipPortalPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-resource-curator" element={
+              <ProtectedRoute>
+                <AIResourceCuratorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/study-goal-tracker" element={
+              <ProtectedRoute>
+                <StudyGoalTrackerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-video-library" element={
+              <ProtectedRoute>
+                <ECZVideoLibraryPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-buddy" element={
+              <ProtectedRoute>
+                <AIStudyBuddyPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/interactive-ecz-games" element={
+              <ProtectedRoute>
+                <InteractiveECZGamesPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-assignment-hub" element={
+              <ProtectedRoute>
+                <ECZAssignmentHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/virtual-ecz-library" element={
+              <ProtectedRoute>
+                <VirtualECZLibraryPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-notes-editor" element={
+              <ProtectedRoute>
+                <ECZStudyNotesEditorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-progress-dashboard" element={
+              <ProtectedRoute>
+                <AIProgressDashboardPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-planner" element={
+              <ProtectedRoute>
+                <ECZStudyPlannerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-feedback-portal" element={
+              <ProtectedRoute>
+                <AIFeedbackPortalPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-project-showcase" element={
+              <ProtectedRoute>
+                <ECZProjectShowcasePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-group-finder" element={
+              <ProtectedRoute>
+                <AIStudyGroupFinderPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-resource-translator" element={
+              <ProtectedRoute>
+                <ECZResourceTranslatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-quiz-creator" element={
+              <ProtectedRoute>
+                <AIQuizCreatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-parent-support-hub" element={
+              <ProtectedRoute>
+                <ECZParentSupportHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/teacher-collaboration-hub" element={
+              <ProtectedRoute>
+                <TeacherCollaborationHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-virtual-tutor" element={
+              <ProtectedRoute>
+                <ECZVirtualTutorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-analytics" element={
+              <ProtectedRoute>
+                <AIStudyAnalyticsPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-resource-marketplace" element={
+              <ProtectedRoute>
+                <ECZResourceMarketplacePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-exam-prep-coach" element={
+              <ProtectedRoute>
+                <AIExamPrepCoachPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-community" element={
+              <ProtectedRoute>
+                <ECZStudyCommunityPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-mentor" element={
+              <ProtectedRoute>
+                <AIStudyMentorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-resource-annotator" element={
+              <ProtectedRoute>
+                <ECZResourceAnnotatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-motivator" element={
+              <ProtectedRoute>
+                <AIStudyMotivatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-parent-teacher-portal" element={
+              <ProtectedRoute>
+                <ECZParentTeacherPortalPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-journal" element={
+              <ProtectedRoute>
+                <AIStudyJournalPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-virtual-whiteboard" element={
+              <ProtectedRoute>
+                <ECZVirtualWhiteboardPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-insights" element={
+              <ProtectedRoute>
+                <AIStudyInsightsPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-resource-validator" element={
+              <ProtectedRoute>
+                <ECZResourceValidatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-scheduler" element={
+              <ProtectedRoute>
+                <AIStudySchedulerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-resource-sharing-hub" element={
+              <ProtectedRoute>
+                <ECZResourceSharingHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-progress-tracker" element={
+              <ProtectedRoute>
+                <AIStudyProgressTrackerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-virtual-lab-simulator" element={
+              <ProtectedRoute>
+                <ECZVirtualLabSimulatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-resource-finder" element={
+              <ProtectedRoute>
+                <AIStudyResourceFinderPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-group-chat" element={
+              <ProtectedRoute>
+                <ECZStudyGroupChatPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-resource-editor" element={
+              <ProtectedRoute>
+                <AIStudyResourceEditorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-community-forum" element={
+              <ProtectedRoute>
+                <ECZStudyCommunityForumPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-progress-visualizer" element={
+              <ProtectedRoute>
+                <AIStudyProgressVisualizerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-resource-hub" element={
+              <ProtectedRoute>
+                <ECZStudyResourceHubPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-task-manager" element={
+              <ProtectedRoute>
+                <AIStudyTaskManagerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-resource-analyzer" element={
+              <ProtectedRoute>
+                <ECZStudyResourceAnalyzerPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-group-moderator" element={
+              <ProtectedRoute>
+                <AIStudyGroupModeratorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-resource-creator" element={
+              <ProtectedRoute>
+                <ECZStudyResourceCreatorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ai-study-progress-monitor" element={
+              <ProtectedRoute>
+                <AIStudyProgressMonitorPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/ecz-study-resource-portal" element={
+              <ProtectedRoute>
+                <ECZStudyResourcePortalPage />
               </ProtectedRoute>
             } />
 
