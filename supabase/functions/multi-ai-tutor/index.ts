@@ -83,6 +83,12 @@ serve(async (req) => {
         case 'deepseek':
           response = await callDeepSeek(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
+        case 'qwen':
+          response = await callQwen(message, systemPrompt || 'You are a helpful educational assistant.');
+          break;
+        case 'grok':
+          response = await callGrok(message, systemPrompt || 'You are a helpful educational assistant.');
+          break;
         case 'gemini':
           response = await callGemini(message, systemPrompt || 'You are a helpful educational assistant.');
           break;
@@ -184,7 +190,7 @@ async function callClaude(message: string, systemPrompt: string): Promise<string
 }
 
 async function callDeepSeek(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('DEEPSEEK_API_KEY')
+  const apiKey = Deno.env.get('EEPSEEK_API_KEY')
   if (!apiKey) throw new Error('DeepSeek API key not configured')
 
   const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
@@ -199,7 +205,7 @@ async function callDeepSeek(message: string, systemPrompt: string): Promise<stri
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_tokens: 1000,
+      max_tokens: 1500,
       temperature: 0.7,
     }),
   })
@@ -242,6 +248,68 @@ async function callGemini(message: string, systemPrompt: string): Promise<string
   return data.candidates[0]?.content?.parts[0]?.text || 'No response generated'
 }
 
+async function callQwen(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('QWEN_API_KEY')
+  if (!apiKey) throw new Error('Qwen API key not configured')
+
+  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'qwen-turbo',
+      input: {
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ]
+      },
+      parameters: {
+        max_tokens: 1500,
+        temperature: 0.7,
+      }
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Qwen API error: ${response.status}`)
+  }
+
+  const data = await response.json()
+  return data.output?.text || 'No response generated'
+}
+
+async function callGrok(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('GROCK_API_KEY')
+  if (!apiKey) throw new Error('Grok API key not configured')
+
+  const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'grok-beta',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      max_tokens: 1500,
+      temperature: 0.7,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Grok API error: ${response.status}`)
+  }
+
+  const data = await response.json()
+  return data.choices[0]?.message?.content || 'No response generated'
+}
+
 async function callLlama(message: string, systemPrompt: string): Promise<string> {
   const apiKey = Deno.env.get('LLAMA_API_KEY')
   if (!apiKey) throw new Error('LLaMA API key not configured')
@@ -258,7 +326,7 @@ async function callLlama(message: string, systemPrompt: string): Promise<string>
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_tokens: 1000,
+      max_tokens: 1500,
       temperature: 0.7,
     }),
   })

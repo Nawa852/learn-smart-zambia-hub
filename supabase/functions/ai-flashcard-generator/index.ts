@@ -34,7 +34,7 @@ serve(async (req) => {
     }
 
     const { topic, difficulty, count = 10, subject } = await req.json();
-    const openaiApiKey = Deno.env.get('PENAI_API_KEY');
+    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
 
     if (!openaiApiKey) {
       throw new Error('OpenAI API key not configured');

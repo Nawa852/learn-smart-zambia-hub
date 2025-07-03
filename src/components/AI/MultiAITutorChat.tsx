@@ -47,6 +47,7 @@ const MultiAITutorChat = () => {
     { value: 'claude', label: 'Anthropic Claude', icon: MessageCircle, color: 'bg-orange-100 text-orange-800', description: 'Excellent for detailed analysis and reasoning' },
     { value: 'deepseek', label: 'DeepSeek', icon: Cpu, color: 'bg-blue-100 text-blue-800', description: 'Strong in math, coding, and technical subjects' },
     { value: 'qwen', label: 'Qwen AI', icon: Sparkles, color: 'bg-purple-100 text-purple-800', description: 'Multilingual support and cultural context' },
+    { value: 'grok', label: 'Grok AI', icon: Zap, color: 'bg-cyan-100 text-cyan-800', description: 'Advanced reasoning and creative problem solving' },
     { value: 'llama', label: 'LLaMA', icon: Zap, color: 'bg-red-100 text-red-800', description: 'Fast responses and efficient processing' }
   ];
 

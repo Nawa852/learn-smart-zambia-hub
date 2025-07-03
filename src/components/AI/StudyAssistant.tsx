@@ -124,13 +124,11 @@ const StudyAssistant = () => {
       // Route to different AI models based on selection
       let edgeFunction = 'multi-ai-tutor';
       
-      const { data, error } = await supabase.functions.invoke(edgeFunction, {
+      const { data, error } = await supabase.functions.invoke('comprehensive-ai-assistant', {
         body: {
           query: inputMessage,
-          language: selectedLanguage,
-          aiModel: selectedAIModel,
-          userId: user.id,
-          context: 'ECZ curriculum tutoring'
+          feature: 'study_assistant',
+          context: `Language: ${selectedLanguage}, ECZ curriculum tutoring`
         }
       });
 
