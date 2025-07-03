@@ -118,7 +118,7 @@ const AICurriculumMapperPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Brain className="w-5 h-5 text-blue-600" />
-                  AI-Powered Curriculum Analyzer (GPT-4o)
+                  AI-Powered Curriculum Analyzer (Grok)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

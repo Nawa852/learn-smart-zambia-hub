@@ -107,7 +107,7 @@ const AIResourceCuratorPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Search className="w-5 h-5 text-cyan-600" />
-                  AI-Powered Resource Scanner (Minimax)
+                  AI-Powered Resource Scanner (Grok)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

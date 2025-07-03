@@ -134,7 +134,7 @@ const VirtualStudyRoomPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="w-5 h-5 text-green-600" />
-                  AI-Powered Room Customizer (Claude 3)
+                  AI-Powered Room Customizer (Grok)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">

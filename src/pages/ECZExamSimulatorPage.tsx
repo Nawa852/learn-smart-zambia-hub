@@ -120,7 +120,7 @@ const ECZExamSimulatorPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-purple-600" />
-                  AI-Powered Exam Generator (Gemini)
+                  AI-Powered Exam Generator (Grok)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

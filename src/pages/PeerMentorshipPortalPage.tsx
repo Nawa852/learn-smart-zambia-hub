@@ -106,7 +106,7 @@ const PeerMentorshipPortalPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-indigo-600" />
-                  AI-Powered Mentor Matcher (LLaMA)
+                  AI-Powered Mentor Matcher (Grok)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
