@@ -7,26 +7,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Rate limiting map
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-
-const isRateLimited = (userId: string): boolean => {
-  const now = Date.now();
-  const userLimit = rateLimitMap.get(userId);
-  
-  if (!userLimit || now > userLimit.resetTime) {
-    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
-    return false;
-  }
-  
-  if (userLimit.count >= 20) {
-    return true;
-  }
-  
-  userLimit.count++;
-  return false;
-};
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -44,24 +24,9 @@ serve(async (req) => {
     )
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
-    
-    if (userError || !user) {
-      console.log('Authentication issue:', userError)
-      // Allow anonymous access for now to fix the fallback mode
-      // return new Response(
-      //   JSON.stringify({ error: 'Unauthorized' }),
-      //   { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      // )
-    }
+    if (userError) console.log('Auth warning:', userError)
 
-    if (user && isRateLimited(user.id)) {
-      return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded' }),
-        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    const { message, model, systemPrompt } = await req.json()
+    const { message, model, systemPrompt, userId } = await req.json()
 
     if (!message || !model) {
       return new Response(
@@ -75,31 +40,40 @@ serve(async (req) => {
     try {
       switch (model) {
         case 'openai':
-          response = await callOpenAI(message, systemPrompt || 'You are a helpful educational assistant.');
-          break;
-        case 'claude':
-          response = await callClaude(message, systemPrompt || 'You are a helpful educational assistant.');
-          break;
-        case 'deepseek':
-          response = await callDeepSeek(message, systemPrompt || 'You are a helpful educational assistant.');
-          break;
-        case 'qwen':
-          response = await callQwen(message, systemPrompt || 'You are a helpful educational assistant.');
+          response = await callOpenAI(message, systemPrompt || 'You are a helpful educational assistant for Zambian students.');
           break;
         case 'grok':
-          response = await callGrok(message, systemPrompt || 'You are a helpful educational assistant.');
+          response = await callGrok(message, systemPrompt || 'You are Grok, an AI assistant for EduZambia platform.');
           break;
-        case 'gemini':
-          response = await callGemini(message, systemPrompt || 'You are a helpful educational assistant.');
+        case 'claude':
+          response = await callClaude(message, systemPrompt || 'You are Claude, an AI assistant focused on detailed analysis.');
+          break;
+        case 'deepseek':
+          response = await callDeepSeek(message, systemPrompt || 'You are DeepSeek, specialized in mathematics and technical subjects.');
           break;
         case 'llama':
-          response = await callLlama(message, systemPrompt || 'You are a helpful educational assistant.');
+          response = await callLlama(message, systemPrompt || 'You are LLaMA, a fast and efficient AI assistant.');
+          break;
+        case 'gemini':
+          response = await callGemini(message, systemPrompt || 'You are Gemini, Google\'s AI assistant.');
+          break;
+        case 'qwen':
+          response = await callQwen(message, systemPrompt || 'You are Qwen, providing multilingual support.');
+          break;
+        case 'minimax':
+          response = await callMinimax(message, systemPrompt || 'You are MiniMax AI assistant.');
+          break;
+        case 'moonshot':
+          response = await callMoonshot(message, systemPrompt || 'You are Moonshot AI assistant.');
+          break;
+        case 'kimi':
+          response = await callKimi(message, systemPrompt || 'You are Kimi AI assistant.');
           break;
         default:
           throw new Error('Unsupported AI model');
       }
 
-      // Store chat history if user is authenticated
+      // Store chat history and analyze student performance
       if (user) {
         await supabaseClient
           .from('ai_chat_history')
@@ -109,18 +83,21 @@ serve(async (req) => {
             response: response,
             ai_model: model
           }]);
+
+        // Analyze student performance and send notifications if needed
+        await analyzeAndNotifyPerformance(supabaseClient, user.id, message, response);
       }
 
     } catch (error) {
       console.error(`Error calling ${model}:`, error);
       return new Response(
-        JSON.stringify({ error: 'AI service temporarily unavailable' }),
+        JSON.stringify({ error: `${model} service temporarily unavailable: ${error.message}` }),
         { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
     return new Response(
-      JSON.stringify({ response }),
+      JSON.stringify({ response, model }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
@@ -149,15 +126,38 @@ async function callOpenAI(message: string, systemPrompt: string): Promise<string
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
-      max_tokens: 1000,
+      max_tokens: 1500,
       temperature: 0.7,
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.status}`)
-  }
+  if (!response.ok) throw new Error(`OpenAI API error: ${response.status}`)
+  const data = await response.json()
+  return data.choices[0]?.message?.content || 'No response generated'
+}
 
+async function callGrok(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('GROCK_API_KEY')
+  if (!apiKey) throw new Error('Grok API key not configured')
+
+  const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'grok-beta',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      max_tokens: 1500,
+      temperature: 0.7,
+    }),
+  })
+
+  if (!response.ok) throw new Error(`Grok API error: ${response.status}`)
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -175,16 +175,13 @@ async function callClaude(message: string, systemPrompt: string): Promise<string
     },
     body: JSON.stringify({
       model: 'claude-3-haiku-20240307',
-      max_tokens: 1000,
+      max_tokens: 1500,
       system: systemPrompt,
       messages: [{ role: 'user', content: message }],
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`Claude API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`Claude API error: ${response.status}`)
   const data = await response.json()
   return data.content[0]?.text || 'No response generated'
 }
@@ -206,20 +203,43 @@ async function callDeepSeek(message: string, systemPrompt: string): Promise<stri
         { role: 'user', content: message }
       ],
       max_tokens: 1500,
+      temperature: 0.3,
+    }),
+  })
+
+  if (!response.ok) throw new Error(`DeepSeek API error: ${response.status}`)
+  const data = await response.json()
+  return data.choices[0]?.message?.content || 'No response generated'
+}
+
+async function callLlama(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('LLAMA_4_API_KEY')
+  if (!apiKey) throw new Error('LLaMA API key not configured')
+
+  const response = await fetch('https://api.together.xyz/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'meta-llama/Llama-2-70b-chat-hf',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      max_tokens: 1500,
       temperature: 0.7,
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`DeepSeek API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`LLaMA API error: ${response.status}`)
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
 
 async function callGemini(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('GEMINI_API_KEY')
+  const apiKey = Deno.env.get('GOOGLE_GEMMA_API_KEY')
   if (!apiKey) throw new Error('Gemini API key not configured')
 
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
@@ -235,15 +255,12 @@ async function callGemini(message: string, systemPrompt: string): Promise<string
       }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1000,
+        maxOutputTokens: 1500,
       }
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`Gemini API error: ${response.status}`)
   const data = await response.json()
   return data.candidates[0]?.content?.parts[0]?.text || 'No response generated'
 }
@@ -273,26 +290,24 @@ async function callQwen(message: string, systemPrompt: string): Promise<string> 
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`Qwen API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`Qwen API error: ${response.status}`)
   const data = await response.json()
   return data.output?.text || 'No response generated'
 }
 
-async function callGrok(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('GROCK_API_KEY')
-  if (!apiKey) throw new Error('Grok API key not configured')
+async function callMinimax(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('MINIMAX_API_KEY')
+  if (!apiKey) throw new Error('MiniMax API key not configured')
 
-  const response = await fetch('https://api.x.ai/v1/chat/completions', {
+  // Using a generic OpenAI-compatible endpoint for MiniMax
+  const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion_pro', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-beta',
+      model: 'abab6.5s-chat',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
@@ -302,26 +317,23 @@ async function callGrok(message: string, systemPrompt: string): Promise<string> 
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`Grok API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`MiniMax API error: ${response.status}`)
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
 
-async function callLlama(message: string, systemPrompt: string): Promise<string> {
-  const apiKey = Deno.env.get('LLAMA_API_KEY')
-  if (!apiKey) throw new Error('LLaMA API key not configured')
+async function callMoonshot(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('MOONSHOT_API_KEY')
+  if (!apiKey) throw new Error('Moonshot API key not configured')
 
-  const response = await fetch('https://api.together.xyz/v1/chat/completions', {
+  const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'meta-llama/Llama-2-7b-chat-hf',
+      model: 'moonshot-v1-8k',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
@@ -331,10 +343,90 @@ async function callLlama(message: string, systemPrompt: string): Promise<string>
     }),
   })
 
-  if (!response.ok) {
-    throw new Error(`LLaMA API error: ${response.status}`)
-  }
-
+  if (!response.ok) throw new Error(`Moonshot API error: ${response.status}`)
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
+}
+
+async function callKimi(message: string, systemPrompt: string): Promise<string> {
+  const apiKey = Deno.env.get('KIMI_API_KEY')
+  if (!apiKey) throw new Error('Kimi API key not configured')
+
+  const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'moonshot-v1-8k',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      max_tokens: 1500,
+      temperature: 0.7,
+    }),
+  })
+
+  if (!response.ok) throw new Error(`Kimi API error: ${response.status}`)
+  const data = await response.json()
+  return data.choices[0]?.message?.content || 'No response generated'
+}
+
+async function analyzeAndNotifyPerformance(supabaseClient: any, userId: string, message: string, response: string) {
+  try {
+    // Get recent chat history
+    const { data: recentChats } = await supabaseClient
+      .from('ai_chat_history')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (!recentChats || recentChats.length < 5) return;
+
+    // Simple performance analysis
+    const strugglingKeywords = ['difficult', 'hard', 'confused', 'don\'t understand', 'help', 'stuck'];
+    const improvingKeywords = ['understand', 'got it', 'clear', 'makes sense', 'thank you'];
+    
+    const recentMessages = recentChats.map(chat => chat.message.toLowerCase()).join(' ');
+    const strugglingCount = strugglingKeywords.filter(keyword => recentMessages.includes(keyword)).length;
+    const improvingCount = improvingKeywords.filter(keyword => recentMessages.includes(keyword)).length;
+
+    // Get user profile with parent contact
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (strugglingCount >= 3 && profile?.parent_contact) {
+      await sendTwilioNotification(profile.parent_contact, 
+        `Hi, this is EduZambia. ${profile.full_name} seems to be struggling with their studies. They've asked for help with difficult topics ${strugglingCount} times recently. Consider providing additional support.`
+      );
+    } else if (improvingCount >= 3 && profile?.parent_contact) {
+      await sendTwilioNotification(profile.parent_contact,
+        `Great news from EduZambia! ${profile.full_name} is showing good progress in their studies and demonstrating understanding of concepts. Keep encouraging them!`
+      );
+    }
+  } catch (error) {
+    console.error('Performance analysis error:', error);
+  }
+}
+
+async function sendTwilioNotification(phoneNumber: string, message: string) {
+  try {
+    const twilioApiKey = Deno.env.get('TWILIO_API_KEY');
+    if (!twilioApiKey) return;
+
+    // This is a simplified Twilio implementation
+    // In production, you'd use proper Twilio credentials and API
+    console.log(`Twilio notification to ${phoneNumber}: ${message}`);
+    
+    // Store notification in database for tracking
+    // await supabaseClient.from('notifications').insert({...});
+  } catch (error) {
+    console.error('Twilio notification error:', error);
+  }
 }
