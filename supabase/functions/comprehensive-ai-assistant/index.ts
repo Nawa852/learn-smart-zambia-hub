@@ -25,29 +25,30 @@ serve(async (req) => {
     );
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-    if (userError) {
-      console.log('Auth warning:', userError);
+    
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const { query, feature, context } = await req.json();
-
-    if (!query) {
-      return new Response(
-        JSON.stringify({ error: 'Query is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
 
     // Get API keys with fallbacks
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
     const grokApiKey = Deno.env.get('GROCK_API_KEY');
     const claudeApiKey = Deno.env.get('CLAUDE_API_KEY');
 
-    console.log('Available API keys:', {
-      openai: !!openaiApiKey,
-      grok: !!grokApiKey,
-      claude: !!claudeApiKey
-    });
+    if (!openaiApiKey && !grokApiKey && !claudeApiKey) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'No AI API keys configured. Please configure at least one AI service.',
+          success: false 
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     let response = '';
     let usedModel = '';
@@ -66,7 +67,6 @@ serve(async (req) => {
     try {
       // Try OpenAI first
       if (openaiApiKey && !response) {
-        console.log('Trying OpenAI...');
         const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -85,18 +85,14 @@ serve(async (req) => {
         });
 
         if (openaiResponse.ok) {
-          console.log('OpenAI response received');
           const openaiData = await openaiResponse.json();
           response = openaiData.choices[0]?.message?.content || '';
           usedModel = 'GPT-4o-mini';
-        } else {
-          console.log('OpenAI failed:', openaiResponse.status);
         }
       }
 
       // Try Grok as fallback
       if (grokApiKey && !response) {
-        console.log('Trying Grok...');
         const grokResponse = await fetch('https://api.x.ai/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -115,64 +111,51 @@ serve(async (req) => {
         });
 
         if (grokResponse.ok) {
-          console.log('Grok response received');
           const grokData = await grokResponse.json();
           response = grokData.choices[0]?.message?.content || '';
           usedModel = 'Grok';
-        } else {
-          console.log('Grok failed:', grokResponse.status);
         }
       }
 
       // Try Claude as final fallback
       if (claudeApiKey && !response) {
-        console.log('Trying Claude...');
         const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: {
-            'x-api-key': claudeApiKey,
+            'Authorization': `Bearer ${claudeApiKey}`,
             'Content-Type': 'application/json',
             'anthropic-version': '2023-06-01'
           },
           body: JSON.stringify({
-            model: 'claude-3-haiku-20240307',
+            model: 'claude-3-sonnet-20240229',
             max_tokens: 1000,
-            system: systemPrompt,
-            messages: [{ role: 'user', content: query }]
+            messages: [
+              { role: 'user', content: `${systemPrompt}\n\nStudent question: ${query}` }
+            ]
           }),
         });
 
         if (claudeResponse.ok) {
-          console.log('Claude response received');
           const claudeData = await claudeResponse.json();
           response = claudeData.content[0]?.text || '';
           usedModel = 'Claude';
-        } else {
-          console.log('Claude failed:', claudeResponse.status);
         }
       }
 
       if (!response) {
-        console.log('All AI services failed, using fallback');
-        response = "I'm experiencing technical difficulties with AI services right now. Here are some general study tips while I get back online:\n\n• Break complex problems into smaller steps\n• Practice regularly rather than cramming\n• Ask specific questions about what you don't understand\n• Use multiple resources to reinforce learning\n\nPlease try asking your question again in a few minutes.";
+        response = "I'm experiencing technical difficulties right now. Please try again in a moment, or contact support if the problem persists.";
         usedModel = 'Fallback';
       }
 
-      // Log the interaction if user is authenticated
-      if (user) {
-        try {
-          await supabaseClient
-            .from('ai_chat_history')
-            .insert([{
-              user_id: user.id,
-              message: query,
-              response: response,
-              chat_type: feature || 'comprehensive_ai'
-            }]);
-        } catch (dbError) {
-          console.log('Database insert warning:', dbError);
-        }
-      }
+      // Log the interaction
+      await supabaseClient
+        .from('ai_chat_history')
+        .insert([{
+          user_id: user.id,
+          message: query,
+          response: response,
+          chat_type: feature || 'comprehensive_ai'
+        }]);
 
       return new Response(JSON.stringify({ 
         response: response,
@@ -200,7 +183,7 @@ Please try asking your question again in a few minutes.`;
         response: fallbackResponse,
         model: 'Fallback',
         success: false,
-        warning: 'AI service temporarily unavailable'
+        error: 'AI service temporarily unavailable'
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -209,12 +192,10 @@ Please try asking your question again in a few minutes.`;
   } catch (error) {
     console.error('Error in comprehensive-ai-assistant function:', error);
     return new Response(JSON.stringify({ 
-      response: "I'm experiencing technical difficulties. Please try again in a moment.",
-      model: 'Error',
-      success: false,
-      error: 'Internal server error'
+      error: error.message,
+      success: false
     }), {
-      status: 200,
+      status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

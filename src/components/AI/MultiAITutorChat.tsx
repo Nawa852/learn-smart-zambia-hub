@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, Send, Bot, Zap, MessageCircle, Sparkles, Cpu, Globe, Rocket, Star } from 'lucide-react';
+import { Brain, Send, Bot, Zap, MessageCircle, Sparkles, Cpu } from 'lucide-react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -27,13 +27,13 @@ const MultiAITutorChat = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Hello! I'm your multi-AI tutor powered by the world's most advanced AI models. Choose an AI model and ask me anything about your studies!",
+      content: "Hello! I'm your multi-AI tutor. I can help you learn using different AI models, each with their own strengths. Choose an AI model and ask me anything!",
       timestamp: new Date(),
     }
   ]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<string>('grok');
+  const [selectedModel, setSelectedModel] = useState<string>('openai');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -43,76 +43,12 @@ const MultiAITutorChat = () => {
   useEffect(scrollToBottom, [messages]);
 
   const aiModels = [
-    { 
-      value: 'grok', 
-      label: 'Grok AI', 
-      icon: Zap, 
-      color: 'bg-cyan-100 text-cyan-800', 
-      description: 'Advanced reasoning and creative problem solving with real-time knowledge' 
-    },
-    { 
-      value: 'openai', 
-      label: 'OpenAI GPT-4o-mini', 
-      icon: Brain, 
-      color: 'bg-green-100 text-green-800', 
-      description: 'Excellent for general tutoring, explanations, and creative solutions' 
-    },
-    { 
-      value: 'claude', 
-      label: 'Anthropic Claude', 
-      icon: MessageCircle, 
-      color: 'bg-orange-100 text-orange-800', 
-      description: 'Superior for detailed analysis, critical thinking, and comprehensive explanations' 
-    },
-    { 
-      value: 'deepseek', 
-      label: 'DeepSeek', 
-      icon: Cpu, 
-      color: 'bg-blue-100 text-blue-800', 
-      description: 'Specialized in mathematics, coding, and technical subjects with step-by-step solutions' 
-    },
-    { 
-      value: 'llama', 
-      label: 'LLaMA 4', 
-      icon: Rocket, 
-      color: 'bg-red-100 text-red-800', 
-      description: 'Fast responses and efficient processing for quick learning' 
-    },
-    { 
-      value: 'gemini', 
-      label: 'Google Gemini', 
-      icon: Star, 
-      color: 'bg-purple-100 text-purple-800', 
-      description: 'Multimodal AI with strong visual understanding and analysis' 
-    },
-    { 
-      value: 'qwen', 
-      label: 'Qwen AI', 
-      icon: Globe, 
-      color: 'bg-indigo-100 text-indigo-800', 
-      description: 'Excellent multilingual support with cultural context awareness' 
-    },
-    { 
-      value: 'minimax', 
-      label: 'MiniMax', 
-      icon: Sparkles, 
-      color: 'bg-pink-100 text-pink-800', 
-      description: 'Creative AI for innovative problem-solving approaches' 
-    },
-    { 
-      value: 'moonshot', 
-      label: 'Moonshot AI', 
-      icon: Rocket, 
-      color: 'bg-yellow-100 text-yellow-800', 
-      description: 'Long-context AI for comprehensive document analysis' 
-    },
-    { 
-      value: 'kimi', 
-      label: 'Kimi AI', 
-      icon: Brain, 
-      color: 'bg-teal-100 text-teal-800', 
-      description: 'Intelligent assistant with strong reasoning capabilities' 
-    }
+    { value: 'openai', label: 'OpenAI GPT-4o-mini', icon: Brain, color: 'bg-green-100 text-green-800', description: 'Great for general tutoring and explanations' },
+    { value: 'claude', label: 'Anthropic Claude', icon: MessageCircle, color: 'bg-orange-100 text-orange-800', description: 'Excellent for detailed analysis and reasoning' },
+    { value: 'deepseek', label: 'DeepSeek', icon: Cpu, color: 'bg-blue-100 text-blue-800', description: 'Strong in math, coding, and technical subjects' },
+    { value: 'qwen', label: 'Qwen AI', icon: Sparkles, color: 'bg-purple-100 text-purple-800', description: 'Multilingual support and cultural context' },
+    { value: 'grok', label: 'Grok AI', icon: Zap, color: 'bg-cyan-100 text-cyan-800', description: 'Advanced reasoning and creative problem solving' },
+    { value: 'llama', label: 'LLaMA', icon: Zap, color: 'bg-red-100 text-red-800', description: 'Fast responses and efficient processing' }
   ];
 
   const getCurrentModel = () => {
@@ -139,13 +75,7 @@ const MultiAITutorChat = () => {
         body: {
           message: currentMessage,
           model: selectedModel,
-          systemPrompt: `You are an expert AI tutor for students in Zambia. Provide clear, educational explanations that are:
-          - Aligned with the Educational Curriculum of Zambia (ECZ) standards
-          - Step-by-step for complex topics
-          - Encouraging and supportive
-          - Culturally relevant to Zambian students
-          - Use examples from Zambian context when possible
-          - Support learning in English and local languages when appropriate`
+          systemPrompt: "You are a helpful AI tutor for students in Zambia. Provide clear, educational explanations and help students understand concepts step by step. Use examples relevant to African/Zambian context when possible."
         }
       });
 
@@ -167,13 +97,6 @@ const MultiAITutorChat = () => {
       };
       
       setMessages(prev => [...prev, aiResponse]);
-
-      // Show success toast with model info
-      toast({
-        title: `Response from ${getCurrentModel().label}`,
-        description: "AI response generated successfully",
-      });
-
     } catch (error) {
       console.error('Error calling AI tutor:', error);
       
@@ -208,13 +131,13 @@ const MultiAITutorChat = () => {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2">
           <Bot className="w-6 h-6 text-blue-600" />
-          Multi-AI Tutor Hub
+          Multi-AI Tutor
         </CardTitle>
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">AI Model:</span>
             <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-80">
+              <SelectTrigger className="w-64">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -232,8 +155,8 @@ const MultiAITutorChat = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-            <strong>{getCurrentModel().label}:</strong> {getCurrentModel().description}
+          <div className="text-xs text-gray-600">
+            {getCurrentModel().description}
           </div>
         </div>
       </CardHeader>
@@ -248,7 +171,7 @@ const MultiAITutorChat = () => {
               >
                 {message.role === 'assistant' && (
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100">
+                    <AvatarFallback className="bg-blue-100">
                       <Bot className="w-4 h-4 text-blue-600" />
                     </AvatarFallback>
                   </Avatar>
@@ -262,19 +185,19 @@ const MultiAITutorChat = () => {
                   <div
                     className={`rounded-lg p-3 ${
                       message.role === 'user'
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                        : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-900 border'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-900'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                    <span className="text-xs opacity-70 block mt-2">
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <span className="text-xs opacity-70 block mt-1">
                       {message.timestamp.toLocaleTimeString()}
                     </span>
                   </div>
                 </div>
                 {message.role === 'user' && (
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-gradient-to-br from-green-100 to-blue-100">
+                    <AvatarFallback>
                       {user?.user_metadata?.full_name?.[0] || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -284,19 +207,16 @@ const MultiAITutorChat = () => {
             {isLoading && (
               <div className="flex gap-3">
                 <Avatar className="w-8 h-8">
-                  <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100">
+                  <AvatarFallback className="bg-blue-100">
                     <Bot className="w-4 h-4 text-blue-600" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-3 border">
+                <div className="bg-gray-100 rounded-lg p-3">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {getCurrentModel().label} is thinking...
-                  </p>
                 </div>
               </div>
             )}
@@ -304,12 +224,12 @@ const MultiAITutorChat = () => {
           </div>
         </ScrollArea>
         
-        <div className="p-4 border-t bg-gray-50">
+        <div className="p-4 border-t">
           <div className="flex gap-2">
             <Input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Ask me anything about your studies... I'm powered by the world's best AI models!"
+              placeholder="Ask me anything about your studies..."
               onKeyDown={handleKeyPress}
               className="flex-1"
               disabled={isLoading}
@@ -317,13 +237,13 @@ const MultiAITutorChat = () => {
             <Button 
               onClick={sendMessage} 
               disabled={!newMessage.trim() || isLoading}
-              className="px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="px-4"
             >
               <Send className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
-            Press Enter to send • Shift+Enter for new line • Powered by {getCurrentModel().label}
+          <p className="text-xs text-gray-500 mt-2">
+            Press Enter to send, Shift+Enter for new line
           </p>
         </div>
       </CardContent>

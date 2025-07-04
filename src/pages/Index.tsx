@@ -5,7 +5,7 @@ import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
 import CoursesPreview from "@/components/CoursesPreview";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/components/Auth/AuthProvider";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GraduationCap, ArrowRight, Users, BookOpen, Award, Brain, Globe, Zap, Heart, Star, MessageSquare, Target, Calendar, Upload, TrendingUp, Lightbulb, Mic, Shield, Eye, Map, Radio, Coins, Wifi, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,36 +15,16 @@ import { Badge } from "@/components/ui/badge";
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Show content after maximum 1 second regardless of auth state
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 1000);
-
-    // If auth check completes quickly, show content immediately
-    if (!loading) {
-      setShowContent(true);
-      
-      // Only redirect authenticated users to dashboard after a brief delay
-      if (user) {
-        const redirectTimer = setTimeout(() => {
-          navigate('/dashboard');
-        }, 100);
-        
-        return () => {
-          clearTimeout(timer);
-          clearTimeout(redirectTimer);
-        };
-      }
+    // Redirect authenticated users to dashboard
+    if (!loading && user) {
+      navigate('/dashboard');
     }
-
-    return () => clearTimeout(timer);
   }, [user, loading, navigate]);
 
-  // Show loading state only briefly, then always show content
-  if (!showContent) {
+  // Show loading state while checking auth
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="flex flex-col items-center space-y-4">
@@ -124,13 +104,13 @@ const Index = () => {
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/login')}
                 className="hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
               >
                 Login
               </Button>
               <Button 
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/signup')}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Start Learning <ArrowRight className="ml-2 w-4 h-4" />
@@ -140,7 +120,9 @@ const Index = () => {
         </div>
       </nav>
 
+      {/* Enhanced Hero Section with AI Showcase */}
       <section className="container mx-auto px-6 py-20 text-center relative overflow-hidden">
+        {/* Background Elements */}
         <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-20 animate-pulse"></div>
         <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-green-400 to-blue-400 rounded-full opacity-15 animate-bounce" style={{ animationDuration: '3s' }}></div>
         <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-25 animate-ping" style={{ animationDuration: '2s' }}></div>
@@ -169,7 +151,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
               size="lg"
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/signup')}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-6 text-lg"
             >
               Start AI Learning Today <Brain className="ml-2 w-5 h-5" />
@@ -184,6 +166,7 @@ const Index = () => {
             </Button>
           </div>
 
+          {/* AI Models Status Bar */}
           <div className="mt-12 p-6 bg-white/70 backdrop-blur rounded-2xl shadow-lg">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Live AI Models Status</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -198,6 +181,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AI-Powered Features Section */}
       <section id="ai-features" className="container mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">16 AI Models, Unlimited Possibilities</h2>
@@ -221,6 +205,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Zambian-Specific Features */}
       <section id="zambian-focus" className="py-16 bg-gradient-to-r from-green-50 to-blue-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
@@ -244,6 +229,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Enhanced Stats Section */}
       <section className="container mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Transforming Education Across Zambia</h2>
@@ -265,6 +251,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Features Sections */}
       <div id="features">
         <ExpandedFeaturesSection />
       </div>
@@ -274,6 +261,7 @@ const Index = () => {
         <CoursesPreview />
       </div>
 
+      {/* Enhanced Call to Action */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-40 h-40 bg-white/10 rounded-full -translate-x-20 -translate-y-20"></div>
@@ -301,7 +289,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button 
               size="lg"
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/signup')}
               className="bg-white text-blue-600 hover:bg-gray-100 transition-all duration-300 px-8 py-6 text-lg font-semibold shadow-lg"
             >
               Start Free AI Learning <Star className="ml-2 w-5 h-5" />
@@ -316,6 +304,7 @@ const Index = () => {
             </Button>
           </div>
 
+          {/* AI Models Showcase */}
           <div className="mt-12 max-w-4xl mx-auto">
             <p className="text-sm opacity-80 mb-4">Powered by the world's most advanced AI:</p>
             <div className="flex flex-wrap justify-center gap-3">

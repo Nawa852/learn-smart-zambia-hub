@@ -47,7 +47,7 @@ const SignUpPage = () => {
 
     setLoading(true);
     try {
-      const { error } = await signUp(email, password, fullName);
+      const { error } = await signUp(email, password, fullName, userType, grade);
 
       if (error) {
         if (error.message.includes('User already exists')) {
