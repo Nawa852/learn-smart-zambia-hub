@@ -18,20 +18,20 @@ const Index = () => {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Always show content after a reasonable timeout, regardless of auth state
+    // Show content after maximum 1 second regardless of auth state
     const timer = setTimeout(() => {
       setShowContent(true);
-    }, 2000); // Increased timeout to 2 seconds
+    }, 1000);
 
     // If auth check completes quickly, show content immediately
     if (!loading) {
       setShowContent(true);
       
-      // Only redirect authenticated users to dashboard
+      // Only redirect authenticated users to dashboard after a brief delay
       if (user) {
         const redirectTimer = setTimeout(() => {
           navigate('/dashboard');
-        }, 500); // Small delay to ensure smooth transition
+        }, 100);
         
         return () => {
           clearTimeout(timer);

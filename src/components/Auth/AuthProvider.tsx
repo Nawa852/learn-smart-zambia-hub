@@ -29,36 +29,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session with error handling for deleted users
-    const getInitialSession = async () => {
+    // Clear any potentially stale sessions first
+    const initializeAuth = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // First, clear any existing session to start fresh
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
         
-        if (error) {
-          console.error('Error getting session:', error);
-          // Clear any stale session data
+        // If there's a session but no user, or any errors, clear it
+        if (initialSession && !initialSession.user) {
+          console.log('Invalid session detected, clearing...');
           await supabase.auth.signOut();
-          if (mounted) {
-            setUser(null);
-            setNeedsOnboarding(false);
-            setLoading(false);
-          }
-          return;
         }
-
+        
         if (mounted) {
-          setUser(session?.user ?? null);
-          if (session?.user) {
-            // Check if user profile exists, handle deleted users
-            await checkOnboardingStatus(session.user.id);
-          } else {
-            setNeedsOnboarding(false);
-          }
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error in getInitialSession:', error);
-        // Force sign out on any critical error
+        console.error('Error initializing auth:', error);
         await supabase.auth.signOut();
         if (mounted) {
           setUser(null);
@@ -68,50 +55,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    getInitialSession();
-
-    // Listen for auth changes
+    // Listen for auth changes first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
       
       if (!mounted) return;
 
-      // Handle different auth events
-      if (event === 'SIGNED_OUT') {
+      // Handle sign out events
+      if (event === 'SIGNED_OUT' || !session || !session.user) {
         setUser(null);
         setNeedsOnboarding(false);
         setLoading(false);
         return;
       }
 
-      if (event === 'TOKEN_REFRESHED' && !session) {
-        // Token refresh failed, likely due to deleted user
-        console.log('Token refresh failed, signing out');
-        await supabase.auth.signOut();
-        setUser(null);
-        setNeedsOnboarding(false);
+      // Handle successful sign in events
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        if (session?.user) {
+          setUser(session.user);
+          try {
+            await checkOnboardingStatus(session.user.id);
+          } catch (error) {
+            console.error('Error checking onboarding status:', error);
+            // If profile check fails, user might be deleted - sign out
+            await supabase.auth.signOut();
+            return;
+          }
+        }
         setLoading(false);
         return;
       }
 
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        try {
-          await checkOnboardingStatus(session.user.id);
-        } catch (error) {
-          console.error('Error checking onboarding status:', error);
-          // If profile check fails, user might be deleted
-          await supabase.auth.signOut();
+      // For initial session, just set the state
+      if (event === 'INITIAL_SESSION') {
+        if (session?.user) {
+          setUser(session.user);
+          try {
+            await checkOnboardingStatus(session.user.id);
+          } catch (error) {
+            console.error('Error checking onboarding status:', error);
+            await supabase.auth.signOut();
+            return;
+          }
+        } else {
           setUser(null);
           setNeedsOnboarding(false);
         }
-      } else {
-        setNeedsOnboarding(false);
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
+
+    // Initialize after setting up listener
+    initializeAuth();
 
     return () => {
       mounted = false;
