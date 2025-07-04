@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -79,7 +78,6 @@ const StakeholderOnboarding = ({ onComplete }: StakeholderOnboardingProps) => {
         .update({
           user_type: formData.userType,
           full_name: formData.fullName,
-          phone_number: formData.phoneNumber,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
@@ -89,23 +87,16 @@ const StakeholderOnboarding = ({ onComplete }: StakeholderOnboardingProps) => {
         throw error;
       }
 
-      // Create additional stakeholder-specific records if needed
+      // Create user preferences record
       if (formData.userType === 'student' && formData.parentPhone) {
-        // Store parent contact information
         await supabase
           .from('user_preferences')
-          .update({
-            preferences: {
-              parent_phone: formData.parentPhone,
-              parent_email: formData.parentEmail,
-              grade: formData.grade,
-              school: formData.school,
-              subjects: formData.subjects,
-              learning_style: formData.learningStyle,
-              goals: formData.goals
-            }
-          })
-          .eq('user_id', user.id);
+          .upsert({
+            user_id: user.id,
+            language: 'English',
+            notifications_enabled: true,
+            theme: 'light'
+          });
       }
 
       toast({
