@@ -27,22 +27,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast();
 
   useEffect(() => {
-    // Get initial session
+    let mounted = true;
+
+    // Get initial session with error handling for deleted users
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
+        
         if (error) {
           console.error('Error getting session:', error);
-        } else {
+          // Clear any stale session data
+          await supabase.auth.signOut();
+          if (mounted) {
+            setUser(null);
+            setNeedsOnboarding(false);
+            setLoading(false);
+          }
+          return;
+        }
+
+        if (mounted) {
           setUser(session?.user ?? null);
           if (session?.user) {
+            // Check if user profile exists, handle deleted users
             await checkOnboardingStatus(session.user.id);
+          } else {
+            setNeedsOnboarding(false);
           }
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error in getInitialSession:', error);
-      } finally {
-        setLoading(false);
+        // Force sign out on any critical error
+        await supabase.auth.signOut();
+        if (mounted) {
+          setUser(null);
+          setNeedsOnboarding(false);
+          setLoading(false);
+        }
       }
     };
 
@@ -51,10 +73,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
+      
+      if (!mounted) return;
+
+      // Handle different auth events
+      if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+        setUser(null);
+        setNeedsOnboarding(false);
+        setLoading(false);
+        return;
+      }
+
+      if (event === 'TOKEN_REFRESHED' && !session) {
+        // Token refresh failed, likely due to deleted user
+        console.log('Token refresh failed, signing out');
+        await supabase.auth.signOut();
+        setUser(null);
+        setNeedsOnboarding(false);
+        setLoading(false);
+        return;
+      }
+
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await checkOnboardingStatus(session.user.id);
+        try {
+          await checkOnboardingStatus(session.user.id);
+        } catch (error) {
+          console.error('Error checking onboarding status:', error);
+          // If profile check fails, user might be deleted
+          await supabase.auth.signOut();
+          setUser(null);
+          setNeedsOnboarding(false);
+        }
       } else {
         setNeedsOnboarding(false);
       }
@@ -62,7 +113,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const checkOnboardingStatus = async (userId: string) => {
@@ -71,11 +125,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle instead of single to handle missing profiles
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error checking profile:', error);
-        return;
+        throw error; // Re-throw to trigger cleanup in caller
       }
 
       // User needs onboarding if profile doesn't exist or is incomplete
@@ -83,6 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setNeedsOnboarding(needsSetup);
     } catch (error) {
       console.error('Error in checkOnboardingStatus:', error);
+      throw error; // Re-throw to trigger cleanup in caller
     }
   };
 
@@ -198,6 +253,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
 
+      setUser(null);
       setNeedsOnboarding(false);
       
       toast({

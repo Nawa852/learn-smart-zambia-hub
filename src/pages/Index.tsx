@@ -1,3 +1,4 @@
+
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
@@ -17,27 +18,33 @@ const Index = () => {
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // Set a timeout to show content even if auth is still loading
+    // Always show content after a reasonable timeout, regardless of auth state
     const timer = setTimeout(() => {
       setShowContent(true);
-    }, 1000);
+    }, 2000); // Increased timeout to 2 seconds
 
-    // Redirect authenticated users to dashboard
-    if (!loading && user) {
-      navigate('/dashboard');
-      return;
-    }
-
-    // Show content once auth check is complete or after timeout
+    // If auth check completes quickly, show content immediately
     if (!loading) {
       setShowContent(true);
+      
+      // Only redirect authenticated users to dashboard
+      if (user) {
+        const redirectTimer = setTimeout(() => {
+          navigate('/dashboard');
+        }, 500); // Small delay to ensure smooth transition
+        
+        return () => {
+          clearTimeout(timer);
+          clearTimeout(redirectTimer);
+        };
+      }
     }
 
     return () => clearTimeout(timer);
   }, [user, loading, navigate]);
 
-  // Show loading state briefly, then show content
-  if (loading && !showContent) {
+  // Show loading state only briefly, then always show content
+  if (!showContent) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="flex flex-col items-center space-y-4">
