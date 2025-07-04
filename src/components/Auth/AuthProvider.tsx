@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,9 +8,14 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   needsOnboarding: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
   signOut: () => Promise<{ error: any }>;
+  sendSMSVerification: (phoneNumber: string) => Promise<void>;
+  verifyPhone: (phoneNumber: string, code: string) => Promise<void>;
   completeOnboarding: () => void;
 }
 
@@ -61,14 +67,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, fullName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: redirectUrl,
+        data: fullName ? { full_name: fullName } : undefined
       }
     });
     return { error };
@@ -82,9 +89,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { error };
   };
 
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    if (error) throw error;
+  };
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
+    });
+    if (error) throw error;
+  };
+
+  const signInWithFacebook = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
+    });
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
+  };
+
+  const sendSMSVerification = async (phoneNumber: string) => {
+    // Placeholder for SMS verification
+    console.log('Sending SMS verification to:', phoneNumber);
+    // This would integrate with Twilio or similar service
+  };
+
+  const verifyPhone = async (phoneNumber: string, code: string) => {
+    // Placeholder for phone verification
+    console.log('Verifying phone:', phoneNumber, 'with code:', code);
+    // This would verify the SMS code
   };
 
   const completeOnboarding = () => {
@@ -98,7 +145,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     needsOnboarding,
     signUp,
     signIn,
+    signInWithEmail,
+    signInWithGoogle,
+    signInWithFacebook,
     signOut,
+    sendSMSVerification,
+    verifyPhone,
     completeOnboarding
   };
 

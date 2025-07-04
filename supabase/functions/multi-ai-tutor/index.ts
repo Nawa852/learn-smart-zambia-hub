@@ -24,17 +24,20 @@ serve(async (req) => {
     )
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
-    if (userError) console.log('Auth warning:', userError)
+    if (userError) {
+      console.log('Auth warning:', userError)
+    }
 
     const { message, model, systemPrompt, userId } = await req.json()
 
     if (!message || !model) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ error: 'Missing required fields: message and model are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
+    console.log(`Processing request for model: ${model}`)
     let response = '';
 
     try {
@@ -70,42 +73,55 @@ serve(async (req) => {
           response = await callKimi(message, systemPrompt || 'You are Kimi AI assistant.');
           break;
         default:
-          throw new Error('Unsupported AI model');
+          return new Response(
+            JSON.stringify({ error: `Unsupported AI model: ${model}` }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
       }
 
-      // Store chat history and analyze student performance
+      // Store chat history if user is authenticated
       if (user) {
-        await supabaseClient
-          .from('ai_chat_history')
-          .insert([{
-            user_id: user.id,
-            message: message,
-            response: response,
-            ai_model: model
-          }]);
-
-        // Analyze student performance and send notifications if needed
-        await analyzeAndNotifyPerformance(supabaseClient, user.id, message, response);
+        try {
+          await supabaseClient
+            .from('ai_chat_history')
+            .insert([{
+              user_id: user.id,
+              message: message,
+              response: response,
+              chat_type: `multi_ai_${model}`
+            }]);
+        } catch (dbError) {
+          console.log('Database insert warning:', dbError)
+        }
       }
+
+      return new Response(
+        JSON.stringify({ response, model, success: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
 
     } catch (error) {
-      console.error(`Error calling ${model}:`, error);
+      console.error(`Error calling ${model}:`, error)
+      
+      // Return a helpful fallback response instead of an error
+      const fallbackResponse = `I'm currently experiencing some technical difficulties with the ${model} service. Here's some general educational guidance while I get back online:\n\n• Break complex problems into smaller, manageable steps\n• Practice regularly rather than cramming before exams\n• Ask specific questions about concepts you don't understand\n• Use multiple learning resources to reinforce understanding\n\nPlease try again in a moment, and I'll do my best to help you with your studies!`
+      
       return new Response(
-        JSON.stringify({ error: `${model} service temporarily unavailable: ${error.message}` }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ response: fallbackResponse, model: `${model}_fallback`, success: false, warning: 'Using fallback response' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    return new Response(
-      JSON.stringify({ response, model }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
 
   } catch (error) {
     console.error('Error in multi-ai-tutor function:', error)
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        response: "I'm experiencing technical difficulties right now. Please try again in a moment.", 
+        model: 'fallback', 
+        success: false,
+        error: 'Internal server error'
+      }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 })
@@ -131,7 +147,11 @@ async function callOpenAI(message: string, systemPrompt: string): Promise<string
     }),
   })
 
-  if (!response.ok) throw new Error(`OpenAI API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`OpenAI API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -157,7 +177,11 @@ async function callGrok(message: string, systemPrompt: string): Promise<string> 
     }),
   })
 
-  if (!response.ok) throw new Error(`Grok API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Grok API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -181,7 +205,11 @@ async function callClaude(message: string, systemPrompt: string): Promise<string
     }),
   })
 
-  if (!response.ok) throw new Error(`Claude API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Claude API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.content[0]?.text || 'No response generated'
 }
@@ -207,7 +235,11 @@ async function callDeepSeek(message: string, systemPrompt: string): Promise<stri
     }),
   })
 
-  if (!response.ok) throw new Error(`DeepSeek API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`DeepSeek API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -233,7 +265,11 @@ async function callLlama(message: string, systemPrompt: string): Promise<string>
     }),
   })
 
-  if (!response.ok) throw new Error(`LLaMA API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`LLaMA API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -260,7 +296,11 @@ async function callGemini(message: string, systemPrompt: string): Promise<string
     }),
   })
 
-  if (!response.ok) throw new Error(`Gemini API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Gemini API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.candidates[0]?.content?.parts[0]?.text || 'No response generated'
 }
@@ -290,7 +330,11 @@ async function callQwen(message: string, systemPrompt: string): Promise<string> 
     }),
   })
 
-  if (!response.ok) throw new Error(`Qwen API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Qwen API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.output?.text || 'No response generated'
 }
@@ -299,7 +343,6 @@ async function callMinimax(message: string, systemPrompt: string): Promise<strin
   const apiKey = Deno.env.get('MINIMAX_API_KEY')
   if (!apiKey) throw new Error('MiniMax API key not configured')
 
-  // Using a generic OpenAI-compatible endpoint for MiniMax
   const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion_pro', {
     method: 'POST',
     headers: {
@@ -317,7 +360,11 @@ async function callMinimax(message: string, systemPrompt: string): Promise<strin
     }),
   })
 
-  if (!response.ok) throw new Error(`MiniMax API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`MiniMax API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -343,7 +390,11 @@ async function callMoonshot(message: string, systemPrompt: string): Promise<stri
     }),
   })
 
-  if (!response.ok) throw new Error(`Moonshot API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Moonshot API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
 }
@@ -369,64 +420,11 @@ async function callKimi(message: string, systemPrompt: string): Promise<string> 
     }),
   })
 
-  if (!response.ok) throw new Error(`Kimi API error: ${response.status}`)
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Kimi API error (${response.status}): ${error}`)
+  }
+  
   const data = await response.json()
   return data.choices[0]?.message?.content || 'No response generated'
-}
-
-async function analyzeAndNotifyPerformance(supabaseClient: any, userId: string, message: string, response: string) {
-  try {
-    // Get recent chat history
-    const { data: recentChats } = await supabaseClient
-      .from('ai_chat_history')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (!recentChats || recentChats.length < 5) return;
-
-    // Simple performance analysis
-    const strugglingKeywords = ['difficult', 'hard', 'confused', 'don\'t understand', 'help', 'stuck'];
-    const improvingKeywords = ['understand', 'got it', 'clear', 'makes sense', 'thank you'];
-    
-    const recentMessages = recentChats.map(chat => chat.message.toLowerCase()).join(' ');
-    const strugglingCount = strugglingKeywords.filter(keyword => recentMessages.includes(keyword)).length;
-    const improvingCount = improvingKeywords.filter(keyword => recentMessages.includes(keyword)).length;
-
-    // Get user profile with parent contact
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (strugglingCount >= 3 && profile?.parent_contact) {
-      await sendTwilioNotification(profile.parent_contact, 
-        `Hi, this is EduZambia. ${profile.full_name} seems to be struggling with their studies. They've asked for help with difficult topics ${strugglingCount} times recently. Consider providing additional support.`
-      );
-    } else if (improvingCount >= 3 && profile?.parent_contact) {
-      await sendTwilioNotification(profile.parent_contact,
-        `Great news from EduZambia! ${profile.full_name} is showing good progress in their studies and demonstrating understanding of concepts. Keep encouraging them!`
-      );
-    }
-  } catch (error) {
-    console.error('Performance analysis error:', error);
-  }
-}
-
-async function sendTwilioNotification(phoneNumber: string, message: string) {
-  try {
-    const twilioApiKey = Deno.env.get('TWILIO_API_KEY');
-    if (!twilioApiKey) return;
-
-    // This is a simplified Twilio implementation
-    // In production, you'd use proper Twilio credentials and API
-    console.log(`Twilio notification to ${phoneNumber}: ${message}`);
-    
-    // Store notification in database for tracking
-    // await supabaseClient.from('notifications').insert({...});
-  } catch (error) {
-    console.error('Twilio notification error:', error);
-  }
 }
