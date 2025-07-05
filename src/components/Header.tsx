@@ -21,6 +21,10 @@ const Header = () => {
     navigate('/');
   };
 
+  const handleCoursesClick = () => {
+    navigate('/courses');
+  };
+
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -31,9 +35,12 @@ const Header = () => {
         <nav className="hidden md:flex space-x-6">
           {!user ? (
             <>
-              <Link to="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
+              <button 
+                onClick={handleCoursesClick}
+                className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+              >
                 Courses
-              </Link>
+              </button>
               <Link to="/about" className="text-gray-600 hover:text-blue-600 transition-colors">
                 About
               </Link>
@@ -46,9 +53,12 @@ const Header = () => {
               <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Dashboard
               </Link>
-              <Link to="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
+              <button 
+                onClick={handleCoursesClick}
+                className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
+              >
                 Courses
-              </Link>
+              </button>
               <Link to="/smart-recommendations" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Smart AI
               </Link>
@@ -81,11 +91,9 @@ const Header = () => {
                     Profile
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/courses" className="flex items-center">
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    My Courses
-                  </Link>
+                <DropdownMenuItem onClick={handleCoursesClick}>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  My Courses
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/learning-analytics" className="flex items-center">

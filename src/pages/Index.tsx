@@ -1,4 +1,3 @@
-
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
@@ -97,6 +96,12 @@ const Index = () => {
             <div className="hidden md:flex items-center space-x-8">
               <a href="#ai-features" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">AI Features</a>
               <a href="#zambian-focus" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">Zambian Focus</a>
+              <button 
+                onClick={() => navigate('/courses')}
+                className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium cursor-pointer"
+              >
+                Courses
+              </button>
               <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">About</a>
               <a href="/contact" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">Contact</a>
             </div>

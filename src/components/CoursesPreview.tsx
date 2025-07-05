@@ -3,8 +3,11 @@ import { Clock, Users, Star, BookOpen, Code, Palette, Calculator, Globe } from "
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const CoursesPreview = () => {
+  const navigate = useNavigate();
+
   const courses = [
     {
       id: 1,
@@ -55,6 +58,14 @@ const CoursesPreview = () => {
       color: "bg-orange-500"
     }
   ];
+
+  const handleEnrollClick = () => {
+    navigate('/courses');
+  };
+
+  const handleBrowseAllClick = () => {
+    navigate('/courses');
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -108,7 +119,11 @@ const CoursesPreview = () => {
                     <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                     <span className="text-sm font-medium">{course.rating}</span>
                   </div>
-                  <Button size="sm" className="bg-zambia-copper hover:bg-orange-600">
+                  <Button 
+                    size="sm" 
+                    className="bg-zambia-copper hover:bg-orange-600"
+                    onClick={handleEnrollClick}
+                  >
                     Enroll Now
                   </Button>
                 </div>
@@ -118,7 +133,12 @@ const CoursesPreview = () => {
         </div>
 
         <div className="text-center">
-          <Button size="lg" variant="outline" className="border-zambia-emerald text-zambia-emerald hover:bg-emerald-50">
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-zambia-emerald text-zambia-emerald hover:bg-emerald-50"
+            onClick={handleBrowseAllClick}
+          >
             <BookOpen className="mr-2 h-5 w-5" />
             Browse All Courses
           </Button>
