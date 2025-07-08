@@ -68,87 +68,113 @@ const CoursesPreview = () => {
   };
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container px-4 mx-auto">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Popular Courses
+    <section className="relative py-24 overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-background via-primary/5 to-accent/5"></div>
+        <div className="absolute top-1/4 right-0 w-96 h-96 gradient-emerald opacity-20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-1/4 w-80 h-80 gradient-copper opacity-15 rounded-full blur-3xl animate-float"></div>
+      </div>
+      
+      <div className="container px-8 mx-auto relative z-10">
+        <div className="text-center mb-20 animate-entrance">
+          <div className="inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full mb-8">
+            <BookOpen className="w-5 h-5 text-primary" />
+            <span className="text-sm font-medium text-foreground/80">Featured Learning Paths</span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-bold mb-6 gradient-text-hero leading-tight">
+            Transform Your Future
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-slide-up">
-            Discover our most loved courses designed by Zambian educators 
-            and enhanced with AI-powered personalization.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            Discover premium courses crafted by Zambian educators and enhanced with cutting-edge AI technology for personalized learning experiences.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {courses.map((course, index) => (
             <Card 
               key={course.id} 
-              className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 cursor-pointer border-0 bg-white/80 backdrop-blur-sm animate-fade-in hover:bg-white"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="group relative overflow-hidden glass-card hover:glass-premium transition-all duration-500 cursor-pointer border-0 rounded-3xl animate-magnetic animate-entrance"
+              style={{ animationDelay: `${index * 0.15}s` }}
               onClick={handleEnrollClick}
             >
-              <CardHeader className="pb-3">
-                <div className={`w-12 h-12 rounded-xl ${course.color} flex items-center justify-center mb-4 group-hover:scale-125 group-hover:rotate-3 transition-all duration-500 shadow-lg animate-glow`}>
-                  <course.icon className="h-6 w-6 text-white" />
+              {/* Premium Gradient Overlay */}
+              <div className="absolute inset-0 gradient-card opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              
+              <CardHeader className="pb-4 relative z-10">
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 gradient-card rounded-2xl blur-lg opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
+                  <div className="relative w-16 h-16 gradient-card rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-xl">
+                    <course.icon className="h-8 w-8 text-white" />
+                  </div>
                 </div>
-                <Badge variant="secondary" className="w-fit mb-2 bg-primary/10 text-primary border-primary/20">
-                  {course.level}
-                </Badge>
-                <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors duration-300">
+                
+                <div className="flex items-center justify-between mb-4">
+                  <Badge className="glass-premium text-xs font-semibold px-3 py-1 rounded-full">
+                    {course.level}
+                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                    <span className="text-sm font-bold text-foreground">{course.rating}</span>
+                  </div>
+                </div>
+                
+                <CardTitle className="text-xl font-bold mb-3 group-hover:gradient-text transition-all duration-300 leading-tight">
                   {course.title}
                 </CardTitle>
-                <CardDescription className="line-clamp-2 text-gray-600">
+                <CardDescription className="text-muted-foreground leading-relaxed">
                   {course.description}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-4">
-                <div className="text-sm text-gray-600 font-medium">
-                  By {course.instructor}
-                </div>
-                
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center hover:text-primary transition-colors duration-200">
-                    <Clock className="h-4 w-4 mr-1" />
-                    {course.duration}
+              <CardContent className="space-y-6 relative z-10">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 gradient-emerald rounded-full flex items-center justify-center">
+                    <Users className="h-4 w-4 text-white" />
                   </div>
-                  <div className="flex items-center hover:text-primary transition-colors duration-200">
-                    <Users className="h-4 w-4 mr-1" />
-                    {course.students.toLocaleString()}
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Prof. {course.instructor.split(' ')[1]}</p>
+                    <p className="text-xs text-muted-foreground">Course Instructor</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1 animate-pulse" />
-                    <span className="text-sm font-medium">{course.rating}</span>
+                <div className="flex items-center justify-between p-3 glass-premium rounded-2xl">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4 text-primary" />
+                    <span className="font-medium">{course.duration}</span>
                   </div>
-                  <Button 
-                    size="sm" 
-                    className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg hover:scale-105"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEnrollClick();
-                    }}
-                  >
-                    Enroll Now
-                  </Button>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Users className="h-4 w-4 text-accent" />
+                    <span className="font-medium">{course.students.toLocaleString()}</span>
+                  </div>
                 </div>
+                
+                <Button 
+                  className="w-full gradient-card text-white font-semibold py-3 rounded-2xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105 relative overflow-hidden"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEnrollClick();
+                  }}
+                >
+                  <span className="relative z-10">Start Learning</span>
+                  <div className="absolute inset-0 gradient-sunset opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Button>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <div className="text-center animate-fade-in" style={{ animationDelay: '0.5s' }}>
+        <div className="text-center animate-entrance" style={{ animationDelay: '0.8s' }}>
           <Button 
             size="lg" 
-            variant="outline" 
-            className="border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 rounded-xl hover:scale-105 shadow-lg"
+            className="group relative px-10 py-4 glass-card hover:glass-premium transition-all duration-300 rounded-2xl animate-magnetic overflow-hidden"
             onClick={handleBrowseAllClick}
           >
-            <BookOpen className="mr-2 h-5 w-5" />
-            Browse All Courses
+            <span className="relative z-10 flex items-center gap-3 font-semibold text-lg">
+              <BookOpen className="h-6 w-6" />
+              Explore All Courses
+            </span>
+            <div className="absolute inset-0 gradient-card opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </Button>
         </div>
       </div>

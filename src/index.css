@@ -5,6 +5,7 @@
 
 @layer base {
   :root {
+    /* Ultra Modern Color Palette */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -14,46 +15,74 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 220 78% 55%;
-    --primary-foreground: 210 40% 98%;
+    /* Premium Brand Colors */
+    --primary: 230 87% 62%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 230 87% 72%;
+    --primary-dark: 230 87% 52%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 220 78% 60%;
+    --accent: 270 87% 68%;
     --accent-foreground: 0 0% 100%;
+    --accent-light: 270 87% 78%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 220 78% 55%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 230 87% 62%;
 
     --radius: 0.75rem;
 
-    /* Modern Zambian-inspired colors */
-    --zambia-copper: 29 85% 58%;
-    --zambia-emerald: 160 84% 39%;
-    --zambia-sunset: 25 95% 65%;
-    --zambia-earth: 35 25% 30%;
-    --zambia-sky: 220 100% 70%;
-    --zambia-gold: 45 93% 58%;
-    --zambia-forest: 152 81% 96%;
+    /* Zambian Heritage Colors */
+    --zambia-copper: 25 95% 53%;
+    --zambia-emerald: 158 64% 52%;
+    --zambia-sunset: 32 95% 64%;
+    --zambia-earth: 30 25% 25%;
+    --zambia-sky: 200 100% 70%;
+    --zambia-gold: 48 96% 53%;
+    --zambia-forest: 152 55% 46%;
     
-    /* Gradient variables */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-copper: linear-gradient(135deg, hsl(var(--zambia-copper)), hsl(var(--zambia-gold)));
-    --gradient-emerald: linear-gradient(135deg, hsl(var(--zambia-emerald)), hsl(var(--zambia-forest)));
+    /* Premium Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--zambia-emerald)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    --gradient-copper: linear-gradient(135deg, hsl(var(--zambia-copper)) 0%, hsl(var(--zambia-gold)) 100%);
+    --gradient-emerald: linear-gradient(135deg, hsl(var(--zambia-emerald)) 0%, hsl(var(--zambia-forest)) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(var(--zambia-sunset)) 0%, hsl(var(--zambia-copper)) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
     
-    /* Shadow variables */
-    --shadow-soft: 0 4px 20px -4px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 10px 40px -12px rgba(0, 0, 0, 0.15);
-    --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.3);
+    /* Advanced Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.4);
+    --shadow-glow-accent: 0 0 30px rgba(139, 92, 246, 0.4);
+    --shadow-copper: 0 10px 30px -10px rgba(251, 146, 60, 0.3);
+    --shadow-emerald: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
+    
+    /* Premium Blur Effects */
+    --blur-xs: blur(2px);
+    --blur-sm: blur(4px);
+    --blur-md: blur(8px);
+    --blur-lg: blur(12px);
+    --blur-xl: blur(16px);
+    --blur-2xl: blur(24px);
+    --blur-3xl: blur(40px);
+    
+    /* Animation Curves */
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   }
 
   .dark {
@@ -111,20 +140,75 @@
     background-color: hsl(var(--zambia-emerald));
   }
   
+  /* Premium Modern Utilities */
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .gradient-copper {
+    background: var(--gradient-copper);
+  }
+  
+  .gradient-emerald {
+    background: var(--gradient-emerald);
+  }
+  
+  .gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+  
+  .gradient-glass {
+    background: var(--gradient-glass);
+  }
+  
+  /* Premium Glass Effects */
+  .glass-premium {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: var(--blur-lg);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: var(--blur-md);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-xl);
+  }
+  
   /* Enhanced Modern Animation Utilities */
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: float 6s var(--ease-smooth) infinite;
   }
   
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 0.8s var(--ease-smooth) forwards;
     opacity: 0;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.6s ease-out forwards;
+    animation: slideUp 0.6s var(--ease-spring) forwards;
     transform: translateY(20px);
     opacity: 0;
+  }
+  
+  .animate-entrance {
+    animation: entrance 1s var(--ease-bounce) forwards;
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+  }
+  
+  .animate-magnetic {
+    transition: all 0.3s var(--ease-spring);
+  }
+  
+  .animate-magnetic:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: var(--shadow-glow);
   }
   
   .animate-slide-down {
@@ -293,6 +377,17 @@
     }
   }
   
+  @keyframes entrance {
+    from {
+      opacity: 0;
+      transform: scale(0.8) translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
   @keyframes glow {
     from {
       box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
@@ -405,7 +500,7 @@
   
   /* Enhanced Gradient Text */
   .gradient-text {
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981, #f59e0b);
+    background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--zambia-emerald)), hsl(var(--zambia-gold)));
     background-size: 300% 300%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -414,12 +509,19 @@
   }
 
   .gradient-text-cosmic {
-    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--zambia-sunset)), hsl(var(--zambia-copper)));
     background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShift 3s ease infinite;
+  }
+
+  .gradient-text-hero {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   @keyframes gradientShift {

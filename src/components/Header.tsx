@@ -26,127 +26,143 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-lg animate-slide-down">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="sticky top-0 z-50 glass-premium border-b border-white/20 animate-slide-down">
+      <div className="container mx-auto px-8 py-5 flex justify-between items-center">
         <Link 
           to={user ? "/dashboard" : "/"} 
-          className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent hover:scale-105 transition-transform duration-300"
+          className="group flex items-center gap-3 animate-magnetic"
         >
-          EDU ZAMBIA
+          <div className="relative">
+            <div className="absolute inset-0 gradient-hero rounded-2xl blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative p-2 gradient-hero rounded-2xl">
+              <GraduationCap className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold gradient-text-cosmic">
+              EDU ZAMBIA
+            </span>
+            <span className="text-xs text-muted-foreground font-medium">
+              AI-Powered Learning
+            </span>
+          </div>
         </Link>
         
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden lg:flex items-center space-x-10">
           {!user ? (
             <>
               <button 
                 onClick={handleCoursesClick}
-                className="text-gray-600 hover:text-primary transition-all duration-300 relative group cursor-pointer"
+                className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group cursor-pointer animate-magnetic"
               >
                 Courses
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </button>
-              <Link to="/about" className="text-gray-600 hover:text-primary transition-all duration-300 relative group">
+              <Link to="/about" className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group animate-magnetic">
                 About
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </Link>
-              <Link to="/contact" className="text-gray-600 hover:text-primary transition-all duration-300 relative group">
+              <Link to="/contact" className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group animate-magnetic">
                 Contact
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </Link>
             </>
           ) : (
             <>
-              <Link to="/dashboard" className="text-gray-600 hover:text-primary transition-all duration-300 relative group">
+              <Link to="/dashboard" className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group animate-magnetic">
                 Dashboard
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </Link>
               <button 
                 onClick={handleCoursesClick}
-                className="text-gray-600 hover:text-primary transition-all duration-300 relative group cursor-pointer"
+                className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group cursor-pointer animate-magnetic"
               >
                 Courses
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </button>
-              <Link to="/smart-recommendations" className="text-gray-600 hover:text-primary transition-all duration-300 relative group">
+              <Link to="/smart-recommendations" className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group animate-magnetic">
                 Smart AI
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </Link>
-              <Link to="/instructor" className="text-gray-600 hover:text-primary transition-all duration-300 relative group">
+              <Link to="/instructor" className="relative px-4 py-2 text-foreground/80 hover:text-primary font-medium transition-all duration-300 group animate-magnetic">
                 Instructor
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <div className="absolute -bottom-2 left-1/2 w-0 h-0.5 gradient-card rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
               </Link>
             </>
           )}
         </nav>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2 hover:bg-primary/10 transition-all duration-300 rounded-xl">
-                  <User className="h-4 w-4" />
-                  <span>{user.user_metadata?.full_name || user.email}</span>
+                <Button variant="ghost" className="group flex items-center space-x-3 px-4 py-2 glass-card hover:glass-premium transition-all duration-300 rounded-2xl animate-magnetic">
+                  <div className="w-8 h-8 gradient-card rounded-full flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="font-medium">{user.user_metadata?.full_name || user.email}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white/95 backdrop-blur-xl border border-gray-200/50 shadow-xl rounded-xl">
+              <DropdownMenuContent align="end" className="w-64 glass-card border border-white/20 shadow-2xl rounded-2xl p-2">
                 <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    Dashboard
+                  <Link to="/dashboard" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <BarChart3 className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
+                  <Link to="/profile" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <User className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Profile</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleCoursesClick} className="hover:bg-primary/10 transition-colors duration-200">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  My Courses
+                <DropdownMenuItem onClick={handleCoursesClick} className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl cursor-pointer">
+                  <BookOpen className="mr-3 h-5 w-5 text-primary" />
+                  <span className="font-medium">My Courses</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/learning-analytics" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <BarChart3 className="mr-2 h-4 w-4" />
-                    Learning Analytics
+                  <Link to="/learning-analytics" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <BarChart3 className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Learning Analytics</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="my-2 bg-white/20" />
                 <DropdownMenuItem asChild>
-                  <Link to="/instructor" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <GraduationCap className="mr-2 h-4 w-4" />
-                    Instructor Portal
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/smart-recommendations" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <Brain className="mr-2 h-4 w-4" />
-                    Smart Recommendations
+                  <Link to="/instructor" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <GraduationCap className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Instructor Portal</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/adaptive-content" className="flex items-center hover:bg-primary/10 transition-colors duration-200">
-                    <Brain className="mr-2 h-4 w-4" />
-                    Adaptive Learning
+                  <Link to="/smart-recommendations" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <Brain className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Smart Recommendations</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="hover:bg-destructive/10 transition-colors duration-200">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
+                <DropdownMenuItem asChild>
+                  <Link to="/adaptive-content" className="flex items-center px-4 py-3 hover:glass-premium transition-all duration-200 rounded-xl">
+                    <Brain className="mr-3 h-5 w-5 text-primary" />
+                    <span className="font-medium">Adaptive Learning</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="my-2 bg-white/20" />
+                <DropdownMenuItem onClick={handleSignOut} className="flex items-center px-4 py-3 hover:bg-destructive/10 transition-all duration-200 rounded-xl cursor-pointer text-destructive">
+                  <LogOut className="mr-3 h-5 w-5" />
+                  <span className="font-medium">Sign Out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" className="hover:bg-primary/10 transition-all duration-300 rounded-xl">
+                <Button variant="ghost" className="px-6 py-3 font-medium hover:glass-premium transition-all duration-300 rounded-2xl animate-magnetic">
                   Login
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl">
-                  Sign Up
+                <Button className="relative px-8 py-3 gradient-card text-white font-medium shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl animate-magnetic overflow-hidden group">
+                  <span className="relative z-10">Sign Up</span>
+                  <div className="absolute inset-0 gradient-sunset opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </Link>
             </>

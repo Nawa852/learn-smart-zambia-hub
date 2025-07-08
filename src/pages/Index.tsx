@@ -73,9 +73,17 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Ultra Modern Background */}
+      <div className="absolute inset-0 gradient-hero opacity-10"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-br from-accent/15 to-zambia-emerald/15 rounded-full blur-3xl animate-levitate"></div>
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-br from-zambia-copper/20 to-zambia-gold/20 rounded-full blur-3xl animate-morph"></div>
+      </div>
+      
       {/* Enhanced Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-200/50 shadow-lg animate-slide-down">
+      <nav className="sticky top-0 z-50 glass-premium border-b border-white/20 animate-slide-down">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 animate-fade-in">
