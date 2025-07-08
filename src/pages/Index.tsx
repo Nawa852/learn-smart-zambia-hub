@@ -75,15 +75,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Enhanced Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-200/50 shadow-lg animate-slide-down">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg">
+            <div className="flex items-center gap-3 animate-fade-in">
+              <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg animate-glow">
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+                <span className="font-bold text-xl bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                   EDU ZAMBIA
                 </span>
                 <span className="text-xs text-gray-500 font-medium flex items-center gap-1">
@@ -93,30 +93,43 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#ai-features" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">AI Features</a>
-              <a href="#zambian-focus" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">Zambian Focus</a>
+            <div className="hidden md:flex items-center space-x-8 animate-slide-left">
+              <a href="#ai-features" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                AI Features
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+              <a href="#zambian-focus" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                Zambian Focus
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
               <button 
                 onClick={() => navigate('/courses')}
-                className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium cursor-pointer"
+                className="text-gray-600 hover:text-primary transition-all duration-300 font-medium cursor-pointer relative group"
               >
                 Courses
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </button>
-              <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">About</a>
-              <a href="/contact" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium">Contact</a>
+              <a href="/about" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                About
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+              <a href="/contact" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                Contact
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 animate-slide-right">
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/login')}
-                className="hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
+                className="hover:bg-primary/10 hover:text-primary transition-all duration-300 rounded-xl"
               >
                 Login
               </Button>
               <Button 
                 onClick={() => navigate('/signup')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl animate-glow"
               >
                 Start Learning <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
@@ -128,15 +141,15 @@ const Index = () => {
       {/* Enhanced Hero Section with AI Showcase */}
       <section className="container mx-auto px-6 py-20 text-center relative overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-green-400 to-blue-400 rounded-full opacity-15 animate-bounce" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-25 animate-ping" style={{ animationDuration: '2s' }}></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-full opacity-20 animate-float"></div>
+        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-accent to-primary rounded-full opacity-15 animate-levitate"></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full opacity-25 animate-morph"></div>
 
         <div className="max-w-5xl mx-auto space-y-8 relative z-10">
-          <div className="space-y-6">
-            <div className="flex justify-center mb-8">
-              <div className="flex items-center gap-2 bg-white/80 backdrop-blur px-6 py-3 rounded-full shadow-lg">
-                <Brain className="w-5 h-5 text-purple-500" />
+          <div className="space-y-6 animate-fade-in">
+            <div className="flex justify-center mb-8 animate-bounce-in">
+              <div className="flex items-center gap-2 bg-white/90 backdrop-blur-xl px-6 py-3 rounded-full shadow-xl border border-white/20">
+                <Brain className="w-5 h-5 text-primary animate-pulse" />
                 <span className="text-sm font-medium text-gray-700">Powered by 16+ Advanced AI Models</span>
                 <div className="flex gap-1 ml-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -145,19 +158,19 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight animate-scale-in">
               AI-Powered Learning for Zambia
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed animate-slide-up">
               Experience the future of education with <strong>GPT-4o, Claude 3, Qwen,</strong> and 13+ more AI models supporting ECZ curriculum in 7 local languages. From rural kiosks to urban classrooms—learning for every Zambian student.
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <Button 
               size="lg"
               onClick={() => navigate('/signup')}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-6 text-lg"
+              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg rounded-xl hover:scale-105 animate-glow"
             >
               Start AI Learning Today <Brain className="ml-2 w-5 h-5" />
             </Button>
@@ -165,18 +178,18 @@ const Index = () => {
               size="lg"
               variant="outline"
               onClick={() => navigate('/study-assistant')}
-              className="border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 px-8 py-6 text-lg"
+              className="border-2 border-primary/30 hover:bg-primary/10 hover:border-primary transition-all duration-300 px-8 py-6 text-lg rounded-xl hover:scale-105"
             >
               Try AI Tutor Free
             </Button>
           </div>
 
           {/* AI Models Status Bar */}
-          <div className="mt-12 p-6 bg-white/70 backdrop-blur rounded-2xl shadow-lg">
+          <div className="mt-12 p-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 animate-blur-in" style={{ animationDelay: '0.6s' }}>
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Live AI Models Status</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {aiModels.slice(0, 8).map((model, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
+                <div key={index} className="flex items-center gap-2 text-sm hover:bg-primary/5 p-2 rounded-lg transition-colors duration-200">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="font-medium">{model.name}</span>
                 </div>

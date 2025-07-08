@@ -70,45 +70,50 @@ const CoursesPreview = () => {
   return (
     <section className="py-20 bg-white">
       <div className="container px-4 mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">
-            Popular <span className="text-zambia-emerald">Courses</span>
+        <div className="text-center mb-16 animate-fade-in">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+            Popular Courses
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-slide-up">
             Discover our most loved courses designed by Zambian educators 
             and enhanced with AI-powered personalization.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {courses.map((course) => (
-            <Card key={course.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          {courses.map((course, index) => (
+            <Card 
+              key={course.id} 
+              className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 cursor-pointer border-0 bg-white/80 backdrop-blur-sm animate-fade-in hover:bg-white"
+              style={{ animationDelay: `${index * 0.1}s` }}
+              onClick={handleEnrollClick}
+            >
               <CardHeader className="pb-3">
-                <div className={`w-12 h-12 rounded-lg ${course.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-12 h-12 rounded-xl ${course.color} flex items-center justify-center mb-4 group-hover:scale-125 group-hover:rotate-3 transition-all duration-500 shadow-lg animate-glow`}>
                   <course.icon className="h-6 w-6 text-white" />
                 </div>
-                <Badge variant="secondary" className="w-fit mb-2">
+                <Badge variant="secondary" className="w-fit mb-2 bg-primary/10 text-primary border-primary/20">
                   {course.level}
                 </Badge>
-                <CardTitle className="text-lg line-clamp-2">
+                <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors duration-300">
                   {course.title}
                 </CardTitle>
-                <CardDescription className="line-clamp-2">
+                <CardDescription className="line-clamp-2 text-gray-600">
                   {course.description}
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="space-y-4">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 font-medium">
                   By {course.instructor}
                 </div>
                 
                 <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center">
+                  <div className="flex items-center hover:text-primary transition-colors duration-200">
                     <Clock className="h-4 w-4 mr-1" />
                     {course.duration}
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center hover:text-primary transition-colors duration-200">
                     <Users className="h-4 w-4 mr-1" />
                     {course.students.toLocaleString()}
                   </div>
@@ -116,13 +121,16 @@ const CoursesPreview = () => {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1 animate-pulse" />
                     <span className="text-sm font-medium">{course.rating}</span>
                   </div>
                   <Button 
                     size="sm" 
-                    className="bg-zambia-copper hover:bg-orange-600"
-                    onClick={handleEnrollClick}
+                    className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg hover:scale-105"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEnrollClick();
+                    }}
                   >
                     Enroll Now
                   </Button>
@@ -132,11 +140,11 @@ const CoursesPreview = () => {
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="text-center animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-zambia-emerald text-zambia-emerald hover:bg-emerald-50"
+            className="border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 rounded-xl hover:scale-105 shadow-lg"
             onClick={handleBrowseAllClick}
           >
             <BookOpen className="mr-2 h-5 w-5" />

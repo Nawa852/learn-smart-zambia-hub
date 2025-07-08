@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 220 78% 55%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -23,24 +23,37 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 220 78% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 220 78% 55%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Enhanced Zambian-inspired custom colors */
-    --zambia-copper: 29 78% 50%;
-    --zambia-emerald: 160 100% 35%;
-    --zambia-sunset: 25 95% 60%;
+    /* Modern Zambian-inspired colors */
+    --zambia-copper: 29 85% 58%;
+    --zambia-emerald: 160 84% 39%;
+    --zambia-sunset: 25 95% 65%;
     --zambia-earth: 35 25% 30%;
     --zambia-sky: 220 100% 70%;
+    --zambia-gold: 45 93% 58%;
+    --zambia-forest: 152 81% 96%;
+    
+    /* Gradient variables */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    --gradient-copper: linear-gradient(135deg, hsl(var(--zambia-copper)), hsl(var(--zambia-gold)));
+    --gradient-emerald: linear-gradient(135deg, hsl(var(--zambia-emerald)), hsl(var(--zambia-forest)));
+    
+    /* Shadow variables */
+    --shadow-soft: 0 4px 20px -4px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 10px 40px -12px rgba(0, 0, 0, 0.15);
+    --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.3);
   }
 
   .dark {
@@ -98,7 +111,7 @@
     background-color: hsl(var(--zambia-emerald));
   }
   
-  /* Enhanced 3D Animation Utilities */
+  /* Enhanced Modern Animation Utilities */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -111,6 +124,24 @@
   .animate-slide-up {
     animation: slideUp 0.6s ease-out forwards;
     transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 0.6s ease-out forwards;
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  
+  .animate-slide-left {
+    animation: slideLeft 0.6s ease-out forwards;
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  
+  .animate-slide-right {
+    animation: slideRight 0.6s ease-out forwards;
+    transform: translateX(-30px);
     opacity: 0;
   }
   
@@ -142,6 +173,23 @@
     animation: levitate 3s ease-in-out infinite;
   }
   
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  
+  .animate-blur-in {
+    animation: blurIn 0.8s ease-out forwards;
+    filter: blur(10px);
+    opacity: 0;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    transform: scale(0);
+  }
+  
   @keyframes float {
     0%, 100% { 
       transform: translateY(0px) rotate(0deg);
@@ -166,6 +214,47 @@
     to {
       transform: translateY(0);
       opacity: 1;
+    }
+  }
+  
+  @keyframes slideDown {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideLeft {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideRight {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes scaleIn {
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes blurIn {
+    to {
+      filter: blur(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes bounceIn {
+    to {
+      transform: scale(1);
     }
   }
   
