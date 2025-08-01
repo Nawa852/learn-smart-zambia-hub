@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    /* Ultra Modern Color Palette */
+    /* Bright Sphere Ultra Modern Color Palette */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -15,11 +15,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Premium Brand Colors */
-    --primary: 230 87% 62%;
+    /* Bright Sphere Premium Brand Colors */
+    --primary: 245 90% 65%; /* Bright Sphere Blue */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 230 87% 72%;
-    --primary-dark: 230 87% 52%;
+    --primary-light: 245 90% 75%;
+    --primary-dark: 245 90% 55%;
 
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -27,20 +27,26 @@
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 270 87% 68%;
+    --accent: 280 100% 70%; /* Bright Purple */
     --accent-foreground: 0 0% 100%;
-    --accent-light: 270 87% 78%;
+    --accent-light: 280 100% 80%;
 
+    --success: 142 76% 36%; /* Green for success */
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 45 93% 47%; /* Yellow for warnings */
+    --warning-foreground: 0 0% 100%;
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 230 87% 62%;
+    --ring: 245 90% 65%;
 
     --radius: 0.75rem;
 
-    /* Zambian Heritage Colors */
+    /* Zambian Heritage Colors - Enhanced */
     --zambia-copper: 25 95% 53%;
     --zambia-emerald: 158 64% 52%;
     --zambia-sunset: 32 95% 64%;
@@ -49,13 +55,20 @@
     --zambia-gold: 48 96% 53%;
     --zambia-forest: 152 55% 46%;
     
-    /* Premium Gradients */
+    /* Social Media Colors */
+    --facebook-blue: 214 89% 52%;
+    --like-red: 0 100% 50%;
+    --online-green: 142 76% 36%;
+    
+    /* Bright Sphere Premium Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--zambia-emerald)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
     --gradient-copper: linear-gradient(135deg, hsl(var(--zambia-copper)) 0%, hsl(var(--zambia-gold)) 100%);
     --gradient-emerald: linear-gradient(135deg, hsl(var(--zambia-emerald)) 0%, hsl(var(--zambia-forest)) 100%);
     --gradient-sunset: linear-gradient(135deg, hsl(var(--zambia-sunset)) 0%, hsl(var(--zambia-copper)) 100%);
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    --gradient-social: linear-gradient(135deg, hsl(var(--facebook-blue)) 0%, hsl(var(--primary)) 100%);
+    --gradient-bright-sphere: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
     
     /* Advanced Shadows */
     --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -519,6 +532,13 @@
 
   .gradient-text-hero {
     background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-text-bright-sphere {
+    background: var(--gradient-bright-sphere);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

@@ -5,8 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/AppSidebar';
+import { MainLayout } from '@/components/Layout/MainLayout';
 
 // Import all pages
 import Index from '@/pages/Index';
@@ -26,7 +25,7 @@ import MentorshipHubPage from '@/pages/MentorshipHubPage';
 import MentorshipGoalCoaching from '@/components/Learning/MentorshipGoalCoaching';
 import StudyGroupsPage from '@/pages/StudyGroupsPage';
 import Courses from '@/pages/Courses';
-import Profile from '@/pages/Profile';
+import ProfilePage from '@/pages/ProfilePage';
 import LearningAnalytics from '@/pages/LearningAnalytics';
 import Achievements from '@/pages/Achievements';
 import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
@@ -136,12 +135,9 @@ function App() {
             {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <SidebarProvider>
-                  <AppSidebar />
-                  <main className="flex-1">
-                    <Dashboard />
-                  </main>
-                </SidebarProvider>
+                <MainLayout>
+                  <Dashboard />
+                </MainLayout>
               </ProtectedRoute>
             } />
 
@@ -394,7 +390,9 @@ function App() {
             {/* User Management */}
             <Route path="/profile" element={
               <ProtectedRoute>
-                <Profile />
+                <MainLayout>
+                  <ProfilePage />
+                </MainLayout>
               </ProtectedRoute>
             } />
 

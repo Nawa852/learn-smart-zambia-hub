@@ -1,5 +1,6 @@
 
 import React from "react"
+import { NavLink } from "react-router-dom"
 import {
   LayoutDashboard,
   Book,
@@ -27,267 +28,327 @@ import {
   FileText,
   MessageCircle,
   Compass,
+  Home,
+  Heart,
+  Share2,
+  TrendingUp,
+  Video,
+  Image,
+  Trophy,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react"
 
-import { NavItem } from "@/components/ui/nav-item"
-import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion"
-import { useSidebar } from "@/components/ui/sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button"
 
-interface SidebarProps {
-  className?: string
-}
-
-export function AppSidebar({ className }: SidebarProps) {
+export function AppSidebar() {
   const { state } = useSidebar()
+  const collapsed = state === 'collapsed'
+  const [socialExpanded, setSocialExpanded] = React.useState(true)
+  const [aiExpanded, setAiExpanded] = React.useState(false)
+  const [learningExpanded, setLearningExpanded] = React.useState(false)
 
-  const sidebarItems = [
+  const mainItems = [
     {
-      title: "Dashboard",
+      title: "Home Feed",
       url: "/dashboard",
-      icon: LayoutDashboard,
-      description: "Overview of your learning progress and goals",
+      icon: Home,
+      color: "text-primary"
+    },
+    {
+      title: "My Profile",
+      url: "/profile",
+      icon: User,
+      color: "text-accent"
     },
     {
       title: "Courses",
       url: "/courses",
       icon: Book,
-      description: "Explore available courses and learning paths",
-    },
-    {
-      title: "Profile",
-      url: "/profile",
-      icon: User,
-      description: "Manage your profile and account settings",
-    },
-    {
-      title: "Learning Analytics",
-      url: "/learning-analytics",
-      icon: Settings,
-      description: "Track your learning progress and performance",
-    },
-    {
-      title: "Achievements",
-      url: "/achievements",
-      icon: HelpCircle,
-      description: "View your achievements and earned rewards",
+      color: "text-zambia-emerald"
     },
   ]
 
-  const aiFeatures = [
-    {
-      title: "AI Flashcards",
-      url: "/ai-flashcards",
-      icon: GraduationCap,
-      description: "Generate flashcards with AI for efficient learning",
-    },
-    {
-      title: "Multi-AI Tutor",
-      url: "/multi-ai-tutor",
-      icon: Brain,
-      description: "Get help from multiple AI models for different subjects",
-    },
-    {
-      title: "AI Study Helper",
-      url: "/ai-study-helper",
-      icon: Search,
-      description: "Your personal AI tutor, scheduler, and learning companion",
-    },
-    {
-      title: "Smart Recommendations",
-      url: "/smart-recommendations",
-      icon: Lightbulb,
-      description: "AI-powered personalized learning recommendations",
-    },
-    {
-      title: "Semantic Search",
-      url: "/semantic-search",
-      icon: Search,
-      description: "AI-powered intelligent search across learning content",
-    },
-    {
-      title: "Emotion Detection",
-      url: "/emotion-detection",
-      icon: MessageSquare,
-      description: "Analyze emotions in text for better understanding",
-    },
-    {
-      title: "Multilingual Translator",
-      url: "/multilingual-translator",
-      icon: Languages,
-      description: "AI-powered course translation for global learning",
-    },
-    {
-      title: "Visual Mind Map",
-      url: "/visual-mind-map",
-      icon: Network,
-      description: "Create interactive mind maps with AI assistance",
-    },
-    {
-      title: "Teach Back Assessment",
-      url: "/teach-back-assessment",
-      icon: Presentation,
-      description: "Demonstrate understanding by teaching concepts to AI",
-    },
-    {
-      title: "Gameify Vault",
-      url: "/gameify-vault",
-      icon: Gamepad2,
-      description: "Gamified learning experiences and rewards",
-    },
-    {
-      title: "AI Learning Paths",
-      url: "/ai-learning-paths",
-      icon: Compass,
-      description: "AI-generated personalized learning paths",
-    },
-    {
-      title: "Daily Goal Coach",
-      url: "/daily-goal-coach",
-      icon: Target,
-      description: "AI-powered daily goal setting and tracking",
-    },
-    {
-      title: "Claude Journaling",
-      url: "/claude-journaling",
-      icon: PenBox,
-      description: "AI-assisted journaling with Claude for reflection",
-    },
-    {
-      title: "Study Assistant",
-      url: "/study-assistant",
-      icon: Brain,
-      description: "24/7 AI tutor with multilingual support"
-    },
-  ];
-
   const socialFeatures = [
     {
-      title: "Social Feed",
+      title: "News Feed",
       url: "/social-feed",
-      icon: MessageCircle,
-      description: "Connect with peers and share learning experiences",
+      icon: Newspaper,
+      badge: "3 new"
     },
     {
       title: "Study Groups",
       url: "/study-groups",
       icon: Users,
-      description: "Join or create study groups for collaborative learning",
+      badge: "5 active"
     },
     {
-      title: "Messenger",
+      title: "Messages",
       url: "/messenger",
-      icon: MessageSquare,
-      description: "Real-time messaging with peers and mentors",
+      icon: MessageCircle,
+      badge: "2"
+    },
+    {
+      title: "Friends",
+      url: "/peer-finder",
+      icon: Heart,
+      badge: "12 online"
     },
     {
       title: "Campus Map",
       url: "/campus-map",
       icon: MapPin,
-      description: "Explore campus resources and locations",
     },
     {
-      title: "Peer Finder",
-      url: "/peer-finder",
-      icon: Search,
-      description: "Find peers with similar interests and goals",
-    },
-    {
-      title: "Mentorship Hub",
-      url: "/mentorship-hub",
-      icon: Handshake,
-      description: "Connect with mentors for guidance and support",
-    },
-    {
-      title: "Events Learning",
+      title: "Events",
       url: "/events-learning",
       icon: Calendar,
-      description: "Discover and participate in learning events",
+      badge: "Today"
     },
     {
-      title: "Knowledge Feed",
-      url: "/knowledge-feed",
-      icon: Newspaper,
-      description: "Stay updated with the latest learning resources",
+      title: "Marketplace",
+      url: "/study-materials",
+      icon: Share2,
     },
   ]
 
-  const studyMaterials = [
+  const aiFeatures = [
     {
-      title: "Study Material Repository",
-      url: "/study-materials",
-      icon: FileText,
-      description: "Access shared study materials and resources",
+      title: "AI Tutor",
+      url: "/multi-ai-tutor",
+      icon: Brain,
+    },
+    {
+      title: "Smart Study",
+      url: "/ai-study-helper",
+      icon: Sparkles,
+    },
+    {
+      title: "Flashcards",
+      url: "/ai-flashcards",
+      icon: GraduationCap,
+    },
+    {
+      title: "Mind Maps",
+      url: "/visual-mind-map",
+      icon: Network,
+    },
+    {
+      title: "Translator",
+      url: "/multilingual-translator",
+      icon: Languages,
     },
   ]
+
+  const learningFeatures = [
+    {
+      title: "Analytics",
+      url: "/learning-analytics",
+      icon: TrendingUp,
+    },
+    {
+      title: "Achievements",
+      url: "/achievements",
+      icon: Trophy,
+    },
+    {
+      title: "Live Classes",
+      url: "/virtual-classroom",
+      icon: Video,
+    },
+    {
+      title: "Gallery",
+      url: "/knowledge-feed",
+      icon: Image,
+    },
+  ]
+
+
+  const isActive = (path: string) => window.location.pathname === path
 
   return (
-    <div className={`hidden border-r bg-gray-100/40 lg:block dark:border-muted/40 ${className}`}>
-      <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Platform
-          </h2>
-          <div className="space-y-1">
-            {sidebarItems.map((item) => (
-              <NavItem
-                key={item.title}
-                title={item.title}
-                href={item.url}
-                icon={item.icon}
-                description={item.description}
-              />
-            ))}
+    <Sidebar className={collapsed ? "w-16" : "w-72"} collapsible="icon">
+      <SidebarContent className="bg-card/50 backdrop-blur-md border-r">
+        {/* Header */}
+        <div className="p-4 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl gradient-bright-sphere flex items-center justify-center">
+              <span className="text-white font-bold">BS</span>
+            </div>
+            {!collapsed && (
+              <div>
+                <h1 className="font-bold text-lg gradient-text-bright-sphere">Learn Smart</h1>
+                <p className="text-xs text-muted-foreground">Zambia Hub</p>
+              </div>
+            )}
           </div>
         </div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            AI Features
-          </h2>
-          <div className="space-y-1">
-            {aiFeatures.map((item) => (
-              <NavItem
-                key={item.title}
-                title={item.title}
-                href={item.url}
-                icon={item.icon}
-                description={item.description}
-              />
+
+        {/* Main Navigation */}
+        <SidebarGroup>
+          <SidebarMenu>
+            {mainItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild className="h-12">
+                  <NavLink 
+                    to={item.url}
+                    className={({ isActive }) => 
+                      `flex items-center gap-3 px-3 py-3 rounded-lg transition-all hover-lift ${
+                        isActive 
+                          ? 'bg-primary text-primary-foreground shadow-md' 
+                          : 'hover:bg-muted/50'
+                      }`
+                    }
+                  >
+                    <item.icon className={`h-5 w-5 ${item.color || ''}`} />
+                    {!collapsed && <span className="font-medium">{item.title}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Social Features */}
+        <Collapsible open={socialExpanded} onOpenChange={setSocialExpanded}>
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted/50 rounded-lg">
+                <span className="font-semibold text-facebook-blue">Social</span>
+                {!collapsed && (
+                  socialExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
+                )}
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {socialFeatures.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <NavLink 
+                          to={item.url}
+                          className={({ isActive }) => 
+                            `flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-all hover:bg-muted/50 ${
+                              isActive ? 'bg-facebook-blue/10 text-facebook-blue border-l-2 border-facebook-blue' : ''
+                            }`
+                          }
+                        >
+                          <div className="flex items-center gap-3">
+                            <item.icon className="h-4 w-4" />
+                            {!collapsed && <span className="text-sm">{item.title}</span>}
+                          </div>
+                          {!collapsed && item.badge && (
+                            <span className="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full">
+                              {item.badge}
+                            </span>
+                          )}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
+
+        {/* AI Features */}
+        <Collapsible open={aiExpanded} onOpenChange={setAiExpanded}>
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted/50 rounded-lg">
+                <span className="font-semibold text-accent">AI Tools</span>
+                {!collapsed && (
+                  aiExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
+                )}
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {aiFeatures.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <NavLink 
+                          to={item.url}
+                          className={({ isActive }) => 
+                            `flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:bg-muted/50 ${
+                              isActive ? 'bg-accent/10 text-accent border-l-2 border-accent' : ''
+                            }`
+                          }
+                        >
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span className="text-sm">{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
+
+        {/* Learning Features */}
+        <Collapsible open={learningExpanded} onOpenChange={setLearningExpanded}>
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-muted/50 rounded-lg">
+                <span className="font-semibold text-zambia-emerald">Learning</span>
+                {!collapsed && (
+                  learningExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
+                )}
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {learningFeatures.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <NavLink 
+                          to={item.url}
+                          className={({ isActive }) => 
+                            `flex items-center gap-3 px-3 py-2 rounded-lg transition-all hover:bg-muted/50 ${
+                              isActive ? 'bg-zambia-emerald/10 text-zambia-emerald border-l-2 border-zambia-emerald' : ''
+                            }`
+                          }
+                        >
+                          <item.icon className="h-4 w-4" />
+                          {!collapsed && <span className="text-sm">{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
+
+        {/* Footer */}
+        <div className="mt-auto p-4 border-t">
+          <div className="text-center text-xs text-muted-foreground">
+            Powered by
+            <div className="font-semibold gradient-text-bright-sphere text-sm">
+              Bright Sphere
+            </div>
           </div>
         </div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Social Learning
-          </h2>
-          <div className="space-y-1">
-            {socialFeatures.map((item) => (
-              <NavItem
-                key={item.title}
-                title={item.title}
-                href={item.url}
-                icon={item.icon}
-                description={item.description}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-            Study Materials
-          </h2>
-          <div className="space-y-1">
-            {studyMaterials.map((item) => (
-              <NavItem
-                key={item.title}
-                title={item.title}
-                href={item.url}
-                icon={item.icon}
-                description={item.description}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+      </SidebarContent>
+    </Sidebar>
   )
 }
