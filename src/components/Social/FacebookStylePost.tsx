@@ -8,13 +8,48 @@ import {
   Send,
   Smile,
   Image,
-  MapPin
+  MapPin,
+  ThumbsUp,
+  ThumbsDown,
+  Laugh,
+  Angry,
+  Eye,
+  UserPlus,
+  Flag,
+  Copy,
+  ExternalLink,
+  ChevronDown,
+  Video,
+  Camera,
+  Mic,
+  Clock,
+  Globe,
+  Users
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+
+interface Reaction {
+  type: 'like' | 'love' | 'haha' | 'wow' | 'sad' | 'angry';
+  emoji: string;
+  count: number;
+  hasReacted: boolean;
+}
+
+interface Comment {
+  id: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  content: string;
+  timestamp: string;
+  likes: number;
+  replies?: Comment[];
+}
 
 interface Post {
   id: string;
@@ -23,17 +58,42 @@ interface Post {
     avatar: string;
     title?: string;
     location?: string;
+    isVerified?: boolean;
+    mutualFriends?: number;
   };
   content: string;
-  image?: string;
+  images?: string[];
+  video?: string;
+  link?: {
+    url: string;
+    title: string;
+    description: string;
+    image: string;
+  };
   timestamp: string;
-  likes: number;
-  comments: number;
+  reactions: Reaction[];
+  comments: Comment[];
   shares: number;
+  views?: number;
+  privacy: 'public' | 'friends' | 'private';
   isLiked: boolean;
   isSaved: boolean;
   subject?: string;
   tags?: string[];
+  feeling?: string;
+  activity?: string;
+  checkedIn?: string;
+  mentionedUsers?: string[];
+  poll?: {
+    question: string;
+    options: { text: string; votes: number }[];
+    totalVotes: number;
+  };
+  event?: {
+    name: string;
+    date: string;
+    location: string;
+  };
 }
 
 interface FacebookStylePostProps {
@@ -55,12 +115,41 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
   const [commentText, setCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [isSaved, setIsSaved] = useState(post.isSaved);
-  const [likesCount, setLikesCount] = useState(post.likes);
+  const [reactions, setReactions] = useState(post.reactions);
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [showAllImages, setShowAllImages] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
+  const reactionEmojis = [
+    { type: 'like', emoji: '👍', label: 'Like' },
+    { type: 'love', emoji: '❤️', label: 'Love' },
+    { type: 'haha', emoji: '😂', label: 'Haha' },
+    { type: 'wow', emoji: '😮', label: 'Wow' },
+    { type: 'sad', emoji: '😢', label: 'Sad' },
+    { type: 'angry', emoji: '😡', label: 'Angry' }
+  ];
+
+  const handleReaction = (reactionType: string) => {
+    const newReactions = reactions.map(r => {
+      if (r.type === reactionType) {
+        return { ...r, count: r.hasReacted ? r.count - 1 : r.count + 1, hasReacted: !r.hasReacted };
+      }
+      return r.hasReacted ? { ...r, count: r.count - 1, hasReacted: false } : r;
+    });
+    setReactions(newReactions);
+    setShowReactionPicker(false);
     onLike?.(post.id);
+  };
+
+  const getTopReactions = () => {
+    return reactions
+      .filter(r => r.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+  };
+
+  const getTotalReactions = () => {
+    return reactions.reduce((sum, r) => sum + r.count, 0);
   };
 
   const handleSave = () => {
@@ -133,10 +222,10 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
             </div>
           )}
 
-          {post.image && (
+          {post.images && post.images.length > 0 && (
             <div className="rounded-lg overflow-hidden">
               <img 
-                src={post.image} 
+                src={post.images[0]} 
                 alt="Post content" 
                 className="w-full h-auto object-cover"
               />
@@ -149,10 +238,10 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Heart className="h-4 w-4 text-red-500 fill-current" />
-              <span className="text-sm text-muted-foreground">{likesCount}</span>
+              <span className="text-sm text-muted-foreground">{getTotalReactions()}</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {post.comments} comments
+              {post.comments.length} comments
             </span>
             <span className="text-sm text-muted-foreground">
               {post.shares} shares
@@ -172,12 +261,12 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
         <div className="flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={handleLike}
+            onClick={() => handleReaction('like')}
             className={`flex items-center gap-2 flex-1 ${
-              isLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'
+              reactions.find(r => r.type === 'like')?.hasReacted ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'
             }`}
           >
-            <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+            <Heart className={`h-5 w-5 ${reactions.find(r => r.type === 'like')?.hasReacted ? 'fill-current' : ''}`} />
             <span className="font-medium">Like</span>
           </Button>
           

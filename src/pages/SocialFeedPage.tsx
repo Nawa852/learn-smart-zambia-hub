@@ -1,18 +1,22 @@
-
 import React from 'react';
-import SocialFeed from '@/components/Social/SocialFeed';
+import { MainLayout } from '@/components/Layout/MainLayout';
+import EnhancedSocialFeed from '@/components/Social/EnhancedSocialFeed';
 
 const SocialFeedPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <MainLayout>
+      <div className="space-y-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Learning Community</h1>
-          <p className="text-gray-600">Stay connected with your learning community</p>
+          <h1 className="text-3xl font-bold gradient-text-bright-sphere mb-2">
+            Learning Community Feed
+          </h1>
+          <p className="text-muted-foreground">
+            Connect, share, and learn together with the Zambian educational community
+          </p>
         </div>
-        <SocialFeed />
+        <EnhancedSocialFeed />
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

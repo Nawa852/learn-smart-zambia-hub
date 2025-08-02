@@ -1,372 +1,487 @@
-
 import React, { useState, useEffect } from 'react';
+import { CreatePost } from './CreatePost';
+import { FacebookStylePost } from './FacebookStylePost';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Heart, MessageSquare, Share, BookOpen, Trophy, Users,
-  Camera, Video, Link as LinkIcon, MoreHorizontal,
-  ThumbsUp, Star, Award, Target, Lightbulb, Zap
+  TrendingUp, 
+  Users, 
+  Calendar, 
+  MapPin, 
+  Star,
+  BookOpen,
+  Award,
+  Sparkles,
+  Clock,
+  Globe,
+  Eye,
+  Zap,
+  Brain,
+  Target,
+  Trophy,
+  Flame,
+  Heart,
+  MessageCircle,
+  Share2
 } from 'lucide-react';
-import { useAuth } from '@/components/Auth/AuthProvider';
+
+interface Story {
+  id: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  image: string;
+  timestamp: string;
+  viewed: boolean;
+}
+
+interface TrendingTopic {
+  id: string;
+  title: string;
+  posts: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+interface SuggestedFriend {
+  id: string;
+  name: string;
+  avatar: string;
+  mutualFriends: number;
+  title: string;
+}
+
+interface LiveEvent {
+  id: string;
+  title: string;
+  host: string;
+  viewers: number;
+  startTime: string;
+  subject: string;
+}
 
 const EnhancedSocialFeed = () => {
-  const { user } = useAuth();
-  const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState('');
-  const [activeTab, setActiveTab] = useState('feed');
+  const [feedFilter, setFeedFilter] = useState('all');
+  const [posts, setPosts] = useState([
+    {
+      id: '1',
+      author: {
+        name: 'Sarah Mwamba',
+        avatar: '/avatar1.jpg',
+        title: 'Computer Science Student',
+        location: 'University of Zambia',
+        isVerified: true,
+        mutualFriends: 12
+      },
+      content: 'Just completed my AI project on predicting student performance! 🎓 The model achieved 94% accuracy using ensemble methods. Excited to share my findings with the class tomorrow. Thanks to everyone who helped with data collection! #MachineLearning #AI #UniversityOfZambia',
+      images: ['/project1.jpg', '/project2.jpg'],
+      timestamp: '2 hours ago',
+      reactions: [
+        { type: 'like', emoji: '👍', count: 45, hasReacted: false },
+        { type: 'love', emoji: '❤️', count: 12, hasReacted: true },
+        { type: 'wow', emoji: '😮', count: 8, hasReacted: false },
+        { type: 'haha', emoji: '😂', count: 2, hasReacted: false },
+        { type: 'sad', emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry', emoji: '😡', count: 0, hasReacted: false }
+      ],
+      comments: [
+        {
+          id: 'c1',
+          author: { name: 'Dr. Kabwe', avatar: '/teacher1.jpg' },
+          content: 'Excellent work Sarah! Would love to see your methodology.',
+          timestamp: '1 hour ago',
+          likes: 5
+        },
+        {
+          id: 'c2',
+          author: { name: 'James Banda', avatar: '/student1.jpg' },
+          content: 'Wow! Can you share your dataset? Working on similar project.',
+          timestamp: '45 minutes ago',
+          likes: 3
+        }
+      ],
+      shares: 8,
+      views: 156,
+      privacy: 'public',
+      isLiked: true,
+      isSaved: false,
+      subject: 'Computer Science',
+      tags: ['AI', 'MachineLearning', 'DataScience'],
+      feeling: 'accomplished',
+      mentionedUsers: ['Dr. Kabwe', 'Research Team']
+    },
+    {
+      id: '2',
+      author: {
+        name: 'Copperbelt University',
+        avatar: '/cbu-logo.jpg',
+        title: 'Educational Institution',
+        isVerified: true
+      },
+      content: 'Applications are now open for our new Digital Innovation Bootcamp! 🚀 Learn coding, AI, and entrepreneurship skills. Scholarships available for outstanding Zambian students. Apply before March 15th.',
+      link: {
+        url: 'https://cbu.ac.zm/bootcamp',
+        title: 'Digital Innovation Bootcamp - Copperbelt University',
+        description: 'Transform your future with cutting-edge technology skills',
+        image: '/bootcamp-banner.jpg'
+      },
+      timestamp: '4 hours ago',
+      reactions: [
+        { type: 'like', emoji: '👍', count: 89, hasReacted: false },
+        { type: 'love', emoji: '❤️', count: 23, hasReacted: false },
+        { type: 'wow', emoji: '😮', count: 15, hasReacted: false },
+        { type: 'haha', emoji: '😂', count: 1, hasReacted: false },
+        { type: 'sad', emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry', emoji: '😡', count: 0, hasReacted: false }
+      ],
+      comments: [
+        {
+          id: 'c3',
+          author: { name: 'Mary Lungu', avatar: '/student2.jpg' },
+          content: 'This is exactly what I was looking for! Already applied 📝',
+          timestamp: '2 hours ago',
+          likes: 12
+        }
+      ],
+      shares: 34,
+      views: 432,
+      privacy: 'public',
+      isLiked: false,
+      isSaved: true,
+      subject: 'Technology',
+      tags: ['Bootcamp', 'Innovation', 'Scholarships']
+    }
+  ]);
 
-  const samplePosts = [
+  const stories: Story[] = [
     {
-      id: 1,
-      author: 'Sarah Mwansa',
-      avatar: '/api/placeholder/40/40',
-      time: '2 hours ago',
-      content: 'Just completed my Grade 12 Mathematics revision! 📚 The AI tutor helped me understand quadratic equations with local examples - calculating maize farm yields made it so much clearer! #StudySuccess #ZambianEducation',
-      likes: 24,
-      comments: 8,
-      shares: 3,
-      type: 'achievement',
-      badges: ['Math Wizard', 'Consistent Learner']
+      id: 's1',
+      author: { name: 'Your Story', avatar: '/you.jpg' },
+      image: '/story-placeholder.jpg',
+      timestamp: '',
+      viewed: false
     },
     {
-      id: 2,
-      author: 'Teacher Phiri',
-      avatar: '/api/placeholder/40/40',
-      time: '4 hours ago',
-      content: 'Sharing some free Biology notes for Grade 11 students focusing on photosynthesis. Remember: "Ukufunda kwaba bantu bonke" - Education is for everyone! 🌱',
-      likes: 67,
-      comments: 15,
-      shares: 23,
-      type: 'resource',
-      attachments: ['biology_notes.pdf'],
-      badges: ['Top Contributor', 'Mentor']
+      id: 's2',
+      author: { name: 'Chanda Mulenga', avatar: '/friend1.jpg' },
+      image: '/story1.jpg',
+      timestamp: '2h',
+      viewed: false
     },
     {
-      id: 3,
-      author: 'Study Group Lusaka',
-      avatar: '/api/placeholder/40/40',
-      time: '1 day ago',
-      content: 'Weekly study group meeting tomorrow at 3 PM! We\'ll be covering Chemistry bonding. All Grade 12 students welcome. "Umuntu ngumuntu ngabantu" - We grow together! 🤝',
-      likes: 45,
-      comments: 12,
-      shares: 18,
-      type: 'event',
-      badges: ['Community Leader']
-    },
-    {
-      id: 4,
-      author: 'James Banda',
-      avatar: '/api/placeholder/40/40',
-      time: '2 days ago',
-      content: 'Got accepted to University of Zambia for Engineering! Thanks to everyone in this community who helped me with my studies. The AI tutoring and peer support made all the difference! 🎓',
-      likes: 156,
-      comments: 34,
-      shares: 41,
-      type: 'milestone',
-      badges: ['High Achiever', 'Future Engineer']
+      id: 's3',
+      author: { name: 'UNZA Alumni', avatar: '/unza-logo.jpg' },
+      image: '/story2.jpg',
+      timestamp: '5h',
+      viewed: true
     }
   ];
 
-  const studyGroups = [
-    { name: 'Grade 12 Mathematics', members: 234, active: true },
-    { name: 'Biology Enthusiasts', members: 189, active: true },
-    { name: 'English Literature Club', members: 156, active: false },
-    { name: 'Physics Problem Solvers', members: 198, active: true },
-    { name: 'Chemistry Study Circle', members: 167, active: false }
+  const trendingTopics: TrendingTopic[] = [
+    { id: 't1', title: '#ZambianTech', posts: 1247, trend: 'up' },
+    { id: 't2', title: '#StudyTogether', posts: 892, trend: 'up' },
+    { id: 't3', title: '#UniversityLife', posts: 634, trend: 'stable' },
+    { id: 't4', title: '#CodingChallenge', posts: 423, trend: 'up' }
   ];
 
-  const achievements = [
-    { title: 'Study Streak', description: '7 days of consistent learning', icon: Zap, color: 'text-yellow-500' },
-    { title: 'Helpful Peer', description: 'Helped 10 classmates this week', icon: Users, color: 'text-blue-500' },
-    { title: 'Quiz Master', description: 'Scored 100% on 5 quizzes', icon: Trophy, color: 'text-green-500' },
-    { title: 'Goal Achiever', description: 'Completed 3 learning goals', icon: Target, color: 'text-purple-500' }
-  ];
-
-  useEffect(() => {
-    setPosts(samplePosts);
-  }, []);
-
-  const handleLike = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, likes: post.likes + 1 }
-        : post
-    ));
-  };
-
-  const getPostTypeColor = (type) => {
-    switch(type) {
-      case 'achievement': return 'border-l-green-500';
-      case 'resource': return 'border-l-blue-500';
-      case 'event': return 'border-l-purple-500';
-      case 'milestone': return 'border-l-yellow-500';
-      default: return 'border-l-gray-300';
+  const suggestedFriends: SuggestedFriend[] = [
+    {
+      id: 'sf1',
+      name: 'Peter Simusokwe',
+      avatar: '/friend2.jpg',
+      mutualFriends: 8,
+      title: 'Engineering Student'
+    },
+    {
+      id: 'sf2',
+      name: 'Grace Tembo',
+      avatar: '/friend3.jpg',
+      mutualFriends: 15,
+      title: 'Medical Student'
     }
-  };
+  ];
 
-  const PostCard = ({ post }) => (
-    <Card className={`mb-6 border-l-4 ${getPostTypeColor(post.type)} hover:shadow-lg transition-shadow`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Avatar>
-              <AvatarImage src={post.avatar} />
-              <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-semibold">{post.author}</span>
-                {post.badges?.map((badge, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {badge}
-                  </Badge>
-                ))}
-              </div>
-              <span className="text-sm text-gray-500">{post.time}</span>
-            </div>
-          </div>
-          <Button variant="ghost" size="sm">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        <p className="mb-4 text-gray-800 leading-relaxed">{post.content}</p>
-        
-        {post.attachments && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-4 h-4 text-blue-500" />
-              <span className="text-sm font-medium">Attachment: {post.attachments[0]}</span>
-            </div>
-          </div>
-        )}
-        
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex space-x-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleLike(post.id)}
-              className="flex items-center space-x-2 hover:text-red-500"
-            >
-              <Heart className="w-4 h-4" />
-              <span>{post.likes}</span>
-            </Button>
-            
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:text-blue-500">
-              <MessageSquare className="w-4 h-4" />
-              <span>{post.comments}</span>
-            </Button>
-            
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:text-green-500">
-              <Share className="w-4 h-4" />
-              <span>{post.shares}</span>
-            </Button>
-          </div>
-          
-          <Badge variant="outline" className="capitalize">
-            {post.type}
-          </Badge>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  const liveEvents: LiveEvent[] = [
+    {
+      id: 'le1',
+      title: 'Python Programming Workshop',
+      host: 'Dr. Mutale Chanda',
+      viewers: 234,
+      startTime: 'Now',
+      subject: 'Computer Science'
+    },
+    {
+      id: 'le2',
+      title: 'Career Guidance Session',
+      host: 'Alumni Network',
+      viewers: 89,
+      startTime: '3:00 PM',
+      subject: 'Career Development'
+    }
+  ];
+
+  const handleCreatePost = (postData: any) => {
+    const newPost = {
+      id: `post-${Date.now()}`,
+      author: {
+        name: 'You',
+        avatar: '/your-avatar.jpg',
+        title: 'Student'
+      },
+      content: postData.content,
+      timestamp: 'just now',
+      reactions: [
+        { type: 'like' as const, emoji: '👍', count: 0, hasReacted: false },
+        { type: 'love' as const, emoji: '❤️', count: 0, hasReacted: false },
+        { type: 'wow' as const, emoji: '😮', count: 0, hasReacted: false },
+        { type: 'haha' as const, emoji: '😂', count: 0, hasReacted: false },
+        { type: 'sad' as const, emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry' as const, emoji: '😡', count: 0, hasReacted: false }
+      ],
+      comments: [],
+      shares: 0,
+      views: 0,
+      privacy: 'public' as const,
+      isLiked: false,
+      isSaved: false,
+      subject: postData.subject,
+      tags: postData.tags
+    };
+    setPosts([newPost, ...posts]);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Community Learning Hub</h1>
-          <p className="text-gray-600">Connect, share, and grow together with fellow Zambian learners</p>
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* Stories Section */}
+      <Card className="glass-card border-0 shadow-lg">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            Stories
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {stories.map((story) => (
+              <div
+                key={story.id}
+                className="flex-shrink-0 relative cursor-pointer hover-lift transition-all duration-300"
+              >
+                <div className={`w-20 h-20 rounded-2xl overflow-hidden border-2 ${
+                  story.id === 's1' 
+                    ? 'border-dashed border-primary' 
+                    : story.viewed 
+                      ? 'border-gray-300' 
+                      : 'border-primary'
+                }`}>
+                  <img
+                    src={story.image}
+                    alt={story.author.name}
+                    className="w-full h-full object-cover"
+                  />
+                  {story.id === 's1' && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-primary/80 text-white text-2xl">
+                      +
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-center mt-1 font-medium truncate w-20">
+                  {story.author.name}
+                </p>
+                {story.timestamp && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    {story.timestamp}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Left Sidebar */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Trending Topics */}
+          <Card className="glass-card border-0 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Trending in Education
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {trendingTopics.map((topic) => (
+                <div key={topic.id} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-lg transition-colors cursor-pointer">
+                  <div>
+                    <p className="font-medium text-sm">{topic.title}</p>
+                    <p className="text-xs text-muted-foreground">{topic.posts.toLocaleString()} posts</p>
+                  </div>
+                  <div className={`flex items-center ${
+                    topic.trend === 'up' ? 'text-green-500' : topic.trend === 'down' ? 'text-red-500' : 'text-gray-500'
+                  }`}>
+                    <TrendingUp className={`h-3 w-3 ${topic.trend === 'down' ? 'rotate-180' : ''}`} />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Live Events */}
+          <Card className="glass-card border-0 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Zap className="h-5 w-5 text-red-500" />
+                Live Events
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {liveEvents.map((event) => (
+                <div key={event.id} className="p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium text-red-500">LIVE</span>
+                  </div>
+                  <h4 className="font-semibold text-sm">{event.title}</h4>
+                  <p className="text-xs text-muted-foreground">by {event.host}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center gap-1">
+                      <Eye className="h-3 w-3" />
+                      <span className="text-xs">{event.viewers}</span>
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {event.subject}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="mb-6">
-          <div className="flex space-x-1 bg-white rounded-lg p-1 shadow-sm">
-            {[
-              { id: 'feed', label: 'Feed', icon: MessageSquare },
-              { id: 'groups', label: 'Study Groups', icon: Users },
-              { id: 'achievements', label: 'Achievements', icon: Trophy }
-            ].map(tab => (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? "default" : "ghost"}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex items-center space-x-2 flex-1"
-              >
-                <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
-              </Button>
+        {/* Main Feed */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Feed Filters */}
+          <Tabs value={feedFilter} onValueChange={setFeedFilter}>
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="all" className="flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                All
+              </TabsTrigger>
+              <TabsTrigger value="friends" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Friends
+              </TabsTrigger>
+              <TabsTrigger value="study" className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                Study
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="flex items-center gap-2">
+                <Trophy className="h-4 w-4" />
+                Achievements
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Create Post */}
+          <CreatePost onSubmit={handleCreatePost} />
+
+          {/* Posts Feed */}
+          <div className="space-y-6">
+            {posts.map((post) => (
+              <FacebookStylePost
+                key={post.id}
+                post={post}
+                onLike={(postId) => console.log('Liked post:', postId)}
+                onComment={(postId, comment) => console.log('Commented on post:', postId, comment)}
+                onShare={(postId) => console.log('Shared post:', postId)}
+                onSave={(postId) => console.log('Saved post:', postId)}
+              />
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {activeTab === 'feed' && (
-              <div>
-                {/* Create Post */}
-                <Card className="mb-6">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <Avatar>
-                        <AvatarFallback>{user?.email?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <Textarea
-                          placeholder="Share your learning progress, ask questions, or celebrate achievements..."
-                          value={newPost}
-                          onChange={(e) => setNewPost(e.target.value)}
-                          className="min-h-[100px] resize-none border-0 bg-gray-50"
-                        />
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="flex space-x-2">
-                            <Button variant="outline" size="sm">
-                              <Camera className="w-4 h-4 mr-2" />
-                              Photo
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Video className="w-4 h-4 mr-2" />
-                              Video
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <LinkIcon className="w-4 h-4 mr-2" />
-                              Link
-                            </Button>
-                          </div>
-                          <Button className="bg-blue-600 hover:bg-blue-700">
-                            Share
-                          </Button>
-                        </div>
-                      </div>
+        {/* Right Sidebar */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Suggested Friends */}
+          <Card className="glass-card border-0 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Users className="h-5 w-5 text-primary" />
+                People You May Know
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {suggestedFriends.map((friend) => (
+                <div key={friend.id} className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={friend.avatar} alt={friend.name} />
+                    <AvatarFallback className="gradient-bright-sphere text-white">
+                      {friend.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-sm">{friend.name}</h4>
+                    <p className="text-xs text-muted-foreground">{friend.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {friend.mutualFriends} mutual connections
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      <Button size="sm" variant="outline" className="h-7 text-xs">
+                        Add Friend
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-7 text-xs">
+                        Remove
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Posts Feed */}
-                {posts.map(post => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
-            )}
-
-            {activeTab === 'groups' && (
-              <div className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Your Study Groups</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {studyGroups.map((group, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-3 h-3 rounded-full ${group.active ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                            <div>
-                              <h3 className="font-semibold">{group.name}</h3>
-                              <p className="text-sm text-gray-600">{group.members} members</p>
-                            </div>
-                          </div>
-                          <Button variant={group.active ? "default" : "outline"} size="sm">
-                            {group.active ? 'Active' : 'Join'}
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {activeTab === 'achievements' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {achievements.map((achievement, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-3 rounded-full bg-gray-100 ${achievement.color}`}>
-                          <achievement.icon className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{achievement.title}</h3>
-                          <p className="text-sm text-gray-600">{achievement.description}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Your Impact</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Posts Shared</span>
-                    <span className="font-semibold">23</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Peers Helped</span>
-                    <span className="font-semibold">15</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Study Streak</span>
-                    <span className="font-semibold text-green-600">7 days</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              ))}
+            </CardContent>
+          </Card>
 
-            {/* Suggested Connections */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Suggested Connections</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {['Maria Tembo', 'John Lungu', 'Grace Zulu'].map((name, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm">{name}</span>
-                      </div>
-                      <Button size="sm" variant="outline">Connect</Button>
-                    </div>
-                  ))}
+          {/* Quick Stats */}
+          <Card className="glass-card border-0 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Target className="h-5 w-5 text-primary" />
+                Your Progress Today
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm">Lessons Completed</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Daily Motivation */}
-            <Card className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Lightbulb className="w-6 h-6" />
-                  <span className="font-semibold">Daily Inspiration</span>
+                <Badge variant="secondary">3/5</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-orange-500" />
+                  <span className="text-sm">Study Streak</span>
                 </div>
-                <p className="text-sm opacity-90">
-                  "Ukufunda kwaba bantu bonse" - Education belongs to everyone. Keep learning, keep growing! 🌟
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+                <Badge variant="secondary">7 days</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm">Achievements</span>
+                </div>
+                <Badge variant="secondary">12</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-green-500" />
+                  <span className="text-sm">Study Time</span>
+                </div>
+                <Badge variant="secondary">2.5h</Badge>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
