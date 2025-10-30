@@ -10,6 +10,7 @@ interface Profile {
   avatar_url?: string;
   user_type: string;
   grade_level?: string;
+  onboarding_completed?: boolean;
   created_at: string;
   updated_at: string;
 }

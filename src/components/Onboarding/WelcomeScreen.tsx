@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { GraduationCap, Users, School, Heart } from "lucide-react";
+import { GraduationCap, Users, School, Heart, Volume2, VolumeX } from "lucide-react";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 
 interface WelcomeScreenProps {
   onRoleSelect: (role: 'student' | 'teacher' | 'institution' | 'guardian') => void;
@@ -10,10 +11,29 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
   const [showContent, setShowContent] = useState(false);
+  const { speak, speaking, supported, cancel } = useTextToSpeech({
+    rate: 0.9,
+    pitch: 1,
+    volume: 0.8,
+  });
+  const [autoSpeak, setAutoSpeak] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setShowContent(true), 1000);
-  }, []);
+    setTimeout(() => {
+      setShowContent(true);
+      if (supported && autoSpeak) {
+        speak("Welcome, Dreamer. You've entered Edu Zambia — a living learning system powered by BrightSphere. Here, knowledge is not consumed — it evolves with you.");
+      }
+    }, 1000);
+  }, [supported, autoSpeak, speak]);
+
+  const toggleSpeech = () => {
+    if (speaking) {
+      cancel();
+    } else {
+      speak("Welcome, Dreamer. You've entered Edu Zambia — a living learning system powered by BrightSphere. Here, knowledge is not consumed — it evolves with you.");
+    }
+  };
 
   const roles = [
     {
@@ -76,8 +96,25 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-center mb-12"
+              className="text-center mb-12 relative"
             >
+              {/* Voice Control Button */}
+              {supported && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  onClick={toggleSpeech}
+                  className="absolute top-0 right-4 p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+                  title={speaking ? "Stop voice" : "Play voice"}
+                >
+                  {speaking ? (
+                    <VolumeX className="w-6 h-6 text-primary" />
+                  ) : (
+                    <Volume2 className="w-6 h-6 text-primary" />
+                  )}
+                </motion.button>
+              )}
               <motion.div
                 className="inline-block mb-6"
                 animate={{ rotate: [0, 5, -5, 0] }}

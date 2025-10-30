@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, BookOpen, Brain, Rocket } from "lucide-react";
+import { Sparkles, BookOpen, Brain, Rocket, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 
 interface LearningSphereVisualizationProps {
   userRole: string;
@@ -14,6 +15,11 @@ export const LearningSphereVisualization = ({ userRole, onComplete }: LearningSp
   const [isGenerating, setIsGenerating] = useState(true);
   const [progress, setProgress] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { speak, speaking, supported, cancel } = useTextToSpeech({
+    rate: 0.9,
+    pitch: 1,
+    volume: 0.8,
+  });
 
   useEffect(() => {
     // Simulate AI generation
@@ -22,14 +28,22 @@ export const LearningSphereVisualization = ({ userRole, onComplete }: LearningSp
         if (prev >= 100) {
           clearInterval(interval);
           setIsGenerating(false);
+          if (supported) {
+            speak("Your Learning Sphere is ready. Explore your personalized knowledge universe.");
+          }
           return 100;
         }
         return prev + 2;
       });
     }, 50);
 
+    // Announce generation start
+    if (supported) {
+      speak("Generating your learning universe. Analyzing patterns, synthesizing knowledge, creating your personalized path.");
+    }
+
     return () => clearInterval(interval);
-  }, []);
+  }, [supported, speak]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -101,6 +115,14 @@ export const LearningSphereVisualization = ({ userRole, onComplete }: LearningSp
     animate();
   }, []);
 
+  const toggleSpeech = () => {
+    if (speaking) {
+      cancel();
+    } else {
+      speak("Your Learning Sphere is ready. Explore your personalized knowledge universe. Your AI tutor is ready to help with any topic.");
+    }
+  };
+
   const subjects = [
     { name: "Mathematics", topics: 12, color: "from-blue-500 to-cyan-500" },
     { name: "Science", topics: 15, color: "from-green-500 to-emerald-500" },
@@ -118,8 +140,22 @@ export const LearningSphereVisualization = ({ userRole, onComplete }: LearningSp
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          className="relative inline-block"
         >
           <Sparkles className="w-16 h-16 text-primary mx-auto" />
+          {supported && !isGenerating && (
+            <button
+              onClick={toggleSpeech}
+              className="absolute -top-2 -right-2 p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+              title={speaking ? "Stop voice" : "Play voice"}
+            >
+              {speaking ? (
+                <VolumeX className="w-4 h-4 text-primary" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-primary" />
+              )}
+            </button>
+          )}
         </motion.div>
         
         {isGenerating ? (

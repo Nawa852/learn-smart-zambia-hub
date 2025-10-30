@@ -84,6 +84,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     try {
       await updateProfile({
         full_name: formData.fullName,
+        onboarding_completed: true,
       });
 
       toast.success("🎉 Welcome to Edu Zambia! Your journey begins now.", {
