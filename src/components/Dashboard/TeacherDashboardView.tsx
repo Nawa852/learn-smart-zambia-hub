@@ -2,8 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Users, BookOpen, ClipboardCheck, TrendingUp, AlertCircle, Calendar, FileText, MessageSquare, Video, Award, PieChart, UserCheck } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Users, BookOpen, ClipboardCheck, TrendingUp, AlertCircle, Calendar, FileText, MessageSquare, Video, Award, PieChart, UserCheck, Brain, Wand2, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AICompanion } from '@/components/BrightSphere/AICompanion';
 
 interface TeacherDashboardViewProps {
   userName: string;
@@ -66,7 +68,24 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
   ];
 
   return (
-    <div className="space-y-6">
+    <Tabs defaultValue="overview" className="space-y-6">
+      <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="ai-assistant">
+          <Brain className="w-4 h-4 mr-2" />
+          AI Teaching Assistant
+        </TabsTrigger>
+        <TabsTrigger value="lesson-builder">
+          <Wand2 className="w-4 h-4 mr-2" />
+          AI Lesson Builder
+        </TabsTrigger>
+        <TabsTrigger value="marking">
+          <ClipboardCheck className="w-4 h-4 mr-2" />
+          Smart Marking
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview" className="space-y-6">
       {/* Welcome Header */}
       <Card className="border-0 shadow-lg bg-gradient-to-r from-primary/10 via-primary/5 to-background">
         <CardContent className="p-6">
@@ -239,6 +258,162 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
           </div>
         </CardContent>
       </Card>
-    </div>
+      </TabsContent>
+
+      <TabsContent value="ai-assistant">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <AICompanion userRole="teacher" userName={userName} />
+          </div>
+          <div className="space-y-4">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-sm">AI Teaching Tools</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Generate Lesson Plan
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Create Quiz
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <PieChart className="w-4 h-4 mr-2" />
+                  Analyze Student Data
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Draft Parent Updates
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="lesson-builder">
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle>AI Lesson Generator</CardTitle>
+            <CardDescription>Create ECZ-aligned lessons in seconds</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Subject</label>
+                  <select className="w-full mt-1 p-2 border rounded-md">
+                    <option>Mathematics</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                    <option>English</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Grade</label>
+                  <select className="w-full mt-1 p-2 border rounded-md">
+                    <option>Grade 10</option>
+                    <option>Grade 11</option>
+                    <option>Grade 12</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Duration</label>
+                  <select className="w-full mt-1 p-2 border rounded-md">
+                    <option>40 minutes</option>
+                    <option>80 minutes</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Topic</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g., Quadratic Equations" 
+                  className="w-full mt-1 p-2 border rounded-md"
+                />
+              </div>
+              <Button className="w-full">
+                <Wand2 className="w-4 h-4 mr-2" />
+                Generate Complete Lesson Plan
+              </Button>
+            </div>
+            <div className="mt-6 p-4 border rounded-lg bg-muted/50">
+              <h4 className="font-semibold mb-2">What will be generated:</h4>
+              <ul className="text-sm space-y-1 text-muted-foreground">
+                <li>✓ Lesson objectives (ECZ-aligned)</li>
+                <li>✓ Starter activities</li>
+                <li>✓ Main teaching content</li>
+                <li>✓ Student activities & worksheets</li>
+                <li>✓ Assessment questions</li>
+                <li>✓ Homework assignments</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="marking">
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle>Smart Marking System</CardTitle>
+            <CardDescription>AI-powered grading and feedback generation</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <ClipboardCheck className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold mb-2">Upload Scripts</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Upload photos or PDFs of student work
+                    </p>
+                    <Button className="w-full">Upload & Auto-Grade</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center">
+                      <Sparkles className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold mb-2">AI Feedback</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Generate personalized feedback comments
+                    </p>
+                    <Button className="w-full">Generate Feedback</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="mt-6">
+              <h4 className="font-semibold mb-3">Recent Marking Jobs</h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Grade 12 Physics - 28 scripts</p>
+                    <p className="text-xs text-muted-foreground">Uploaded 2 hours ago</p>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Completed</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium text-sm">Grade 11 Math Quiz - 32 scripts</p>
+                    <p className="text-xs text-muted-foreground">Processing...</p>
+                  </div>
+                  <Badge variant="secondary">85% Done</Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };

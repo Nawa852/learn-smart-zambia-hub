@@ -2,8 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Brain, Award, Target, TrendingUp, Clock, Star, Globe, Lightbulb, Mic, Eye, GraduationCap, Zap, Video, FileText, Headphones } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BookOpen, Brain, Award, Target, TrendingUp, Clock, Star, Globe, Lightbulb, Mic, Eye, GraduationCap, Zap, Video, FileText, Headphones, MessageSquare, Trophy, Gamepad2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AICompanion } from '@/components/BrightSphere/AICompanion';
+import { GamificationPanel } from '@/components/BrightSphere/GamificationPanel';
 
 interface StudentDashboardViewProps {
   userName: string;
@@ -67,7 +70,24 @@ export const StudentDashboardView = ({ userName }: StudentDashboardViewProps) =>
   ];
 
   return (
-    <div className="space-y-6">
+    <Tabs defaultValue="overview" className="space-y-6">
+      <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="ai-companion">
+          <Brain className="w-4 h-4 mr-2" />
+          AI Companion
+        </TabsTrigger>
+        <TabsTrigger value="gamification">
+          <Trophy className="w-4 h-4 mr-2" />
+          Progress & Rewards
+        </TabsTrigger>
+        <TabsTrigger value="3d-world">
+          <Gamepad2 className="w-4 h-4 mr-2" />
+          3D Learning World
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview" className="space-y-6">
       {/* Welcome Header */}
       <Card className="border-0 shadow-lg bg-gradient-to-r from-primary/10 via-primary/5 to-background">
         <CardContent className="p-6">
@@ -227,6 +247,124 @@ export const StudentDashboardView = ({ userName }: StudentDashboardViewProps) =>
           </div>
         </CardContent>
       </Card>
-    </div>
+      </TabsContent>
+
+      <TabsContent value="ai-companion">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <AICompanion userRole="student" userName={userName} />
+          </div>
+          <div className="space-y-4">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-sm">AI Features</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Mic className="w-4 h-4 mr-2" />
+                  Voice Learning Mode
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Lightbulb className="w-4 h-4 mr-2" />
+                  Smart Predictions
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Brain className="w-4 h-4 mr-2" />
+                  Multi-Agent Mode
+                </Button>
+                <Button variant="outline" className="w-full justify-start" size="sm">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Language Switcher
+                </Button>
+              </CardContent>
+            </Card>
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-pink-50">
+              <CardContent className="p-4 text-center">
+                <Brain className="w-12 h-12 mx-auto mb-2 text-purple-600" />
+                <h4 className="font-bold">BrightSphere Core</h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Quantum-powered AI adapting to your learning style
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="gamification">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <GamificationPanel userType="student" />
+          </div>
+          <div className="space-y-4">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-sm">Rewards Store</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 border rounded-lg hover:shadow-md transition-all cursor-pointer">
+                  <h4 className="font-semibold text-sm">AI Voice Pack</h4>
+                  <p className="text-xs text-muted-foreground">Custom AI voices</p>
+                  <Badge variant="secondary" className="mt-2">250 ZedCoins</Badge>
+                </div>
+                <div className="p-3 border rounded-lg hover:shadow-md transition-all cursor-pointer">
+                  <h4 className="font-semibold text-sm">Premium Flashcards</h4>
+                  <p className="text-xs text-muted-foreground">Unlimited AI cards</p>
+                  <Badge variant="secondary" className="mt-2">500 ZedCoins</Badge>
+                </div>
+                <div className="p-3 border rounded-lg hover:shadow-md transition-all cursor-pointer">
+                  <h4 className="font-semibold text-sm">Certificate</h4>
+                  <p className="text-xs text-muted-foreground">Digital credential</p>
+                  <Badge variant="secondary" className="mt-2">1000 ZedCoins</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="3d-world">
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle>3D Learning Universe</CardTitle>
+            <CardDescription>Explore interactive 3D environments and virtual labs</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="hover:shadow-lg transition-all cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <Eye className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold mb-2">Virtual Lab</h3>
+                  <p className="text-sm text-muted-foreground">Conduct physics experiments in 3D</p>
+                  <Button className="w-full mt-4" size="sm">Enter Lab</Button>
+                </CardContent>
+              </Card>
+              <Card className="hover:shadow-lg transition-all cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center">
+                    <Globe className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold mb-2">History Explorer</h3>
+                  <p className="text-sm text-muted-foreground">Walk through historical events</p>
+                  <Button className="w-full mt-4" size="sm">Start Tour</Button>
+                </CardContent>
+              </Card>
+              <Card className="hover:shadow-lg transition-all cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
+                    <Brain className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold mb-2">Anatomy 3D</h3>
+                  <p className="text-sm text-muted-foreground">Explore human body systems</p>
+                  <Button className="w-full mt-4" size="sm">Explore</Button>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
