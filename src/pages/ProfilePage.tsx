@@ -47,14 +47,26 @@ const ProfilePage = () => {
         name: profile?.full_name || 'Student',
         avatar: profile?.avatar_url || '/api/placeholder/40/40',
         title: profile?.grade_level ? `Grade ${profile.grade_level} Student` : 'Student',
-        location: 'Zambia'
+        location: 'Zambia',
+        isVerified: false,
+        mutualFriends: 0
       },
       content: 'Just completed my first AI-powered study session! The personalized learning path really helped me understand complex mathematics concepts. Excited to share my progress with everyone! 🚀📚',
+      images: [],
       subject: 'Mathematics',
       timestamp: '3 hours ago',
-      likes: 24,
-      comments: 12,
+      reactions: [
+        { type: 'like' as const, emoji: '👍', count: 24, hasReacted: true },
+        { type: 'love' as const, emoji: '❤️', count: 8, hasReacted: false },
+        { type: 'haha' as const, emoji: '😂', count: 1, hasReacted: false },
+        { type: 'wow' as const, emoji: '😮', count: 3, hasReacted: false },
+        { type: 'sad' as const, emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry' as const, emoji: '😡', count: 0, hasReacted: false }
+      ],
+      comments: [],
       shares: 6,
+      views: 89,
+      privacy: 'public' as const,
       isLiked: true,
       isSaved: false,
       tags: ['studying', 'mathematics', 'ai-learning']

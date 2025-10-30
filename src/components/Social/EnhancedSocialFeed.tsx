@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CreatePost } from './CreatePost';
-import { FacebookStylePost } from './FacebookStylePost';
+import { FacebookStylePost, type Post } from './FacebookStylePost';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,7 +65,7 @@ interface LiveEvent {
 
 const EnhancedSocialFeed = () => {
   const [feedFilter, setFeedFilter] = useState('all');
-  const [posts, setPosts] = useState([
+  const [posts, setPosts] = useState<Post[]>([
     {
       id: '1',
       author: {
@@ -80,12 +80,12 @@ const EnhancedSocialFeed = () => {
       images: ['/project1.jpg', '/project2.jpg'],
       timestamp: '2 hours ago',
       reactions: [
-        { type: 'like', emoji: '👍', count: 45, hasReacted: false },
-        { type: 'love', emoji: '❤️', count: 12, hasReacted: true },
-        { type: 'wow', emoji: '😮', count: 8, hasReacted: false },
-        { type: 'haha', emoji: '😂', count: 2, hasReacted: false },
-        { type: 'sad', emoji: '😢', count: 0, hasReacted: false },
-        { type: 'angry', emoji: '😡', count: 0, hasReacted: false }
+        { type: 'like' as const, emoji: '👍', count: 45, hasReacted: false },
+        { type: 'love' as const, emoji: '❤️', count: 12, hasReacted: true },
+        { type: 'haha' as const, emoji: '😂', count: 2, hasReacted: false },
+        { type: 'wow' as const, emoji: '😮', count: 8, hasReacted: false },
+        { type: 'sad' as const, emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry' as const, emoji: '😡', count: 0, hasReacted: false }
       ],
       comments: [
         {
@@ -105,7 +105,7 @@ const EnhancedSocialFeed = () => {
       ],
       shares: 8,
       views: 156,
-      privacy: 'public',
+      privacy: 'public' as const,
       isLiked: true,
       isSaved: false,
       subject: 'Computer Science',
@@ -130,12 +130,12 @@ const EnhancedSocialFeed = () => {
       },
       timestamp: '4 hours ago',
       reactions: [
-        { type: 'like', emoji: '👍', count: 89, hasReacted: false },
-        { type: 'love', emoji: '❤️', count: 23, hasReacted: false },
-        { type: 'wow', emoji: '😮', count: 15, hasReacted: false },
-        { type: 'haha', emoji: '😂', count: 1, hasReacted: false },
-        { type: 'sad', emoji: '😢', count: 0, hasReacted: false },
-        { type: 'angry', emoji: '😡', count: 0, hasReacted: false }
+        { type: 'like' as const, emoji: '👍', count: 89, hasReacted: false },
+        { type: 'love' as const, emoji: '❤️', count: 23, hasReacted: false },
+        { type: 'haha' as const, emoji: '😂', count: 1, hasReacted: false },
+        { type: 'wow' as const, emoji: '😮', count: 15, hasReacted: false },
+        { type: 'sad' as const, emoji: '😢', count: 0, hasReacted: false },
+        { type: 'angry' as const, emoji: '😡', count: 0, hasReacted: false }
       ],
       comments: [
         {
@@ -148,7 +148,7 @@ const EnhancedSocialFeed = () => {
       ],
       shares: 34,
       views: 432,
-      privacy: 'public',
+      privacy: 'public' as const,
       isLiked: false,
       isSaved: true,
       subject: 'Technology',
@@ -229,15 +229,19 @@ const EnhancedSocialFeed = () => {
       author: {
         name: 'You',
         avatar: '/your-avatar.jpg',
-        title: 'Student'
+        title: 'Student',
+        location: 'Zambia',
+        isVerified: false,
+        mutualFriends: 0
       },
       content: postData.content,
+      images: postData.images || [],
       timestamp: 'just now',
       reactions: [
         { type: 'like' as const, emoji: '👍', count: 0, hasReacted: false },
         { type: 'love' as const, emoji: '❤️', count: 0, hasReacted: false },
-        { type: 'wow' as const, emoji: '😮', count: 0, hasReacted: false },
         { type: 'haha' as const, emoji: '😂', count: 0, hasReacted: false },
+        { type: 'wow' as const, emoji: '😮', count: 0, hasReacted: false },
         { type: 'sad' as const, emoji: '😢', count: 0, hasReacted: false },
         { type: 'angry' as const, emoji: '😡', count: 0, hasReacted: false }
       ],
@@ -248,7 +252,7 @@ const EnhancedSocialFeed = () => {
       isLiked: false,
       isSaved: false,
       subject: postData.subject,
-      tags: postData.tags
+      tags: postData.tags || []
     };
     setPosts([newPost, ...posts]);
   };

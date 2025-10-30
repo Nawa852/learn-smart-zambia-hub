@@ -96,6 +96,8 @@ interface Post {
   };
 }
 
+export type { Post, Reaction, Comment };
+
 interface FacebookStylePostProps {
   post: Post;
   onLike?: (postId: string) => void;
