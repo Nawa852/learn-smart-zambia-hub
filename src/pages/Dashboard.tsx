@@ -16,10 +16,16 @@ const Dashboard = () => {
   const [userType, setUserType] = useState<string>(() => {
     return localStorage.getItem('edu-zambia-user-type') || 'student';
   });
-  const [userName, setUserName] = useState('Demo User');
+  const [userName, setUserName] = useState(() => {
+    const onboardingData = localStorage.getItem('edu-zambia-onboarding');
+    if (onboardingData) {
+      const data = JSON.parse(onboardingData);
+      return data.fullName || 'Learner';
+    }
+    return 'Learner';
+  });
 
   useEffect(() => {
-    // Load onboarding data
     const onboardingData = localStorage.getItem('edu-zambia-onboarding');
     if (onboardingData) {
       const data = JSON.parse(onboardingData);
