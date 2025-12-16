@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { StudentDashboardView } from '@/components/Dashboard/StudentDashboardView';
 import { TeacherDashboardView } from '@/components/Dashboard/TeacherDashboardView';
 import { GuardianDashboardView } from '@/components/Dashboard/GuardianDashboardView';
@@ -6,13 +7,16 @@ import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDash
 import AIAPIStatus from '@/components/AI/AIAPIStatus';
 import { QuickCommandCenter } from '@/components/BrightSphere/QuickCommandCenter';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { DashboardTour } from '@/components/Dashboard/DashboardTour';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Brain, BarChart3, Command, User, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [commandCenterOpen, setCommandCenterOpen] = useState(false);
+  const [showTour, setShowTour] = useState(false);
   const [userType, setUserType] = useState<string>(() => {
     return localStorage.getItem('edu-zambia-user-type') || 'student';
   });
@@ -26,13 +30,27 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
+    // Check if onboarding is completed
+    const onboardingCompleted = localStorage.getItem('edu-zambia-onboarding-completed');
+    if (!onboardingCompleted) {
+      navigate('/welcome', { replace: true });
+      return;
+    }
+
+    // Load onboarding data
     const onboardingData = localStorage.getItem('edu-zambia-onboarding');
     if (onboardingData) {
       const data = JSON.parse(onboardingData);
       if (data.fullName) setUserName(data.fullName);
       if (data.userType) setUserType(data.userType);
     }
-  }, []);
+
+    // Check if tour should be shown
+    const tourCompleted = localStorage.getItem('edu-zambia-tour-completed');
+    if (!tourCompleted) {
+      setShowTour(true);
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -67,6 +85,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
+      {showTour && <DashboardTour onComplete={() => setShowTour(false)} />}
       <QuickCommandCenter isOpen={commandCenterOpen} onClose={() => setCommandCenterOpen(false)} />
       
       <Tabs defaultValue="dashboard" className="w-full">
