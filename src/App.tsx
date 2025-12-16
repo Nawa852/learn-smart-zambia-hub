@@ -56,6 +56,7 @@ import StudyMaterialsPageWrapper from '@/pages/StudyMaterialsPage';
 import CommunityPageWrapper from '@/pages/CommunityPage';
 import MealPlannerPageWrapper from '@/pages/MealPlannerPage';
 import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
+import WelcomePage from '@/pages/WelcomePage';
 
 // Import all 50 new AI-powered pages
 import AICurriculumMapperPage from '@/pages/AICurriculumMapperPage';
@@ -131,6 +132,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/landing-verse" element={<LandingVerse />} />
+            <Route path="/welcome" element={<WelcomePage />} />
             
             {/* Protected Dashboard Routes */}
             <Route path="/dashboard" element={

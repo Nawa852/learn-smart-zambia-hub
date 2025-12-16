@@ -136,7 +136,7 @@ const Index = () => {
                 Login
               </Button>
               <Button 
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/welcome')}
                 className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl animate-glow"
               >
                 Start Learning <ArrowRight className="ml-2 w-4 h-4" />
@@ -177,7 +177,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <Button 
               size="lg"
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/welcome')}
               className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg rounded-xl hover:scale-105 animate-glow"
             >
               Start AI Learning Today <Brain className="ml-2 w-5 h-5" />
