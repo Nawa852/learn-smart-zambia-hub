@@ -101,23 +101,115 @@
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 8%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 222.2 84% 6%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 245 90% 65%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 280 100% 70%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
+    --border: 217.2 32.6% 20%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 245 90% 65%;
+  }
+
+  /* Zambian Heritage Theme */
+  .theme-zambian {
+    --background: 30 20% 98%;
+    --foreground: 30 25% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 30 25% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 25% 10%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 48 96% 89%;
+    --secondary-foreground: 30 25% 10%;
+    --muted: 30 20% 94%;
+    --muted-foreground: 30 15% 40%;
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 20% 88%;
+    --input: 30 20% 88%;
+    --ring: 25 95% 53%;
+  }
+
+  /* Ocean Blue Theme */
+  .theme-ocean {
+    --background: 200 50% 98%;
+    --foreground: 200 50% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 200 50% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 50% 10%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 185 96% 90%;
+    --secondary-foreground: 200 50% 10%;
+    --muted: 200 30% 94%;
+    --muted-foreground: 200 20% 40%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 200 30% 88%;
+    --input: 200 30% 88%;
+    --ring: 199 89% 48%;
+  }
+
+  /* Sunset Theme */
+  .theme-sunset {
+    --background: 30 30% 98%;
+    --foreground: 0 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 30% 10%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 70% 92%;
+    --secondary-foreground: 0 30% 10%;
+    --muted: 30 20% 94%;
+    --muted-foreground: 0 15% 40%;
+    --accent: 330 80% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 20% 88%;
+    --input: 30 20% 88%;
+    --ring: 25 95% 53%;
+  }
+
+  /* Forest Theme */
+  .theme-forest {
+    --background: 140 30% 97%;
+    --foreground: 140 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 140 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 30% 10%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 140 60% 90%;
+    --secondary-foreground: 140 30% 10%;
+    --muted: 140 20% 94%;
+    --muted-foreground: 140 15% 40%;
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 140 20% 88%;
+    --input: 140 20% 88%;
+    --ring: 142 76% 36%;
   }
 }
 
