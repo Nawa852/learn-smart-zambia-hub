@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StudentDashboardView } from '@/components/Dashboard/StudentDashboardView';
 import { TeacherDashboardView } from '@/components/Dashboard/TeacherDashboardView';
 import { GuardianDashboardView } from '@/components/Dashboard/GuardianDashboardView';
 import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDashboardView';
 import AIAPIStatus from '@/components/AI/AIAPIStatus';
 import { QuickCommandCenter } from '@/components/BrightSphere/QuickCommandCenter';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, BarChart3, Command, User } from 'lucide-react';
+import { Brain, BarChart3, Command, User, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
   const [commandCenterOpen, setCommandCenterOpen] = useState(false);
-  const [userType, setUserType] = useState<string>('student');
-  const [userName] = useState('Demo User');
+  const [userType, setUserType] = useState<string>(() => {
+    return localStorage.getItem('edu-zambia-user-type') || 'student';
+  });
+  const [userName, setUserName] = useState('Demo User');
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Load onboarding data
+    const onboardingData = localStorage.getItem('edu-zambia-onboarding');
+    if (onboardingData) {
+      const data = JSON.parse(onboardingData);
+      if (data.fullName) setUserName(data.fullName);
+      if (data.userType) setUserType(data.userType);
+    }
+  }, []);
+
+  useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -65,10 +78,19 @@ const Dashboard = () => {
             </TabsList>
             
             <div className="flex items-center gap-3">
+              {/* BrightSphere Branding */}
+              <div className="hidden md:flex items-center gap-1 text-sm text-muted-foreground">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span>Powered by BrightSphere</span>
+              </div>
+              
+              {/* Theme Switcher */}
+              <ThemeSwitcher />
+              
               {/* Role Switcher for Demo */}
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <Select value={userType} onValueChange={setUserType}>
+                <Select value={userType} onValueChange={(v) => { setUserType(v); localStorage.setItem('edu-zambia-user-type', v); }}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Select Role" />
                   </SelectTrigger>
