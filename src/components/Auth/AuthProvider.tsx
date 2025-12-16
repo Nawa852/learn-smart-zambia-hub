@@ -1,12 +1,22 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
+
+// Mock user type (simplified from Supabase)
+interface MockUser {
+  id: string;
+  email: string;
+  full_name?: string;
+  user_type?: string;
+  user_metadata?: {
+    full_name?: string;
+    avatar_url?: string;
+    [key: string]: any;
+  };
+}
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: MockUser | null;
+  session: { user: MockUser } | null;
   loading: boolean;
   signOut: () => Promise<void>;
   signUp: (email: string, password: string, fullName?: string, userType?: string, grade?: string) => Promise<{ error: any }>;
@@ -31,228 +41,130 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+// Simple mock user storage
+const MOCK_USERS_KEY = 'edu-zambia-mock-users';
+const CURRENT_USER_KEY = 'edu-zambia-current-user';
+
+const getMockUsers = (): Record<string, { password: string; user: MockUser }> => {
+  const stored = localStorage.getItem(MOCK_USERS_KEY);
+  return stored ? JSON.parse(stored) : {};
+};
+
+const saveMockUsers = (users: Record<string, { password: string; user: MockUser }>) => {
+  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<MockUser | null>(null);
+  const [session, setSession] = useState<{ user: MockUser } | null>(null);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   useEffect(() => {
-    let mounted = true;
-
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
-        
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          setLoading(false);
-        }
-      }
-    );
-
-    // Get initial session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-        }
-
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error in getInitialSession:', error);
-        if (mounted) {
-          setSession(null);
-          setUser(null);
-          setLoading(false);
-        }
-      }
-    };
-
-    getInitialSession();
-
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
+    // Check for existing session
+    const storedUser = localStorage.getItem(CURRENT_USER_KEY);
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setSession({ user: parsedUser });
+    }
+    setLoading(false);
   }, []);
 
   const signOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      
-      toast({
-        title: "Signed out successfully",
-        description: "You have been logged out.",
-      });
-    } catch (error) {
-      console.error('Error signing out:', error);
-      toast({
-        title: "Error signing out",
-        description: "Please try again.",
-        variant: "destructive",
-      });
-    }
+    localStorage.removeItem(CURRENT_USER_KEY);
+    setUser(null);
+    setSession(null);
+    toast.success("Signed out successfully");
   };
 
   const signUp = async (email: string, password: string, fullName?: string, userType?: string, grade?: string) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const users = getMockUsers();
+      
+      if (users[email]) {
+        toast.error("User already exists with this email");
+        return { error: { message: "User already exists" } };
+      }
+
+      const newUser: MockUser = {
+        id: `user_${Date.now()}`,
         email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            full_name: fullName,
-            user_type: userType || 'student',
-            grade_level: grade,
-          }
-        }
-      });
+        full_name: fullName,
+        user_type: userType || 'student',
+        user_metadata: {
+          full_name: fullName,
+        },
+      };
 
-      if (error) {
-        toast({
-          title: "Sign up failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { error };
-      }
+      users[email] = { password, user: newUser };
+      saveMockUsers(users);
 
-      if (data.user && !data.session) {
-        toast({
-          title: "Check your email",
-          description: "Please check your email for a verification link.",
-        });
-      }
-
+      toast.success("Account created! You can now sign in.");
       return { error: null };
     } catch (error: any) {
-      console.error('Sign up error:', error);
-      toast({
-        title: "Sign up failed",
-        description: error.message || "An unexpected error occurred.",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Sign up failed");
       return { error };
     }
   };
 
   const signInWithEmail = async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const users = getMockUsers();
+    const userRecord = users[email];
 
-      if (error) {
-        toast({
-          title: "Sign in failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
-      }
-
-      toast({
-        title: "Welcome back!",
-        description: "You have been signed in successfully.",
-      });
-    } catch (error: any) {
-      console.error('Sign in error:', error);
-      throw error;
+    if (!userRecord) {
+      toast.error("No account found with this email");
+      throw new Error("Invalid login credentials");
     }
+
+    if (userRecord.password !== password) {
+      toast.error("Invalid password");
+      throw new Error("Invalid login credentials");
+    }
+
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userRecord.user));
+    setUser(userRecord.user);
+    setSession({ user: userRecord.user });
+    toast.success("Welcome back!");
   };
 
   const signInWithGoogle = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        }
-      });
-
-      if (error) {
-        toast({
-          title: "Google sign in failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
-      }
-    } catch (error: any) {
-      console.error('Google sign in error:', error);
-      throw error;
-    }
+    // Mock Google sign in - create a demo user
+    const demoUser: MockUser = {
+      id: 'google_user_demo',
+      email: 'demo@google.com',
+      full_name: 'Google Demo User',
+      user_type: 'student',
+      user_metadata: { full_name: 'Google Demo User' },
+    };
+    
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(demoUser));
+    setUser(demoUser);
+    setSession({ user: demoUser });
+    toast.success("Signed in with Google (Demo)");
   };
 
   const signInWithFacebook = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'facebook',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        }
-      });
-
-      if (error) {
-        toast({
-          title: "Facebook sign in failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
-      }
-    } catch (error: any) {
-      console.error('Facebook sign in error:', error);
-      throw error;
-    }
+    // Mock Facebook sign in - create a demo user
+    const demoUser: MockUser = {
+      id: 'facebook_user_demo',
+      email: 'demo@facebook.com',
+      full_name: 'Facebook Demo User',
+      user_type: 'student',
+      user_metadata: { full_name: 'Facebook Demo User' },
+    };
+    
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(demoUser));
+    setUser(demoUser);
+    setSession({ user: demoUser });
+    toast.success("Signed in with Facebook (Demo)");
   };
 
   const sendSMSVerification = async (phone: string) => {
-    try {
-      // This would typically call a Supabase edge function for SMS
-      toast({
-        title: "SMS sent",
-        description: "Verification code sent to your phone.",
-      });
-    } catch (error: any) {
-      console.error('SMS verification error:', error);
-      toast({
-        title: "SMS failed",
-        description: "Failed to send verification code.",
-        variant: "destructive",
-      });
-      throw error;
-    }
+    toast.success("SMS sent (Demo mode)");
   };
 
   const verifyPhone = async (phone: string, code: string) => {
-    try {
-      // This would typically verify the SMS code
-      toast({
-        title: "Phone verified",
-        description: "Your phone number has been verified.",
-      });
-    } catch (error: any) {
-      console.error('Phone verification error:', error);
-      toast({
-        title: "Verification failed",
-        description: "Invalid verification code.",
-        variant: "destructive",
-      });
-      throw error;
-    }
+    toast.success("Phone verified (Demo mode)");
   };
 
   const value = {
