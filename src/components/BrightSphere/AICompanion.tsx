@@ -18,6 +18,71 @@ interface AICompanionProps {
   userName: string;
 }
 
+// Mock AI responses based on user role
+const getMockResponse = (userMessage: string, userRole: string): string => {
+  const lowerMessage = userMessage.toLowerCase();
+  
+  const roleResponses: Record<string, Record<string, string>> = {
+    student: {
+      default: "I understand you're looking for help! As your BrightSphere AI companion, I can assist with explaining concepts, creating study plans, generating flashcards, or helping you prepare for exams. What specific topic or subject would you like to focus on?",
+      math: "For mathematics, I recommend starting with understanding the core concepts. Would you like me to break down the problem step by step, create practice problems, or explain the underlying theory?",
+      study: "Great question about studying! Here are my top recommendations: 1) Use spaced repetition for better retention, 2) Take breaks every 25 minutes (Pomodoro technique), 3) Teach concepts to others to reinforce learning. Which approach interests you?",
+      exam: "For exam preparation, let's create a strategic plan! I can help you identify key topics, generate practice questions, create summary notes, or set up a revision schedule. What subject is the exam for?"
+    },
+    teacher: {
+      default: "Hello! As your AI teaching assistant, I can help create lesson plans, generate assessments, analyze student performance data, or suggest engagement strategies. How can I support your teaching today?",
+      lesson: "I'd be happy to help with lesson planning! Tell me the subject, grade level, and topic, and I'll generate a comprehensive ECZ-aligned lesson plan with objectives, activities, and assessments.",
+      grade: "For grading assistance, I can help create rubrics, generate feedback templates, or analyze patterns in student submissions. What type of assessment are you working with?",
+      student: "Student management is crucial! I can help identify at-risk students based on performance patterns, suggest intervention strategies, or draft parent communication. What's your specific concern?"
+    },
+    guardian: {
+      default: "Welcome! As a guardian support AI, I can help you understand your child's progress, suggest ways to support their learning at home, or explain educational concepts. How can I assist you?",
+      progress: "I can provide detailed insights into your child's academic progress, including strengths, areas for improvement, and recommended activities. Which subject would you like to focus on?",
+      help: "Supporting learning at home is valuable! I recommend: 1) Creating a dedicated study space, 2) Establishing consistent routines, 3) Showing interest in their schoolwork. Would you like specific activity suggestions?"
+    },
+    institution: {
+      default: "Greetings! I can assist with institutional analytics, curriculum planning, staff management insights, or compliance reporting. What aspect of institution management would you like to explore?",
+      report: "I can generate comprehensive reports on student performance, attendance trends, resource utilization, and more. What specific metrics are you interested in analyzing?",
+      analytics: "Our analytics capabilities include predictive dropout identification, performance benchmarking, and trend analysis across departments. Which area would you like to dive into?"
+    }
+  };
+
+  const responses = roleResponses[userRole] || roleResponses.student;
+  
+  if (lowerMessage.includes('math') || lowerMessage.includes('calculus') || lowerMessage.includes('algebra')) {
+    return responses.math || responses.default;
+  }
+  if (lowerMessage.includes('study') || lowerMessage.includes('learn')) {
+    return responses.study || responses.default;
+  }
+  if (lowerMessage.includes('exam') || lowerMessage.includes('test') || lowerMessage.includes('quiz')) {
+    return responses.exam || responses.default;
+  }
+  if (lowerMessage.includes('lesson') || lowerMessage.includes('plan')) {
+    return responses.lesson || responses.default;
+  }
+  if (lowerMessage.includes('grade') || lowerMessage.includes('mark')) {
+    return responses.grade || responses.default;
+  }
+  if (lowerMessage.includes('student')) {
+    return responses.student || responses.default;
+  }
+  if (lowerMessage.includes('progress') || lowerMessage.includes('performance')) {
+    return responses.progress || responses.default;
+  }
+  if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
+    return responses.help || responses.default;
+  }
+  if (lowerMessage.includes('report')) {
+    return responses.report || responses.default;
+  }
+  if (lowerMessage.includes('analytics') || lowerMessage.includes('data')) {
+    return responses.analytics || responses.default;
+  }
+  
+  return responses.default;
+};
+
 export const AICompanion = ({ userRole, userName }: AICompanionProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -37,101 +102,44 @@ export const AICompanion = ({ userRole, userName }: AICompanionProps) => {
     }
   }, [messages]);
 
-  const streamChat = async (userMessage: string) => {
+  const simulateStreamingResponse = async (userMessage: string) => {
     const newMessages = [...messages, { role: 'user' as const, content: userMessage }];
     setMessages(newMessages);
     setInput('');
     setIsLoading(true);
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/brightsphere-chat`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ 
-            messages: newMessages,
-            userRole 
-          }),
-        }
-      );
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (!response.ok) {
-        const error = await response.json();
-        if (response.status === 429) {
-          toast.error('Rate limit exceeded. Please wait a moment and try again.');
-        } else if (response.status === 402) {
-          toast.error('AI credits exhausted. Please contact support.');
-        } else {
-          toast.error('Failed to get AI response. Please try again.');
+    const fullResponse = getMockResponse(userMessage, userRole);
+    let currentResponse = '';
+
+    // Simulate streaming effect
+    for (let i = 0; i < fullResponse.length; i++) {
+      currentResponse += fullResponse[i];
+      
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'assistant' && prev.length > newMessages.length) {
+          return prev.map((m, idx) => 
+            idx === prev.length - 1 ? { ...m, content: currentResponse } : m
+          );
         }
-        setIsLoading(false);
-        return;
+        return [...prev.slice(0, newMessages.length), { role: 'assistant' as const, content: currentResponse }];
+      });
+      
+      // Add small delay for streaming effect
+      if (i % 3 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 10));
       }
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('No reader available');
-
-      const decoder = new TextDecoder();
-      let textBuffer = '';
-      let assistantMessage = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        textBuffer += decoder.decode(value, { stream: true });
-        let newlineIndex: number;
-
-        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
-          let line = textBuffer.slice(0, newlineIndex);
-          textBuffer = textBuffer.slice(newlineIndex + 1);
-
-          if (line.endsWith('\r')) line = line.slice(0, -1);
-          if (line.startsWith(':') || line.trim() === '') continue;
-          if (!line.startsWith('data: ')) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === '[DONE]') {
-            setIsLoading(false);
-            break;
-          }
-
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-            if (content) {
-              assistantMessage += content;
-              setMessages(prev => {
-                const last = prev[prev.length - 1];
-                if (last?.role === 'assistant') {
-                  return prev.map((m, i) => 
-                    i === prev.length - 1 ? { ...m, content: assistantMessage } : m
-                  );
-                }
-                return [...prev, { role: 'assistant', content: assistantMessage }];
-              });
-            }
-          } catch {
-            textBuffer = line + '\n' + textBuffer;
-            break;
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Streaming error:', error);
-      toast.error('Connection error. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   };
 
   const handleSend = () => {
     if (!input.trim() || isLoading) return;
-    streamChat(input.trim());
+    simulateStreamingResponse(input.trim());
   };
 
   const startVoiceInput = () => {
@@ -184,7 +192,7 @@ export const AICompanion = ({ userRole, userName }: AICompanionProps) => {
           </div>
           <Badge variant="secondary" className="bg-green-100 text-green-800">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></div>
-            Active
+            Demo Mode
           </Badge>
         </CardTitle>
       </CardHeader>

@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle, AlertCircle, RefreshCw, Brain, Globe, Mic, Eye, Shield, Zap } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 
 interface APIStatus {
   name: string;
@@ -12,19 +10,18 @@ interface APIStatus {
   status: 'active' | 'inactive' | 'checking';
   lastChecked?: Date;
   purpose: string;
-  secretKey: string;
 }
 
 const AIAPIStatus = () => {
   const [apiStatuses, setApiStatuses] = useState<APIStatus[]>([
-    { name: 'GPT-4o', icon: Brain, status: 'checking', purpose: 'Advanced tutoring & explanations', secretKey: 'PENAI_API_KEY' },
-    { name: 'Claude 3', icon: Shield, status: 'checking', purpose: 'Content safety & essay grading', secretKey: 'CLAUDE_API_KEY' },
-    { name: 'Qwen', icon: Globe, status: 'checking', purpose: 'Multilingual translation', secretKey: 'QWEN_API_KEY' },
-    { name: 'Gemini', icon: Eye, status: 'checking', purpose: 'Visual learning & AR labs', secretKey: 'GEMINI_API_KEY' },
-    { name: 'DeepSeek', icon: Zap, status: 'checking', purpose: 'Predictive analytics', secretKey: 'DEEPSEEK_API_KEY' },
-    { name: 'Whisper', icon: Mic, status: 'checking', purpose: 'Voice recognition & audio', secretKey: 'PENAI_API_KEY' },
-    { name: 'LLaMA 3', icon: Brain, status: 'checking', purpose: 'Offline learning support', secretKey: 'LLAMA_API_KEY' },
-    { name: 'Moonshot AI', icon: Brain, status: 'checking', purpose: 'Career & scholarship matching', secretKey: 'MOONSHOT_API_KEY' }
+    { name: 'GPT-4o', icon: Brain, status: 'checking', purpose: 'Advanced tutoring & explanations' },
+    { name: 'Claude 3', icon: Shield, status: 'checking', purpose: 'Content safety & essay grading' },
+    { name: 'Qwen', icon: Globe, status: 'checking', purpose: 'Multilingual translation' },
+    { name: 'Gemini', icon: Eye, status: 'checking', purpose: 'Visual learning & AR labs' },
+    { name: 'DeepSeek', icon: Zap, status: 'checking', purpose: 'Predictive analytics' },
+    { name: 'Whisper', icon: Mic, status: 'checking', purpose: 'Voice recognition & audio' },
+    { name: 'LLaMA 3', icon: Brain, status: 'checking', purpose: 'Offline learning support' },
+    { name: 'Moonshot AI', icon: Brain, status: 'checking', purpose: 'Career & scholarship matching' }
   ]);
 
   const [isChecking, setIsChecking] = useState(false);
@@ -32,30 +29,17 @@ const AIAPIStatus = () => {
   const checkAPIStatus = async () => {
     setIsChecking(true);
     
-    try {
-      // Test each API by making a simple call through our edge functions
-      const { data, error } = await supabase.functions.invoke('ai-api-status-check', {
-        body: { apis: apiStatuses.map(api => ({ name: api.name, secretKey: api.secretKey })) }
-      });
-
-      if (data && !error) {
-        setApiStatuses(prev => prev.map(api => ({
-          ...api,
-          status: data[api.name] ? 'active' : 'inactive',
-          lastChecked: new Date()
-        })));
-      }
-    } catch (error) {
-      console.error('Error checking API status:', error);
-      // Set all as active for demo purposes if edge function fails
-      setApiStatuses(prev => prev.map(api => ({
-        ...api,
-        status: 'active',
-        lastChecked: new Date()
-      })));
-    } finally {
-      setIsChecking(false);
-    }
+    // Simulate API checking with mock data
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Mock status - all active for demo
+    setApiStatuses(prev => prev.map(api => ({
+      ...api,
+      status: 'active' as const,
+      lastChecked: new Date()
+    })));
+    
+    setIsChecking(false);
   };
 
   useEffect(() => {
@@ -96,7 +80,8 @@ const AIAPIStatus = () => {
             AI Models Status Dashboard
           </CardTitle>
           <div className="flex items-center gap-3">
-            <div className="text-sm text-gray-600">
+            <Badge variant="outline" className="text-xs">Demo Mode</Badge>
+            <div className="text-sm text-muted-foreground">
               {activeCount}/{totalCount} Active
             </div>
             <Button
@@ -120,7 +105,7 @@ const AIAPIStatus = () => {
               System Status: {activeCount === totalCount ? 'All Systems Operational' : activeCount > totalCount / 2 ? 'Partial Service' : 'Service Degraded'}
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-muted rounded-full h-3">
             <div 
               className={`h-3 rounded-full transition-all duration-500 ${activeCount === totalCount ? 'bg-green-500' : activeCount > totalCount / 2 ? 'bg-yellow-500' : 'bg-red-500'}`}
               style={{ width: `${(activeCount / totalCount) * 100}%` }}
@@ -138,11 +123,11 @@ const AIAPIStatus = () => {
                 </div>
                 {getStatusIcon(api.status)}
               </div>
-              <p className="text-sm text-gray-600 mb-3">{api.purpose}</p>
+              <p className="text-sm text-muted-foreground mb-3">{api.purpose}</p>
               <div className="flex items-center justify-between">
                 {getStatusBadge(api.status)}
                 {api.lastChecked && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-muted-foreground">
                     {api.lastChecked.toLocaleTimeString()}
                   </span>
                 )}
@@ -151,12 +136,15 @@ const AIAPIStatus = () => {
           ))}
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <h3 className="font-semibold text-blue-900 mb-2">About AI Integration</h3>
-          <p className="text-sm text-blue-800">
+        <div className="mt-6 p-4 bg-primary/5 rounded-lg">
+          <h3 className="font-semibold mb-2">About AI Integration</h3>
+          <p className="text-sm text-muted-foreground">
             Edu Zambia integrates with 16+ AI models to provide comprehensive educational support. 
             Each model serves specific purposes from multilingual tutoring to career guidance, 
             ensuring reliable and diverse AI-powered learning experiences.
+          </p>
+          <p className="text-xs text-muted-foreground mt-2 italic">
+            Note: This is a demo view. Connect your custom backend to enable live AI services.
           </p>
         </div>
       </CardContent>
