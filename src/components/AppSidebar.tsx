@@ -16,12 +16,25 @@ import {
   Video,
   Trophy,
   ChevronDown,
-  ChevronRight,
   Home,
   GraduationCap,
   Settings,
-  LogOut,
-  Bell
+  Zap,
+  FileText,
+  Lightbulb,
+  Target,
+  Gamepad2,
+  Briefcase,
+  BarChart3,
+  BookOpen,
+  Play,
+  Search,
+  Upload,
+  Camera,
+  Mic,
+  Globe2,
+  Award,
+  Star
 } from "lucide-react"
 
 import {
@@ -38,14 +51,16 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import BrightSphereLogo from "@/assets/brightsphere-logo.svg"
 
 export function AppSidebar() {
   const { state } = useSidebar()
   const collapsed = state === 'collapsed'
   const location = useLocation()
-  const [socialExpanded, setSocialExpanded] = React.useState(true)
-  const [aiExpanded, setAiExpanded] = React.useState(false)
-  const [learningExpanded, setLearningExpanded] = React.useState(false)
+  const [aiExpanded, setAiExpanded] = React.useState(true)
+  const [practiceExpanded, setPracticeExpanded] = React.useState(false)
+  const [socialExpanded, setSocialExpanded] = React.useState(false)
+  const [analyticsExpanded, setAnalyticsExpanded] = React.useState(false)
 
   const userName = localStorage.getItem('edu-zambia-onboarding') 
     ? JSON.parse(localStorage.getItem('edu-zambia-onboarding') || '{}').fullName || 'Student'
@@ -53,32 +68,96 @@ export function AppSidebar() {
 
   const mainItems = [
     { title: "Dashboard", url: "/dashboard", icon: Home },
+    { title: "My Courses", url: "/courses", icon: BookOpen },
     { title: "My Profile", url: "/profile", icon: User },
-    { title: "Courses", url: "/courses", icon: Book },
+  ]
+
+  const aiFeatures = [
+    { title: "AI Tutor Hub", url: "/multi-ai-tutor", icon: Brain, badge: "Popular" },
+    { title: "Photo Solver", url: "/comprehensive-ai-study", icon: Camera },
+    { title: "Flashcard Generator", url: "/ai-flashcards", icon: Lightbulb },
+    { title: "Mind Map Builder", url: "/visual-mind-map", icon: Network },
+    { title: "Study Assistant", url: "/study-assistant", icon: Sparkles },
+    { title: "Voice Learning", url: "/comprehensive-ai-hub", icon: Mic },
+    { title: "Translator", url: "/multilingual-translator", icon: Languages },
+    { title: "Smart Search", url: "/semantic-search", icon: Search },
+  ]
+
+  const practiceFeatures = [
+    { title: "Quiz Creator", url: "/ai-quiz-creator", icon: Target },
+    { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: FileText },
+    { title: "Interactive Games", url: "/interactive-ecz-games", icon: Gamepad2 },
+    { title: "Virtual Lab", url: "/ecz-virtual-lab-simulator", icon: Play },
+    { title: "Assignment Hub", url: "/ecz-assignment-hub", icon: Upload },
   ]
 
   const socialFeatures = [
     { title: "Study Groups", url: "/study-groups", icon: Users },
     { title: "Messages", url: "/messenger", icon: MessageCircle },
-    { title: "Campus Map", url: "/campus-map", icon: MapPin },
+    { title: "Peer Finder", url: "/peer-finder", icon: Globe2 },
     { title: "Events", url: "/events-learning", icon: Calendar },
+    { title: "Campus Map", url: "/campus-map", icon: MapPin },
+    { title: "Knowledge Feed", url: "/knowledge-feed", icon: Star },
   ]
 
-  const aiFeatures = [
-    { title: "AI Tutor", url: "/multi-ai-tutor", icon: Brain },
-    { title: "Smart Study", url: "/ai-study-helper", icon: Sparkles },
-    { title: "Flashcards", url: "/ai-flashcards", icon: GraduationCap },
-    { title: "Mind Maps", url: "/visual-mind-map", icon: Network },
-    { title: "Translator", url: "/multilingual-translator", icon: Languages },
-  ]
-
-  const learningFeatures = [
-    { title: "Analytics", url: "/learning-analytics", icon: TrendingUp },
+  const analyticsFeatures = [
+    { title: "Learning Analytics", url: "/learning-analytics", icon: BarChart3 },
+    { title: "Progress Tracker", url: "/ai-study-progress-tracker", icon: TrendingUp },
     { title: "Achievements", url: "/achievements", icon: Trophy },
+    { title: "Goal Coach", url: "/daily-goal-coach", icon: Award },
     { title: "Live Classes", url: "/virtual-classroom", icon: Video },
   ]
 
   const isActive = (path: string) => location.pathname === path
+
+  const renderNavSection = (
+    items: typeof mainItems, 
+    expanded: boolean, 
+    setExpanded: (val: boolean) => void, 
+    label: string
+  ) => (
+    <Collapsible open={expanded} onOpenChange={setExpanded} className="px-2">
+      <SidebarGroup>
+        <SidebarGroupLabel asChild>
+          <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 hover:bg-accent/30 rounded-lg transition-colors">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+            {!collapsed && (
+              <ChevronDown className={cn(
+                "h-4 w-4 text-muted-foreground transition-transform duration-200",
+                !expanded && "-rotate-90"
+              )} />
+            )}
+          </CollapsibleTrigger>
+        </SidebarGroupLabel>
+        <CollapsibleContent className="animate-accordion-down">
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-0.5 mt-1">
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <NavLink 
+                      to={item.url}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
+                        isActive(item.url)
+                          ? "bg-primary/10 text-primary border-l-2 border-primary" 
+                          : "hover:bg-accent/30 text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 flex-shrink-0" />
+                      {!collapsed && (
+                        <span className="text-sm flex-1">{item.title}</span>
+                      )}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </CollapsibleContent>
+      </SidebarGroup>
+    </Collapsible>
+  )
 
   return (
     <Sidebar className={cn(
@@ -86,26 +165,46 @@ export function AppSidebar() {
       "transition-all duration-300 ease-in-out"
     )} collapsible="icon">
       <SidebarContent className="bg-gradient-to-b from-card via-card to-card/95 border-r border-border/50">
-        {/* Header with User Profile */}
+        {/* BrightSphere Header */}
         <div className="p-4 border-b border-border/50">
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 ring-2 ring-primary/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center overflow-hidden">
+              <img src={BrightSphereLogo} alt="BrightSphere" className="w-8 h-8" />
+            </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <h2 className="font-bold text-sm bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  BrightSphere
+                </h2>
+                <p className="text-xs text-muted-foreground">AI Learning Platform</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* User Profile */}
+        <div className="p-3 mx-2 my-2 rounded-xl bg-gradient-to-br from-accent/50 to-accent/20 border border-border/30">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 ring-2 ring-primary/20">
               <AvatarImage src="" />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground font-semibold">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-primary-foreground font-semibold text-sm">
                 {userName.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <h2 className="font-semibold text-sm truncate">{userName}</h2>
-                <p className="text-xs text-muted-foreground">Student</p>
+                <h3 className="font-semibold text-sm truncate">{userName}</h3>
+                <div className="flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-amber-500" />
+                  <span className="text-xs text-muted-foreground">Level 1 Learner</span>
+                </div>
               </div>
             )}
           </div>
         </div>
 
         {/* Main Navigation */}
-        <SidebarGroup className="px-2 py-4">
+        <SidebarGroup className="px-2 py-2">
           <SidebarMenu className="space-y-1">
             {mainItems.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -128,128 +227,17 @@ export function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Social Features */}
-        <Collapsible open={socialExpanded} onOpenChange={setSocialExpanded} className="px-2">
-          <SidebarGroup>
-            <SidebarGroupLabel asChild>
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 hover:bg-accent/30 rounded-lg transition-colors">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Social</span>
-                {!collapsed && (
-                  <ChevronDown className={cn(
-                    "h-4 w-4 text-muted-foreground transition-transform duration-200",
-                    !socialExpanded && "-rotate-90"
-                  )} />
-                )}
-              </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent className="animate-accordion-down">
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-0.5 mt-1">
-                  {socialFeatures.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink 
-                          to={item.url}
-                          className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
-                            isActive(item.url)
-                              ? "bg-accent text-accent-foreground" 
-                              : "hover:bg-accent/30 text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4 flex-shrink-0" />
-                          {!collapsed && <span className="text-sm">{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
+        {/* AI Learning Hub */}
+        {renderNavSection(aiFeatures as any, aiExpanded, setAiExpanded, "🤖 AI Learning Hub")}
 
-        {/* AI Features */}
-        <Collapsible open={aiExpanded} onOpenChange={setAiExpanded} className="px-2">
-          <SidebarGroup>
-            <SidebarGroupLabel asChild>
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 hover:bg-accent/30 rounded-lg transition-colors">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Tools</span>
-                {!collapsed && (
-                  <ChevronDown className={cn(
-                    "h-4 w-4 text-muted-foreground transition-transform duration-200",
-                    !aiExpanded && "-rotate-90"
-                  )} />
-                )}
-              </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent className="animate-accordion-down">
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-0.5 mt-1">
-                  {aiFeatures.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink 
-                          to={item.url}
-                          className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
-                            isActive(item.url)
-                              ? "bg-accent text-accent-foreground" 
-                              : "hover:bg-accent/30 text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4 flex-shrink-0" />
-                          {!collapsed && <span className="text-sm">{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
+        {/* Practice Lab */}
+        {renderNavSection(practiceFeatures as any, practiceExpanded, setPracticeExpanded, "🎯 Practice Lab")}
 
-        {/* Learning Features */}
-        <Collapsible open={learningExpanded} onOpenChange={setLearningExpanded} className="px-2">
-          <SidebarGroup>
-            <SidebarGroupLabel asChild>
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 hover:bg-accent/30 rounded-lg transition-colors">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Learning</span>
-                {!collapsed && (
-                  <ChevronDown className={cn(
-                    "h-4 w-4 text-muted-foreground transition-transform duration-200",
-                    !learningExpanded && "-rotate-90"
-                  )} />
-                )}
-              </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent className="animate-accordion-down">
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-0.5 mt-1">
-                  {learningFeatures.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink 
-                          to={item.url}
-                          className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
-                            isActive(item.url)
-                              ? "bg-accent text-accent-foreground" 
-                              : "hover:bg-accent/30 text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4 flex-shrink-0" />
-                          {!collapsed && <span className="text-sm">{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
+        {/* Social & Community */}
+        {renderNavSection(socialFeatures as any, socialExpanded, setSocialExpanded, "👥 Community")}
+
+        {/* Analytics & Progress */}
+        {renderNavSection(analyticsFeatures as any, analyticsExpanded, setAnalyticsExpanded, "📊 Progress")}
 
         {/* Footer */}
         <div className="mt-auto p-4 border-t border-border/50">
@@ -264,11 +252,14 @@ export function AppSidebar() {
               </NavLink>
               <div className="px-3 py-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary" />
+                  <img src={BrightSphereLogo} alt="BrightSphere" className="w-5 h-5" />
                   <span className="text-xs font-medium">Powered by</span>
                 </div>
                 <p className="text-sm font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mt-1">
-                  Bright Sphere
+                  BrightSphere AI
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  Inspired by ChatEDU, Filo, Coursera & More
                 </p>
               </div>
             </div>
