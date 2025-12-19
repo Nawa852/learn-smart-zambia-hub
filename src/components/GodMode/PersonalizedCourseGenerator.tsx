@@ -88,7 +88,7 @@ export const PersonalizedCourseGenerator = () => {
               <div>
                 <label className="text-sm font-medium mb-2 block">What do you want to learn?</label>
                 <Textarea
-                  placeholder='e.g., "Teach me machine learning like I\'m a farmer with no math background" or "Explain quantum physics using cooking analogies"'
+                  placeholder="e.g., Teach me machine learning like I'm a farmer with no math background"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="min-h-[100px] resize-none"
