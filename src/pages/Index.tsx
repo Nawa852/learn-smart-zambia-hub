@@ -1,342 +1,350 @@
+import HeroSection from "@/components/HeroSection";
+import FeaturesSection from "@/components/FeaturesSection";
+import ExpandedFeaturesSection from "@/components/ExpandedFeaturesSection";
+import CoursesPreview from "@/components/CoursesPreview";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  GraduationCap, ArrowRight, Users, BookOpen, Award, Brain, Globe, Zap, 
-  Heart, Star, MessageSquare, Target, Calendar, Upload, TrendingUp, 
-  Lightbulb, Mic, Shield, Eye, Map, Radio, Coins, Wifi, Truck, Sparkles,
-  Play, CheckCircle, Clock, Trophy, Rocket, Camera, FileText, Video,
-  Headphones, PenTool, BarChart3, Layers, Database, Bot, Wand2
-} from "lucide-react";
+import { GraduationCap, ArrowRight, Users, BookOpen, Award, Brain, Globe, Zap, Heart, Star, MessageSquare, Target, Calendar, Upload, TrendingUp, Lightbulb, Mic, Shield, Eye, Map, Radio, Coins, Wifi, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import brightSphereLogo from "@/assets/brightsphere-logo.svg";
 
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Redirect authenticated users to dashboard
     if (!loading && user) {
       navigate('/dashboard');
     }
   }, [user, loading, navigate]);
 
+  // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="flex flex-col items-center space-y-4">
-          <img src={brightSphereLogo} alt="BrightSphere" className="w-20 h-20 animate-pulse" />
-          <p className="text-muted-foreground animate-pulse">Loading BrightSphere AI Platform...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+          <p className="text-gray-600 animate-pulse">Loading EDU ZAMBIA AI Platform...</p>
         </div>
       </div>
     );
   }
 
-  const godModeFeatures = [
-    { icon: Brain, title: "Mind-Reading AI Tutor", description: "Knows what you're confused about before you ask", color: "from-purple-500 to-pink-500" },
-    { icon: Layers, title: "Living Knowledge Graph", description: "3D interactive brain map of your learning", color: "from-blue-500 to-cyan-500" },
-    { icon: Wand2, title: "Auto-Generated Courses", description: "Personalized courses created just for you", color: "from-orange-500 to-red-500" },
-    { icon: MessageSquare, title: "Socratic Combat Mode", description: "AI argues with you to deepen understanding", color: "from-green-500 to-emerald-500" },
-    { icon: Eye, title: "Explain Like X", description: "Any concept explained your way", color: "from-indigo-500 to-purple-500" },
-    { icon: Trophy, title: "Mastery Proof System", description: "Certificates that prove real knowledge", color: "from-yellow-500 to-orange-500" },
-    { icon: Heart, title: "Mood-Aware Teaching", description: "AI adapts to your emotional state", color: "from-pink-500 to-rose-500" },
-    { icon: Coins, title: "Learn-to-Earn Engine", description: "Turn learning into real opportunities", color: "from-teal-500 to-green-500" },
+  const aiPoweredFeatures = [
+    { icon: Brain, title: "GPT-4o AI Tutor", description: "24/7 multilingual AI tutor supporting ECZ & Cambridge", color: "from-blue-500 to-purple-600", link: "/study-assistant", apis: "GPT-4o, Claude 3" },
+    { icon: Globe, title: "7-Language Support", description: "Learn in Bemba, Nyanja, Tonga, Lozi + English", color: "from-green-500 to-blue-500", link: "/multilingual-translator", apis: "Qwen, Whisper" },
+    { icon: Lightbulb, title: "Smart Flashcards", description: "AI-generated from your notes and textbooks", color: "from-purple-500 to-pink-500", link: "/ai-flashcards", apis: "Gemini, GPT-4o" },
+    { icon: Target, title: "Career Predictions", description: "AI career pathways for Zambian industries", color: "from-orange-500 to-red-500", link: "/smart-recommendations", apis: "Moonshot AI, DeepSeek" },
+    { icon: Eye, title: "Visual Mind Maps", description: "AI-generated concept visualization", color: "from-cyan-500 to-blue-500", link: "/visual-mind-map", apis: "Gemini 1.5, MiniMax" },
+    { icon: Mic, title: "Voice Learning", description: "Audio lessons and voice-activated Q&A", color: "from-indigo-500 to-purple-500", link: "/comprehensive-ai-study", apis: "Whisper, Azure Speech" },
+    { icon: Shield, title: "Safe AI Content", description: "Verified, age-appropriate educational content", color: "from-pink-500 to-red-500", link: "/study-materials", apis: "StealthGPT, Claude 3" },
+    { icon: Wifi, title: "Offline AI Mode", description: "Study without internet using cached AI", color: "from-teal-500 to-green-500", link: "/study-materials", apis: "LLaMA 3, Firebase ML" }
   ];
 
-  const platformFeatures = [
-    { icon: Bot, title: "16+ AI Models", description: "GPT-4o, Claude 3, Gemini, DeepSeek & more", stat: "Active" },
-    { icon: Globe, title: "7 Languages", description: "Bemba, Nyanja, Tonga, Lozi + English", stat: "Live" },
-    { icon: Video, title: "Live Tutoring", description: "1:1 sessions with expert tutors", stat: "24/7" },
-    { icon: Camera, title: "Photo Solver", description: "Snap homework, get instant solutions", stat: "Instant" },
-    { icon: FileText, title: "25,000+ Resources", description: "ECZ past papers, notes, guides", stat: "Growing" },
-    { icon: BarChart3, title: "Smart Analytics", description: "Track progress & predict success", stat: "Real-time" },
+  const zambianFeatures = [
+    { icon: GraduationCap, title: "ECZ Exam Mastery", description: "Grade 7, 9 & 12 preparation with AI", color: "text-green-600", apis: "GPT-4o, Claude 3" },
+    { icon: Map, title: "Rural Learning Hubs", description: "Solar kiosks for remote communities", color: "text-blue-600", apis: "LLaMA 3, Twilio" },
+    { icon: Radio, title: "Community Radio", description: "Lessons broadcast via 80+ local stations", color: "text-purple-600", apis: "Whisper, Firebase ML" },
+    { icon: Coins, title: "Scholarship Finder", description: "AI matches you with funding opportunities", color: "text-orange-600", apis: "Moonshot AI, DeepSeek" },
+    { icon: Heart, title: "Nutrition Planner", description: "Healthy meals with nshima and local foods", color: "text-pink-600", apis: "Google Vision, GPT-4o" },
+    { icon: Truck, title: "Mobile Money Integration", description: "Airtel Money & MTN rewards for learning", color: "text-yellow-600", apis: "Twilio, Firebase" }
   ];
 
   const stats = [
-    { value: "50,000+", label: "Active Learners", icon: Users },
-    { value: "16+", label: "AI Models", icon: Brain },
-    { value: "5M+", label: "Questions Answered", icon: MessageSquare },
-    { value: "98%", label: "Success Rate", icon: Trophy },
+    { icon: Users, label: "Zambian Students", value: "50,000+", description: "Across all 10 provinces" },
+    { icon: BookOpen, label: "ECZ Resources", value: "25,000+", description: "Past papers, notes, guides" },
+    { icon: Brain, label: "AI Interactions", value: "5M+", description: "Questions answered daily" },
+    { icon: Globe, label: "Languages Supported", value: "7", description: "Bemba, Nyanja, Tonga, Lozi+" },
   ];
 
-  const testimonials = [
-    { name: "Mwansa K.", role: "Grade 12 Student", quote: "BrightSphere helped me pass my ECZ exams with distinction!", avatar: "MK" },
-    { name: "Chanda M.", role: "Teacher, Lusaka", quote: "The AI grading saves me hours every week.", avatar: "CM" },
-    { name: "Bwalya T.", role: "Parent", quote: "My children love learning now. It's like magic!", avatar: "BT" },
+  const aiModels = [
+    { name: "GPT-4o", purpose: "Advanced tutoring & explanations", status: "active" },
+    { name: "Claude 3", purpose: "Content safety & essay grading", status: "active" },
+    { name: "Qwen", purpose: "Multilingual translation", status: "active" },
+    { name: "Gemini 1.5", purpose: "Visual learning & AR labs", status: "active" },
+    { name: "DeepSeek", purpose: "Predictive analytics", status: "active" },
+    { name: "Whisper", purpose: "Voice recognition & audio", status: "active" },
+    { name: "LLaMA 3", purpose: "Offline learning support", status: "active" },
+    { name: "Moonshot AI", purpose: "Career & scholarship matching", status: "active" }
   ];
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-primary/20 to-accent/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-gradient-to-br from-accent/15 to-primary/10 rounded-full blur-3xl animate-levitate" />
-        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-gradient-to-br from-primary/10 to-accent/20 rounded-full blur-3xl animate-morph" />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Ultra Modern Background */}
+      <div className="absolute inset-0 gradient-hero opacity-10"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-1/3 right-0 w-80 h-80 bg-gradient-to-br from-accent/15 to-zambia-emerald/15 rounded-full blur-3xl animate-levitate"></div>
+        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-br from-zambia-copper/20 to-zambia-gold/20 rounded-full blur-3xl animate-morph"></div>
       </div>
       
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+      {/* Enhanced Navigation Bar */}
+      <nav className="sticky top-0 z-50 glass-premium border-b border-white/20 animate-slide-down">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={brightSphereLogo} alt="BrightSphere" className="w-10 h-10" />
+            <div className="flex items-center gap-3 animate-fade-in">
+              <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg animate-glow">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
               <div className="flex flex-col">
-                <span className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  BrightSphere AI
+                <span className="font-bold text-xl bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                  EDU ZAMBIA
                 </span>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                   16 AI Models Active
                 </span>
               </div>
             </div>
             
-            <div className="hidden md:flex items-center space-x-6">
-              {["Features", "AI Models", "Courses", "About"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => item === "Courses" ? navigate('/courses') : null}
-                  className="text-muted-foreground hover:text-primary transition-colors font-medium"
-                >
-                  {item}
-                </button>
-              ))}
+            <div className="hidden md:flex items-center space-x-8 animate-slide-left">
+              <a href="#ai-features" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                AI Features
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+              <a href="#zambian-focus" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                Zambian Focus
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+              <button 
+                onClick={() => navigate('/courses')}
+                className="text-gray-600 hover:text-primary transition-all duration-300 font-medium cursor-pointer relative group"
+              >
+                Courses
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              <a href="/about" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                About
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
+              <a href="/contact" className="text-gray-600 hover:text-primary transition-all duration-300 font-medium relative group">
+                Contact
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </a>
             </div>
 
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" onClick={() => navigate('/login')}>
+            <div className="flex items-center space-x-4 animate-slide-right">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/login')}
+                className="hover:bg-primary/10 hover:text-primary transition-all duration-300 rounded-xl"
+              >
                 Login
               </Button>
-              <Button onClick={() => navigate('/welcome')} className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                Get Started <ArrowRight className="ml-2 w-4 h-4" />
+              <Button 
+                onClick={() => navigate('/welcome')}
+                className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl animate-glow"
+              >
+                Start Learning <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-6 py-20 relative z-10">
-        <div className="max-w-5xl mx-auto text-center space-y-8">
-          <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2 text-sm">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Powered by 16+ Advanced AI Models
-          </Badge>
-          
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              The Future of Learning
-            </span>
-            <br />
-            <span className="text-foreground">is Here</span>
-          </h1>
-          
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Experience God-Mode learning with AI that reads your mind, adapts to your mood, 
-            and transforms how Zambia learns. GPT-4o, Claude 3, and 14+ more AI models at your fingertips.
-          </p>
+      {/* Enhanced Hero Section with AI Showcase */}
+      <section className="container mx-auto px-6 py-20 text-center relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-full opacity-20 animate-float"></div>
+        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-accent to-primary rounded-full opacity-15 animate-levitate"></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full opacity-25 animate-morph"></div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Button 
-              size="lg" 
-              onClick={() => navigate('/welcome')}
-              className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all"
-            >
-              <Rocket className="mr-2 w-5 h-5" />
-              Start Learning Free
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              onClick={() => navigate('/study-assistant')}
-              className="text-lg px-8 py-6"
-            >
-              <Play className="mr-2 w-5 h-5" />
-              Try AI Tutor
-            </Button>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12">
-            {stats.map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+        <div className="max-w-5xl mx-auto space-y-8 relative z-10">
+          <div className="space-y-6 animate-fade-in">
+            <div className="flex justify-center mb-8 animate-bounce-in">
+              <div className="flex items-center gap-2 bg-white/90 backdrop-blur-xl px-6 py-3 rounded-full shadow-xl border border-white/20">
+                <Brain className="w-5 h-5 text-primary animate-pulse" />
+                <span className="text-sm font-medium text-gray-700">Powered by 16+ Advanced AI Models</span>
+                <div className="flex gap-1 ml-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* God Mode Features */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <Badge className="bg-accent/10 text-accent border-accent/20 mb-4">GOD MODE FEATURES</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Beyond <span className="text-primary">Ordinary</span> Learning
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Features so advanced, they feel like superpowers
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight animate-scale-in">
+              AI-Powered Learning for Zambia
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed animate-slide-up">
+              Experience the future of education with <strong>GPT-4o, Claude 3, Qwen,</strong> and 13+ more AI models supporting ECZ curriculum in 7 local languages. From rural kiosks to urban classrooms—learning for every Zambian student.
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {godModeFeatures.map((feature, i) => (
-              <Card 
-                key={i} 
-                className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 cursor-pointer"
-                onClick={() => navigate('/dashboard')}
-              >
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <feature.icon className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Platform Features */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Everything You Need</h2>
-            <p className="text-lg text-muted-foreground">One platform, infinite possibilities</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {platformFeatures.map((feature, i) => (
-              <Card key={i} className="border-border/50 hover:shadow-lg transition-all">
-                <CardContent className="p-6 flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold">{feature.title}</h3>
-                      <Badge variant="outline" className="text-xs">{feature.stat}</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AI Models Showcase */}
-      <section className="py-20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Powered by the Best AI</h2>
-            <p className="text-lg text-muted-foreground">16+ models working together for you</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4">
-            {["GPT-4o", "Claude 3", "Gemini 1.5", "DeepSeek", "Qwen", "Whisper", "LLaMA 3", "Moonshot"].map((model, i) => (
-              <div 
-                key={i}
-                className="flex items-center gap-2 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50"
-              >
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="font-medium">{model}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Loved by Learners</h2>
-            <p className="text-lg text-muted-foreground">Join thousands of successful students</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <Card key={i} className="border-border/50">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center text-primary-foreground font-bold">
-                      {t.avatar}
-                    </div>
-                    <div>
-                      <div className="font-bold">{t.name}</div>
-                      <div className="text-sm text-muted-foreground">{t.role}</div>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground italic">"{t.quote}"</p>
-                  <div className="flex gap-1 mt-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-accent text-primary-foreground">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Transform Your Learning?
-          </h2>
-          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Join 50,000+ Zambian students already learning with BrightSphere AI
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <Button 
-              size="lg" 
-              variant="secondary"
+              size="lg"
               onClick={() => navigate('/welcome')}
-              className="text-lg px-8 py-6"
+              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg rounded-xl hover:scale-105 animate-glow"
             >
-              Start Free Today <ArrowRight className="ml-2 w-5 h-5" />
+              Start AI Learning Today <Brain className="ml-2 w-5 h-5" />
             </Button>
             <Button 
-              size="lg" 
+              size="lg"
               variant="outline"
-              onClick={() => navigate('/about')}
-              className="text-lg px-8 py-6 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+              onClick={() => navigate('/study-assistant')}
+              className="border-2 border-primary/30 hover:bg-primary/10 hover:border-primary transition-all duration-300 px-8 py-6 text-lg rounded-xl hover:scale-105"
             >
-              Learn More
+              Try AI Tutor Free
             </Button>
+          </div>
+
+          {/* AI Models Status Bar */}
+          <div className="mt-12 p-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 animate-blur-in" style={{ animationDelay: '0.6s' }}>
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">Live AI Models Status</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {aiModels.slice(0, 8).map((model, index) => (
+                <div key={index} className="flex items-center gap-2 text-sm hover:bg-primary/5 p-2 rounded-lg transition-colors duration-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="font-medium">{model.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 bg-muted/30 border-t border-border/50">
+      {/* AI-Powered Features Section */}
+      <section id="ai-features" className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">16 AI Models, Unlimited Possibilities</h2>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">From GPT-4o tutoring to Whisper voice learning, experience education powered by the world's most advanced AI</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {aiPoweredFeatures.map((feature, index) => (
+            <Card key={index} className="hover:shadow-xl transition-all duration-300 cursor-pointer group border-0 shadow-lg" onClick={() => navigate(feature.link)}>
+              <CardContent className="p-6 text-center">
+                <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2 text-gray-900">{feature.title}</h3>
+                <p className="text-sm text-gray-600 mb-3">{feature.description}</p>
+                <Badge variant="outline" className="text-xs bg-purple-50">
+                  {feature.apis}
+                </Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Zambian-Specific Features */}
+      <section id="zambian-focus" className="py-16 bg-gradient-to-r from-green-50 to-blue-50">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <img src={brightSphereLogo} alt="BrightSphere" className="w-8 h-8" />
-              <span className="font-bold text-lg">BrightSphere AI</span>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Built for Zambia, Powered by AI</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Addressing uniquely Zambian challenges with cutting-edge AI technology</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {zambianFeatures.map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 bg-white">
+                <CardContent className="p-6">
+                  <feature.icon className={`h-10 w-10 ${feature.color} mb-4`} />
+                  <h3 className="font-bold text-lg mb-2 text-gray-900">{feature.title}</h3>
+                  <p className="text-gray-600 mb-3">{feature.description}</p>
+                  <Badge variant="outline" className="text-xs bg-green-50">
+                    AI: {feature.apis}
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Stats Section */}
+      <section className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Transforming Education Across Zambia</h2>
+          <p className="text-lg text-gray-600">Join thousands of students, teachers, and families on their AI-powered learning journey</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center space-y-4 group">
+              <div className="mx-auto w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <stat.icon className="w-10 h-10 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</p>
+                <p className="text-gray-800 font-semibold mb-1">{stat.label}</p>
+                <p className="text-sm text-gray-500">{stat.description}</p>
+              </div>
             </div>
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <button onClick={() => navigate('/about')}>About</button>
-              <button onClick={() => navigate('/contact')}>Contact</button>
-              <button onClick={() => navigate('/courses')}>Courses</button>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Sections */}
+      <div id="features">
+        <ExpandedFeaturesSection />
+      </div>
+      <FeaturesSection />
+      
+      <div id="courses">
+        <CoursesPreview />
+      </div>
+
+      {/* Enhanced Call to Action */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-40 h-40 bg-white/10 rounded-full -translate-x-20 -translate-y-20"></div>
+          <div className="absolute bottom-0 right-0 w-60 h-60 bg-white/5 rounded-full translate-x-30 translate-y-30"></div>
+        </div>
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <div className="flex justify-center mb-8">
+            <div className="flex items-center gap-3 bg-white/20 backdrop-blur px-6 py-3 rounded-full">
+              <Heart className="w-5 h-5 text-pink-300" />
+              <span className="text-sm font-medium">Made with love for Zambian learners</span>
+              <div className="flex gap-1 ml-3">
+                {["ZM", "🇿🇲"].map((flag, i) => (
+                  <span key={i} className="text-lg">{flag}</span>
+                ))}
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground">
-              © 2024 BrightSphere AI. Made with ❤️ in Zambia
+          </div>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            Ready to Join the AI Learning Revolution?
+          </h2>
+          <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
+            Join <strong>50,000+ Zambian students</strong> already experiencing AI-powered education with GPT-4o, Claude 3, and 14 more advanced models. From Lusaka to Lundazi—intelligent learning for everyone.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Button 
+              size="lg"
+              onClick={() => navigate('/signup')}
+              className="bg-white text-blue-600 hover:bg-gray-100 transition-all duration-300 px-8 py-6 text-lg font-semibold shadow-lg"
+            >
+              Start Free AI Learning <Star className="ml-2 w-5 h-5" />
+            </Button>
+            <Button 
+              size="lg"
+              variant="outline"
+              onClick={() => navigate('/study-assistant')}
+              className="border-2 border-white text-white hover:bg-white/10 transition-all duration-300 px-8 py-6 text-lg"
+            >
+              Try AI Tutor Now
+            </Button>
+          </div>
+
+          {/* AI Models Showcase */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <p className="text-sm opacity-80 mb-4">Powered by the world's most advanced AI:</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {["GPT-4o", "Claude 3", "Qwen", "Gemini 1.5", "DeepSeek", "Whisper", "LLaMA 3", "Moonshot AI"].map((model, index) => (
+                <Badge key={index} variant="secondary" className="bg-white/20 text-white hover:bg-white/30 px-3 py-1">
+                  {model}
+                </Badge>
+              ))}
             </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      <Footer />
     </div>
   );
 };
