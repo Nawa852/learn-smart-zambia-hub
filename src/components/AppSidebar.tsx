@@ -62,6 +62,7 @@ export function AppSidebar() {
   const [practiceExpanded, setPracticeExpanded] = React.useState(false)
   const [socialExpanded, setSocialExpanded] = React.useState(false)
   const [analyticsExpanded, setAnalyticsExpanded] = React.useState(false)
+  const [platformsExpanded, setPlatformsExpanded] = React.useState(false)
 
   const userName = localStorage.getItem('edu-zambia-onboarding') 
     ? JSON.parse(localStorage.getItem('edu-zambia-onboarding') || '{}').fullName || 'Student'
@@ -69,13 +70,14 @@ export function AppSidebar() {
 
   const mainItems = [
     { title: "Dashboard", url: "/dashboard", icon: Home },
-    { title: "Mega Dashboard", url: "/mega-dashboard", icon: Grid3X3, badge: "164 Features" },
+    { title: "Mega Dashboard", url: "/mega-dashboard", icon: Grid3X3 },
+    { title: "Platform Hub", url: "/platform-features", icon: Briefcase },
     { title: "My Courses", url: "/courses", icon: BookOpen },
     { title: "My Profile", url: "/profile", icon: User },
   ]
 
   const aiFeatures = [
-    { title: "AI Tutor Hub", url: "/multi-ai-tutor", icon: Brain, badge: "Popular" },
+    { title: "AI Tutor Hub", url: "/multi-ai-tutor", icon: Brain },
     { title: "Photo Solver", url: "/comprehensive-ai-study", icon: Camera },
     { title: "Flashcard Generator", url: "/ai-flashcards", icon: Lightbulb },
     { title: "Mind Map Builder", url: "/visual-mind-map", icon: Network },
@@ -108,6 +110,21 @@ export function AppSidebar() {
     { title: "Achievements", url: "/achievements", icon: Trophy },
     { title: "Goal Coach", url: "/daily-goal-coach", icon: Award },
     { title: "Live Classes", url: "/virtual-classroom", icon: Video },
+  ]
+
+  const platformFeatures = [
+    { title: "Coursera Style", url: "/platform-coursera", icon: GraduationCap },
+    { title: "Udemy Style", url: "/platform-udemy", icon: Play },
+    { title: "LinkedIn Learning", url: "/platform-linkedin", icon: Briefcase },
+    { title: "Khan Academy", url: "/platform-khan", icon: BookOpen },
+    { title: "Skillshare Style", url: "/platform-skillshare", icon: Star },
+    { title: "edX Style", url: "/platform-edx", icon: Award },
+    { title: "Thinkific Style", url: "/platform-thinkific", icon: Zap },
+    { title: "LearnWorlds", url: "/platform-learnworlds", icon: Video },
+    { title: "Teachable Style", url: "/platform-teachable", icon: Target },
+    { title: "Kajabi Style", url: "/platform-kajabi", icon: TrendingUp },
+    { title: "Filo Style", url: "/platform-filo", icon: MessageCircle },
+    { title: "ChatEDU Style", url: "/platform-chatedu", icon: Brain },
   ]
 
   const isActive = (path: string) => location.pathname === path
@@ -240,6 +257,9 @@ export function AppSidebar() {
 
         {/* Analytics & Progress */}
         {renderNavSection(analyticsFeatures as any, analyticsExpanded, setAnalyticsExpanded, "📊 Progress")}
+
+        {/* Platform Features */}
+        {renderNavSection(platformFeatures as any, platformsExpanded, setPlatformsExpanded, "🚀 Platforms")}
 
         {/* Footer */}
         <div className="mt-auto p-4 border-t border-border/50">
