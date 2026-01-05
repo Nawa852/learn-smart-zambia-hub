@@ -109,6 +109,8 @@ import AIStudyGroupModeratorPage from '@/pages/AIStudyGroupModeratorPage';
 import ECZStudyResourceCreatorPage from '@/pages/ECZStudyResourceCreatorPage';
 import AIStudyProgressMonitorPage from '@/pages/AIStudyProgressMonitorPage';
 import ECZStudyResourcePortalPage from '@/pages/ECZStudyResourcePortalPage';
+import MegaDashboard from '@/pages/MegaDashboard';
+import PlatformFeaturesPage from '@/pages/PlatformFeaturesPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -696,6 +698,20 @@ function App() {
             <Route path="/ecz-study-resource-portal" element={
               <ProtectedRoute>
                 <ECZStudyResourcePortalPage />
+              </ProtectedRoute>
+            } />
+
+            {/* Mega Dashboard - All 164 Features */}
+            <Route path="/mega-dashboard" element={
+              <ProtectedRoute>
+                <MegaDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Platform Features Hub */}
+            <Route path="/platform-features" element={
+              <ProtectedRoute>
+                <PlatformFeaturesPage />
               </ProtectedRoute>
             } />
 
