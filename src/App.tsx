@@ -112,6 +112,20 @@ import ECZStudyResourcePortalPage from '@/pages/ECZStudyResourcePortalPage';
 import MegaDashboard from '@/pages/MegaDashboard';
 import PlatformFeaturesPage from '@/pages/PlatformFeaturesPage';
 
+// Platform Feature Components
+import CourseraFeatures from '@/components/Platforms/CourseraFeatures';
+import UdemyFeatures from '@/components/Platforms/UdemyFeatures';
+import LinkedInLearningFeatures from '@/components/Platforms/LinkedInLearningFeatures';
+import KhanAcademyFeatures from '@/components/Platforms/KhanAcademyFeatures';
+import FiloFeatures from '@/components/Platforms/FiloFeatures';
+import ChatEDUFeatures from '@/components/Platforms/ChatEDUFeatures';
+import SkillshareFeatures from '@/components/Platforms/SkillshareFeatures';
+import EdXFeatures from '@/components/Platforms/EdXFeatures';
+import ThinkificFeatures from '@/components/Platforms/ThinkificFeatures';
+import LearnWorldsFeatures from '@/components/Platforms/LearnWorldsFeatures';
+import TeachableFeatures from '@/components/Platforms/TeachableFeatures';
+import KajabiFeatures from '@/components/Platforms/KajabiFeatures';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -712,6 +726,68 @@ function App() {
             <Route path="/platform-features" element={
               <ProtectedRoute>
                 <PlatformFeaturesPage />
+              </ProtectedRoute>
+            } />
+
+            {/* Individual Platform Feature Pages */}
+            <Route path="/platform-coursera" element={
+              <ProtectedRoute>
+                <CourseraFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-udemy" element={
+              <ProtectedRoute>
+                <UdemyFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-linkedin" element={
+              <ProtectedRoute>
+                <LinkedInLearningFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-khan" element={
+              <ProtectedRoute>
+                <KhanAcademyFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-skillshare" element={
+              <ProtectedRoute>
+                <SkillshareFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-edx" element={
+              <ProtectedRoute>
+                <EdXFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-thinkific" element={
+              <ProtectedRoute>
+                <ThinkificFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-learnworlds" element={
+              <ProtectedRoute>
+                <LearnWorldsFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-teachable" element={
+              <ProtectedRoute>
+                <TeachableFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-kajabi" element={
+              <ProtectedRoute>
+                <KajabiFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-filo" element={
+              <ProtectedRoute>
+                <FiloFeatures />
+              </ProtectedRoute>
+            } />
+            <Route path="/platform-chatedu" element={
+              <ProtectedRoute>
+                <ChatEDUFeatures />
               </ProtectedRoute>
             } />
 
