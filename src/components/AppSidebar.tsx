@@ -34,7 +34,8 @@ import {
   Mic,
   Globe2,
   Award,
-  Star
+  Star,
+  Grid3X3
 } from "lucide-react"
 
 import {
@@ -68,6 +69,7 @@ export function AppSidebar() {
 
   const mainItems = [
     { title: "Dashboard", url: "/dashboard", icon: Home },
+    { title: "Mega Dashboard", url: "/mega-dashboard", icon: Grid3X3, badge: "164 Features" },
     { title: "My Courses", url: "/courses", icon: BookOpen },
     { title: "My Profile", url: "/profile", icon: User },
   ]
