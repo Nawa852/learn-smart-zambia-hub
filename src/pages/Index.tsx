@@ -1,14 +1,15 @@
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MegaHero from "@/components/Landing/MegaHero";
+import UltraHero from "@/components/Landing/UltraHero";
+import AIShowcase from "@/components/Landing/AIShowcase";
+import LearningPaths from "@/components/Landing/LearningPaths";
+import GamificationSection from "@/components/Landing/GamificationSection";
 import RoleSelector from "@/components/Landing/RoleSelector";
-import FeatureMegaDeck from "@/components/Landing/FeatureMegaDeck";
-import ImpactSection from "@/components/Landing/ImpactSection";
-import SmartSearchBar from "@/components/Landing/SmartSearchBar";
-import TestimonialsSection from "@/components/Landing/TestimonialsSection";
-import CollaborationWall from "@/components/Landing/CollaborationWall";
-import MegaFooter from "@/components/Landing/MegaFooter";
+import PlatformIntegrations from "@/components/Landing/PlatformIntegrations";
+import SocialProof from "@/components/Landing/SocialProof";
+import CTASection from "@/components/Landing/CTASection";
+import NewMegaFooter from "@/components/Landing/NewMegaFooter";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -33,31 +34,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* 1. Mega Hero with 3D Zambia Map */}
-      <MegaHero />
+      {/* 1. Ultra Hero - Inspired by QANDA/Socratic with interactive AI demo */}
+      <UltraHero />
       
-      {/* 2. Role-Based Universe */}
+      {/* 2. AI Features Showcase - All AI tools from 40+ platforms */}
+      <AIShowcase />
+      
+      {/* 3. Learning Paths - Coursera/Khan Academy style courses */}
+      <LearningPaths />
+      
+      {/* 4. Gamification - Duolingo-inspired streaks & rewards */}
+      <GamificationSection />
+      
+      {/* 5. Role-Based Universe - Stakeholder selection */}
       <RoleSelector />
       
-      {/* 3. BrightSphere Feature Mega-Deck */}
-      <div id="features">
-        <FeatureMegaDeck />
-      </div>
+      {/* 6. Platform Integrations - Tech stack & offline features */}
+      <PlatformIntegrations />
       
-      {/* 4. Mega Impact Section */}
-      <ImpactSection />
+      {/* 7. Social Proof - Testimonials & stats */}
+      <SocialProof />
       
-      {/* 5. AI-Powered Smart Search */}
-      <SmartSearchBar />
+      {/* 8. Final CTA - Get started section */}
+      <CTASection />
       
-      {/* 6. Testimonials & Success Stories */}
-      <TestimonialsSection />
-      
-      {/* 7. Collaboration Wall */}
-      <CollaborationWall />
-      
-      {/* 8. Mega Footer */}
-      <MegaFooter />
+      {/* 9. Mega Footer */}
+      <NewMegaFooter />
     </div>
   );
 };
