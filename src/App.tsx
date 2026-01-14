@@ -27,6 +27,7 @@ import CommunityHub from '@/pages/CommunityHub';
 import LearningAnalytics from '@/pages/LearningAnalytics';
 import Achievements from '@/pages/Achievements';
 import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
+import StudyToolsPage from '@/pages/StudyToolsPage';
 import InteractiveLessons from '@/components/Learning/InteractiveLessons';
 import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 
@@ -113,6 +114,15 @@ function App() {
               <ProtectedRoute>
                 <MainLayout>
                   <StudyMaterialRepository />
+                </MainLayout>
+              </ProtectedRoute>
+            } />
+
+            {/* Study Tools & Resources */}
+            <Route path="/study-tools" element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <StudyToolsPage />
                 </MainLayout>
               </ProtectedRoute>
             } />
