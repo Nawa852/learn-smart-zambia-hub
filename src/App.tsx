@@ -31,6 +31,15 @@ import StudyToolsPage from '@/pages/StudyToolsPage';
 import InteractiveLessons from '@/components/Learning/InteractiveLessons';
 import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 
+// ChatEdu Landing
+import ChatEduLanding from '@/pages/ChatEduLanding';
+
+// Role-Specific Dashboards
+import TeacherDashboard from '@/pages/TeacherDashboard';
+import ParentDashboard from '@/pages/ParentDashboard';
+import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
+import MinistryDashboard from '@/pages/MinistryDashboard';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -53,6 +62,13 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/welcome" element={<WelcomePage />} />
+            <Route path="/chatedu" element={<ChatEduLanding />} />
+            
+            {/* Role-Specific Dashboards */}
+            <Route path="/teacher-dashboard" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
+            <Route path="/parent-dashboard" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
+            <Route path="/school-admin" element={<ProtectedRoute><SchoolAdminDashboard /></ProtectedRoute>} />
+            <Route path="/ministry-dashboard" element={<ProtectedRoute><MinistryDashboard /></ProtectedRoute>} />
             
             {/* Dashboard */}
             <Route path="/dashboard" element={
