@@ -1,16 +1,13 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { useProfile } from '@/hooks/useProfile';
-import { MessageCircle, Users, Plus, Search, Flame, Clock, ThumbsUp, Reply } from 'lucide-react';
+import { MessageCircle, Users, Plus, Search, Flame, Clock, Reply } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Forum {
@@ -19,9 +16,7 @@ interface Forum {
   description: string;
   created_by: string;
   created_at: string;
-  profiles?: {
-    full_name: string;
-  };
+  author_name: string;
 }
 
 interface ForumPost {
@@ -33,32 +28,21 @@ interface ForumPost {
   language: string;
 }
 
-interface StudyGroup {
-  id: string;
-  name: string;
-  description: string;
-  subject: string;
-  grade_level: string;
-  created_by: string;
-  max_members: number;
-  is_public: boolean;
-  created_at: string;
-  profiles?: {
-    full_name: string;
-  };
-}
-
 const CommunityPage = () => {
-  const [forums, setForums] = useState<Forum[]>([]);
-  const [posts, setPosts] = useState<ForumPost[]>([]);
-  const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [forums, setForums] = useState<Forum[]>([
+    { id: 1, title: 'Grade 12 Mathematics Discussion', description: 'Help each other with ECZ Grade 12 Mathematics problems', created_by: '1', created_at: new Date().toISOString(), author_name: 'Admin' },
+    { id: 2, title: 'Science Study Group', description: 'Discuss Physics, Chemistry, and Biology topics', created_by: '1', created_at: new Date().toISOString(), author_name: 'Teacher John' },
+    { id: 3, title: 'English Literature Corner', description: 'Book discussions and writing tips', created_by: '1', created_at: new Date().toISOString(), author_name: 'Ms. Smith' },
+  ]);
+  const [posts, setPosts] = useState<ForumPost[]>([
+    { id: 1, content: 'Can someone explain how to solve quadratic equations?', created_at: new Date().toISOString(), user_id: '1', forum_id: 1, language: 'en' },
+    { id: 2, content: 'What are the key topics for Grade 12 Biology exams?', created_at: new Date().toISOString(), user_id: '2', forum_id: 2, language: 'en' },
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreateForum, setShowCreateForum] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   
   const { user } = useAuth();
-  const { profile } = useProfile();
   const { toast } = useToast();
 
   const [newForum, setNewForum] = useState({
@@ -74,132 +58,44 @@ const CommunityPage = () => {
     max_members: 20
   });
 
-  const categories = [
-    'General', 'Mathematics', 'Science', 'English', 'Social Studies',
-    'ECZ Prep', 'Study Tips', 'Career Guidance', 'Technology'
-  ];
+  const createForum = () => {
+    if (!newForum.title.trim()) return;
 
-  useEffect(() => {
-    fetchForums();
-    fetchRecentPosts();
-    setLoading(false);
-  }, []);
+    const forum: Forum = {
+      id: forums.length + 1,
+      title: newForum.title,
+      description: newForum.description,
+      created_by: user?.id || '1',
+      created_at: new Date().toISOString(),
+      author_name: 'You'
+    };
 
-  const fetchForums = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('forums')
-        .select(`
-          *,
-          profiles!forums_created_by_fkey (
-            full_name
-          )
-        `)
-        .order('created_at', { ascending: false });
+    setForums(prev => [forum, ...prev]);
+    toast({
+      title: "Forum Created",
+      description: "Your forum has been created successfully!",
+    });
 
-      if (error) {
-        console.error('Error fetching forums:', error);
-        // Set empty array on error to prevent type issues
-        setForums([]);
-        return;
-      }
-      
-      setForums(data || []);
-    } catch (error) {
-      console.error('Error fetching forums:', error);
-      setForums([]);
-    }
+    setNewForum({ title: '', description: '' });
+    setShowCreateForum(false);
   };
 
-  const fetchRecentPosts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('forum_posts')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
+  const createStudyGroup = () => {
+    if (!newGroup.name.trim()) return;
 
-      if (error) throw error;
-      setPosts(data || []);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
+    toast({
+      title: "Study Group Created",
+      description: "Your study group has been created successfully!",
+    });
 
-  const createForum = async () => {
-    if (!user || !newForum.title.trim()) return;
-
-    try {
-      const { error } = await supabase
-        .from('forums')
-        .insert({
-          ...newForum,
-          created_by: user.id
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Forum Created",
-        description: "Your forum has been created successfully!",
-      });
-
-      setNewForum({ title: '', description: '' });
-      setShowCreateForum(false);
-      fetchForums();
-    } catch (error) {
-      console.error('Error creating forum:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create forum",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const createStudyGroup = async () => {
-    if (!user || !newGroup.name.trim()) return;
-
-    try {
-      // For now, we'll create a simplified study group using the notes table as a placeholder
-      const { error } = await supabase
-        .from('notes')
-        .insert({
-          title: `Study Group: ${newGroup.name}`,
-          content: JSON.stringify({
-            type: 'study_group',
-            description: newGroup.description,
-            subject: newGroup.subject,
-            grade_level: newGroup.grade_level,
-            max_members: newGroup.max_members
-          }),
-          subject: newGroup.subject,
-          user_id: user.id
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Study Group Created",
-        description: "Your study group has been created successfully!",
-      });
-
-      setNewGroup({
-        name: '',
-        description: '',
-        subject: '',
-        grade_level: '',
-        max_members: 20
-      });
-      setShowCreateGroup(false);
-    } catch (error) {
-      console.error('Error creating study group:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create study group",
-        variant: "destructive"
-      });
-    }
+    setNewGroup({
+      name: '',
+      description: '',
+      subject: '',
+      grade_level: '',
+      max_members: 20
+    });
+    setShowCreateGroup(false);
   };
 
   return (
@@ -290,7 +186,7 @@ const CommunityPage = () => {
                     </p>
                     
                     <div className="flex items-center justify-between text-sm text-gray-500">
-                      <span>by {forum.profiles?.full_name || 'Anonymous'}</span>
+                      <span>by {forum.author_name}</span>
                       <span>{new Date(forum.created_at).toLocaleDateString()}</span>
                     </div>
                   </CardContent>

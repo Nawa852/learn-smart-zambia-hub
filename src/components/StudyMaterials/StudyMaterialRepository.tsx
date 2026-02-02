@@ -1,13 +1,11 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Upload, Search, Filter, Download, FileText, Video, Image, Music } from 'lucide-react';
+import { Search, Download, FileText, Video, Image, Music } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StudyMaterial {
@@ -25,81 +23,16 @@ interface StudyMaterial {
 }
 
 const StudyMaterialRepository = () => {
-  const [materials, setMaterials] = useState<StudyMaterial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [materials] = useState<StudyMaterial[]>([
+    { id: '1', file_name: 'Grade 12 Mathematics Notes.pdf', file_path: '/materials/math.pdf', file_type: 'application/pdf', subject: 'Mathematics', grade: '12', curriculum: 'ECZ', upload_date: new Date().toISOString(), user_id: '1', file_size: 2048000, metadata: {} },
+    { id: '2', file_name: 'Physics Formulas.pdf', file_path: '/materials/physics.pdf', file_type: 'application/pdf', subject: 'Physics', grade: '12', curriculum: 'ECZ', upload_date: new Date().toISOString(), user_id: '1', file_size: 1024000, metadata: {} },
+    { id: '3', file_name: 'Chemistry Lab Guide.pdf', file_path: '/materials/chemistry.pdf', file_type: 'application/pdf', subject: 'Chemistry', grade: '11', curriculum: 'ECZ', upload_date: new Date().toISOString(), user_id: '1', file_size: 3072000, metadata: {} },
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [selectedGrade, setSelectedGrade] = useState<string>('all');
   const { user } = useAuth();
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchMaterials();
-  }, []);
-
-  const fetchMaterials = async () => {
-    try {
-      setLoading(true);
-      // Use generic query since study_materials table may not be in types yet
-      const { data, error } = await supabase
-        .from('study_materials')
-        .select('*')
-        .order('upload_date', { ascending: false });
-
-      if (error) throw error;
-      setMaterials(data || []);
-    } catch (error) {
-      console.error('Error fetching materials:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch study materials",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const uploadMaterial = async (file: File, metadata: any) => {
-    try {
-      if (!user) throw new Error('Must be logged in to upload');
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-
-      // For now, we'll just store the metadata
-      const { error } = await supabase
-        .from('study_materials')
-        .insert({
-          user_id: user.id,
-          file_name: file.name,
-          file_path: filePath,
-          file_type: file.type,
-          subject: metadata.subject,
-          grade: metadata.grade,
-          curriculum: metadata.curriculum,
-          file_size: file.size,
-          metadata: metadata
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Material uploaded successfully",
-      });
-
-      fetchMaterials();
-    } catch (error) {
-      console.error('Error uploading material:', error);
-      toast({
-        title: "Error",
-        description: "Failed to upload material",
-        variant: "destructive",
-      });
-    }
-  };
 
   const getFileIcon = (fileType: string | null) => {
     if (!fileType) return <FileText className="h-6 w-6" />;
@@ -121,14 +54,6 @@ const StudyMaterialRepository = () => {
 
   const subjects = [...new Set(materials.map(m => m.subject).filter(Boolean))];
   const grades = [...new Set(materials.map(m => m.grade).filter(Boolean))];
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">

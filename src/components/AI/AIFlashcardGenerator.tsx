@@ -1,14 +1,12 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Brain, Plus, RotateCcw, Save, Trash2 } from 'lucide-react';
+import { Brain, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Flashcard {
@@ -22,7 +20,26 @@ interface Flashcard {
 }
 
 const AIFlashcardGenerator = () => {
-  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([
+    {
+      id: '1',
+      front_content: 'What is photosynthesis?',
+      back_content: 'The process by which plants convert sunlight, water, and CO2 into glucose and oxygen.',
+      subject: 'Biology',
+      difficulty_level: 'medium',
+      tags: ['plants', 'energy'],
+      created_at: new Date().toISOString()
+    },
+    {
+      id: '2',
+      front_content: 'What is the formula for calculating velocity?',
+      back_content: 'Velocity = Distance / Time (v = d/t)',
+      subject: 'Physics',
+      difficulty_level: 'easy',
+      tags: ['motion', 'formulas'],
+      created_at: new Date().toISOString()
+    }
+  ]);
   const [currentCard, setCurrentCard] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,109 +53,55 @@ const AIFlashcardGenerator = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchFlashcards();
-  }, []);
-
-  const fetchFlashcards = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('flashcards')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setFlashcards(data || []);
-    } catch (error) {
-      console.error('Error fetching flashcards:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch flashcards",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const createFlashcard = async () => {
-    try {
-      if (!user) throw new Error('Must be logged in');
-      if (!newCard.front_content || !newCard.back_content) {
-        toast({
-          title: "Error",
-          description: "Please fill in both front and back content",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setLoading(true);
-      const { error } = await supabase
-        .from('flashcards')
-        .insert({
-          user_id: user.id,
-          front_content: newCard.front_content,
-          back_content: newCard.back_content,
-          subject: newCard.subject || null,
-          difficulty_level: newCard.difficulty_level,
-          tags: newCard.tags ? newCard.tags.split(',').map(tag => tag.trim()) : null
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Flashcard created successfully",
-      });
-
-      setNewCard({
-        front_content: '',
-        back_content: '',
-        subject: '',
-        difficulty_level: 'medium',
-        tags: ''
-      });
-
-      fetchFlashcards();
-    } catch (error) {
-      console.error('Error creating flashcard:', error);
+    if (!newCard.front_content || !newCard.back_content) {
       toast({
         title: "Error",
-        description: "Failed to create flashcard",
+        description: "Please fill in both front and back content",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    setLoading(true);
+    
+    // Create flashcard locally
+    const newFlashcard: Flashcard = {
+      id: Date.now().toString(),
+      front_content: newCard.front_content,
+      back_content: newCard.back_content,
+      subject: newCard.subject || null,
+      difficulty_level: newCard.difficulty_level,
+      tags: newCard.tags ? newCard.tags.split(',').map(tag => tag.trim()) : null,
+      created_at: new Date().toISOString()
+    };
+
+    setFlashcards(prev => [newFlashcard, ...prev]);
+
+    toast({
+      title: "Success",
+      description: "Flashcard created successfully",
+    });
+
+    setNewCard({
+      front_content: '',
+      back_content: '',
+      subject: '',
+      difficulty_level: 'medium',
+      tags: ''
+    });
+
+    setLoading(false);
   };
 
-  const deleteFlashcard = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('flashcards')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Flashcard deleted successfully",
-      });
-
-      fetchFlashcards();
-      if (currentCard >= flashcards.length - 1) {
-        setCurrentCard(Math.max(0, flashcards.length - 2));
-      }
-    } catch (error) {
-      console.error('Error deleting flashcard:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete flashcard",
-        variant: "destructive",
-      });
+  const deleteFlashcard = (id: string) => {
+    setFlashcards(prev => prev.filter(card => card.id !== id));
+    toast({
+      title: "Success",
+      description: "Flashcard deleted successfully",
+    });
+    if (currentCard >= flashcards.length - 1) {
+      setCurrentCard(Math.max(0, flashcards.length - 2));
     }
   };
 

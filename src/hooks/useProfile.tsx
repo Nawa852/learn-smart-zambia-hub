@@ -1,7 +1,5 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { supabase } from '@/integrations/supabase/client';
 
 interface Profile {
   id: string;
@@ -20,46 +18,58 @@ export const useProfile = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
+  // Get profile from localStorage/onboarding data
+  const localProfile = useMemo(() => {
+    try {
+      const onboardingData = JSON.parse(localStorage.getItem('edu-zambia-onboarding') || '{}');
+      const userType = localStorage.getItem('edu-zambia-user-type') || 'student';
+      
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+          full_name: onboardingData.fullName || user.email?.split('@')[0] || 'User',
+          avatar_url: undefined,
+          user_type: userType,
+          grade_level: onboardingData.gradeLevel,
+          onboarding_completed: !!onboardingData.fullName,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }, [user]);
+
   useEffect(() => {
     if (user) {
-      fetchProfile();
+      setProfile(localProfile);
+      setLoading(false);
     } else {
       setProfile(null);
       setLoading(false);
     }
-  }, [user]);
-
-  const fetchProfile = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
-      } else {
-        setProfile(data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, localProfile]);
 
   const updateProfile = async (updates: Partial<Profile>) => {
-    if (!user) return;
+    if (!user) return { success: false, error: 'Not logged in' };
 
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({ id: user.id, ...updates });
-
-      if (error) throw error;
-      
+      // Update local state
       setProfile(prev => prev ? { ...prev, ...updates } : null);
+      
+      // Store in localStorage for persistence
+      const onboardingData = JSON.parse(localStorage.getItem('edu-zambia-onboarding') || '{}');
+      if (updates.full_name) onboardingData.fullName = updates.full_name;
+      if (updates.grade_level) onboardingData.gradeLevel = updates.grade_level;
+      localStorage.setItem('edu-zambia-onboarding', JSON.stringify(onboardingData));
+      
+      if (updates.user_type) {
+        localStorage.setItem('edu-zambia-user-type', updates.user_type);
+      }
+      
       return { success: true };
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -67,5 +77,9 @@ export const useProfile = () => {
     }
   };
 
-  return { profile, loading, updateProfile, refetch: fetchProfile };
+  const refetch = () => {
+    setProfile(localProfile);
+  };
+
+  return { profile, loading, updateProfile, refetch };
 };
