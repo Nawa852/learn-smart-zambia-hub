@@ -1,6 +1,6 @@
 import React from 'react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/AppSidebar';
+import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
 
 interface MainLayoutProps {
@@ -11,7 +11,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <AppSidebar />
+        <RoleBasedSidebar />
         <div className="flex-1 flex flex-col">
           <TopNavbar />
           <main className="flex-1 p-6 overflow-auto">
@@ -21,9 +21,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <div className="text-center text-sm text-muted-foreground">
               Powered by{' '}
               <span className="font-semibold gradient-text-bright-sphere">
-                Bright Sphere
+                Edu Zambia
               </span>{' '}
-              - Educational Innovation for Zambia
+              - Smart Learning for Zambia
             </div>
           </footer>
         </div>

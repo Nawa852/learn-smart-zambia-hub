@@ -215,25 +215,14 @@ const StudyToolsPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchMaterials();
+    // Use mock data since database tables don't exist yet
+    setMaterials([
+      { id: '1', file_name: 'ECZ Mathematics Past Paper 2024', file_path: '/materials/math2024.pdf', subject: 'Mathematics', grade: 'Grade 12', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 2048000 },
+      { id: '2', file_name: 'Physics Formula Sheet', file_path: '/materials/physics.pdf', subject: 'Physics', grade: 'Grade 12', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 512000 },
+      { id: '3', file_name: 'Biology Cell Structure Notes', file_path: '/materials/biology.pdf', subject: 'Biology', grade: 'Grade 11', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 1536000 },
+    ]);
+    setLoadingMaterials(false);
   }, []);
-
-  const fetchMaterials = async () => {
-    try {
-      setLoadingMaterials(true);
-      const { data, error } = await supabase
-        .from('study_materials')
-        .select('*')
-        .order('upload_date', { ascending: false });
-
-      if (error) throw error;
-      setMaterials(data || []);
-    } catch (error) {
-      console.error('Error fetching materials:', error);
-    } finally {
-      setLoadingMaterials(false);
-    }
-  };
 
   const getFileIcon = (fileType: string) => {
     if (fileType?.includes('pdf')) return <FileText className="w-5 h-5 text-red-500" />;

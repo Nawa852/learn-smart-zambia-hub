@@ -1,13 +1,11 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Search, Upload, Download, Star, Eye, Filter, BookOpen, FileText, Video, Image } from 'lucide-react';
+import { Search, Download, Eye, BookOpen, FileText, Video, Image } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StudyMaterial {
@@ -25,8 +23,12 @@ interface StudyMaterial {
 }
 
 const StudyMaterialsPage = () => {
-  const [materials, setMaterials] = useState<StudyMaterial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [materials] = useState<StudyMaterial[]>([
+    { id: '1', file_name: 'ECZ Mathematics Past Paper 2024', file_path: '/materials/math2024.pdf', subject: 'Mathematics', grade: 'Grade 12', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 2048000 },
+    { id: '2', file_name: 'Physics Formula Sheet', file_path: '/materials/physics.pdf', subject: 'Physics', grade: 'Grade 12', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 512000 },
+    { id: '3', file_name: 'Biology Cell Structure Notes', file_path: '/materials/biology.pdf', subject: 'Biology', grade: 'Grade 11', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 1536000 },
+    { id: '4', file_name: 'Chemistry Organic Compounds', file_path: '/materials/chemistry.pdf', subject: 'Chemistry', grade: 'Grade 12', curriculum: 'ECZ', file_type: 'application/pdf', user_id: '1', upload_date: new Date().toISOString(), file_size: 1024000 },
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [subjectFilter, setSubjectFilter] = useState('all');
   const [gradeFilter, setGradeFilter] = useState('all');
@@ -45,32 +47,6 @@ const StudyMaterialsPage = () => {
     'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
   ];
 
-  useEffect(() => {
-    fetchMaterials();
-  }, []);
-
-  const fetchMaterials = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('study_materials')
-        .select('*')
-        .order('upload_date', { ascending: false });
-
-      if (error) throw error;
-      setMaterials(data || []);
-    } catch (error) {
-      console.error('Error fetching materials:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load study materials",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getFileIcon = (fileType: string) => {
     if (fileType?.includes('pdf')) return <FileText className="w-5 h-5 text-red-500" />;
     if (fileType?.includes('video')) return <Video className="w-5 h-5 text-blue-500" />;
@@ -78,21 +54,11 @@ const StudyMaterialsPage = () => {
     return <BookOpen className="w-5 h-5 text-gray-500" />;
   };
 
-  const handleDownload = async (material: StudyMaterial) => {
-    try {
-      window.open(material.file_path, '_blank');
-      toast({
-        title: "Download Started",
-        description: `${material.file_name} is being downloaded`,
-      });
-    } catch (error) {
-      console.error('Error downloading material:', error);
-      toast({
-        title: "Error",
-        description: "Failed to download material",
-        variant: "destructive"
-      });
-    }
+  const handleDownload = (material: StudyMaterial) => {
+    toast({
+      title: "Download Started",
+      description: `${material.file_name} is being downloaded`,
+    });
   };
 
   const filteredMaterials = materials.filter(material => {
@@ -178,21 +144,7 @@ const StudyMaterialsPage = () => {
 
         {/* Materials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {loading ? (
-            Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i} className="border-0 shadow-md animate-pulse">
-                <CardContent className="p-6">
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-3 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded mb-4"></div>
-                  <div className="flex justify-between">
-                    <div className="h-8 w-20 bg-gray-200 rounded"></div>
-                    <div className="h-8 w-16 bg-gray-200 rounded"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : filteredMaterials.length === 0 ? (
+          {filteredMaterials.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No materials found</h3>

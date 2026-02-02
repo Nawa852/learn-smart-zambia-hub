@@ -1,79 +1,39 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
   User, Settings, Award, BookOpen, TrendingUp, Brain,
-  Camera, Edit, Save, Globe, Clock, Star, Target
+  Camera, Edit, Globe, Clock, Target
 } from "lucide-react";
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useProfile } from '@/hooks/useProfile';
 
 const Profile = () => {
   const { user } = useAuth();
+  const { profile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    full_name: '',
-    grade_level: '',
-    learning_style: 'visual'
-  });
 
-  const { data: profile } = useQuery({
-    queryKey: ['profile', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id
-  });
+  // Mock data for demonstration
+  const studySessions = [
+    { id: '1', subject: 'Mathematics', duration: 45, created_at: new Date().toISOString() },
+    { id: '2', subject: 'Physics', duration: 30, created_at: new Date().toISOString() },
+    { id: '3', subject: 'Chemistry', duration: 60, created_at: new Date().toISOString() },
+  ];
 
-  const { data: achievements } = useQuery({
-    queryKey: ['achievements', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from('achievements')
-        .select('*')
-        .eq('user_id', user.id);
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id
-  });
-
-  const { data: studySessions } = useQuery({
-    queryKey: ['study-sessions', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return [];
-      const { data, error } = await supabase
-        .from('study_sessions')
-        .select('*')
-        .eq('user_id', user.id);
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id
-  });
+  const achievements = [
+    { id: '1', title: 'First Lesson', description: 'Completed your first lesson' },
+    { id: '2', title: 'Study Streak', description: '7-day study streak' },
+    { id: '3', title: 'Quiz Master', description: 'Scored 100% on a quiz' },
+  ];
 
   const learningStats = {
-    totalCourses: studySessions?.length || 0,
-    completedCourses: studySessions?.filter(s => s.duration > 30)?.length || 0,
-    totalHours: studySessions?.reduce((sum, session) => sum + (session.duration || 0), 0) || 0,
+    totalCourses: studySessions.length,
+    completedCourses: studySessions.filter(s => s.duration > 30).length,
+    totalHours: studySessions.reduce((sum, session) => sum + (session.duration || 0), 0),
     currentStreak: 12,
-    skillsLearned: achievements?.length || 0
+    skillsLearned: achievements.length
   };
 
   const aiInsights = [
@@ -96,6 +56,9 @@ const Profile = () => {
       color: "purple"
     }
   ];
+
+  const displayName = profile?.full_name || user?.email?.split('@')[0] || 'User';
+  const displayEmail = profile?.email || user?.email || '';
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -127,7 +90,7 @@ const Profile = () => {
               
               <div className="flex-1 text-center md:text-left">
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold">{profile?.full_name || user?.email}</h1>
+                  <h1 className="text-3xl font-bold">{displayName}</h1>
                   <Button 
                     variant="ghost" 
                     size="sm"
@@ -136,13 +99,13 @@ const Profile = () => {
                     <Edit className="w-4 h-4" />
                   </Button>
                 </div>
-                <p className="text-gray-600 mb-4">{profile?.email}</p>
+                <p className="text-gray-600 mb-4">{displayEmail}</p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <Badge variant="secondary">
                     <Globe className="w-3 h-3 mr-1" />
                     {profile?.grade_level || 'Not Set'}
                   </Badge>
-                  <Badge variant="secondary">Student</Badge>
+                  <Badge variant="secondary">{profile?.user_type || 'Student'}</Badge>
                   <Badge className="bg-green-100 text-green-800">Active Learner</Badge>
                 </div>
               </div>
@@ -197,7 +160,7 @@ const Profile = () => {
                 {/* Recent Sessions */}
                 <div className="space-y-3">
                   <h4 className="font-semibold">Recent Study Sessions</h4>
-                  {studySessions?.slice(0, 3).map((session) => (
+                  {studySessions.map((session) => (
                     <div key={session.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                       <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                         <BookOpen className="w-6 h-6 text-blue-600" />
@@ -210,12 +173,7 @@ const Profile = () => {
                         {new Date(session.created_at).toLocaleDateString()}
                       </div>
                     </div>
-                  )) || (
-                    <div className="text-center py-4 text-gray-500">
-                      <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Start studying to see your progress!</p>
-                    </div>
-                  )}
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -260,18 +218,12 @@ const Profile = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3">
-                  {achievements?.slice(0, 6).map((achievement, index) => (
+                  {achievements.map((achievement, index) => (
                     <div key={index} className="text-center p-3 bg-yellow-50 rounded-lg">
                       <Award className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
                       <div className="text-xs font-medium">{achievement.title}</div>
                     </div>
                   ))}
-                  {(!achievements || achievements.length === 0) && (
-                    <div className="col-span-2 text-center py-4 text-gray-500">
-                      <Award className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Start learning to earn achievements!</p>
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>

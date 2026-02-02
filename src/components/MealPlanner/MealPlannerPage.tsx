@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { ChefHat, Plus, Utensils, Calendar, Sparkles } from 'lucide-react';
+import { ChefHat, Plus, Utensils } from 'lucide-react';
 
 interface MealPlan {
   id: string;
@@ -19,39 +18,12 @@ interface MealPlan {
 
 const MealPlannerPage = () => {
   const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentPlan, setCurrentPlan] = useState<MealPlan | null>(null);
   const [planName, setPlanName] = useState('');
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchMealPlans();
-  }, []);
-
-  const fetchMealPlans = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('meal_plans')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setMealPlans(data || []);
-    } catch (error) {
-      console.error('Error fetching meal plans:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch meal plans",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generateMealPlan = async () => {
+  const generateMealPlan = () => {
     if (!planName) {
       toast({
         title: "Error",
@@ -61,86 +33,57 @@ const MealPlannerPage = () => {
       return;
     }
 
-    try {
-      const sampleRecipes = [
-        {
-          day: 'Monday',
-          breakfast: 'Oatmeal with berries',
-          lunch: 'Grilled chicken salad',
-          dinner: 'Baked salmon with vegetables'
-        },
-        {
-          day: 'Tuesday',
-          breakfast: 'Greek yogurt with granola',
-          lunch: 'Quinoa bowl',
-          dinner: 'Lean beef stir-fry'
-        }
-      ];
+    const sampleRecipes = [
+      {
+        day: 'Monday',
+        breakfast: 'Oatmeal with berries',
+        lunch: 'Grilled chicken salad',
+        dinner: 'Baked salmon with vegetables'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Greek yogurt with granola',
+        lunch: 'Quinoa bowl',
+        dinner: 'Lean beef stir-fry'
+      }
+    ];
 
-      const nutritionalInfo = {
-        calories: 2000,
-        protein: 150,
-        carbs: 200,
-        fat: 70
-      };
+    const nutritionalInfo = {
+      calories: 2000,
+      protein: 150,
+      carbs: 200,
+      fat: 70
+    };
 
-      const { data, error } = await supabase
-        .from('meal_plans')
-        .insert({
-          plan_name: planName,
-          recipes: sampleRecipes,
-          nutritional_info: nutritionalInfo,
-          user_id: user?.id
-        })
-        .select()
-        .single();
+    const newPlan: MealPlan = {
+      id: Date.now().toString(),
+      plan_name: planName,
+      recipes: sampleRecipes,
+      nutritional_info: nutritionalInfo,
+      created_at: new Date().toISOString(),
+      user_id: user?.id || ''
+    };
 
-      if (error) throw error;
+    setMealPlans(prev => [newPlan, ...prev]);
+    setCurrentPlan(newPlan);
+    setPlanName('');
 
-      setCurrentPlan(data);
-      setPlanName('');
-      fetchMealPlans();
-
-      toast({
-        title: "Success",
-        description: "Meal plan generated successfully!",
-      });
-    } catch (error) {
-      console.error('Error generating meal plan:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate meal plan",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Success",
+      description: "Meal plan generated successfully!",
+    });
   };
 
-  const deleteMealPlan = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('meal_plans')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      fetchMealPlans();
-      if (currentPlan?.id === id) {
-        setCurrentPlan(null);
-      }
-
-      toast({
-        title: "Success",
-        description: "Meal plan deleted successfully",
-      });
-    } catch (error) {
-      console.error('Error deleting meal plan:', error);
-      toast({
-        title: "Error",
-        description: "Failed to delete meal plan",
-        variant: "destructive",
-      });
+  const deleteMealPlan = (id: string) => {
+    setMealPlans(prev => prev.filter(plan => plan.id !== id));
+    if (currentPlan?.id === id) {
+      setCurrentPlan(null);
     }
+
+    toast({
+      title: "Success",
+      description: "Meal plan deleted successfully",
+    });
   };
 
   return (
@@ -181,13 +124,7 @@ const MealPlannerPage = () => {
               <CardTitle>Your Meal Plans</CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <div className="animate-pulse space-y-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-20 bg-gray-200 rounded"></div>
-                  ))}
-                </div>
-              ) : mealPlans.length === 0 ? (
+              {mealPlans.length === 0 ? (
                 <p className="text-gray-500 text-center">No meal plans yet. Create your first plan!</p>
               ) : (
                 <div className="space-y-4">

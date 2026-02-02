@@ -1,59 +1,14 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { BarChart3, TrendingUp, Clock, Target, Award, Brain } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
-interface LearningData {
-  id: string;
-  activity_type: string;
-  subject: string;
-  score: number | null;
-  time_spent: number | null;
-  completed_at: string | null;
-  user_id: string | null;
-  metadata?: any;
-}
-
 const LearningAnalytics = () => {
-  const [analyticsData, setAnalyticsData] = useState<LearningData[]>([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const { toast } = useToast();
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, []);
-
-  const fetchAnalyticsData = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('learning_analytics')
-        .select('*')
-        .order('completed_at', { ascending: false })
-        .limit(100);
-
-      if (error) throw error;
-      setAnalyticsData(data || []);
-    } catch (error) {
-      console.error('Error fetching analytics:', error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch learning analytics",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Mock data for demonstration since we need actual learning data
+  // Mock data for demonstration
   const weeklyProgress = [
     { day: 'Mon', hours: 2.5, performance: 85 },
     { day: 'Tue', hours: 3.2, performance: 78 },
@@ -86,14 +41,6 @@ const LearningAnalytics = () => {
     { title: "Streak Days", value: "23", icon: TrendingUp, color: "text-purple-600", change: "+3 days" },
     { title: "Achievements", value: "15", icon: Award, color: "text-yellow-600", change: "+2" },
   ];
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
