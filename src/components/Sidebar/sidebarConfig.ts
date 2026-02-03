@@ -30,6 +30,26 @@ import {
   Heart,
   Compass,
   Wrench,
+  Sparkles,
+  Youtube,
+  Calculator,
+  FlaskConical,
+  Atom,
+  Languages,
+  BookMarked,
+  Layers,
+  Timer,
+  Award,
+  Gamepad2,
+  Headphones,
+  PenTool,
+  Camera,
+  Presentation,
+  MessagesSquare,
+  Library,
+  Microscope,
+  Bot,
+  Zap,
   type LucideIcon
 } from "lucide-react";
 
@@ -45,33 +65,62 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-// Student Navigation
+// Student Navigation - Comprehensive with AceQuiz features
 export const studentNavigation: NavGroup[] = [
   {
-    label: "Learning",
+    label: "Dashboard",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Home", url: "/dashboard", icon: LayoutDashboard },
+      { title: "My Profile", url: "/profile", icon: User },
+    ],
+  },
+  {
+    label: "AI Quiz Tools",
+    items: [
+      { title: "AI Quiz Generator", url: "/ai-quiz", icon: Sparkles },
+      { title: "Math Quiz", url: "/math-quiz", icon: Calculator },
+      { title: "Science Quiz", url: "/science-quiz", icon: FlaskConical },
+      { title: "YouTube Quiz", url: "/youtube-quiz", icon: Youtube },
+      { title: "Vocabulary Quiz", url: "/vocabulary-quiz", icon: Languages },
+    ],
+  },
+  {
+    label: "AI Learning",
+    items: [
       { title: "AI Tutor", url: "/ai", icon: Brain },
+      { title: "Multi AI Tutor", url: "/multi-ai-tutor", icon: Bot },
+      { title: "Flashcards", url: "/flashcards", icon: Layers },
+      { title: "Mind Maps", url: "/mind-maps", icon: Lightbulb },
+      { title: "Study Assistant", url: "/study-assistant", icon: BookMarked },
+      { title: "Learning Path", url: "/learning-path", icon: Compass },
+    ],
+  },
+  {
+    label: "Courses & Lessons",
+    items: [
       { title: "My Courses", url: "/courses", icon: BookOpen },
       { title: "Lessons", url: "/lessons", icon: GraduationCap },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },
+      { title: "Video Learning", url: "/video-learning", icon: Presentation },
+      { title: "YouTube Learning", url: "/youtube-learning", icon: Youtube },
     ],
   },
   {
-    label: "Resources",
+    label: "Study Resources",
     items: [
       { title: "Study Materials", url: "/materials", icon: FolderOpen },
       { title: "Study Tools", url: "/study-tools", icon: Wrench },
-      { title: "Flashcards", url: "/flashcards", icon: FileText },
-      { title: "Mind Maps", url: "/mind-maps", icon: Lightbulb },
+      { title: "ECZ Resources", url: "/ecz-resources", icon: Library },
+      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },
     ],
   },
   {
-    label: "Progress",
+    label: "Progress & Goals",
     items: [
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
       { title: "Achievements", url: "/achievements", icon: Trophy },
-      { title: "Goals", url: "/goals", icon: Target },
+      { title: "Daily Goals", url: "/goals", icon: Target },
+      { title: "Skill Passport", url: "/skill-passport", icon: Award },
     ],
   },
   {
@@ -79,7 +128,18 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "Community Hub", url: "/community", icon: Users },
       { title: "Study Groups", url: "/study-groups", icon: MessageSquare },
+      { title: "Social Feed", url: "/social-feed", icon: MessagesSquare },
       { title: "Mentorship", url: "/mentorship", icon: Heart },
+      { title: "Campus Map", url: "/campus-map", icon: Map },
+    ],
+  },
+  {
+    label: "More Tools",
+    items: [
+      { title: "Adaptive Content", url: "/adaptive-content", icon: Zap },
+      { title: "Journaling", url: "/journaling", icon: PenTool },
+      { title: "Teach Back", url: "/teach-back", icon: Presentation },
+      { title: "Meal Planner", url: "/meal-planner", icon: Calendar },
     ],
   },
 ];
@@ -90,17 +150,29 @@ export const teacherNavigation: NavGroup[] = [
     label: "Overview",
     items: [
       { title: "Dashboard", url: "/teacher-dashboard", icon: LayoutDashboard },
+      { title: "My Profile", url: "/profile", icon: User },
       { title: "My Classes", url: "/my-classes", icon: School },
       { title: "Schedule", url: "/schedule", icon: Calendar },
     ],
   },
   {
+    label: "AI Teaching Tools",
+    items: [
+      { title: "AI Quiz Creator", url: "/ai-quiz", icon: Sparkles },
+      { title: "AI Lesson Generator", url: "/ai-lesson-generator", icon: Brain },
+      { title: "Content Generator", url: "/ai-content-generator", icon: FileText },
+      { title: "Math Quiz Builder", url: "/math-quiz", icon: Calculator },
+      { title: "Science Quiz Builder", url: "/science-quiz", icon: FlaskConical },
+    ],
+  },
+  {
     label: "Teaching",
     items: [
-      { title: "AI Lesson Generator", url: "/lesson-generator", icon: Brain },
       { title: "Curriculum", url: "/curriculum", icon: BookOpen },
       { title: "Create Lesson", url: "/create-lesson", icon: FileText },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },
+      { title: "Live Learning", url: "/live-learning", icon: Presentation },
+      { title: "Resource Library", url: "/materials", icon: FolderOpen },
     ],
   },
   {
@@ -109,6 +181,7 @@ export const teacherNavigation: NavGroup[] = [
       { title: "Auto Grading", url: "/grading", icon: ClipboardCheck },
       { title: "Quiz Creator", url: "/quiz-creator", icon: Target },
       { title: "Assignments", url: "/assignments", icon: FileBarChart },
+      { title: "Exam Prep", url: "/exam-prep", icon: Timer },
     ],
   },
   {
@@ -117,13 +190,15 @@ export const teacherNavigation: NavGroup[] = [
       { title: "Class Analytics", url: "/class-analytics", icon: BarChart3 },
       { title: "Student Progress", url: "/student-progress", icon: TrendingUp },
       { title: "Reports", url: "/reports", icon: PieChart },
+      { title: "Insights", url: "/insights", icon: Lightbulb },
     ],
   },
   {
     label: "Community",
     items: [
       { title: "Teacher Hub", url: "/teacher-collaboration", icon: Users },
-      { title: "Resources", url: "/materials", icon: FolderOpen },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+      { title: "Forums", url: "/teacher-forums", icon: MessageSquare },
     ],
   },
 ];
@@ -135,6 +210,7 @@ export const parentNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/parent-dashboard", icon: LayoutDashboard },
       { title: "My Children", url: "/my-children", icon: Users },
+      { title: "My Profile", url: "/profile", icon: User },
     ],
   },
   {
@@ -144,14 +220,23 @@ export const parentNavigation: NavGroup[] = [
       { title: "Attendance", url: "/attendance", icon: Calendar },
       { title: "Grades", url: "/grades", icon: FileBarChart },
       { title: "Alerts", url: "/alerts", icon: Bell, badge: "3" },
+      { title: "Learning Analytics", url: "/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "AI Tools",
+    items: [
+      { title: "AI Parent Advisor", url: "/parent-advisor", icon: Brain },
+      { title: "Quiz Review", url: "/quiz-review", icon: Sparkles },
+      { title: "Study Tips", url: "/study-tips", icon: Lightbulb },
     ],
   },
   {
     label: "Support",
     items: [
-      { title: "AI Parent Advisor", url: "/parent-advisor", icon: Brain },
-      { title: "Study Tips", url: "/study-tips", icon: Lightbulb },
       { title: "Resources", url: "/parent-resources", icon: FolderOpen },
+      { title: "Parent Support Hub", url: "/ecz-parent-support", icon: Heart },
+      { title: "Meal Planner", url: "/meal-planner", icon: Calendar },
     ],
   },
   {
@@ -183,6 +268,14 @@ export const schoolAdminNavigation: NavGroup[] = [
     ],
   },
   {
+    label: "AI Tools",
+    items: [
+      { title: "AI Analytics", url: "/ai-analytics", icon: Brain },
+      { title: "Quiz Generator", url: "/ai-quiz", icon: Sparkles },
+      { title: "Content Curator", url: "/content-curator", icon: Library },
+    ],
+  },
+  {
     label: "Analytics",
     items: [
       { title: "School Analytics", url: "/school-analytics", icon: BarChart3 },
@@ -196,6 +289,7 @@ export const schoolAdminNavigation: NavGroup[] = [
     items: [
       { title: "Curriculum", url: "/curriculum-admin", icon: BookOpen },
       { title: "Announcements", url: "/announcements", icon: Bell },
+      { title: "Resources", url: "/school-resources", icon: FolderOpen },
       { title: "Settings", url: "/admin-settings", icon: Settings },
     ],
   },
@@ -217,6 +311,14 @@ export const ministryNavigation: NavGroup[] = [
       { title: "District Comparison", url: "/district-comparison", icon: BarChart3 },
       { title: "Performance Trends", url: "/trends", icon: TrendingUp },
       { title: "Impact Analysis", url: "/impact", icon: PieChart },
+    ],
+  },
+  {
+    label: "AI Tools",
+    items: [
+      { title: "AI Insights", url: "/ai-insights", icon: Brain },
+      { title: "Data Analysis", url: "/data-analysis", icon: Sparkles },
+      { title: "Predictive Models", url: "/predictions", icon: Zap },
     ],
   },
   {
