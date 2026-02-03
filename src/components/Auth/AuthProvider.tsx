@@ -1,22 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-// Mock user type (simplified from Supabase)
-interface MockUser {
-  id: string;
-  email: string;
-  full_name?: string;
-  user_type?: string;
-  user_metadata?: {
-    full_name?: string;
-    avatar_url?: string;
-    [key: string]: any;
-  };
-}
-
 interface AuthContextType {
-  user: MockUser | null;
-  session: { user: MockUser } | null;
+  user: User | null;
+  session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
   signUp: (email: string, password: string, fullName?: string, userType?: string, grade?: string) => Promise<{ error: any }>;
@@ -41,37 +30,46 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-// Simple mock user storage
-const MOCK_USERS_KEY = 'edu-zambia-mock-users';
-const CURRENT_USER_KEY = 'edu-zambia-current-user';
-
-const getMockUsers = (): Record<string, { password: string; user: MockUser }> => {
-  const stored = localStorage.getItem(MOCK_USERS_KEY);
-  return stored ? JSON.parse(stored) : {};
-};
-
-const saveMockUsers = (users: Record<string, { password: string; user: MockUser }>) => {
-  localStorage.setItem(MOCK_USERS_KEY, JSON.stringify(users));
-};
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<MockUser | null>(null);
-  const [session, setSession] = useState<{ user: MockUser } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session
-    const storedUser = localStorage.getItem(CURRENT_USER_KEY);
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setSession({ user: parsedUser });
-    }
-    setLoading(false);
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Defer user type storage
+        if (session?.user) {
+          setTimeout(() => {
+            const userType = session.user.user_metadata?.user_type || 'student';
+            localStorage.setItem('edu-zambia-user-type', userType);
+          }, 0);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {
-    localStorage.removeItem(CURRENT_USER_KEY);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error('Sign out failed');
+      throw error;
+    }
+    localStorage.removeItem('edu-zambia-user-type');
+    localStorage.removeItem('edu-zambia-onboarding-completed');
     setUser(null);
     setSession(null);
     toast.success("Signed out successfully");
@@ -79,27 +77,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signUp = async (email: string, password: string, fullName?: string, userType?: string, grade?: string) => {
     try {
-      const users = getMockUsers();
-      
-      if (users[email]) {
-        toast.error("User already exists with this email");
-        return { error: { message: "User already exists" } };
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            full_name: fullName,
+            user_type: userType || 'student',
+            grade: grade,
+          }
+        }
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return { error };
       }
 
-      const newUser: MockUser = {
-        id: `user_${Date.now()}`,
-        email,
-        full_name: fullName,
-        user_type: userType || 'student',
-        user_metadata: {
-          full_name: fullName,
-        },
-      };
-
-      users[email] = { password, user: newUser };
-      saveMockUsers(users);
-
-      toast.success("Account created! You can now sign in.");
+      localStorage.setItem('edu-zambia-user-type', userType || 'student');
+      toast.success("Account created! Please check your email to verify your account.");
       return { error: null };
     } catch (error: any) {
       toast.error(error.message || "Sign up failed");
@@ -108,63 +105,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signInWithEmail = async (email: string, password: string) => {
-    const users = getMockUsers();
-    const userRecord = users[email];
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (!userRecord) {
-      toast.error("No account found with this email");
-      throw new Error("Invalid login credentials");
+    if (error) {
+      toast.error(error.message);
+      throw error;
     }
 
-    if (userRecord.password !== password) {
-      toast.error("Invalid password");
-      throw new Error("Invalid login credentials");
-    }
-
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userRecord.user));
-    setUser(userRecord.user);
-    setSession({ user: userRecord.user });
     toast.success("Welcome back!");
   };
 
   const signInWithGoogle = async () => {
-    // Mock Google sign in - create a demo user
-    const demoUser: MockUser = {
-      id: 'google_user_demo',
-      email: 'demo@google.com',
-      full_name: 'Google Demo User',
-      user_type: 'student',
-      user_metadata: { full_name: 'Google Demo User' },
-    };
-    
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(demoUser));
-    setUser(demoUser);
-    setSession({ user: demoUser });
-    toast.success("Signed in with Google (Demo)");
+    // Using Lovable Cloud managed Google OAuth
+    try {
+      const { lovable } = await import('@/integrations/lovable');
+      const { error } = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin,
+      });
+      
+      if (error) {
+        toast.error("Google sign in failed");
+        throw error;
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Google sign in failed");
+      throw error;
+    }
   };
 
   const signInWithFacebook = async () => {
-    // Mock Facebook sign in - create a demo user
-    const demoUser: MockUser = {
-      id: 'facebook_user_demo',
-      email: 'demo@facebook.com',
-      full_name: 'Facebook Demo User',
-      user_type: 'student',
-      user_metadata: { full_name: 'Facebook Demo User' },
-    };
-    
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(demoUser));
-    setUser(demoUser);
-    setSession({ user: demoUser });
-    toast.success("Signed in with Facebook (Demo)");
+    toast.info("Facebook sign-in is not currently available");
   };
 
   const sendSMSVerification = async (phone: string) => {
-    toast.success("SMS sent (Demo mode)");
+    toast.info("SMS verification is not currently available");
   };
 
   const verifyPhone = async (phone: string, code: string) => {
-    toast.success("Phone verified (Demo mode)");
+    toast.info("Phone verification is not currently available");
   };
 
   const value = {

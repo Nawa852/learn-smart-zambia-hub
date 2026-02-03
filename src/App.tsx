@@ -8,8 +8,7 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 
 // Core Pages
 import Index from '@/pages/Index';
-import LoginPage from '@/components/Auth/LoginPage';
-import SignUpPage from '@/components/Auth/SignUpPage';
+import AuthPage from '@/pages/AuthPage';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import WelcomePage from '@/pages/WelcomePage';
@@ -40,6 +39,13 @@ import ParentDashboard from '@/pages/ParentDashboard';
 import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
 import MinistryDashboard from '@/pages/MinistryDashboard';
 
+// AI Quiz Pages (AceQuiz-style)
+import AIQuizGeneratorPage from '@/pages/AIQuizGeneratorPage';
+import AIMathQuizPage from '@/pages/AIMathQuizPage';
+import AIScienceQuizPage from '@/pages/AIScienceQuizPage';
+import AIYouTubeQuizPage from '@/pages/AIYouTubeQuizPage';
+import AIVocabularyQuizPage from '@/pages/AIVocabularyQuizPage';
+
 // AI Features
 import AIFlashcardPage from '@/pages/AIFlashcardPage';
 import AITutorPage from '@/pages/AITutorPage';
@@ -51,6 +57,7 @@ import VisualMindMapPage from '@/pages/VisualMindMapPage';
 import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
 import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
 import TeachBackPage from '@/pages/TeachBackPage';
+import MultiAITutorPage from '@/pages/MultiAITutorPage';
 
 // Social & Community
 import StudyGroupsPage from '@/pages/StudyGroupsPage';
@@ -66,6 +73,13 @@ import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
 import MealPlannerPage from '@/pages/MealPlannerPage';
 import StudyMaterialsPage from '@/pages/StudyMaterialsPage';
 import CommunityPage from '@/pages/CommunityPage';
+import SkillPassportPage from '@/pages/SkillPassportPage';
+import LiveLearningPage from '@/pages/LiveLearningPage';
+import MentorshipHubPage from '@/pages/MentorshipHubPage';
+
+// ECZ Pages
+import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
+import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,8 +98,9 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/welcome" element={<WelcomePage />} />
@@ -113,6 +128,13 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* AI Quiz Tools (AceQuiz-style) */}
+            <Route path="/ai-quiz" element={<ProtectedRoute><MainLayout><AIQuizGeneratorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/math-quiz" element={<ProtectedRoute><MainLayout><AIMathQuizPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/science-quiz" element={<ProtectedRoute><MainLayout><AIScienceQuizPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/youtube-quiz" element={<ProtectedRoute><MainLayout><AIYouTubeQuizPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/vocabulary-quiz" element={<ProtectedRoute><MainLayout><AIVocabularyQuizPage /></MainLayout></ProtectedRoute>} />
+
             {/* AI Features */}
             <Route path="/ai" element={<ProtectedRoute><MainLayout><AIChat /></MainLayout></ProtectedRoute>} />
             <Route path="/flashcards" element={<ProtectedRoute><MainLayout><AIFlashcardPage /></MainLayout></ProtectedRoute>} />
@@ -125,6 +147,7 @@ function App() {
             <Route path="/adaptive-difficulty" element={<ProtectedRoute><MainLayout><AdaptiveDifficultyPage /></MainLayout></ProtectedRoute>} />
             <Route path="/journaling" element={<ProtectedRoute><MainLayout><ClaudeJournalingPage /></MainLayout></ProtectedRoute>} />
             <Route path="/teach-back" element={<ProtectedRoute><MainLayout><TeachBackPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/multi-ai-tutor" element={<ProtectedRoute><MainLayout><MultiAITutorPage /></MainLayout></ProtectedRoute>} />
 
             {/* Community & Social */}
             <Route path="/community" element={<ProtectedRoute><MainLayout><CommunityHub /></MainLayout></ProtectedRoute>} />
@@ -133,6 +156,7 @@ function App() {
             <Route path="/campus-map" element={<ProtectedRoute><MainLayout><CampusMapPage /></MainLayout></ProtectedRoute>} />
             <Route path="/academic-profile" element={<ProtectedRoute><MainLayout><AcademicProfilePage /></MainLayout></ProtectedRoute>} />
             <Route path="/mentorship" element={<ProtectedRoute><MainLayout><CommunityPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/mentorship-hub" element={<ProtectedRoute><MainLayout><MentorshipHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Courses & Learning */}
             <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
@@ -141,11 +165,14 @@ function App() {
             <Route path="/video-learning" element={<ProtectedRoute><MainLayout><VideoLearningPage /></MainLayout></ProtectedRoute>} />
             <Route path="/youtube-learning" element={<ProtectedRoute><MainLayout><YouTubeLearningPage /></MainLayout></ProtectedRoute>} />
             <Route path="/adaptive-content" element={<ProtectedRoute><MainLayout><AdaptiveContentPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/live-learning" element={<ProtectedRoute><MainLayout><LiveLearningPage /></MainLayout></ProtectedRoute>} />
 
             {/* Study Materials */}
             <Route path="/materials" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
             <Route path="/study-tools" element={<ProtectedRoute><MainLayout><StudyToolsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-materials" element={<ProtectedRoute><MainLayout><StudyMaterialsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-resources" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
+            <Route path="/skill-passport" element={<ProtectedRoute><MainLayout><SkillPassportPage /></MainLayout></ProtectedRoute>} />
 
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
@@ -154,6 +181,10 @@ function App() {
 
             {/* Profile */}
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
+
+            {/* ECZ Features */}
+            <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
