@@ -106,12 +106,14 @@ export const studentNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "Study Resources",
+    label: "🇿🇲 Zambian Resources",
     items: [
+      { title: "Resources Hub", url: "/zambian-resources", icon: Library, badge: "NEW" },
+      { title: "ECZ Past Papers", url: "/ecz-past-papers", icon: FileText },
+      { title: "Video Library", url: "/ecz-videos", icon: Youtube },
+      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },
       { title: "Study Materials", url: "/materials", icon: FolderOpen },
       { title: "Study Tools", url: "/study-tools", icon: Wrench },
-      { title: "ECZ Resources", url: "/ecz-resources", icon: Library },
-      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },
     ],
   },
   {
@@ -151,16 +153,16 @@ export const teacherNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/teacher-dashboard", icon: LayoutDashboard },
       { title: "My Profile", url: "/profile", icon: User },
-      { title: "My Classes", url: "/my-classes", icon: School },
-      { title: "Schedule", url: "/schedule", icon: Calendar },
+      { title: "My Classes", url: "/courses", icon: School },
+      { title: "Schedule", url: "/goals", icon: Calendar },
     ],
   },
   {
     label: "AI Teaching Tools",
     items: [
       { title: "AI Quiz Creator", url: "/ai-quiz", icon: Sparkles },
-      { title: "AI Lesson Generator", url: "/ai-lesson-generator", icon: Brain },
-      { title: "Content Generator", url: "/ai-content-generator", icon: FileText },
+      { title: "AI Lesson Generator", url: "/ai", icon: Brain },
+      { title: "Content Generator", url: "/flashcards", icon: FileText },
       { title: "Math Quiz Builder", url: "/math-quiz", icon: Calculator },
       { title: "Science Quiz Builder", url: "/science-quiz", icon: FlaskConical },
     ],
@@ -168,37 +170,46 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Teaching",
     items: [
-      { title: "Curriculum", url: "/curriculum", icon: BookOpen },
-      { title: "Create Lesson", url: "/create-lesson", icon: FileText },
+      { title: "Curriculum", url: "/courses", icon: BookOpen },
+      { title: "Create Lesson", url: "/lessons", icon: FileText },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },
       { title: "Live Learning", url: "/live-learning", icon: Presentation },
       { title: "Resource Library", url: "/materials", icon: FolderOpen },
     ],
   },
   {
+    label: "🇿🇲 Zambian Resources",
+    items: [
+      { title: "Resources Hub", url: "/zambian-resources", icon: Library, badge: "NEW" },
+      { title: "ECZ Past Papers", url: "/ecz-past-papers", icon: FileText },
+      { title: "Video Library", url: "/ecz-videos", icon: Youtube },
+      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },
+    ],
+  },
+  {
     label: "Assessment",
     items: [
-      { title: "Auto Grading", url: "/grading", icon: ClipboardCheck },
-      { title: "Quiz Creator", url: "/quiz-creator", icon: Target },
-      { title: "Assignments", url: "/assignments", icon: FileBarChart },
-      { title: "Exam Prep", url: "/exam-prep", icon: Timer },
+      { title: "Auto Grading", url: "/analytics", icon: ClipboardCheck },
+      { title: "Quiz Creator", url: "/ai-quiz", icon: Target },
+      { title: "Assignments", url: "/courses", icon: FileBarChart },
+      { title: "Exam Prep", url: "/ecz-exam-simulator", icon: Timer },
     ],
   },
   {
     label: "Analytics",
     items: [
-      { title: "Class Analytics", url: "/class-analytics", icon: BarChart3 },
-      { title: "Student Progress", url: "/student-progress", icon: TrendingUp },
-      { title: "Reports", url: "/reports", icon: PieChart },
-      { title: "Insights", url: "/insights", icon: Lightbulb },
+      { title: "Class Analytics", url: "/analytics", icon: BarChart3 },
+      { title: "Student Progress", url: "/analytics", icon: TrendingUp },
+      { title: "Reports", url: "/analytics", icon: PieChart },
+      { title: "Insights", url: "/smart-recommendations", icon: Lightbulb },
     ],
   },
   {
     label: "Community",
     items: [
-      { title: "Teacher Hub", url: "/teacher-collaboration", icon: Users },
+      { title: "Teacher Hub", url: "/community", icon: Users },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
-      { title: "Forums", url: "/teacher-forums", icon: MessageSquare },
+      { title: "Forums", url: "/study-groups", icon: MessageSquare },
     ],
   },
 ];
@@ -209,32 +220,40 @@ export const parentNavigation: NavGroup[] = [
     label: "Overview",
     items: [
       { title: "Dashboard", url: "/parent-dashboard", icon: LayoutDashboard },
-      { title: "My Children", url: "/my-children", icon: Users },
+      { title: "My Children", url: "/analytics", icon: Users },
       { title: "My Profile", url: "/profile", icon: User },
     ],
   },
   {
     label: "Monitoring",
     items: [
-      { title: "Progress Tracker", url: "/child-progress", icon: TrendingUp },
-      { title: "Attendance", url: "/attendance", icon: Calendar },
-      { title: "Grades", url: "/grades", icon: FileBarChart },
-      { title: "Alerts", url: "/alerts", icon: Bell, badge: "3" },
+      { title: "Progress Tracker", url: "/analytics", icon: TrendingUp },
+      { title: "Attendance", url: "/analytics", icon: Calendar },
+      { title: "Grades", url: "/analytics", icon: FileBarChart },
+      { title: "Alerts", url: "/community", icon: Bell, badge: "3" },
       { title: "Learning Analytics", url: "/analytics", icon: BarChart3 },
     ],
   },
   {
     label: "AI Tools",
     items: [
-      { title: "AI Parent Advisor", url: "/parent-advisor", icon: Brain },
-      { title: "Quiz Review", url: "/quiz-review", icon: Sparkles },
-      { title: "Study Tips", url: "/study-tips", icon: Lightbulb },
+      { title: "AI Parent Advisor", url: "/ai", icon: Brain },
+      { title: "Quiz Review", url: "/ai-quiz", icon: Sparkles },
+      { title: "Study Tips", url: "/smart-recommendations", icon: Lightbulb },
+    ],
+  },
+  {
+    label: "🇿🇲 Zambian Resources",
+    items: [
+      { title: "Resources Hub", url: "/zambian-resources", icon: Library, badge: "NEW" },
+      { title: "ECZ Past Papers", url: "/ecz-past-papers", icon: FileText },
+      { title: "Video Library", url: "/ecz-videos", icon: Youtube },
     ],
   },
   {
     label: "Support",
     items: [
-      { title: "Resources", url: "/parent-resources", icon: FolderOpen },
+      { title: "Resources", url: "/materials", icon: FolderOpen },
       { title: "Parent Support Hub", url: "/ecz-parent-support", icon: Heart },
       { title: "Meal Planner", url: "/meal-planner", icon: Calendar },
     ],
@@ -242,9 +261,9 @@ export const parentNavigation: NavGroup[] = [
   {
     label: "Communication",
     items: [
-      { title: "Messages", url: "/messages", icon: MessageSquare },
-      { title: "Teacher Contact", url: "/teacher-contact", icon: UserCheck },
-      { title: "School Updates", url: "/school-updates", icon: School },
+      { title: "Messages", url: "/community", icon: MessageSquare },
+      { title: "Teacher Contact", url: "/community", icon: UserCheck },
+      { title: "School Updates", url: "/community", icon: School },
     ],
   },
 ];
