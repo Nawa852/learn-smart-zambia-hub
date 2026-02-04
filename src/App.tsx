@@ -77,9 +77,12 @@ import SkillPassportPage from '@/pages/SkillPassportPage';
 import LiveLearningPage from '@/pages/LiveLearningPage';
 import MentorshipHubPage from '@/pages/MentorshipHubPage';
 
-// ECZ Pages
+// ECZ & Zambian Resources
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
+import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
+import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
+import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -167,12 +170,19 @@ function App() {
             <Route path="/adaptive-content" element={<ProtectedRoute><MainLayout><AdaptiveContentPage /></MainLayout></ProtectedRoute>} />
             <Route path="/live-learning" element={<ProtectedRoute><MainLayout><LiveLearningPage /></MainLayout></ProtectedRoute>} />
 
-            {/* Study Materials */}
+            {/* Study Materials & Resources */}
             <Route path="/materials" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
             <Route path="/study-tools" element={<ProtectedRoute><MainLayout><StudyToolsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-materials" element={<ProtectedRoute><MainLayout><StudyMaterialsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-resources" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
             <Route path="/skill-passport" element={<ProtectedRoute><MainLayout><SkillPassportPage /></MainLayout></ProtectedRoute>} />
+            
+            {/* ECZ & Zambian Resources */}
+            <Route path="/zambian-resources" element={<ProtectedRoute><MainLayout><ZambianResourcesHubPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-resources" element={<ProtectedRoute><MainLayout><ZambianResourcesHubPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-past-papers" element={<ProtectedRoute><MainLayout><ECZPastPapersPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-videos" element={<ProtectedRoute><MainLayout><ECZVideoLibraryPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
@@ -181,10 +191,6 @@ function App() {
 
             {/* Profile */}
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
-
-            {/* ECZ Features */}
-            <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
