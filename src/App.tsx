@@ -76,6 +76,11 @@ import CommunityPage from '@/pages/CommunityPage';
 import SkillPassportPage from '@/pages/SkillPassportPage';
 import LiveLearningPage from '@/pages/LiveLearningPage';
 import MentorshipHubPage from '@/pages/MentorshipHubPage';
+import LessonsPage from '@/pages/LessonsPage';
+import VirtualClassroomPage from '@/pages/VirtualClassroomPage';
+import GoalsPage from '@/pages/GoalsPage';
+import JournalingPage from '@/pages/JournalingPage';
+import MentorshipPage from '@/pages/MentorshipPage';
 
 // ECZ & Zambian Resources
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
@@ -163,12 +168,15 @@ function App() {
 
             {/* Courses & Learning */}
             <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
-            <Route path="/lessons" element={<ProtectedRoute><MainLayout><InteractiveLessons /></MainLayout></ProtectedRoute>} />
-            <Route path="/classroom" element={<ProtectedRoute><MainLayout><VirtualClassroom /></MainLayout></ProtectedRoute>} />
+            <Route path="/lessons" element={<ProtectedRoute><MainLayout><LessonsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/classroom" element={<ProtectedRoute><MainLayout><VirtualClassroomPage /></MainLayout></ProtectedRoute>} />
             <Route path="/video-learning" element={<ProtectedRoute><MainLayout><VideoLearningPage /></MainLayout></ProtectedRoute>} />
             <Route path="/youtube-learning" element={<ProtectedRoute><MainLayout><YouTubeLearningPage /></MainLayout></ProtectedRoute>} />
             <Route path="/adaptive-content" element={<ProtectedRoute><MainLayout><AdaptiveContentPage /></MainLayout></ProtectedRoute>} />
             <Route path="/live-learning" element={<ProtectedRoute><MainLayout><LiveLearningPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/goals-tracker" element={<ProtectedRoute><MainLayout><GoalsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/journal" element={<ProtectedRoute><MainLayout><JournalingPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/mentors" element={<ProtectedRoute><MainLayout><MentorshipPage /></MainLayout></ProtectedRoute>} />
 
             {/* Study Materials & Resources */}
             <Route path="/materials" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
