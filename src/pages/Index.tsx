@@ -1,15 +1,18 @@
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import UltraHero from "@/components/Landing/UltraHero";
-import AIShowcase from "@/components/Landing/AIShowcase";
-import LearningPaths from "@/components/Landing/LearningPaths";
+import {
+  ChatEduNavbar,
+  ChatEduHero,
+  ChatEduFeatures,
+  ChatEduRoles,
+  ChatEduTestimonials,
+  ChatEduPricing,
+  ChatEduCTA,
+  ChatEduFooter
+} from '@/components/ChatEdu';
 import GamificationSection from "@/components/Landing/GamificationSection";
-import RoleSelector from "@/components/Landing/RoleSelector";
 import PlatformIntegrations from "@/components/Landing/PlatformIntegrations";
-import SocialProof from "@/components/Landing/SocialProof";
-import CTASection from "@/components/Landing/CTASection";
-import NewMegaFooter from "@/components/Landing/NewMegaFooter";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -34,32 +37,35 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* 1. Ultra Hero - Inspired by QANDA/Socratic with interactive AI demo */}
-      <UltraHero />
-      
-      {/* 2. AI Features Showcase - All AI tools from 40+ platforms */}
-      <AIShowcase />
-      
-      {/* 3. Learning Paths - Coursera/Khan Academy style courses */}
-      <LearningPaths />
-      
-      {/* 4. Gamification - Duolingo-inspired streaks & rewards */}
+      {/* Fixed Navbar */}
+      <ChatEduNavbar />
+
+      {/* Hero with interactive AI demo */}
+      <ChatEduHero />
+
+      {/* AI Features Showcase */}
+      <ChatEduFeatures />
+
+      {/* Role-Based Solutions */}
+      <ChatEduRoles />
+
+      {/* Gamification */}
       <GamificationSection />
-      
-      {/* 5. Role-Based Universe - Stakeholder selection */}
-      <RoleSelector />
-      
-      {/* 6. Platform Integrations - Tech stack & offline features */}
+
+      {/* Platform Integrations & Offline */}
       <PlatformIntegrations />
-      
-      {/* 7. Social Proof - Testimonials & stats */}
-      <SocialProof />
-      
-      {/* 8. Final CTA - Get started section */}
-      <CTASection />
-      
-      {/* 9. Mega Footer */}
-      <NewMegaFooter />
+
+      {/* Testimonials */}
+      <ChatEduTestimonials />
+
+      {/* Pricing */}
+      <ChatEduPricing />
+
+      {/* Final CTA */}
+      <ChatEduCTA />
+
+      {/* Footer */}
+      <ChatEduFooter />
     </div>
   );
 };
