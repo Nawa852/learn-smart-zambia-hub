@@ -124,7 +124,7 @@ const ChatEduHero = () => {
           >
             <Button
               size="lg"
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/auth?mode=signup')}
               className="h-14 px-8 text-lg bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-xl shadow-primary/25"
             >
               Start Learning Free

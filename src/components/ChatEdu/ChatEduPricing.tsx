@@ -193,7 +193,7 @@ const ChatEduPricing = () => {
                   <Button 
                     className={`w-full ${plan.popular ? `bg-gradient-to-r ${plan.gradient}` : ''}`}
                     variant={plan.popular ? 'default' : 'outline'}
-                    onClick={() => navigate('/signup')}
+                    onClick={() => navigate('/auth?mode=signup')}
                   >
                     {plan.cta}
                     <ArrowRight className="w-4 h-4 ml-2" />

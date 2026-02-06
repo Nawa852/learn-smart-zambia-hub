@@ -112,11 +112,11 @@ const ChatEduNavbar = () => {
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" onClick={() => navigate('/login')}>
+            <Button variant="ghost" onClick={() => navigate('/auth')}>
               Log in
             </Button>
             <Button 
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/auth?mode=signup')}
               className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
             >
               <Zap className="w-4 h-4 mr-2" />
@@ -175,10 +175,10 @@ const ChatEduNavbar = () => {
                 </div>
               ))}
               <div className="flex gap-3 pt-4 border-t border-border">
-                <Button variant="outline" className="flex-1" onClick={() => navigate('/login')}>
+                <Button variant="outline" className="flex-1" onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }}>
                   Log in
                 </Button>
-                <Button className="flex-1 bg-gradient-to-r from-primary to-accent" onClick={() => navigate('/signup')}>
+                <Button className="flex-1 bg-gradient-to-r from-primary to-accent" onClick={() => { navigate('/auth?mode=signup'); setMobileMenuOpen(false); }}>
                   Sign Up
                 </Button>
               </div>
