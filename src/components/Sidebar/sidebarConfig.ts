@@ -72,6 +72,7 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "Home", url: "/dashboard", icon: LayoutDashboard },
       { title: "My Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
     ],
   },
   {
@@ -109,6 +110,7 @@ export const studentNavigation: NavGroup[] = [
     label: "🇿🇲 Zambian Resources",
     items: [
       { title: "Resources Hub", url: "/zambian-resources", icon: Library, badge: "NEW" },
+      { title: "Resource Library", url: "/resource-library", icon: FolderOpen, badge: "60+" },
       { title: "ECZ Past Papers", url: "/ecz-past-papers", icon: FileText },
       { title: "Video Library", url: "/ecz-videos", icon: Youtube },
       { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },

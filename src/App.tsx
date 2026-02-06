@@ -88,6 +88,8 @@ import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
 import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
 import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
+import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
+import SettingsPage from '@/pages/SettingsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -197,8 +199,10 @@ function App() {
             <Route path="/achievements" element={<ProtectedRoute><MainLayout><Achievements /></MainLayout></ProtectedRoute>} />
             <Route path="/smart-recommendations" element={<ProtectedRoute><MainLayout><SmartRecommendationsPage /></MainLayout></ProtectedRoute>} />
 
-            {/* Profile */}
+            {/* Profile & Settings */}
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
