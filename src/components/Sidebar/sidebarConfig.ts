@@ -222,17 +222,17 @@ export const parentNavigation: NavGroup[] = [
     label: "Overview",
     items: [
       { title: "Dashboard", url: "/parent-dashboard", icon: LayoutDashboard },
-      { title: "My Children", url: "/analytics", icon: Users },
+      { title: "My Children", url: "/parent-children", icon: Users },
       { title: "My Profile", url: "/profile", icon: User },
     ],
   },
   {
     label: "Monitoring",
     items: [
-      { title: "Progress Tracker", url: "/analytics", icon: TrendingUp },
-      { title: "Attendance", url: "/analytics", icon: Calendar },
-      { title: "Grades", url: "/analytics", icon: FileBarChart },
-      { title: "Alerts", url: "/community", icon: Bell, badge: "3" },
+      { title: "Progress Tracker", url: "/parent-progress", icon: TrendingUp },
+      { title: "Attendance", url: "/parent-attendance", icon: Calendar },
+      { title: "Grades", url: "/parent-grades", icon: FileBarChart },
+      { title: "Alerts", url: "/parent-alerts", icon: Bell, badge: "3" },
       { title: "Learning Analytics", url: "/analytics", icon: BarChart3 },
     ],
   },
@@ -263,9 +263,9 @@ export const parentNavigation: NavGroup[] = [
   {
     label: "Communication",
     items: [
-      { title: "Messages", url: "/community", icon: MessageSquare },
-      { title: "Teacher Contact", url: "/community", icon: UserCheck },
-      { title: "School Updates", url: "/community", icon: School },
+      { title: "Messages", url: "/parent-messages", icon: MessageSquare },
+      { title: "Teacher Contact", url: "/parent-teacher-contact", icon: UserCheck },
+      { title: "School Updates", url: "/parent-school-updates", icon: School },
     ],
   },
 ];

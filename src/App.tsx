@@ -91,6 +91,16 @@ import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
 
+// Parent-Specific Pages
+import ParentChildrenPage from '@/pages/ParentChildrenPage';
+import ParentAttendancePage from '@/pages/ParentAttendancePage';
+import ParentGradesPage from '@/pages/ParentGradesPage';
+import ParentAlertsPage from '@/pages/ParentAlertsPage';
+import ParentMessagesPage from '@/pages/ParentMessagesPage';
+import ParentTeacherContactPage from '@/pages/ParentTeacherContactPage';
+import ParentSchoolUpdatesPage from '@/pages/ParentSchoolUpdatesPage';
+import ParentProgressTrackerPage from '@/pages/ParentProgressTrackerPage';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -193,6 +203,16 @@ function App() {
             <Route path="/ecz-videos" element={<ProtectedRoute><MainLayout><ECZVideoLibraryPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
+
+            {/* Parent-Specific Pages */}
+            <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-attendance" element={<ProtectedRoute><MainLayout><ParentAttendancePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-grades" element={<ProtectedRoute><MainLayout><ParentGradesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-alerts" element={<ProtectedRoute><MainLayout><ParentAlertsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-messages" element={<ProtectedRoute><MainLayout><ParentMessagesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-teacher-contact" element={<ProtectedRoute><MainLayout><ParentTeacherContactPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-school-updates" element={<ProtectedRoute><MainLayout><ParentSchoolUpdatesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/parent-progress" element={<ProtectedRoute><MainLayout><ParentProgressTrackerPage /></MainLayout></ProtectedRoute>} />
 
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
