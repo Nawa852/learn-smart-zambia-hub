@@ -11,12 +11,12 @@ import Index from '@/pages/Index';
 import AuthPage from '@/pages/AuthPage';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
-import WelcomePage from '@/pages/WelcomePage';
+
 import NotFound from '@/pages/NotFound';
 import Dashboard from '@/pages/Dashboard';
 import Courses from '@/pages/Courses';
 import ProfilePage from '@/pages/ProfilePage';
-import OnboardingFlow from '@/components/Onboarding/OnboardingFlow';
+
 
 // Unified Pages
 import AIChat from '@/pages/AIChat';
@@ -123,7 +123,7 @@ function App() {
             <Route path="/signup" element={<AuthPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/welcome" element={<WelcomePage />} />
+            
             <Route path="/chatedu" element={<ChatEduLanding />} />
             
             {/* Role-Specific Dashboards */}
@@ -141,12 +141,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* Onboarding */}
-            <Route path="/onboarding" element={
-              <ProtectedRoute>
-                <OnboardingFlow onComplete={() => window.location.href = '/dashboard'} />
-              </ProtectedRoute>
-            } />
+
 
             {/* AI Quiz Tools (AceQuiz-style) */}
             <Route path="/ai-quiz" element={<ProtectedRoute><MainLayout><AIQuizGeneratorPage /></MainLayout></ProtectedRoute>} />
