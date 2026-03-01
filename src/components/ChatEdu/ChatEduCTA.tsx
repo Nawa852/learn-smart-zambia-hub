@@ -108,7 +108,7 @@ const ChatEduCTA = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               size="lg"
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/auth?mode=signup')}
               className="h-14 px-8 text-lg bg-white text-primary hover:bg-white/90 shadow-xl"
             >
               Start Learning Free

@@ -7,12 +7,9 @@ import {
   ChatEduFeatures,
   ChatEduRoles,
   ChatEduTestimonials,
-  ChatEduPricing,
   ChatEduCTA,
   ChatEduFooter
 } from '@/components/ChatEdu';
-import GamificationSection from "@/components/Landing/GamificationSection";
-import PlatformIntegrations from "@/components/Landing/PlatformIntegrations";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -37,34 +34,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Fixed Navbar */}
       <ChatEduNavbar />
-
-      {/* Hero with interactive AI demo */}
       <ChatEduHero />
-
-      {/* AI Features Showcase */}
       <ChatEduFeatures />
-
-      {/* Role-Based Solutions */}
       <ChatEduRoles />
-
-      {/* Gamification */}
-      <GamificationSection />
-
-      {/* Platform Integrations & Offline */}
-      <PlatformIntegrations />
-
-      {/* Testimonials */}
       <ChatEduTestimonials />
-
-      {/* Pricing */}
-      <ChatEduPricing />
-
-      {/* Final CTA */}
       <ChatEduCTA />
-
-      {/* Footer */}
       <ChatEduFooter />
     </div>
   );
