@@ -194,7 +194,7 @@ const ChatEduRoles = () => {
 
                   <Button 
                     className={`w-full bg-gradient-to-r ${role.gradient} hover:opacity-90 mt-4`}
-                    onClick={() => navigate('/welcome')}
+                    onClick={() => navigate('/auth?mode=signup')}
                   >
                     {role.cta}
                     <ArrowRight className="w-4 h-4 ml-2" />
