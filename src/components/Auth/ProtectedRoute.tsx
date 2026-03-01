@@ -33,10 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  // Check if user has completed onboarding (skip check for onboarding page itself)
-  if (user && profile && !profile.onboarding_completed && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
-  }
+
 
   return <>{children}</>;
 };
