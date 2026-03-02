@@ -23,7 +23,10 @@ import {
   School,
   Building2,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Stethoscope,
+  Rocket,
+  Code
 } from 'lucide-react';
 import { z } from 'zod';
 
@@ -33,8 +36,11 @@ const passwordSchema = z.string().min(8, 'Password must be at least 8 characters
 const roles = [
   { value: 'student', label: 'Student', icon: GraduationCap, description: 'Learn and grow with AI-powered education' },
   { value: 'teacher', label: 'Teacher', icon: BookOpen, description: 'Create and manage courses for your students' },
-  { value: 'parent', label: 'Parent/Guardian', icon: Users, description: 'Monitor your child\'s learning progress' },
-  { value: 'school_admin', label: 'School Admin', icon: School, description: 'Manage your institution\'s learning platform' },
+  { value: 'guardian', label: 'Parent/Guardian', icon: Users, description: "Monitor your child's learning progress" },
+  { value: 'doctor', label: 'Medical Student', icon: Stethoscope, description: 'Clinical learning with AI case simulations' },
+  { value: 'entrepreneur', label: 'Entrepreneur', icon: Rocket, description: 'Build ventures with AI business tools' },
+  { value: 'developer', label: 'Developer', icon: Code, description: 'Code, build, and learn with AI assistance' },
+  { value: 'institution', label: 'School Admin', icon: School, description: "Manage your institution's learning platform" },
   { value: 'ministry', label: 'Ministry/NGO', icon: Building2, description: 'Oversee educational programs at scale' },
 ];
 
