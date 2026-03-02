@@ -4,6 +4,9 @@ import { StudentDashboardView } from '@/components/Dashboard/StudentDashboardVie
 import { TeacherDashboardView } from '@/components/Dashboard/TeacherDashboardView';
 import { GuardianDashboardView } from '@/components/Dashboard/GuardianDashboardView';
 import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDashboardView';
+import { MedicalDashboardView } from '@/components/Dashboard/MedicalDashboardView';
+import { EntrepreneurDashboardView } from '@/components/Dashboard/EntrepreneurDashboardView';
+import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboardView';
 import AIAPIStatus from '@/components/AI/AIAPIStatus';
 import { QuickCommandCenter } from '@/components/BrightSphere/QuickCommandCenter';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
@@ -58,11 +61,11 @@ const Dashboard = () => {
       case 'institution':
         return <InstitutionDashboardView userName={userName} />;
       case 'doctor':
-        return <StudentDashboardView userName={userName} />;
+        return <MedicalDashboardView userName={userName} />;
       case 'entrepreneur':
-        return <StudentDashboardView userName={userName} />;
+        return <EntrepreneurDashboardView userName={userName} />;
       case 'developer':
-        return <StudentDashboardView userName={userName} />;
+        return <DeveloperDashboardView userName={userName} />;
       case 'student':
       default:
         return <StudentDashboardView userName={userName} />;
