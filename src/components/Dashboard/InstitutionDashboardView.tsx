@@ -1,34 +1,15 @@
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { School, Users, TrendingUp, DollarSign, BookOpen, Award, BarChart3, UserCheck, Calendar, AlertCircle, Globe, Activity, X, Lightbulb, CheckCircle2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { School, Users, TrendingUp, DollarSign, BookOpen, Award, BarChart3, UserCheck, Calendar, AlertCircle, Globe, Activity } from 'lucide-react';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface InstitutionDashboardViewProps {
   userName: string;
 }
 
 export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewProps) => {
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  useEffect(() => {
-    const dismissed = localStorage.getItem('edu-zambia-institution-welcome-dismissed');
-    if (!dismissed) setShowWelcome(true);
-  }, []);
-
-  const dismissWelcome = () => {
-    setShowWelcome(false);
-    localStorage.setItem('edu-zambia-institution-welcome-dismissed', 'true');
-  };
-
-  const onboardingTips = [
-    { icon: Users, title: 'Manage Your Staff', desc: 'Use the User Management tool to add teachers and assign departments.' },
-    { icon: BookOpen, title: 'Set Up Curriculum', desc: 'Align your courses with ECZ standards using the Curriculum tool.' },
-    { icon: BarChart3, title: 'Track Performance', desc: 'Monitor department scores and generate reports from this dashboard.' },
-    { icon: Calendar, title: 'Plan the Term', desc: 'Use Scheduling to set exam dates, events, and academic calendars.' },
-  ];
   const institutionStats = [
     { title: "Total Students", value: "2,847", icon: Users, color: "text-blue-600", bg: "bg-blue-50", change: "+12% vs last term" },
     { title: "Active Teachers", value: "124", icon: UserCheck, color: "text-green-600", bg: "bg-green-50", change: "98% engagement" },
@@ -82,63 +63,18 @@ export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewP
         </CardContent>
       </Card>
 
-      {/* First-time Onboarding Tips */}
-      <AnimatePresence>
-        {showWelcome && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Card className="border-2 border-primary/30 shadow-xl bg-gradient-to-br from-primary/5 via-background to-accent/10">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center">
-                      <Lightbulb className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">Welcome to Your Institution Hub, {userName}! 🎉</CardTitle>
-                      <CardDescription>Here are some tips to get you started managing your school.</CardDescription>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="icon" onClick={dismissWelcome} className="shrink-0">
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {onboardingTips.map((tip, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * (i + 1) }}
-                      className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:shadow-md transition-all"
-                    >
-                      <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <tip.icon className="w-4 h-4 text-primary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{tip.title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{tip.desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-end mt-4 gap-2">
-                  <Button variant="outline" size="sm" onClick={dismissWelcome} className="gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Got it, let's go!
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <OnboardingWelcomeBanner
+        role="institution"
+        userName={userName}
+        emoji="🎉"
+        subtitle="Here are some tips to get you started managing your school."
+        tips={[
+          { icon: Users, title: 'Manage Your Staff', desc: 'Use the User Management tool to add teachers and assign departments.' },
+          { icon: BookOpen, title: 'Set Up Curriculum', desc: 'Align your courses with ECZ standards using the Curriculum tool.' },
+          { icon: BarChart3, title: 'Track Performance', desc: 'Monitor department scores and generate reports from this dashboard.' },
+          { icon: Calendar, title: 'Plan the Term', desc: 'Use Scheduling to set exam dates, events, and academic calendars.' },
+        ]}
+      />
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

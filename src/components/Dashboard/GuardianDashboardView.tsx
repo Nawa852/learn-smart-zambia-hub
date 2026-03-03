@@ -4,6 +4,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Heart, TrendingUp, AlertCircle, Calendar, MessageSquare, Award, BookOpen, Clock, Target, Users, Activity, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface GuardianDashboardViewProps {
   userName: string;
@@ -97,6 +98,19 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
           </div>
         </CardContent>
       </Card>
+
+      <OnboardingWelcomeBanner
+        role="guardian"
+        userName={userName}
+        emoji="👨‍👩‍👧‍👦"
+        subtitle="Here's how to stay connected with your child's education."
+        tips={[
+          { icon: TrendingUp, title: 'Track Progress', desc: "View your child's grades, scores, and learning streaks." },
+          { icon: MessageSquare, title: 'Message Teachers', desc: 'Communicate directly with teachers about performance.' },
+          { icon: Bell, title: 'Set Alerts', desc: 'Get notified about attendance, grades, and upcoming events.' },
+          { icon: BookOpen, title: 'AI Parent Advisor', desc: 'Get AI-powered tips for supporting learning at home.' },
+        ]}
+      />
 
       {/* Weekly Summary */}
       <Card className="border-0 shadow-lg">

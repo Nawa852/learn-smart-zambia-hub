@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, BookOpen, ClipboardCheck, TrendingUp, AlertCircle, Calendar, FileText, MessageSquare, Video, Award, PieChart, UserCheck, Brain, Wand2, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AICompanion } from '@/components/BrightSphere/AICompanion';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface TeacherDashboardViewProps {
   userName: string;
@@ -104,7 +105,19 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         </CardContent>
       </Card>
 
-      {/* Quick Stats */}
+      <OnboardingWelcomeBanner
+        role="teacher"
+        userName={userName}
+        emoji="📚"
+        subtitle="Here are some tips to make the most of your teaching tools."
+        tips={[
+          { icon: Wand2, title: 'AI Lesson Builder', desc: 'Generate ECZ-aligned lesson plans with AI assistance.' },
+          { icon: ClipboardCheck, title: 'Smart Marking', desc: 'Use AI to auto-mark structured answers and save time.' },
+          { icon: Users, title: 'Track Students', desc: 'Monitor attendance, performance, and engagement.' },
+          { icon: PieChart, title: 'Class Analytics', desc: 'View detailed reports on class and student progress.' },
+        ]}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {quickStats.map((stat, index) => (
           <Card key={index} className="hover:shadow-lg transition-all duration-300 group">

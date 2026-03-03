@@ -8,6 +8,7 @@ import {
   Target, Globe, Briefcase, FileText, Zap, Award,
   PieChart, BookOpen, MessageSquare, Star
 } from 'lucide-react';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface EntrepreneurDashboardViewProps {
   userName: string;
@@ -78,6 +79,19 @@ export const EntrepreneurDashboardView = ({ userName }: EntrepreneurDashboardVie
           </div>
         </CardContent>
       </Card>
+
+      <OnboardingWelcomeBanner
+        role="entrepreneur"
+        userName={userName}
+        emoji="🚀"
+        subtitle="Here's how to kickstart your entrepreneurial journey."
+        tips={[
+          { icon: Lightbulb, title: 'Validate Ideas', desc: 'Use AI market analysis to test your business concepts.' },
+          { icon: FileText, title: 'Business Plan', desc: 'Generate investor-ready business plans with AI.' },
+          { icon: Globe, title: 'Market Research', desc: 'Access Zambian market data and competitive insights.' },
+          { icon: MessageSquare, title: 'Mentor Connect', desc: 'Find and connect with experienced business mentors.' },
+        ]}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
