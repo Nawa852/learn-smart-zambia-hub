@@ -8,6 +8,7 @@ import {
   FileText, Clock, Target, TrendingUp, Microscope, Heart,
   Pill, ClipboardList, GraduationCap, Zap
 } from 'lucide-react';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface MedicalDashboardViewProps {
   userName: string;
@@ -71,6 +72,19 @@ export const MedicalDashboardView = ({ userName }: MedicalDashboardViewProps) =>
           </div>
         </CardContent>
       </Card>
+
+      <OnboardingWelcomeBanner
+        role="doctor"
+        userName={userName}
+        emoji="🩺"
+        subtitle="Get started with your clinical learning tools."
+        tips={[
+          { icon: Microscope, title: '3D Anatomy Lab', desc: 'Explore interactive anatomical models and visualizations.' },
+          { icon: Brain, title: 'Case Simulator', desc: 'Practice clinical reasoning with AI-generated patient cases.' },
+          { icon: ClipboardList, title: 'Log Cases', desc: 'Track your clinical encounters and build your case portfolio.' },
+          { icon: GraduationCap, title: 'Board Prep', desc: 'AI-powered exam preparation for medical licensing.' },
+        ]}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

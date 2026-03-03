@@ -8,6 +8,7 @@ import {
   Database, Zap, Award, BookOpen, Users, TrendingUp,
   FileCode, Braces, Server, Layers
 } from 'lucide-react';
+import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 
 interface DeveloperDashboardViewProps {
   userName: string;
@@ -79,6 +80,19 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
           </div>
         </CardContent>
       </Card>
+
+      <OnboardingWelcomeBanner
+        role="developer"
+        userName={userName}
+        emoji="💻"
+        subtitle="Here's how to level up your coding skills."
+        tips={[
+          { icon: Terminal, title: 'Code Sandbox', desc: 'Write and test code in a live environment.' },
+          { icon: Bug, title: 'Debug Assistant', desc: 'AI-powered error resolution and code fixes.' },
+          { icon: Braces, title: 'Code Review', desc: 'Get AI analysis and improvement suggestions.' },
+          { icon: GitBranch, title: 'Open Source', desc: 'Contribute to projects and build your portfolio.' },
+        ]}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
