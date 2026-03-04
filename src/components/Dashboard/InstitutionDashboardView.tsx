@@ -4,12 +4,14 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { School, Users, TrendingUp, DollarSign, BookOpen, Award, BarChart3, UserCheck, Calendar, AlertCircle, Globe, Activity } from 'lucide-react';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
+import { useNavigate } from 'react-router-dom';
 
 interface InstitutionDashboardViewProps {
   userName: string;
 }
 
 export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewProps) => {
+  const navigate = useNavigate();
   const institutionStats = [
     { title: "Total Students", value: "2,847", icon: Users, color: "text-blue-600", bg: "bg-blue-50", change: "+12% vs last term" },
     { title: "Active Teachers", value: "124", icon: UserCheck, color: "text-green-600", bg: "bg-green-50", change: "98% engagement" },
@@ -230,19 +232,19 @@ export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewP
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/users')}>
               <Users className="w-6 h-6" />
               <span className="text-xs">User Management</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/curriculum')}>
               <BookOpen className="w-6 h-6" />
               <span className="text-xs">Curriculum</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/scheduling')}>
               <Calendar className="w-6 h-6" />
               <span className="text-xs">Scheduling</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/analytics')}>
               <BarChart3 className="w-6 h-6" />
               <span className="text-xs">Analytics</span>
             </Button>
