@@ -91,6 +91,12 @@ import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
 
+// School Admin Pages
+import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
+import AdminCurriculumPage from '@/pages/AdminCurriculumPage';
+import AdminSchedulingPage from '@/pages/AdminSchedulingPage';
+import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
+
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
 import ParentAttendancePage from '@/pages/ParentAttendancePage';
