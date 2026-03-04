@@ -4,6 +4,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { School, Users, TrendingUp, DollarSign, BookOpen, Award, BarChart3, UserCheck, Calendar, AlertCircle, Globe, Activity } from 'lucide-react';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
+import { useNavigate } from 'react-router-dom';
 
 interface InstitutionDashboardViewProps {
   userName: string;
