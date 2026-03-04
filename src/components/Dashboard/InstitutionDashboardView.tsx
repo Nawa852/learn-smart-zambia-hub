@@ -11,6 +11,7 @@ interface InstitutionDashboardViewProps {
 }
 
 export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewProps) => {
+  const navigate = useNavigate();
   const institutionStats = [
     { title: "Total Students", value: "2,847", icon: Users, color: "text-blue-600", bg: "bg-blue-50", change: "+12% vs last term" },
     { title: "Active Teachers", value: "124", icon: UserCheck, color: "text-green-600", bg: "bg-green-50", change: "98% engagement" },
