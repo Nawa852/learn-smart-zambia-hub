@@ -232,19 +232,19 @@ export const InstitutionDashboardView = ({ userName }: InstitutionDashboardViewP
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/users')}>
               <Users className="w-6 h-6" />
               <span className="text-xs">User Management</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/curriculum')}>
               <BookOpen className="w-6 h-6" />
               <span className="text-xs">Curriculum</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/scheduling')}>
               <Calendar className="w-6 h-6" />
               <span className="text-xs">Scheduling</span>
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => navigate('/admin/analytics')}>
               <BarChart3 className="w-6 h-6" />
               <span className="text-xs">Analytics</span>
             </Button>

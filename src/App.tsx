@@ -215,6 +215,12 @@ function App() {
             <Route path="/parent-school-updates" element={<ProtectedRoute><MainLayout><ParentSchoolUpdatesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/parent-progress" element={<ProtectedRoute><MainLayout><ParentProgressTrackerPage /></MainLayout></ProtectedRoute>} />
 
+            {/* School Admin Management Pages */}
+            <Route path="/admin/users" element={<ProtectedRoute><MainLayout><AdminUserManagementPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/admin/curriculum" element={<ProtectedRoute><MainLayout><AdminCurriculumPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/admin/scheduling" element={<ProtectedRoute><MainLayout><AdminSchedulingPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/admin/analytics" element={<ProtectedRoute><MainLayout><AdminAnalyticsPage /></MainLayout></ProtectedRoute>} />
+
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
             <Route path="/achievements" element={<ProtectedRoute><MainLayout><Achievements /></MainLayout></ProtectedRoute>} />
