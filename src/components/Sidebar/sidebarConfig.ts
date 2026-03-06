@@ -282,7 +282,7 @@ export const schoolAdminNavigation: NavGroup[] = [
   {
     label: "Management",
     items: [
-      { title: "Teachers", url: "/manage-teachers", icon: UserCheck },
+      { title: "User Management", url: "/admin/users", icon: UserCheck },
       { title: "Students", url: "/manage-students", icon: Users },
       { title: "Classes", url: "/manage-classes", icon: School },
       { title: "Departments", url: "/departments", icon: Briefcase },
@@ -299,7 +299,7 @@ export const schoolAdminNavigation: NavGroup[] = [
   {
     label: "Analytics",
     items: [
-      { title: "School Analytics", url: "/school-analytics", icon: BarChart3 },
+      { title: "Admin Analytics", url: "/admin/analytics", icon: BarChart3 },
       { title: "Performance", url: "/performance", icon: TrendingUp },
       { title: "Compliance", url: "/compliance", icon: Shield },
       { title: "Reports", url: "/admin-reports", icon: FileBarChart },
@@ -308,7 +308,8 @@ export const schoolAdminNavigation: NavGroup[] = [
   {
     label: "Administration",
     items: [
-      { title: "Curriculum", url: "/curriculum-admin", icon: BookOpen },
+      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
+      { title: "Scheduling", url: "/admin/scheduling", icon: Calendar },
       { title: "Announcements", url: "/announcements", icon: Bell },
       { title: "Resources", url: "/school-resources", icon: FolderOpen },
       { title: "Settings", url: "/admin-settings", icon: Settings },
