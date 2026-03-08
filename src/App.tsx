@@ -229,6 +229,7 @@ const CyberGlossaryPage = React.lazy(() => import('@/pages/CyberGlossaryPage'));
 const DevAPIPlaygroundPage = React.lazy(() => import('@/pages/DevAPIPlaygroundPage'));
 const DevAlgorithmVisualizerPage = React.lazy(() => import('@/pages/DevAlgorithmVisualizerPage'));
 const NotificationPreferencesPage = React.lazy(() => import('@/pages/NotificationPreferencesPage'));
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
