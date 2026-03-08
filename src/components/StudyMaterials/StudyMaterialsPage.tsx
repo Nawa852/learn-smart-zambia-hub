@@ -212,6 +212,7 @@ const StudyMaterialsPage = () => {
               </Card>
             ))
           )}
+          </div>
         </div>
       </div>
     </div>
