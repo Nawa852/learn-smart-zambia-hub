@@ -28,8 +28,6 @@ export const TopNavbar = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { profile } = useProfile();
-  const { signOut } = useAuth();
-  const { profile } = useProfile();
 
   const handleSignOut = async () => {
     await signOut();
@@ -66,14 +64,7 @@ export const TopNavbar = () => {
         {/* Quick Actions */}
         <div className="flex items-center space-x-2">
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative hover-lift">
-            <Bell className="h-5 w-5" />
-            {notifications > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-destructive">
-                {notifications}
-              </Badge>
-            )}
-          </Button>
+          <NotificationDropdown />
 
           {/* Messages */}
           <Button variant="ghost" size="icon" className="relative hover-lift">
