@@ -236,6 +236,7 @@ export const institutionNavigation: NavGroup[] = [
       { title: "User Management", url: "/admin/users", icon: Users },
       { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
       { title: "Scheduling", url: "/admin/scheduling", icon: Calendar },
+      { title: "Attendance", url: "/admin/attendance", icon: UserCheck, badge: "NEW" },
       { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
     ],
   },

@@ -274,6 +274,7 @@ function App() {
               <Route path="/admin/curriculum" element={<PG><AdminCurriculumPage /></PG>} />
               <Route path="/admin/scheduling" element={<PG><AdminSchedulingPage /></PG>} />
               <Route path="/admin/analytics" element={<PG><AdminAnalyticsPage /></PG>} />
+              <Route path="/admin/attendance" element={<PG><AdminAttendancePage /></PG>} />
 
               {/* Analytics & Progress */}
               <Route path="/analytics" element={<PG><LearningAnalytics /></PG>} />
