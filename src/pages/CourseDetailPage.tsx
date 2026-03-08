@@ -252,6 +252,28 @@ const CourseDetailPage = () => {
                         )}
                       </div>
                     )}
+
+                    {/* Notes Panel */}
+                    {isEnrolled && (
+                      <div className="border-t border-border/50 pt-4 mt-4">
+                        <Button variant="ghost" size="sm" onClick={() => setShowNotes(!showNotes)} className="mb-2 text-muted-foreground">
+                          <StickyNote className="w-4 h-4 mr-2" /> {showNotes ? 'Hide Notes' : 'Take Notes'}
+                        </Button>
+                        {showNotes && (
+                          <div className="space-y-2">
+                            <Textarea
+                              value={noteContent}
+                              onChange={e => setNoteContent(e.target.value)}
+                              placeholder="Write your notes for this lesson..."
+                              className="min-h-[80px] bg-secondary/30"
+                            />
+                            <Button size="sm" onClick={saveNote} disabled={!noteContent.trim() || savingNote}>
+                              <Save className="w-3.5 h-3.5 mr-1" /> Save Note
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
