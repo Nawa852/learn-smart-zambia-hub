@@ -207,7 +207,13 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
           <CardDescription>Support your children's learning journey</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <Link to="/parental-controls">
+              <Button variant="outline" className="w-full h-20 flex-col gap-2">
+                <Shield className="w-6 h-6" />
+                <span className="text-xs">Parental Controls</span>
+              </Button>
+            </Link>
             <Link to="/parent-grades">
               <Button variant="outline" className="w-full h-20 flex-col gap-2">
                 <TrendingUp className="w-6 h-6" />
