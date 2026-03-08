@@ -1,305 +1,326 @@
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Send, Phone, Video, MoreVertical, Paperclip, Smile, 
-  Users, Search, Settings, Star, Archive, Bell, Globe, MessageCircle
+import {
+  Send, Phone, Video, MoreVertical, Paperclip,
+  Users, Search, Settings, Bell, Globe, MessageCircle, Plus, Loader2
 } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from '@/components/ui/dialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { toast } from 'sonner';
+import { formatDistanceToNow } from 'date-fns';
 
-// Define types
-interface User {
+interface ChatRoom {
   id: string;
   name: string;
-  avatar: string;
-  status: 'online' | 'offline' | 'idle' | 'busy';
+  is_group: boolean;
+  created_by: string | null;
+  description: string | null;
 }
 
-interface Conversation {
+interface ChatMessage {
   id: string;
-  name: string;
-  participants: User[];
-  lastMessage: string;
-  lastMessageTime: string;
+  room_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  file_url: string | null;
 }
 
-interface Message {
-  id: string;
-  sender: 'me' | 'other';
-  text: string;
-  time: string;
+interface ChatMember {
+  user_id: string;
+  profiles?: { full_name: string | null; avatar_url: string | null } | null;
 }
-
-interface StudyGroup {
-  id: string;
-  name: string;
-  description: string;
-  members: number;
-}
-
-// Mock Data
-const mockUsers: User[] = [
-  { id: 'user-1', name: 'Alice Johnson', avatar: 'https://i.pravatar.cc/150?img=1', status: 'online' },
-  { id: 'user-2', name: 'Bob Williams', avatar: 'https://i.pravatar.cc/150?img=2', status: 'offline' },
-  { id: 'user-3', name: 'Charlie Brown', avatar: 'https://i.pravatar.cc/150?img=3', status: 'idle' },
-  { id: 'user-4', name: 'Diana Miller', avatar: 'https://i.pravatar.cc/150?img=4', status: 'busy' },
-];
-
-const mockConversations: Conversation[] = [
-  {
-    id: 'conv-1',
-    name: 'Alice Johnson',
-    participants: [mockUsers[0]],
-    lastMessage: 'Hey, how is the project going?',
-    lastMessageTime: '10:30 AM',
-  },
-  {
-    id: 'conv-2',
-    name: 'Bob Williams',
-    participants: [mockUsers[1]],
-    lastMessage: 'Did you finish the assignment?',
-    lastMessageTime: 'Yesterday',
-  },
-];
-
-const mockMessages: Message[] = [
-  { id: 'msg-1', sender: 'other', text: 'Hello!', time: '10:29 AM' },
-  { id: 'msg-2', sender: 'me', text: 'Hi there!', time: '10:30 AM' },
-  { id: 'msg-3', sender: 'other', text: 'How are you doing?', time: '10:31 AM' },
-  { id: 'msg-4', sender: 'me', text: 'I am doing great, thanks!', time: '10:32 AM' },
-];
-
-const mockStudyGroups: StudyGroup[] = [
-  { id: 'group-1', name: 'Math Study Group', description: 'Discuss math problems and solutions', members: 15 },
-  { id: 'group-2', name: 'Science Club', description: 'Explore science topics together', members: 20 },
-];
 
 const MessengerChat = () => {
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(mockConversations[0]);
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const { user } = useAuth();
+  const [rooms, setRooms] = useState<ChatRoom[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [members, setMembers] = useState<ChatMember[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [newRoomName, setNewRoomName] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [profileMap, setProfileMap] = useState<Record<string, string>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  // Fetch rooms user is a member of
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (!user) return;
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    const fetchRooms = async () => {
+      setLoading(true);
+      const { data: memberRows } = await supabase
+        .from('chat_members')
+        .select('room_id')
+        .eq('user_id', user.id);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      const newMsg: Message = {
-        id: `msg-${messages.length + 1}`,
-        sender: 'me',
-        text: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMessages([...messages, newMsg]);
-      setNewMessage('');
-      scrollToBottom();
+      if (memberRows?.length) {
+        const roomIds = memberRows.map(m => m.room_id);
+        const { data: roomData } = await supabase
+          .from('chat_rooms')
+          .select('*')
+          .in('id', roomIds)
+          .order('created_at', { ascending: false });
+        setRooms(roomData || []);
+      }
+      setLoading(false);
+    };
+
+    fetchRooms();
+  }, [user]);
+
+  // Fetch messages and members when room is selected
+  useEffect(() => {
+    if (!selectedRoom || !user) return;
+
+    const fetchMessages = async () => {
+      const { data } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('room_id', selectedRoom.id)
+        .order('created_at', { ascending: true })
+        .limit(200);
+      setMessages(data || []);
+
+      // Build profile map for senders
+      const userIds = [...new Set((data || []).map(m => m.user_id))];
+      if (userIds.length) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', userIds);
+        const map: Record<string, string> = {};
+        profiles?.forEach(p => { map[p.id] = p.full_name || 'User'; });
+        setProfileMap(prev => ({ ...prev, ...map }));
+      }
+    };
+
+    const fetchMembers = async () => {
+      const { data } = await supabase
+        .from('chat_members')
+        .select('user_id')
+        .eq('room_id', selectedRoom.id);
+      setMembers((data || []) as ChatMember[]);
+    };
+
+    fetchMessages();
+    fetchMembers();
+
+    // Real-time subscription
+    const channel = supabase
+      .channel(`room-${selectedRoom.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `room_id=eq.${selectedRoom.id}`,
+      }, async (payload) => {
+        const newMsg = payload.new as ChatMessage;
+        setMessages(prev => [...prev, newMsg]);
+
+        // Fetch profile name if not cached
+        if (!profileMap[newMsg.user_id]) {
+          const { data: p } = await supabase
+            .from('profiles')
+            .select('id, full_name')
+            .eq('id', newMsg.user_id)
+            .single();
+          if (p) {
+            setProfileMap(prev => ({ ...prev, [p.id]: p.full_name || 'User' }));
+          }
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [selectedRoom, user]);
+
+  useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedRoom || !user) return;
+    setSendingMessage(true);
+
+    const { error } = await supabase.from('messages').insert({
+      room_id: selectedRoom.id,
+      user_id: user.id,
+      content: newMessage.trim(),
+    });
+
+    if (error) {
+      toast.error('Failed to send message');
     }
+    setNewMessage('');
+    setSendingMessage(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
+  const handleCreateRoom = async () => {
+    if (!newRoomName.trim() || !user) return;
+
+    const { data: room, error } = await supabase
+      .from('chat_rooms')
+      .insert({ name: newRoomName.trim(), created_by: user.id, is_group: true })
+      .select()
+      .single();
+
+    if (error || !room) {
+      toast.error('Failed to create room');
+      return;
+    }
+
+    await supabase.from('chat_members').insert({ room_id: room.id, user_id: user.id });
+
+    setRooms(prev => [room, ...prev]);
+    setSelectedRoom(room);
+    setNewRoomName('');
+    setDialogOpen(false);
+    toast.success('Chat room created!');
   };
+
+  const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
   return (
-    <div className="h-[600px] bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg overflow-hidden">
+    <div className="h-[calc(100vh-12rem)] bg-background rounded-lg overflow-hidden border border-border">
       {/* Header */}
-      <CardHeader className="py-4 px-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <CardHeader className="py-3 px-6 bg-primary text-primary-foreground">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Messenger</h2>
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="icon">
-              <Globe className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Bell className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Settings className="w-5 h-5" />
-            </Button>
-          </div>
+          <h2 className="text-lg font-semibold">Messenger</h2>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="secondary" size="sm"><Plus className="w-4 h-4 mr-1" /> New Chat</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader><DialogTitle>Create Chat Room</DialogTitle></DialogHeader>
+              <div className="space-y-4 pt-2">
+                <Input placeholder="Room name..." value={newRoomName} onChange={e => setNewRoomName(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleCreateRoom()} />
+                <Button onClick={handleCreateRoom} className="w-full" disabled={!newRoomName.trim()}>Create Room</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </CardHeader>
-      
-      <div className="flex h-full">
+
+      <div className="flex h-[calc(100%-3.5rem)]">
         {/* Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-          {/* Search */}
-          <div className="p-3">
-            <Input type="text" placeholder="Search..." className="rounded-full bg-gray-100 border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0" />
-          </div>
-          
-          <Tabs defaultValue="chats" className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 mx-4 my-2">
-              <TabsTrigger value="chats">Chats</TabsTrigger>
-              <TabsTrigger value="groups">Groups</TabsTrigger>
-              <TabsTrigger value="calls">Calls</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="chats" className="flex-1 mt-0">
-              <ScrollArea className="h-full px-2">
-                {mockConversations.map((conv) => (
-                  <div
-                    key={conv.id}
-                    className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors ${
-                      selectedConversation?.id === conv.id
-                        ? 'bg-blue-100 border-l-4 border-blue-500'
-                        : 'hover:bg-gray-100'
-                    }`}
-                    onClick={() => setSelectedConversation(conv)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage src={conv.participants[0].avatar} alt={conv.name} />
-                        <AvatarFallback>{conv.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="text-sm font-medium">{conv.name}</h3>
-                        <p className="text-xs text-gray-500">{conv.lastMessage}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </ScrollArea>
-            </TabsContent>
-            
-            <TabsContent value="groups" className="flex-1 mt-0">
-              <ScrollArea className="h-full px-2">
-                {mockStudyGroups.map((group) => (
-                  <div key={group.id} className="p-3 rounded-lg mb-2 hover:bg-gray-100 cursor-pointer">
-                    <div className="flex items-center space-x-3">
-                      <div className="rounded-full bg-green-100 p-2">
-                        <Users className="w-4 h-4 text-green-500" />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium">{group.name}</h3>
-                        <p className="text-xs text-gray-500">{group.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </ScrollArea>
-            </TabsContent>
-            
-            <TabsContent value="calls" className="flex-1 mt-0">
-              <div className="p-4 text-center text-gray-500">
-                <Phone className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>Recent calls will appear here</p>
+        <div className="w-72 bg-card border-r border-border flex flex-col">
+          <ScrollArea className="flex-1 p-2">
+            {loading ? (
+              <div className="flex items-center justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+            ) : rooms.length === 0 ? (
+              <div className="text-center py-8">
+                <MessageCircle className="w-10 h-10 mx-auto text-muted-foreground/30 mb-2" />
+                <p className="text-sm text-muted-foreground">No conversations yet</p>
+                <p className="text-xs text-muted-foreground/60">Create a chat room to start</p>
               </div>
-            </TabsContent>
-          </Tabs>
+            ) : (
+              rooms.map(room => (
+                <button
+                  key={room.id}
+                  className={`w-full text-left p-3 rounded-lg mb-1 transition-colors ${
+                    selectedRoom?.id === room.id ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-muted/50'
+                  }`}
+                  onClick={() => setSelectedRoom(room)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                      {room.is_group ? <Users className="w-4 h-4 text-primary" /> : <MessageCircle className="w-4 h-4 text-primary" />}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-foreground truncate">{room.name}</p>
+                      {room.description && <p className="text-xs text-muted-foreground truncate">{room.description}</p>}
+                    </div>
+                  </div>
+                </button>
+              ))
+            )}
+          </ScrollArea>
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col bg-white">
-          {selectedConversation ? (
+        <div className="flex-1 flex flex-col bg-background">
+          {selectedRoom ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                <div className="flex items-center space-x-4">
-                  <Avatar>
-                    <AvatarImage src={selectedConversation.participants[0].avatar} alt={selectedConversation.name} />
-                    <AvatarFallback>{selectedConversation.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="text-lg font-semibold">{selectedConversation.name}</h3>
-                    <Badge variant="secondary">Online</Badge>
+              <div className="p-3 border-b border-border flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                    {selectedRoom.is_group ? <Users className="w-4 h-4 text-primary" /> : <MessageCircle className="w-4 h-4 text-primary" />}
                   </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Button variant="ghost" size="icon">
-                    <Phone className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Video className="w-5 h-5" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="w-5 h-5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Mute Notifications</DropdownMenuItem>
-                      <DropdownMenuItem>Block User</DropdownMenuItem>
-                      <DropdownMenuItem>Report User</DropdownMenuItem>
-                      <DropdownMenuItem>Archive Chat</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">{selectedRoom.name}</h3>
+                    <p className="text-xs text-muted-foreground">{members.length} member{members.length !== 1 ? 's' : ''}</p>
+                  </div>
                 </div>
               </div>
 
               {/* Messages */}
-              <ScrollArea className="flex-1 p-4" ref={messagesEndRef}>
-                <div className="space-y-4">
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`rounded-xl px-4 py-2 ${
-                          message.sender === 'me' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        <p className="text-sm">{message.text}</p>
-                        <p className="text-[0.6rem] text-right opacity-70">{message.time}</p>
-                      </div>
+              <ScrollArea className="flex-1 p-4">
+                <div className="space-y-3">
+                  {messages.length === 0 && (
+                    <div className="text-center py-12">
+                      <MessageCircle className="w-10 h-10 mx-auto text-muted-foreground/20 mb-2" />
+                      <p className="text-sm text-muted-foreground">No messages yet. Say hello!</p>
                     </div>
-                  ))}
+                  )}
+                  {messages.map(msg => {
+                    const isMe = msg.user_id === user?.id;
+                    const senderName = profileMap[msg.user_id] || 'User';
+                    return (
+                      <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[70%] rounded-xl px-4 py-2 ${isMe ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
+                          {!isMe && <p className="text-[10px] font-semibold opacity-70 mb-0.5">{senderName}</p>}
+                          <p className="text-sm">{msg.content}</p>
+                          <p className="text-[10px] text-right opacity-60 mt-0.5">
+                            {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
 
-              {/* Message Input */}
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
-                <div className="flex items-center space-x-3">
-                  <Button variant="ghost" size="icon">
-                    <Paperclip className="w-5 h-5" />
-                  </Button>
+              {/* Input */}
+              <div className="p-3 border-t border-border">
+                <div className="flex items-center gap-2">
                   <Input
-                    type="text"
                     placeholder="Type a message..."
                     value={newMessage}
-                    onChange={handleInputChange}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSendMessage();
-                      }
-                    }}
-                    className="rounded-full bg-white border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    onChange={e => setNewMessage(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                    className="flex-1"
+                    disabled={sendingMessage}
                   />
-                  <Button variant="ghost" size="icon">
-                    <Smile className="w-5 h-5" />
-                  </Button>
-                  <Button onClick={handleSendMessage}>
-                    <Send className="w-4 h-4 mr-2" />
-                    Send
+                  <Button onClick={handleSendMessage} disabled={!newMessage.trim() || sendingMessage} size="sm">
+                    {sendingMessage ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   </Button>
                 </div>
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+            <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-600">Select a conversation to start messaging</p>
+                <MessageCircle className="w-12 h-12 mx-auto mb-3 text-muted-foreground/30" />
+                <p className="text-muted-foreground text-sm">Select a conversation to start messaging</p>
               </div>
             </div>
           )}
