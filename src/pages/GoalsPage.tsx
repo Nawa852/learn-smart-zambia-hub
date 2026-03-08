@@ -1,68 +1,102 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { Target, Plus, CheckCircle, Clock, Trophy, Flame, Calendar } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Target, Plus, CheckCircle, Clock, Trophy, Flame, Calendar, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const stagger = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.06 } } };
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.3 } } };
 
 interface Goal {
-  id: number;
+  id: string;
   title: string;
-  progress: number;
+  goal_type: string;
   target: number;
   current: number;
   completed: boolean;
+  due_date: string | null;
+  created_at: string;
 }
 
 const GoalsPage = () => {
+  const { user } = useAuth();
   const [newGoal, setNewGoal] = useState('');
-  const [dailyGoals, setDailyGoals] = useState<Goal[]>([
-    { id: 1, title: 'Complete 2 Math lessons', progress: 50, target: 2, current: 1, completed: false },
-    { id: 2, title: 'Practice 30 vocabulary words', progress: 100, target: 30, current: 30, completed: true },
-    { id: 3, title: 'Watch Physics video tutorial', progress: 0, target: 1, current: 0, completed: false },
-    { id: 4, title: 'Review Biology notes', progress: 75, target: 4, current: 3, completed: false },
-  ]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState('daily');
 
-  const weeklyGoals = [
-    { id: 1, title: 'Finish Algebra unit', deadline: 'Friday', progress: 60 },
-    { id: 2, title: 'Complete 5 practice exams', deadline: 'Sunday', progress: 40 },
-    { id: 3, title: 'Read 2 literature books', deadline: 'Saturday', progress: 25 },
-  ];
+  useEffect(() => {
+    if (!user) return;
+    const fetch = async () => {
+      const { data } = await supabase
+        .from('study_goals' as any)
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      setGoals((data as any[]) || []);
+      setLoading(false);
+    };
+    fetch();
+  }, [user]);
 
-  const completedCount = dailyGoals.filter(g => g.completed).length;
-  const streak = 7;
-
-  const addGoal = () => {
-    if (!newGoal.trim()) return;
-    setDailyGoals(prev => [...prev, {
-      id: Date.now(),
+  const addGoal = async () => {
+    if (!newGoal.trim() || !user) return;
+    const { data, error } = await supabase.from('study_goals' as any).insert({
+      user_id: user.id,
       title: newGoal.trim(),
-      progress: 0,
+      goal_type: tab,
       target: 1,
       current: 0,
       completed: false,
-    }]);
+    }).select().single();
+
+    if (error) { toast.error('Failed to add goal'); return; }
+    setGoals(prev => [(data as any), ...prev]);
     setNewGoal('');
     toast.success('Goal added!');
   };
 
-  const toggleGoal = (id: number) => {
-    setDailyGoals(prev => prev.map(g =>
-      g.id === id ? { ...g, completed: !g.completed, progress: g.completed ? 0 : 100, current: g.completed ? 0 : g.target } : g
-    ));
+  const toggleGoal = async (goal: Goal) => {
+    const newCompleted = !goal.completed;
+    const { error } = await supabase.from('study_goals' as any)
+      .update({
+        completed: newCompleted,
+        current: newCompleted ? goal.target : 0,
+        completed_at: newCompleted ? new Date().toISOString() : null,
+      })
+      .eq('id', goal.id);
+
+    if (!error) {
+      setGoals(prev => prev.map(g => g.id === goal.id ? { ...g, completed: newCompleted, current: newCompleted ? g.target : 0 } : g));
+    }
   };
+
+  const deleteGoal = async (id: string) => {
+    await supabase.from('study_goals' as any).delete().eq('id', id);
+    setGoals(prev => prev.filter(g => g.id !== id));
+    toast.success('Goal removed');
+  };
+
+  const dailyGoals = goals.filter(g => g.goal_type === 'daily');
+  const weeklyGoals = goals.filter(g => g.goal_type === 'weekly');
+  const completedCount = goals.filter(g => g.completed).length;
+
+  if (loading) {
+    return <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">{[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-xl animate-pulse" />)}</div>;
+  }
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="max-w-4xl mx-auto py-6 px-4 space-y-6">
       <motion.div variants={fadeUp}>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Target className="w-6 h-6 text-primary" /> Goals
+          <Target className="w-6 h-6 text-primary" /> Study Goals
         </h1>
         <p className="text-sm text-muted-foreground">Track your daily and weekly learning targets</p>
       </motion.div>
@@ -70,15 +104,13 @@ const GoalsPage = () => {
       {/* Stats */}
       <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Streak', value: `${streak} days`, icon: Flame, accent: 'text-orange-500 bg-orange-500/10' },
+          { label: 'Total Goals', value: goals.length, icon: Target, accent: 'text-blue-500 bg-blue-500/10' },
           { label: 'Completed', value: completedCount, icon: Trophy, accent: 'text-emerald-500 bg-emerald-500/10' },
-          { label: 'Weekly', value: '68%', icon: Calendar, accent: 'text-blue-500 bg-blue-500/10' },
+          { label: 'Daily Done', value: dailyGoals.filter(g => g.completed).length, icon: Flame, accent: 'text-orange-500 bg-orange-500/10' },
         ].map((s, i) => (
           <Card key={i} className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${s.accent}`}>
-                <s.icon className="w-5 h-5" />
-              </div>
+              <div className={`p-2 rounded-lg ${s.accent}`}><s.icon className="w-5 h-5" /></div>
               <div>
                 <p className="text-xl font-bold text-foreground">{s.value}</p>
                 <p className="text-xs text-muted-foreground">{s.label}</p>
@@ -88,84 +120,54 @@ const GoalsPage = () => {
         ))}
       </motion.div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Daily Goals */}
-        <motion.div variants={fadeUp}>
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Today's Goals</CardTitle>
-              <CardDescription className="text-xs">Complete your daily learning targets</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add a new goal..."
-                  value={newGoal}
-                  onChange={e => setNewGoal(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && addGoal()}
-                  className="text-sm"
-                />
-                <Button size="icon" onClick={addGoal} className="shrink-0">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="daily">Daily ({dailyGoals.length})</TabsTrigger>
+          <TabsTrigger value="weekly">Weekly ({weeklyGoals.length})</TabsTrigger>
+        </TabsList>
 
-              {dailyGoals.map(goal => (
-                <div
-                  key={goal.id}
-                  onClick={() => toggleGoal(goal.id)}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                    goal.completed
-                      ? 'bg-emerald-500/5 border-emerald-500/20'
-                      : 'border-border/50 hover:border-primary/30'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-2">
-                      {goal.completed ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      ) : (
-                        <Clock className="w-4 h-4 text-muted-foreground" />
-                      )}
-                      <span className={`text-sm ${goal.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+        {['daily', 'weekly'].map(type => (
+          <TabsContent key={type} value={type} className="space-y-3 mt-4">
+            <div className="flex gap-2">
+              <Input
+                placeholder={`Add a ${type} goal...`}
+                value={newGoal}
+                onChange={e => setNewGoal(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && addGoal()}
+                className="text-sm"
+              />
+              <Button size="icon" onClick={addGoal} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+            </div>
+
+            {(type === 'daily' ? dailyGoals : weeklyGoals).map(goal => (
+              <motion.div key={goal.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <div className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                  goal.completed ? 'bg-emerald-500/5 border-emerald-500/20' : 'border-border/50 hover:border-primary/30'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 flex-1 min-w-0" onClick={() => toggleGoal(goal)}>
+                      {goal.completed
+                        ? <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
+                        : <Clock className="w-4 h-4 text-muted-foreground shrink-0" />}
+                      <span className={`text-sm truncate ${goal.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                         {goal.title}
                       </span>
                     </div>
-                    <Badge variant={goal.completed ? 'default' : 'secondary'} className="text-[10px]">
-                      {goal.current}/{goal.target}
-                    </Badge>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => deleteGoal(goal.id)}>
+                      <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
+                    </Button>
                   </div>
-                  <Progress value={goal.progress} className="h-1.5" />
+                  <Progress value={goal.completed ? 100 : 0} className="h-1.5 mt-2" />
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
+              </motion.div>
+            ))}
 
-        {/* Weekly Goals */}
-        <motion.div variants={fadeUp}>
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Weekly Goals</CardTitle>
-              <CardDescription className="text-xs">Your targets for this week</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {weeklyGoals.map(goal => (
-                <div key={goal.id} className="p-3 rounded-lg border border-border/50">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-foreground">{goal.title}</span>
-                    <Badge variant="outline" className="text-[10px]">Due {goal.deadline}</Badge>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Progress value={goal.progress} className="flex-1 h-1.5" />
-                    <span className="text-xs text-muted-foreground">{goal.progress}%</span>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+            {(type === 'daily' ? dailyGoals : weeklyGoals).length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-6">No {type} goals yet. Add one above!</p>
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
     </motion.div>
   );
 };

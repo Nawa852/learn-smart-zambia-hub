@@ -104,6 +104,8 @@ import CourseCatalogPage from '@/pages/CourseCatalogPage';
 import CourseDetailPage from '@/pages/CourseDetailPage';
 import AssignmentPage from '@/pages/AssignmentPage';
 import MyCoursesPage from '@/pages/MyCoursesPage';
+import ProgressReportPage from '@/pages/ProgressReportPage';
+import ECZPracticeQuizPage from '@/pages/ECZPracticeQuizPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
@@ -217,6 +219,7 @@ function App() {
             <Route path="/ecz-past-papers" element={<ProtectedRoute><MainLayout><ECZPastPapersPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-videos" element={<ProtectedRoute><MainLayout><ECZVideoLibraryPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-practice-quiz" element={<ProtectedRoute><MainLayout><ECZPracticeQuizPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Parent-Specific Pages */}
@@ -238,6 +241,7 @@ function App() {
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
             <Route path="/achievements" element={<ProtectedRoute><MainLayout><Achievements /></MainLayout></ProtectedRoute>} />
+            <Route path="/progress-report" element={<ProtectedRoute><MainLayout><ProgressReportPage /></MainLayout></ProtectedRoute>} />
             <Route path="/smart-recommendations" element={<ProtectedRoute><MainLayout><SmartRecommendationsPage /></MainLayout></ProtectedRoute>} />
 
             {/* Profile & Settings */}

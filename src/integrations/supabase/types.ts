@@ -422,6 +422,78 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_attempts: {
+        Row: {
+          correct_answers: number
+          created_at: string
+          grade_level: string
+          id: string
+          subject: string
+          time_taken_seconds: number | null
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          correct_answers: number
+          created_at?: string
+          grade_level: string
+          id?: string
+          subject: string
+          time_taken_seconds?: number | null
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          correct_answers?: number
+          created_at?: string
+          grade_level?: string
+          id?: string
+          subject?: string
+          time_taken_seconds?: number | null
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_goals: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          current: number
+          due_date: string | null
+          goal_type: string
+          id: string
+          target: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current?: number
+          due_date?: string | null
+          goal_type?: string
+          id?: string
+          target?: number
+          title: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current?: number
+          due_date?: string | null
+          goal_type?: string
+          id?: string
+          target?: number
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           assignment_id: string
