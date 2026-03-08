@@ -318,7 +318,7 @@ export const doctorNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
