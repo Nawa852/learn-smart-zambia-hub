@@ -56,13 +56,12 @@ const CourseDetailPage = () => {
       }
 
       if (user) {
-        const { data: enrollment } = await supabase
-          .from('enrollments')
-          .select('id')
-          .eq('course_id', courseId)
-          .eq('user_id', user.id)
-          .maybeSingle();
+        const [{ data: enrollment }, { data: completions }] = await Promise.all([
+          supabase.from('enrollments').select('id').eq('course_id', courseId).eq('user_id', user.id).maybeSingle(),
+          supabase.from('lesson_completions').select('lesson_id').eq('course_id', courseId).eq('user_id', user.id),
+        ]);
         setIsEnrolled(!!enrollment);
+        if (completions) setCompletedLessons(new Set(completions.map(c => c.lesson_id)));
       }
       setLoading(false);
     };
