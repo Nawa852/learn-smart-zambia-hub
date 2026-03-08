@@ -22,7 +22,7 @@ const TeacherReportCardsPage = () => {
     (async () => {
       const { data: courses } = await supabase.from('courses').select('id').eq('created_by', user.id);
       if (!courses?.length) { setLoading(false); return; }
-      const courseIds = courses.map(c => c.id);
+      const courseIds = courses.map(c => c.id) as string[];
       const { data: enrollments } = await supabase.from('enrollments').select('user_id').in('course_id', courseIds);
       const uniqueIds = [...new Set((enrollments || []).map(e => e.user_id))];
       const { data: profiles } = await supabase.from('profiles').select('id, full_name, grade').in('id', uniqueIds);
