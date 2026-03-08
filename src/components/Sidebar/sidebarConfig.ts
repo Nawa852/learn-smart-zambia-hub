@@ -230,10 +230,16 @@ export const institutionNavigation: NavGroup[] = [
   {
     label: "Management",
     items: [
-      { title: "User Management", url: "/admin-users", icon: Users },
-      { title: "Curriculum", url: "/admin-curriculum", icon: BookOpen },
-      { title: "Scheduling", url: "/admin-scheduling", icon: Calendar },
-      { title: "Analytics", url: "/admin-analytics", icon: BarChart3 },
+      { title: "User Management", url: "/admin/users", icon: Users },
+      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
+      { title: "Scheduling", url: "/admin/scheduling", icon: Calendar },
+      { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Communication",
+    items: [
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
