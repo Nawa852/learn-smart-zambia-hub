@@ -97,6 +97,11 @@ import AdminCurriculumPage from '@/pages/AdminCurriculumPage';
 import AdminSchedulingPage from '@/pages/AdminSchedulingPage';
 import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
 
+// New Feature Pages
+import StudyGroupChatPage from '@/pages/StudyGroupChatPage';
+import CreateCoursePage from '@/pages/CreateCoursePage';
+import CourseCatalogPage from '@/pages/CourseCatalogPage';
+
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
 import ParentAttendancePage from '@/pages/ParentAttendancePage';
