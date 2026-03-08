@@ -55,6 +55,44 @@ export type Database = {
           },
         ]
       }
+      attendance: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          date: string
+          id: string
+          recorded_by: string | null
+          status: string
+          student_id: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          recorded_by?: string | null
+          status?: string
+          student_id: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          recorded_by?: string | null
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_milestones: {
         Row: {
           completed: boolean | null
@@ -92,6 +130,38 @@ export type Database = {
             columns: ["venture_id"]
             isOneToOne: false
             referencedRelation: "ventures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      certificates: {
+        Row: {
+          certificate_number: string
+          course_id: string | null
+          id: string
+          issued_at: string
+          user_id: string
+        }
+        Insert: {
+          certificate_number?: string
+          course_id?: string | null
+          id?: string
+          issued_at?: string
+          user_id: string
+        }
+        Update: {
+          certificate_number?: string
+          course_id?: string | null
+          id?: string
+          issued_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]
@@ -700,6 +770,7 @@ export type Database = {
           province: string | null
           role: Database["public"]["Enums"]["app_role"]
           school: string | null
+          theme_preference: string | null
           updated_at: string
         }
         Insert: {
@@ -714,6 +785,7 @@ export type Database = {
           province?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           school?: string | null
+          theme_preference?: string | null
           updated_at?: string
         }
         Update: {
@@ -728,6 +800,7 @@ export type Database = {
           province?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           school?: string | null
+          theme_preference?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -786,6 +859,54 @@ export type Database = {
         }
         Relationships: []
       }
+      student_notes: {
+        Row: {
+          content: string
+          course_id: string | null
+          created_at: string
+          id: string
+          lesson_id: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_notes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_notes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_goals: {
         Row: {
           completed: boolean
@@ -822,6 +943,71 @@ export type Database = {
           target?: number
           title?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      study_group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_groups: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          grade_level: string | null
+          id: string
+          is_public: boolean | null
+          max_members: number | null
+          name: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          grade_level?: string | null
+          id?: string
+          is_public?: boolean | null
+          max_members?: number | null
+          name: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          grade_level?: string | null
+          id?: string
+          is_public?: boolean | null
+          max_members?: number | null
+          name?: string
+          subject?: string | null
         }
         Relationships: []
       }
@@ -1017,6 +1203,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_user_streak: { Args: { p_user_id: string }; Returns: number }
       get_platform_stats: { Args: never; Returns: Json }
       has_role: {
         Args: {
