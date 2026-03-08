@@ -134,6 +134,11 @@ const CourseDetailPage = () => {
             <Badge variant="outline"><Layers className="w-3 h-3 mr-1" />{lessons.length} lessons</Badge>
           </div>
           {course.description && <p className="text-sm text-muted-foreground mt-2">{course.description}</p>}
+          {isEnrolled && (
+            <Button variant="outline" size="sm" className="mt-2" onClick={() => navigate(`/course/${courseId}/assignments`)}>
+              <ClipboardCheck className="w-4 h-4 mr-1" /> Assignments
+            </Button>
+          )}
         </div>
       </div>
 
