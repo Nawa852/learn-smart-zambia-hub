@@ -130,6 +130,8 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Study Streak", url: "/study-streak", icon: Flame },
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
