@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save
+  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save, Users
 } from 'lucide-react';
 
 interface Lesson {
@@ -30,6 +30,14 @@ interface Course {
   description: string | null;
   subject: string | null;
   grade_level: string | null;
+  created_by: string | null;
+}
+
+interface EnrolledStudent {
+  user_id: string;
+  full_name: string;
+  progress: number;
+  enrolled_at: string;
 }
 
 const CourseDetailPage = () => {
@@ -40,11 +48,15 @@ const CourseDetailPage = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [noteContent, setNoteContent] = useState('');
   const [showNotes, setShowNotes] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
+  const [showRoster, setShowRoster] = useState(false);
+  const [students, setStudents] = useState<EnrolledStudent[]>([]);
+  const [loadingRoster, setLoadingRoster] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
