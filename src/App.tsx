@@ -40,7 +40,7 @@ import ChatEduLanding from '@/pages/ChatEduLanding';
 
 // Role-Specific Dashboards
 // TeacherDashboard removed - using role-based Dashboard instead
-import ParentDashboard from '@/pages/ParentDashboard';
+// ParentDashboard removed - using role-based Dashboard instead
 import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
 import MinistryDashboard from '@/pages/MinistryDashboard';
 
