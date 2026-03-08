@@ -303,7 +303,7 @@ const MFASetupPage = () => {
                     </div>
                   </div>
 
-                  <Button onClick={() => setStep('verify')} className="w-full bg-primary text-primary-foreground glow-primary">
+                  <Button onClick={() => setStep('verify')} className="w-full bg-primary text-primary-foreground">
                     I've scanned the code
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
