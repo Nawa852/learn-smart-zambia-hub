@@ -346,6 +346,7 @@ function App() {
       </QueryClientProvider>
     </AuthProvider>
     </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
