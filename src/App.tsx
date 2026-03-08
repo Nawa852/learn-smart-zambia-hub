@@ -219,6 +219,7 @@ function App() {
             <Route path="/ecz-past-papers" element={<ProtectedRoute><MainLayout><ECZPastPapersPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-videos" element={<ProtectedRoute><MainLayout><ECZVideoLibraryPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/ecz-practice-quiz" element={<ProtectedRoute><MainLayout><ECZPracticeQuizPage /></MainLayout></ProtectedRoute>} />
             <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
 
             {/* Parent-Specific Pages */}
