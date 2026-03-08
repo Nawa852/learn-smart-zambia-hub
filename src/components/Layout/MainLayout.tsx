@@ -2,6 +2,7 @@ import React from 'react';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
+import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 
 interface MainLayoutProps {
   children: React.ReactNode;
