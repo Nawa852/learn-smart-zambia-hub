@@ -139,10 +139,19 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
-          <Label htmlFor="password" className="flex items-center gap-2 font-semibold">
-            <Lock className="w-4 h-4 text-primary" />
-            Password
-          </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="flex items-center gap-2 font-semibold">
+              <Lock className="w-4 h-4 text-primary" />
+              Password
+            </Label>
+            <a 
+              href="/password-reset"
+              className="text-xs text-primary hover:text-primary/80 font-medium underline transition-colors flex items-center gap-1"
+            >
+              <HelpCircle className="w-3 h-3" />
+              Forgot?
+            </a>
+          </div>
           <div className="relative">
             <Input
               id="password"
