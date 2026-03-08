@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -10,8 +10,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Megaphone, Plus, Trash2, Inbox } from 'lucide-react';
+import { Megaphone, Plus, Trash2, Inbox, AlertTriangle, Info, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+
+const priorityConfig = {
+  urgent: { variant: 'destructive' as const, icon: AlertTriangle, label: 'Urgent' },
+  important: { variant: 'default' as const, icon: Info, label: 'Important' },
+  normal: { variant: 'outline' as const, icon: Clock, label: 'Normal' },
+};
 
 const TeacherAnnouncementsPage = () => {
   const { user } = useAuth();
@@ -65,45 +71,101 @@ const TeacherAnnouncementsPage = () => {
   );
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2"><Megaphone className="w-6 h-6 text-primary" /> Announcements</h1>
-          <p className="text-sm text-muted-foreground">Post announcements to your classes</p>
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Megaphone className="w-5 h-5 text-primary" />
+            </div>
+            Announcements
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">Post updates and alerts to your classes</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild><Button><Plus className="w-4 h-4 mr-2" />New</Button></DialogTrigger>
-          <DialogContent>
+          <DialogTrigger asChild>
+            <Button className="gap-2"><Plus className="w-4 h-4" /> New</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader><DialogTitle>New Announcement</DialogTitle></DialogHeader>
-            <Select value={courseId} onValueChange={setCourseId}><SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger><SelectContent>{courses.map(c => <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>)}</SelectContent></Select>
-            <Input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-            <Textarea placeholder="Content" value={content} onChange={e => setContent(e.target.value)} />
-            <Select value={priority} onValueChange={setPriority}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="normal">Normal</SelectItem><SelectItem value="important">Important</SelectItem><SelectItem value="urgent">Urgent</SelectItem></SelectContent></Select>
-            <Button onClick={post}>Post</Button>
+            <div className="space-y-4 pt-2">
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">Course</label>
+                <Select value={courseId} onValueChange={setCourseId}>
+                  <SelectTrigger><SelectValue placeholder="Select course" /></SelectTrigger>
+                  <SelectContent>{courses.map(c => <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">Title</label>
+                <Input placeholder="Announcement title" value={title} onChange={e => setTitle(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">Content (optional)</label>
+                <Textarea placeholder="Additional details..." value={content} onChange={e => setContent(e.target.value)} rows={3} />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">Priority</label>
+                <Select value={priority} onValueChange={setPriority}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="important">Important</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={post} className="w-full" disabled={!title.trim() || !courseId}>Post Announcement</Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
 
       {announcements.length === 0 ? (
-        <Card><CardContent className="py-16 text-center"><Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" /><p className="font-medium">No announcements</p><p className="text-sm text-muted-foreground mt-1">Post your first announcement to a class.</p></CardContent></Card>
-      ) : announcements.map(a => (
-        <Card key={a.id} className="border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="font-medium">{a.title}</p>
-                <div className="flex gap-2 mt-1">
-                  <Badge variant="secondary" className="text-xs">{a.course_title}</Badge>
-                  <Badge variant={a.priority === 'urgent' ? 'destructive' : a.priority === 'important' ? 'default' : 'outline'} className="text-xs">{a.priority}</Badge>
-                </div>
-                {a.content && <p className="text-sm text-muted-foreground mt-2">{a.content}</p>}
-                <p className="text-[10px] text-muted-foreground/60 mt-2">{formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}</p>
-              </div>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => remove(a.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
-            </div>
+        <Card className="border-dashed">
+          <CardContent className="py-16 text-center">
+            <Inbox className="w-14 h-14 mx-auto text-muted-foreground/20 mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-1">No announcements</h3>
+            <p className="text-sm text-muted-foreground">Post your first announcement to a class</p>
           </CardContent>
         </Card>
-      ))}
+      ) : (
+        <div className="space-y-3">
+          {announcements.map(a => {
+            const config = priorityConfig[a.priority as keyof typeof priorityConfig] || priorityConfig.normal;
+            const PriorityIcon = config.icon;
+            return (
+              <Card key={a.id} className="hover:shadow-sm transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
+                        a.priority === 'urgent' ? 'bg-destructive/10' : a.priority === 'important' ? 'bg-primary/10' : 'bg-muted'
+                      }`}>
+                        <PriorityIcon className={`w-4 h-4 ${
+                          a.priority === 'urgent' ? 'text-destructive' : a.priority === 'important' ? 'text-primary' : 'text-muted-foreground'
+                        }`} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-foreground">{a.title}</p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <Badge variant="secondary" className="text-[10px]">{a.course_title}</Badge>
+                          <Badge variant={config.variant} className="text-[10px]">{config.label}</Badge>
+                        </div>
+                        {a.content && <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{a.content}</p>}
+                        <p className="text-[10px] text-muted-foreground/60 mt-2">{formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive shrink-0" onClick={() => remove(a.id)}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
