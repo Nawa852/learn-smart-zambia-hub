@@ -127,6 +127,10 @@ const SUBJECT_ICONS: Record<string, React.ReactNode> = {
   coding: <Code className="w-4 h-4" />,
   civic_education: <Star className="w-4 h-4" />,
   agriculture: <Beaker className="w-4 h-4" />,
+  biology: <Atom className="w-4 h-4" />,
+  chemistry: <Beaker className="w-4 h-4" />,
+  physics: <Atom className="w-4 h-4" />,
+  business: <GraduationCap className="w-4 h-4" />,
 };
 
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
