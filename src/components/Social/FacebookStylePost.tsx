@@ -296,7 +296,7 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
           <div className="space-y-3 pt-3 border-t">
             <div className="flex items-center space-x-3">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="gradient-bright-sphere text-white text-xs">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                   You
                 </AvatarFallback>
               </Avatar>
