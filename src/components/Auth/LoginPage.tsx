@@ -183,13 +183,18 @@ const LoginPage = () => {
                   </TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="login" className="space-y-6">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Welcome Back!</h2>
-                    <p className="text-muted-foreground">
+                <TabsContent value="login" className="space-y-6 animate-fade-in">
+                  <motion.div 
+                    className="text-center space-y-2"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <h2 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Welcome Back!</h2>
+                    <p className="text-muted-foreground text-sm">
                       Continue your learning journey with Edu Zambia's AI-powered platform.
                     </p>
-                  </div>
+                  </motion.div>
                   
                   <EnhancedLoginForm 
                     onSuccess={() => { /* Navigate handled by AuthProvider */ }} 
