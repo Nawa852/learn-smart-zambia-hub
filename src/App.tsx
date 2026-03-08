@@ -86,8 +86,8 @@ import VirtualClassroomPage from '@/pages/VirtualClassroomPage';
 import GoalsPage from '@/pages/GoalsPage';
 import JournalingPage from '@/pages/JournalingPage';
 import MentorshipPage from '@/pages/MentorshipPage';
+import FocusModePage from '@/pages/FocusModePage';
 
-// ECZ & Zambian Resources
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
