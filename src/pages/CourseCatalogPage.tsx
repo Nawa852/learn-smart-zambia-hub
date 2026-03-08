@@ -324,6 +324,11 @@ const CourseCatalogPage = () => {
                           <Clock className="w-3 h-3" /> {formatDuration(course.total_duration)}
                         </span>
                       ) : null}
+                      {(course.material_count || 0) > 0 && (
+                        <span className="flex items-center gap-1">
+                          <Download className="w-3 h-3" /> {course.material_count} papers
+                        </span>
+                      )}
                       <span className="flex items-center gap-1 ml-auto">
                         <Users className="w-3 h-3" /> {course.enrollment_count}
                       </span>
