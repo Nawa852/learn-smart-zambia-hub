@@ -118,6 +118,7 @@ import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
 import NotificationsPage from '@/pages/NotificationsPage';
 import GuardianLinkPage from '@/pages/GuardianLinkPage';
 import GuardianReportsPage from '@/pages/GuardianReportsPage';
+import MyNotesPage from '@/pages/MyNotesPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
