@@ -5,6 +5,7 @@ import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
 import { MobileBottomNav } from '@/components/Layout/MobileBottomNav';
 import { OnboardingTour } from '@/components/Onboarding/OnboardingTour';
+import { QuickNoteButton } from '@/components/UI/QuickNoteButton';
 import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 import { useStudySchedule } from '@/hooks/useStudySchedule';
 import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
