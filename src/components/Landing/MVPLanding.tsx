@@ -69,7 +69,7 @@ const MVPLanding = () => {
             <Button variant="ghost" size="sm" onClick={() => navigate('/auth')} className="text-muted-foreground hover:text-foreground">
               Log in
             </Button>
-            <Button size="sm" onClick={() => navigate('/auth?mode=signup')} className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/25">
+            <Button size="sm" onClick={() => navigate('/auth?mode=signup')} className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-card">
               Get Started
             </Button>
           </div>
