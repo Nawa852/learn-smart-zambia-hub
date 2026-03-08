@@ -392,6 +392,7 @@ export const developerNavigation: NavGroup[] = [
     label: "Projects",
     items: [
       { title: "My Projects", url: "/developer/projects", icon: Layers, badge: "NEW" },
+      { title: "IDE", url: "/developer/ide", icon: Bot, badge: "BETA" },
     ],
   },
   {

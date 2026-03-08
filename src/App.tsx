@@ -111,6 +111,7 @@ import EntrepreneurFundingPage from '@/pages/EntrepreneurFundingPage';
 import DeveloperProjectsPage from '@/pages/DeveloperProjectsPage';
 import DeveloperChallengesPage from '@/pages/DeveloperChallengesPage';
 import DeveloperCodeReviewPage from '@/pages/DeveloperCodeReviewPage';
+import DeveloperIDEPage from '@/pages/DeveloperIDEPage';
 
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
@@ -326,6 +327,7 @@ function App() {
             <Route path="/developer/projects" element={<ProtectedRoute><MainLayout><DeveloperProjectsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/developer/challenges" element={<ProtectedRoute><MainLayout><DeveloperChallengesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/developer/code-review" element={<ProtectedRoute><MainLayout><DeveloperCodeReviewPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/developer/ide" element={<ProtectedRoute><MainLayout><DeveloperIDEPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
