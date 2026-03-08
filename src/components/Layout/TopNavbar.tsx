@@ -67,13 +67,8 @@ export const TopNavbar = () => {
           <NotificationDropdown />
 
           {/* Messages */}
-          <Button variant="ghost" size="icon" className="relative hover-lift">
+          <Button variant="ghost" size="icon" className="relative">
             <MessageCircle className="h-5 w-5" />
-            {messages > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-primary">
-                {messages}
-              </Badge>
-            )}
           </Button>
 
           {/* Likes/Activity */}
