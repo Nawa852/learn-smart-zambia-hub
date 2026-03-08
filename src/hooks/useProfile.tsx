@@ -18,6 +18,7 @@ export interface Profile {
   grade_level?: string | null; // backward compat alias for grade
   province: string | null;
   onboarding_completed?: boolean;
+  device_setup_complete?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -77,6 +78,7 @@ export const useProfile = () => {
           user_type: role,
           grade_level: data.grade,
           onboarding_completed: !!data.full_name,
+          device_setup_complete: data.device_setup_complete ?? false,
         });
         localStorage.setItem('edu-zambia-user-type', role);
       }

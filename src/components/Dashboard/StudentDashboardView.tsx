@@ -18,6 +18,8 @@ import {
 import { XPBar } from '@/components/Gamification/XPBar';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useScreenTime } from '@/hooks/useScreenTime';
+import { DailyCheckin } from '@/components/Dashboard/DailyCheckin';
+import { StudyLeaderboard } from '@/components/Dashboard/StudyLeaderboard';
 
 interface EnrolledCourse {
   id: string;
@@ -208,7 +210,12 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
         </Card>
       </motion.div>
 
-      {/* XP & Gamification Bar */}
+      {/* Daily Check-in */}
+      <motion.div variants={item}>
+        <DailyCheckin />
+      </motion.div>
+
+
       <motion.div variants={item}>
         <Card>
           <CardContent className="p-4">
@@ -363,6 +370,11 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
               ))}
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Study Leaderboard */}
+        <motion.div variants={item}>
+          <StudyLeaderboard />
         </motion.div>
       </div>
     </motion.div>
