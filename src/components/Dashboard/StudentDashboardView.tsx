@@ -73,6 +73,8 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
   const [assignments, setAssignments] = useState<UpcomingAssignment[]>([]);
   const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, completedLessons: 0, totalLessons: 0, averageProgress: 0, streak: 0 });
   const [loading, setLoading] = useState(true);
+  const { stats: userStats } = useUserStats();
+  const { todayMinutes, dailyLimit } = useScreenTime();
 
   const displayName = profile?.full_name || userName || 'Learner';
 
