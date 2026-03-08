@@ -69,7 +69,8 @@ export const studentNavigation: NavGroup[] = [
     label: "ECZ Resources",
     items: [
       { title: "Past Papers", url: "/ecz-past-papers", icon: FileText },
-      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Timer },
+      { title: "Practice Quiz", url: "/ecz-practice-quiz", icon: Timer, badge: "NEW" },
+      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Calculator },
       { title: "Video Library", url: "/ecz-videos", icon: Youtube },
       { title: "Resources Hub", url: "/zambian-resources", icon: Library },
     ],
@@ -77,6 +78,7 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Progress",
     items: [
+      { title: "Progress Report", url: "/progress-report", icon: TrendingUp, badge: "NEW" },
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
       { title: "Achievements", url: "/achievements", icon: Trophy },
       { title: "Goals", url: "/goals", icon: Target },

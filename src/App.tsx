@@ -241,6 +241,7 @@ function App() {
             {/* Analytics & Progress */}
             <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
             <Route path="/achievements" element={<ProtectedRoute><MainLayout><Achievements /></MainLayout></ProtectedRoute>} />
+            <Route path="/progress-report" element={<ProtectedRoute><MainLayout><ProgressReportPage /></MainLayout></ProtectedRoute>} />
             <Route path="/smart-recommendations" element={<ProtectedRoute><MainLayout><SmartRecommendationsPage /></MainLayout></ProtectedRoute>} />
 
             {/* Profile & Settings */}
