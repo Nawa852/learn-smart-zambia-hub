@@ -377,10 +377,32 @@ export const developerNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "Learning",
+    label: "Projects",
     items: [
+      { title: "My Projects", url: "/developer/projects", icon: Layers, badge: "NEW" },
+    ],
+  },
+  {
+    label: "AI Tools",
+    items: [
+      { title: "Code Challenges", url: "/developer/challenges", icon: Zap, badge: "AI" },
+      { title: "Code Review", url: "/developer/code-review", icon: Sparkles, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
-      { title: "Community", url: "/community", icon: Users },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
   {
