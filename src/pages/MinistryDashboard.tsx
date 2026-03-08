@@ -40,6 +40,38 @@ const MinistryDashboard = () => {
     { label: 'Avg Grade', value: platformStats?.avg_grade ? `${platformStats.avg_grade}%` : 'N/A', icon: Target, color: 'bg-warning', change: `${platformStats?.total_courses || 0} courses` },
   ];
 
+  const provinces = [
+    { name: 'Lusaka', schools: 1845, students: 620000, passRate: 78, ecz: 82, trend: '+5%', risk: 'low' },
+    { name: 'Copperbelt', schools: 1654, students: 485000, passRate: 75, ecz: 79, trend: '+4%', risk: 'low' },
+    { name: 'Southern', schools: 1423, students: 380000, passRate: 71, ecz: 74, trend: '+3%', risk: 'medium' },
+    { name: 'Central', schools: 1256, students: 345000, passRate: 69, ecz: 71, trend: '+2%', risk: 'medium' },
+    { name: 'Eastern', schools: 1189, students: 312000, passRate: 67, ecz: 68, trend: '+3%', risk: 'medium' },
+    { name: 'Northern', schools: 1098, students: 298000, passRate: 65, ecz: 66, trend: '+4%', risk: 'high' },
+    { name: 'Luapula', schools: 987, students: 265000, passRate: 63, ecz: 64, trend: '+2%', risk: 'high' },
+    { name: 'Northwestern', schools: 876, students: 234000, passRate: 64, ecz: 65, trend: '+3%', risk: 'high' },
+    { name: 'Western', schools: 812, students: 218000, passRate: 62, ecz: 63, trend: '+1%', risk: 'critical' },
+    { name: 'Muchinga', schools: 707, students: 178000, passRate: 61, ecz: 62, trend: '+2%', risk: 'critical' },
+  ];
+  const subjectPerformance = [
+    { subject: 'English', national: 74, urban: 82, rural: 66, change: '+3%' },
+    { subject: 'Mathematics', national: 68, urban: 76, rural: 60, change: '+4%' },
+    { subject: 'Science', national: 71, urban: 79, rural: 63, change: '+2%' },
+    { subject: 'Social Studies', national: 76, urban: 83, rural: 69, change: '+3%' },
+    { subject: 'Local Languages', national: 82, urban: 78, rural: 86, change: '+1%' },
+  ];
+  const policyImpact = [
+    { policy: 'Free Education Initiative', implemented: '2022', target: 'Increase enrollment by 20%', actual: '18% increase achieved', status: 'on-track', budget: 'K2.5B' },
+    { policy: 'Teacher Training Program', implemented: '2023', target: 'Train 10,000 teachers', actual: '7,500 trained', status: 'in-progress', budget: 'K800M' },
+    { policy: 'Digital Learning Rollout', implemented: '2024', target: '500 schools connected', actual: '320 schools connected', status: 'delayed', budget: 'K1.2B' },
+    { policy: 'School Feeding Program', implemented: '2021', target: '2M students fed daily', actual: '2.3M students', status: 'exceeded', budget: 'K3.1B' },
+  ];
+  const interventionAreas = [
+    { area: 'Western Province', issue: 'Low pass rates', priority: 'critical', students: 218000 },
+    { area: 'Muchinga Province', issue: 'Teacher shortage', priority: 'critical', students: 178000 },
+    { area: 'Rural Mathematics', issue: 'Below 60% pass rate', priority: 'high', students: 890000 },
+    { area: 'Grade 7 Transition', issue: 'Dropout risk', priority: 'high', students: 120000 },
+  ];
+
   if (statsLoading) return <LogoLoader text="Loading national data..." />;
 
   return (
