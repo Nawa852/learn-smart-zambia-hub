@@ -90,6 +90,7 @@ export const studentNavigation: NavGroup[] = [
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
       { title: "Achievements", url: "/achievements", icon: Trophy },
       { title: "Goals", url: "/goals", icon: Target },
+      { title: "My Notes", url: "/my-notes", icon: PenTool, badge: "NEW" },
     ],
   },
   {

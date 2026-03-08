@@ -7,7 +7,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import { NotificationDropdown } from '@/components/Notifications/NotificationDropdown';
+import { NotificationBell } from '@/components/Notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -62,7 +62,7 @@ export const TopNavbar = () => {
 
         {/* Actions */}
         <div className="flex items-center space-x-1">
-          <NotificationDropdown />
+          <NotificationBell />
 
           <Button variant="ghost" size="icon" className="relative h-9 w-9 text-muted-foreground hover:text-foreground">
             <MessageCircle className="h-4 w-4" />

@@ -1,41 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { LogoLoader } from '@/components/UI/LogoLoader';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Trophy, Star, Zap, Users, BookOpen, Calendar, 
-  Award, Medal, Crown, Sparkles, TrendingUp, Clock, Brain
+  Award, TrendingUp, Clock, Brain
 } from "lucide-react";
 
 const stagger = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.06 } } };
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.3 } } };
 
-const achievements = [
-  { id: 1, title: "First Steps", description: "Complete your first lesson", icon: BookOpen, category: "Learning", points: 50, earned: true, earnedDate: "2024-05-15", rarity: "common" },
-  { id: 2, title: "Speed Demon", description: "Complete 5 lessons in one day", icon: Zap, category: "Performance", points: 150, earned: true, earnedDate: "2024-05-20", rarity: "rare" },
-  { id: 3, title: "Perfect Score", description: "Get 100% on 10 quizzes", icon: Star, category: "Excellence", points: 300, earned: false, progress: 7, total: 10, rarity: "epic" },
-  { id: 4, title: "Helping Hand", description: "Help 20 fellow students", icon: Users, category: "Community", points: 200, earned: false, progress: 12, total: 20, rarity: "rare" },
-  { id: 5, title: "Night Owl", description: "Study after 10 PM for 7 days", icon: Clock, category: "Dedication", points: 100, earned: true, earnedDate: "2024-05-25", rarity: "uncommon" },
-  { id: 6, title: "Brain Master", description: "Master 5 different subjects", icon: Brain, category: "Knowledge", points: 500, earned: false, progress: 3, total: 5, rarity: "legendary" },
-];
+interface AchievementDef {
+  id: string;
+  title: string;
+  description: string;
+  icon: typeof BookOpen;
+  rarity: string;
+  points: number;
+  checkProgress: (data: any) => { earned: boolean; progress: number; total: number };
+}
 
-const leaderboard = [
-  { rank: 1, name: "Mwansa Mukuka", points: 4850, avatar: "MM" },
-  { rank: 2, name: "Sarah Banda", points: 4200, avatar: "SB" },
-  { rank: 3, name: "John Phiri", points: 3890, avatar: "JP" },
-  { rank: 4, name: "Grace Tembo", points: 3650, avatar: "GT" },
-  { rank: 5, name: "You", points: 2350, avatar: "YU", isCurrentUser: true },
-];
-
-const weeklyActivity = [
-  { day: "Mon", xp: 150, active: true },
-  { day: "Tue", xp: 200, active: true },
-  { day: "Wed", xp: 120, active: true },
-  { day: "Thu", xp: 180, active: true },
-  { day: "Fri", xp: 90, active: true },
-  { day: "Sat", xp: 0, active: false },
-  { day: "Sun", xp: 0, active: false },
+const achievementDefs: AchievementDef[] = [
+  { id: 'first_lesson', title: 'First Steps', description: 'Complete your first lesson', icon: BookOpen, rarity: 'common', points: 50,
+    checkProgress: (d) => ({ earned: d.lessons >= 1, progress: Math.min(d.lessons, 1), total: 1 }) },
+  { id: 'speed_5', title: 'Speed Learner', description: 'Complete 5 lessons', icon: Zap, rarity: 'rare', points: 150,
+    checkProgress: (d) => ({ earned: d.lessons >= 5, progress: Math.min(d.lessons, 5), total: 5 }) },
+  { id: 'quiz_10', title: 'Quiz Master', description: 'Complete 10 quizzes', icon: Star, rarity: 'epic', points: 300,
+    checkProgress: (d) => ({ earned: d.quizzes >= 10, progress: Math.min(d.quizzes, 10), total: 10 }) },
+  { id: 'goals_5', title: 'Goal Getter', description: 'Complete 5 study goals', icon: Award, rarity: 'rare', points: 200,
+    checkProgress: (d) => ({ earned: d.goals >= 5, progress: Math.min(d.goals, 5), total: 5 }) },
+  { id: 'streak_7', title: 'Week Warrior', description: 'Achieve a 7-day study streak', icon: Clock, rarity: 'epic', points: 250,
+    checkProgress: (d) => ({ earned: d.streak >= 7, progress: Math.min(d.streak, 7), total: 7 }) },
+  { id: 'courses_3', title: 'Knowledge Seeker', description: 'Enroll in 3 courses', icon: Brain, rarity: 'uncommon', points: 100,
+    checkProgress: (d) => ({ earned: d.courses >= 3, progress: Math.min(d.courses, 3), total: 3 }) },
 ];
 
 const rarityStyles: Record<string, { badge: string; glow: string }> = {
@@ -47,14 +48,48 @@ const rarityStyles: Record<string, { badge: string; glow: string }> = {
 };
 
 const AchievementSystem = () => {
-  const userXP = 2350;
-  const nextLevelXP = 3000;
-  const userLevel = 7;
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [playerData, setPlayerData] = useState({ lessons: 0, quizzes: 0, goals: 0, streak: 0, courses: 0, xp: 0 });
+
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      const [{ count: lessonCount }, { count: quizCount }, { count: goalCount }, { count: courseCount }, { data: statsData }] = await Promise.all([
+        supabase.from('lesson_completions').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+        supabase.from('quiz_attempts').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+        supabase.from('study_goals').select('*', { count: 'exact', head: true }).eq('user_id', user.id).eq('completed', true),
+        supabase.from('enrollments').select('*', { count: 'exact', head: true }).eq('user_id', user.id),
+        (supabase as any).from('user_stats').select('total_xp, current_streak').eq('user_id', user.id).maybeSingle(),
+      ]);
+
+      setPlayerData({
+        lessons: lessonCount || 0,
+        quizzes: quizCount || 0,
+        goals: goalCount || 0,
+        courses: courseCount || 0,
+        streak: statsData?.current_streak || 0,
+        xp: statsData?.total_xp || 0,
+      });
+      setLoading(false);
+    };
+    load();
+  }, [user]);
+
+  if (loading) return <div className="max-w-5xl mx-auto py-12 px-4"><LogoLoader text="Loading achievements..." /></div>;
+
+  const achievements = achievementDefs.map(def => {
+    const { earned, progress, total } = def.checkProgress(playerData);
+    return { ...def, earned, progress, total };
+  });
+
   const earnedCount = achievements.filter(a => a.earned).length;
+  const totalXP = achievements.filter(a => a.earned).reduce((s, a) => s + a.points, 0);
+  const userLevel = Math.floor(totalXP / 500) + 1;
+  const nextLevelXP = userLevel * 500;
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="max-w-5xl mx-auto py-6 px-4 space-y-6">
-      {/* Header */}
       <motion.div variants={fadeUp}>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <Trophy className="w-6 h-6 text-primary" /> Achievements
@@ -62,7 +97,6 @@ const AchievementSystem = () => {
         <p className="text-sm text-muted-foreground">{earnedCount}/{achievements.length} unlocked · Level {userLevel}</p>
       </motion.div>
 
-      {/* XP Bar */}
       <motion.div variants={fadeUp}>
         <Card className="border-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
           <CardContent className="p-5">
@@ -72,112 +106,46 @@ const AchievementSystem = () => {
                 <p className="text-xs text-muted-foreground">Learning Champion</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-bold text-foreground">{userXP.toLocaleString()} XP</p>
-                <p className="text-xs text-muted-foreground">{nextLevelXP - userXP} to next level</p>
+                <p className="text-lg font-bold text-foreground">{totalXP.toLocaleString()} XP</p>
+                <p className="text-xs text-muted-foreground">{nextLevelXP - totalXP} to next level</p>
               </div>
             </div>
-            <Progress value={(userXP / nextLevelXP) * 100} className="h-2.5" />
+            <Progress value={(totalXP / nextLevelXP) * 100} className="h-2.5" />
           </CardContent>
         </Card>
       </motion.div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Achievement Grid */}
-        <motion.div variants={fadeUp} className="lg:col-span-2">
-          <div className="grid sm:grid-cols-2 gap-3">
-            {achievements.map((a) => (
-              <Card key={a.id} className={`border-border/50 transition-all ${a.earned ? rarityStyles[a.rarity]?.glow : 'opacity-70'}`}>
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`p-2 rounded-lg ${a.earned ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                      <a.icon className="w-5 h-5" />
-                    </div>
-                    <Badge variant="outline" className={`text-[10px] ${rarityStyles[a.rarity]?.badge}`}>
-                      {a.rarity}
-                    </Badge>
+      <motion.div variants={fadeUp}>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {achievements.map((a) => (
+            <Card key={a.id} className={`border-border/50 transition-all ${a.earned ? rarityStyles[a.rarity]?.glow : 'opacity-70'}`}>
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className={`p-2 rounded-lg ${a.earned ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                    <a.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-sm text-foreground">{a.title}</h3>
-                  <p className="text-xs text-muted-foreground mb-3">{a.description}</p>
-                  {a.earned ? (
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-[10px]">+{a.points} XP</Badge>
-                      <span className="text-[10px] text-muted-foreground">{a.earnedDate}</span>
-                    </div>
-                  ) : a.progress !== undefined && a.total ? (
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>Progress</span>
-                        <span>{a.progress}/{a.total}</span>
-                      </div>
-                      <Progress value={(a.progress / a.total) * 100} className="h-1.5" />
-                    </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Sidebar */}
-        <motion.div variants={fadeUp} className="space-y-4">
-          {/* Leaderboard */}
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-primary" /> Leaderboard
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {leaderboard.map(u => (
-                <div key={u.rank} className={`flex items-center gap-3 p-2 rounded-lg ${u.isCurrentUser ? 'bg-primary/5 border border-primary/20' : ''}`}>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                    u.rank === 1 ? 'bg-amber-400 text-amber-900' :
-                    u.rank === 2 ? 'bg-muted text-muted-foreground' :
-                    u.rank === 3 ? 'bg-orange-400/50 text-orange-800' :
-                    'bg-muted text-muted-foreground'
-                  }`}>
-                    {u.rank}
-                  </div>
-                  <div className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">
-                    {u.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{u.name}</p>
-                    <p className="text-[10px] text-muted-foreground">{u.points.toLocaleString()} XP</p>
-                  </div>
+                  <Badge variant="outline" className={`text-[10px] ${rarityStyles[a.rarity]?.badge}`}>
+                    {a.rarity}
+                  </Badge>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Weekly Activity */}
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-primary" /> This Week
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-1.5">
-                {weeklyActivity.map(d => (
-                  <div key={d.day} className="text-center">
-                    <span className="text-[10px] text-muted-foreground">{d.day}</span>
-                    <div className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center text-[10px] font-semibold mt-1 ${
-                      d.active ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {d.xp}
+                <h3 className="font-semibold text-sm text-foreground">{a.title}</h3>
+                <p className="text-xs text-muted-foreground mb-3">{a.description}</p>
+                {a.earned ? (
+                  <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-[10px]">+{a.points} XP ✓</Badge>
+                ) : (
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>Progress</span>
+                      <span>{a.progress}/{a.total}</span>
                     </div>
+                    <Progress value={(a.progress / a.total) * 100} className="h-1.5" />
                   </div>
-                ))}
-              </div>
-              <div className="text-center mt-4 pt-3 border-t border-border/50">
-                <p className="text-xs text-muted-foreground">Weekly Total</p>
-                <p className="text-xl font-bold text-foreground">{weeklyActivity.reduce((s, d) => s + d.xp, 0)} XP</p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   );
 };

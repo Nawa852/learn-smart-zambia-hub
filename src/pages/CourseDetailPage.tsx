@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock, ClipboardCheck
+  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save
 } from 'lucide-react';
 
 interface Lesson {
@@ -41,6 +42,9 @@ const CourseDetailPage = () => {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [noteContent, setNoteContent] = useState('');
+  const [showNotes, setShowNotes] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
@@ -101,6 +105,20 @@ const CourseDetailPage = () => {
       .eq('user_id', user.id).eq('course_id', courseId);
 
     toast.success('Lesson completed!');
+  };
+
+  const saveNote = async () => {
+    if (!user || !courseId || !activeLesson || !noteContent.trim()) return;
+    setSavingNote(true);
+    await (supabase as any).from('student_notes').insert({
+      user_id: user.id,
+      lesson_id: activeLesson.id,
+      course_id: courseId,
+      content: noteContent.trim(),
+    });
+    setNoteContent('');
+    setSavingNote(false);
+    toast.success('Note saved!');
   };
 
   const progress = lessons.length > 0 ? (completedLessons.size / lessons.length) * 100 : 0;
@@ -231,6 +249,28 @@ const CourseDetailPage = () => {
                           <Button onClick={() => markComplete(activeLesson.id)}>
                             <CheckCircle className="w-4 h-4 mr-2" /> Mark as Complete
                           </Button>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Notes Panel */}
+                    {isEnrolled && (
+                      <div className="border-t border-border/50 pt-4 mt-4">
+                        <Button variant="ghost" size="sm" onClick={() => setShowNotes(!showNotes)} className="mb-2 text-muted-foreground">
+                          <StickyNote className="w-4 h-4 mr-2" /> {showNotes ? 'Hide Notes' : 'Take Notes'}
+                        </Button>
+                        {showNotes && (
+                          <div className="space-y-2">
+                            <Textarea
+                              value={noteContent}
+                              onChange={e => setNoteContent(e.target.value)}
+                              placeholder="Write your notes for this lesson..."
+                              className="min-h-[80px] bg-secondary/30"
+                            />
+                            <Button size="sm" onClick={saveNote} disabled={!noteContent.trim() || savingNote}>
+                              <Save className="w-3.5 h-3.5 mr-1" /> Save Note
+                            </Button>
+                          </div>
                         )}
                       </div>
                     )}
