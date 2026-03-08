@@ -60,25 +60,33 @@ export const studentNavigation: NavGroup[] = [
     label: "Study",
     items: [
       { title: "AI Study Buddy", url: "/ai", icon: Brain },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar, badge: "NEW" },
       { title: "Flashcards", url: "/flashcards", icon: Layers },
       { title: "AI Quiz", url: "/ai-quiz", icon: Sparkles },
       { title: "Mind Maps", url: "/mind-maps", icon: Lightbulb },
     ],
   },
   {
+    label: "Assignments",
+    items: [
+      { title: "My Assignments", url: "/my-assignments", icon: ClipboardCheck, badge: "NEW" },
+    ],
+  },
+  {
     label: "ECZ Resources",
     items: [
+      { title: "Resource Library", url: "/ecz-resource-library", icon: Library, badge: "NEW" },
       { title: "Past Papers", url: "/ecz-past-papers", icon: FileText },
-      { title: "Practice Quiz", url: "/ecz-practice-quiz", icon: Timer, badge: "NEW" },
+      { title: "Practice Quiz", url: "/ecz-practice-quiz", icon: Timer },
       { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Calculator },
       { title: "Video Library", url: "/ecz-videos", icon: Youtube },
-      { title: "Resources Hub", url: "/zambian-resources", icon: Library },
+      { title: "Resources Hub", url: "/zambian-resources", icon: Globe },
     ],
   },
   {
     label: "Progress",
     items: [
-      { title: "Progress Report", url: "/progress-report", icon: TrendingUp, badge: "NEW" },
+      { title: "Progress Report", url: "/progress-report", icon: TrendingUp },
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
       { title: "Achievements", url: "/achievements", icon: Trophy },
       { title: "Goals", url: "/goals", icon: Target },
