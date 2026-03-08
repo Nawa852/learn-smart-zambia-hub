@@ -93,6 +93,10 @@ const SkillsVideoPage = React.lazy(() => import('@/pages/SkillsVideoPage'));
 const CybersecurityDashboardPage = React.lazy(() => import('@/pages/CybersecurityDashboardPage'));
 const CybersecurityLabsPage = React.lazy(() => import('@/pages/CybersecurityLabsPage'));
 const CybersecurityVideoPage = React.lazy(() => import('@/pages/CybersecurityVideoPage'));
+const HackingTerminalPage = React.lazy(() => import('@/pages/HackingTerminalPage'));
+const StudentVideoHubPage = React.lazy(() => import('@/pages/StudentVideoHubPage'));
+const RoleVideoHubPage = React.lazy(() => import('@/pages/RoleVideoHubPage'));
+const SkillsCategoryPage = React.lazy(() => import('@/pages/SkillsCategoryPage'));
 const DeveloperProjectsPage = React.lazy(() => import('@/pages/DeveloperProjectsPage'));
 const DeveloperChallengesPage = React.lazy(() => import('@/pages/DeveloperChallengesPage'));
 const DeveloperCodeReviewPage = React.lazy(() => import('@/pages/DeveloperCodeReviewPage'));
@@ -326,11 +330,20 @@ function App() {
               {/* Skills Development Pages */}
               <Route path="/skills/dashboard" element={<PG><SkillsDashboardPage /></PG>} />
               <Route path="/skills/videos" element={<PG><SkillsVideoPage /></PG>} />
+              <Route path="/skills/categories" element={<PG><SkillsCategoryPage /></PG>} />
 
               {/* Cybersecurity Pages */}
               <Route path="/cybersecurity/dashboard" element={<PG><CybersecurityDashboardPage /></PG>} />
               <Route path="/cybersecurity/labs" element={<PG><CybersecurityLabsPage /></PG>} />
               <Route path="/cybersecurity/videos" element={<PG><CybersecurityVideoPage /></PG>} />
+              <Route path="/cybersecurity/terminal" element={<PG><HackingTerminalPage /></PG>} />
+
+              {/* Role-specific Video Hubs */}
+              <Route path="/student-videos" element={<PG><StudentVideoHubPage /></PG>} />
+              <Route path="/teacher-videos" element={<PG><RoleVideoHubPage role="teacher" /></PG>} />
+              <Route path="/parent-videos" element={<PG><RoleVideoHubPage role="guardian" /></PG>} />
+              <Route path="/medical-videos" element={<PG><RoleVideoHubPage role="doctor" /></PG>} />
+              <Route path="/developer-videos" element={<PG><RoleVideoHubPage role="developer" /></PG>} />
 
               {/* Developer Pages */}
               <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />

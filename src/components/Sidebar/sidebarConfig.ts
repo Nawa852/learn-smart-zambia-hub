@@ -86,6 +86,7 @@ export const studentNavigation: NavGroup[] = [
       { title: "Practice Quiz", url: "/ecz-practice-quiz", icon: Timer },
       { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Calculator },
       { title: "Video Library", url: "/ecz-videos", icon: Youtube },
+      { title: "ECZ Video Hub", url: "/student-videos", icon: Youtube, badge: "NEW" },
       { title: "Resources Hub", url: "/zambian-resources", icon: Globe },
     ],
   },
@@ -465,6 +466,7 @@ export const skillsNavigation: NavGroup[] = [
     label: "Skills",
     items: [
       { title: "Skills Hub", url: "/skills/dashboard", icon: Wrench, badge: "NEW" },
+      { title: "Choose Focus", url: "/skills/categories", icon: Target, badge: "NEW" },
       { title: "Video Tutorials", url: "/skills/videos", icon: Video, badge: "NEW" },
     ],
   },
@@ -517,6 +519,7 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Cyber Dashboard", url: "/cybersecurity/dashboard", icon: Shield, badge: "NEW" },
       { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
       { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
+      { title: "Hacking Terminal", url: "/cybersecurity/terminal", icon: Monitor, badge: "🔥" },
     ],
   },
   {
