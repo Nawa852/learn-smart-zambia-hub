@@ -97,6 +97,11 @@ import AdminCurriculumPage from '@/pages/AdminCurriculumPage';
 import AdminSchedulingPage from '@/pages/AdminSchedulingPage';
 import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
 
+// New Feature Pages
+import StudyGroupChatPage from '@/pages/StudyGroupChatPage';
+import CreateCoursePage from '@/pages/CreateCoursePage';
+import CourseCatalogPage from '@/pages/CourseCatalogPage';
+
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
 import ParentAttendancePage from '@/pages/ParentAttendancePage';
@@ -181,6 +186,9 @@ function App() {
 
             {/* Courses & Learning */}
             <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
+            <Route path="/course-catalog" element={<ProtectedRoute><MainLayout><CourseCatalogPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/create-course" element={<ProtectedRoute><MainLayout><CreateCoursePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/study-chat" element={<ProtectedRoute><MainLayout><StudyGroupChatPage /></MainLayout></ProtectedRoute>} />
             <Route path="/lessons" element={<ProtectedRoute><MainLayout><LessonsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/classroom" element={<ProtectedRoute><MainLayout><VirtualClassroomPage /></MainLayout></ProtectedRoute>} />
             <Route path="/video-learning" element={<ProtectedRoute><MainLayout><VideoLearningPage /></MainLayout></ProtectedRoute>} />

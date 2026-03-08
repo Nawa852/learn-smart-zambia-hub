@@ -99,6 +99,8 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Courses & Lessons",
     items: [
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen, badge: "NEW" },
+      { title: "Create Course", url: "/create-course", icon: Layers },
       { title: "My Courses", url: "/courses", icon: BookOpen },
       { title: "Lessons", url: "/lessons", icon: GraduationCap },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },
@@ -130,6 +132,7 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Community",
     items: [
+      { title: "Study Group Chat", url: "/study-chat", icon: MessageSquare, badge: "LIVE" },
       { title: "Community Hub", url: "/community", icon: Users },
       { title: "Study Groups", url: "/study-groups", icon: MessageSquare },
       { title: "Social Feed", url: "/social-feed", icon: MessagesSquare },
