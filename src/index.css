@@ -189,25 +189,132 @@
   }
 
   .theme-forest {
-    --background: 150 20% 5%;
-    --foreground: 140 10% 90%;
-    --card: 150 20% 9%;
-    --card-foreground: 140 10% 90%;
-    --popover: 150 20% 8%;
-    --popover-foreground: 140 10% 90%;
-    --primary: 142 76% 36%;
+    --background: 150 25% 5%;
+    --foreground: 140 10% 92%;
+    --card: 150 25% 8%;
+    --card-foreground: 140 10% 92%;
+    --popover: 150 25% 7%;
+    --popover-foreground: 140 10% 92%;
+    --primary: 152 76% 42%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 150 15% 14%;
+    --secondary: 150 18% 13%;
     --secondary-foreground: 140 10% 85%;
-    --muted: 150 15% 14%;
+    --muted: 150 18% 13%;
     --muted-foreground: 140 10% 50%;
     --accent: 158 64% 52%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 150 12% 16%;
-    --input: 150 12% 14%;
-    --ring: 142 76% 36%;
+    --border: 150 14% 15%;
+    --input: 150 14% 13%;
+    --ring: 152 76% 42%;
+    --sidebar-background: 150 25% 6%;
+    --sidebar-foreground: 140 10% 80%;
+    --sidebar-primary: 152 76% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 18% 13%;
+    --sidebar-accent-foreground: 140 10% 92%;
+    --sidebar-border: 150 14% 15%;
+    --sidebar-ring: 152 76% 42%;
+  }
+
+  /* Neon Pulse — Cyberpunk-inspired */
+  .theme-neon {
+    --background: 250 30% 5%;
+    --foreground: 0 0% 95%;
+    --card: 250 30% 8%;
+    --card-foreground: 0 0% 95%;
+    --popover: 250 30% 7%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 155 100% 50%;
+    --primary-foreground: 250 30% 5%;
+    --secondary: 250 22% 13%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 250 22% 13%;
+    --muted-foreground: 250 10% 50%;
+    --accent: 300 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 100% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 250 18% 16%;
+    --input: 250 18% 14%;
+    --ring: 155 100% 50%;
+    --glow-primary: 155 100% 50%;
+    --glow-accent: 300 100% 50%;
+    --sidebar-background: 250 30% 6%;
+    --sidebar-foreground: 0 0% 80%;
+    --sidebar-primary: 155 100% 50%;
+    --sidebar-primary-foreground: 250 30% 5%;
+    --sidebar-accent: 250 22% 13%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 250 18% 16%;
+    --sidebar-ring: 155 100% 50%;
+  }
+
+  /* Royal Gold — Luxurious warm tones */
+  .theme-royal {
+    --background: 270 25% 6%;
+    --foreground: 45 10% 92%;
+    --card: 270 25% 9%;
+    --card-foreground: 45 10% 92%;
+    --popover: 270 25% 8%;
+    --popover-foreground: 45 10% 92%;
+    --primary: 45 93% 55%;
+    --primary-foreground: 270 25% 6%;
+    --secondary: 270 18% 14%;
+    --secondary-foreground: 45 10% 85%;
+    --muted: 270 18% 14%;
+    --muted-foreground: 270 10% 50%;
+    --accent: 263 70% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 270 14% 16%;
+    --input: 270 14% 14%;
+    --ring: 45 93% 55%;
+    --glow-primary: 45 93% 55%;
+    --glow-accent: 263 70% 50%;
+    --sidebar-background: 270 25% 7%;
+    --sidebar-foreground: 45 10% 80%;
+    --sidebar-primary: 45 93% 55%;
+    --sidebar-primary-foreground: 270 25% 6%;
+    --sidebar-accent: 270 18% 14%;
+    --sidebar-accent-foreground: 45 10% 92%;
+    --sidebar-border: 270 14% 16%;
+    --sidebar-ring: 45 93% 55%;
+  }
+
+  /* Midnight Blue — Deep indigo tones */
+  .theme-midnight {
+    --background: 225 40% 5%;
+    --foreground: 215 15% 92%;
+    --card: 225 40% 8%;
+    --card-foreground: 215 15% 92%;
+    --popover: 225 40% 7%;
+    --popover-foreground: 215 15% 92%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 225 25% 13%;
+    --secondary-foreground: 215 15% 85%;
+    --muted: 225 25% 13%;
+    --muted-foreground: 225 10% 50%;
+    --accent: 239 84% 67%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 225 20% 16%;
+    --input: 225 20% 14%;
+    --ring: 217 91% 60%;
+    --glow-primary: 217 91% 60%;
+    --glow-accent: 239 84% 67%;
+    --sidebar-background: 225 40% 6%;
+    --sidebar-foreground: 215 15% 80%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 225 25% 13%;
+    --sidebar-accent-foreground: 215 15% 92%;
+    --sidebar-border: 225 20% 16%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 

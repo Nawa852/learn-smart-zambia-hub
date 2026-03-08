@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,46 +5,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sun, Moon, Palette, Waves, Sunset, TreePine, MapPin, Check } from "lucide-react";
+import { Sun, Moon, Palette, Waves, Sunset, TreePine, MapPin, Check, Zap, Crown, CloudMoon } from "lucide-react";
+import { useTheme, ThemeType } from "@/contexts/ThemeContext";
 
-type ThemeType = 'light' | 'dark' | 'zambian' | 'ocean' | 'sunset' | 'forest';
-
-const themes: { id: ThemeType; name: string; icon: React.ElementType }[] = [
-  { id: 'light', name: 'Light', icon: Sun },
-  { id: 'dark', name: 'Dark', icon: Moon },
-  { id: 'zambian', name: 'Zambian Heritage', icon: MapPin },
-  { id: 'ocean', name: 'Ocean Blue', icon: Waves },
-  { id: 'sunset', name: 'Sunset', icon: Sunset },
-  { id: 'forest', name: 'Forest', icon: TreePine },
-];
+const themeIcons: Record<ThemeType, React.ElementType> = {
+  light: Sun,
+  dark: Moon,
+  zambian: MapPin,
+  ocean: Waves,
+  sunset: Sunset,
+  forest: TreePine,
+  neon: Zap,
+  royal: Crown,
+  midnight: CloudMoon,
+};
 
 export function ThemeSwitcher() {
-  const [currentTheme, setCurrentTheme] = useState<ThemeType>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'light';
-    }
-    return 'light';
-  });
+  const { theme, setTheme, themes } = useTheme();
 
-  const applyTheme = (theme: ThemeType) => {
-    const root = document.documentElement;
-    root.classList.remove('dark', 'theme-zambian', 'theme-ocean', 'theme-sunset', 'theme-forest');
-    
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else if (theme !== 'light') {
-      root.classList.add(`theme-${theme}`);
-    }
-    
-    localStorage.setItem('edu-zambia-theme', theme);
-    setCurrentTheme(theme);
-  };
-
-  useEffect(() => {
-    applyTheme(currentTheme);
-  }, []);
-
-  const CurrentIcon = themes.find(t => t.id === currentTheme)?.icon || Palette;
+  const CurrentIcon = themeIcons[theme] || Palette;
 
   return (
     <DropdownMenu>
@@ -55,20 +33,28 @@ export function ThemeSwitcher() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 bg-popover z-50">
-        {themes.map((theme) => (
-          <DropdownMenuItem
-            key={theme.id}
-            onClick={() => applyTheme(theme.id)}
-            className="flex items-center justify-between cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <theme.icon className="h-4 w-4" />
-              <span>{theme.name}</span>
-            </div>
-            {currentTheme === theme.id && <Check className="h-4 w-4 text-primary" />}
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent align="end" className="w-52 bg-popover z-50">
+        {themes.map((t) => {
+          const Icon = themeIcons[t.id] || Palette;
+          return (
+            <DropdownMenuItem
+              key={t.id}
+              onClick={() => setTheme(t.id)}
+              className="flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Icon className="h-4 w-4" />
+                <span>{t.name}</span>
+                <div className="flex gap-0.5 ml-1">
+                  {t.colors.map((c, i) => (
+                    <span key={i} className="w-2.5 h-2.5 rounded-full border border-border/30" style={{ background: c }} />
+                  ))}
+                </div>
+              </div>
+              {theme === t.id && <Check className="h-4 w-4 text-primary" />}
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
