@@ -120,6 +120,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <SidebarProvider>
+      <ScheduleEnforcer />
       <div className="min-h-screen flex w-full bg-background">
         <RoleBasedSidebar />
         <div className="flex-1 flex flex-col">

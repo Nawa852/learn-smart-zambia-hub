@@ -343,10 +343,12 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
             </CardHeader>
             <CardContent className="space-y-2">
               {[
-                { label: 'AI Study Buddy', icon: Brain, path: '/ai', color: 'text-purple-500' },
-                { label: 'Study Groups', icon: MessageSquare, path: '/study-chat', color: 'text-blue-500' },
-                { label: 'ECZ Past Papers', icon: Target, path: '/ecz-past-papers', color: 'text-amber-500' },
-                { label: 'Achievements', icon: Trophy, path: '/achievements', color: 'text-emerald-500' },
+                { label: 'Focus Mode', icon: Shield, path: '/focus-mode', color: 'text-primary' },
+                { label: 'AI Study Buddy', icon: Brain, path: '/ai', color: 'text-primary' },
+                { label: 'Leaderboard', icon: Trophy, path: '/leaderboard', color: 'text-primary' },
+                { label: 'Badges', icon: Award, path: '/badges', color: 'text-primary' },
+                { label: 'Screen Time', icon: Monitor, path: '/screen-time', color: 'text-muted-foreground' },
+                { label: 'ECZ Past Papers', icon: Target, path: '/ecz-past-papers', color: 'text-primary' },
               ].map(action => (
                 <Button
                   key={action.path}
