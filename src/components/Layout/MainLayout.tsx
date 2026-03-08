@@ -162,10 +162,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               ))}
             </div>
           )}
-          <main className="flex-1 p-6 overflow-auto">
+          <main className="flex-1 p-6 pb-20 lg:pb-6 overflow-auto">
             {children}
           </main>
-          <footer className="border-t bg-card p-4">
+          <footer className="hidden lg:block border-t bg-card p-4">
             <div className="text-center text-sm text-muted-foreground">
               Powered by{' '}
               <span className="font-semibold text-primary">
@@ -177,8 +177,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               </button>
             </div>
           </footer>
+          <MobileBottomNav />
         </div>
       </div>
+
+      {/* Onboarding Tour */}
+      <OnboardingTour />
 
       {/* Cmd+K Command Palette */}
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
