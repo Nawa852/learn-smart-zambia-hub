@@ -281,7 +281,7 @@ const MFASetupPage = () => {
 
                   {/* QR Code */}
                   <div className="flex justify-center">
-                    <div className="p-4 bg-white rounded-2xl shadow-lg glow-border">
+                    <div className="p-4 bg-white rounded-2xl shadow-card border border-border">
                       {qrCode && <img src={qrCode} alt="MFA QR Code" className="w-48 h-48" />}
                     </div>
                   </div>
