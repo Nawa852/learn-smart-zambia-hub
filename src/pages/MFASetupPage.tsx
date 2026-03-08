@@ -318,7 +318,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Lock className="w-5 h-5 text-primary" />
-                    <span className="gradient-text">Verify Setup</span>
+                    <span className="text-primary">Verify Setup</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
