@@ -218,10 +218,10 @@ const EnhancedDashboard = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {aiInsights.map((insight, index) => (
-                <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer group bg-white">
+                <div key={index} className="p-4 border border-border rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer group bg-card">
                   <insight.icon className={`h-8 w-8 ${insight.color} mb-2 group-hover:scale-110 transition-transform duration-300`} />
-                  <h3 className="font-semibold text-gray-900 mb-1">{insight.title}</h3>
-                  <p className="text-sm text-gray-600">{insight.description}</p>
+                  <h3 className="font-semibold text-foreground mb-1">{insight.title}</h3>
+                  <p className="text-sm text-muted-foreground">{insight.description}</p>
                 </div>
               ))}
             </div>
