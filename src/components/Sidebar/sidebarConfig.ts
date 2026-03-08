@@ -553,6 +553,10 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
       { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
       { title: "Hacking Terminal", url: "/cybersecurity/terminal", icon: Monitor, badge: "🔥" },
+      { title: "CTF Arena", url: "/cybersecurity/ctf", icon: Flag, badge: "LIVE" },
+      { title: "Kill Chain", url: "/cybersecurity/kill-chain", icon: Shield, badge: "NEW" },
+      { title: "Vuln Scanner", url: "/cybersecurity/vuln-scanner", icon: Search, badge: "NEW" },
+      { title: "Report Writer", url: "/cybersecurity/report-writer", icon: FileText, badge: "AI" },
     ],
   },
   {
