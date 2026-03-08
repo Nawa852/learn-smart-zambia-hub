@@ -150,6 +150,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     toast.info("Phone verification is not currently available");
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/password-reset`,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return { error };
+      }
+
+      toast.success("Password reset email sent!");
+      return { error: null };
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send reset email");
+      return { error };
+    }
+  };
+
+  const updatePassword = async (password: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return { error };
+      }
+
+      toast.success("Password updated successfully!");
+      return { error: null };
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update password");
+      return { error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -161,6 +199,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signInWithFacebook,
     sendSMSVerification,
     verifyPhone,
+    resetPassword,
+    updatePassword,
   };
 
   return (
