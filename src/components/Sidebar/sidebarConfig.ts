@@ -519,6 +519,7 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Cyber Dashboard", url: "/cybersecurity/dashboard", icon: Shield, badge: "NEW" },
       { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
       { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
+      { title: "Hacking Terminal", url: "/cybersecurity/terminal", icon: Monitor, badge: "🔥" },
     ],
   },
   {
