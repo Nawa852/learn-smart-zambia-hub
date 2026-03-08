@@ -17,7 +17,7 @@ const stages = ['ideation', 'validation', 'mvp', 'growth', 'scaling'];
 export default function EntrepreneurVenturesPage() {
   const { ventures, loading, addVenture, updateVenture, deleteVenture } = useVentures();
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ name: '', sector: '', stage: 'ideation', description: '', funding_status: 'bootstrapped', funding_amount: 0, team_size: 1, progress: 0 });
+  const [form, setForm] = useState({ name: '', sector: '', stage: 'ideation', description: '', funding_status: 'bootstrapped', funding_amount: 0, team_size: 1, progress: 0, notes: '' });
 
   const handleSubmit = async () => {
     if (!form.name) return;
