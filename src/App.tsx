@@ -127,6 +127,13 @@ const ParentTeacherContactPage = React.lazy(() => import('@/pages/ParentTeacherC
 const ParentSchoolUpdatesPage = React.lazy(() => import('@/pages/ParentSchoolUpdatesPage'));
 const ParentProgressTrackerPage = React.lazy(() => import('@/pages/ParentProgressTrackerPage'));
 const TeacherCollaborationHubPage = React.lazy(() => import('@/pages/TeacherCollaborationHubPage'));
+const MinistryProvincesPage = React.lazy(() => import('@/pages/MinistryProvincesPage'));
+const MinistryPolicyTrackerPage = React.lazy(() => import('@/pages/MinistryPolicyTrackerPage'));
+const MinistrySchoolRegistryPage = React.lazy(() => import('@/pages/MinistrySchoolRegistryPage'));
+const MinistryInterventionsPage = React.lazy(() => import('@/pages/MinistryInterventionsPage'));
+const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAnalyticsPage'));
+const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
+const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
