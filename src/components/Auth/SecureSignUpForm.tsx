@@ -14,8 +14,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Lock, CheckCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { motion } from 'framer-motion';
 
 interface SecureSignUpFormProps {
   onSuccess?: () => void;
