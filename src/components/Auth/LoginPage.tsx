@@ -149,13 +149,23 @@ const LoginPage = () => {
               ))}
             </motion.div>
 
-            <div className="text-xs opacity-70 border-t border-background/30 pt-4">
+            <motion.div 
+              className="text-xs opacity-70 border-t border-background/30 pt-4 relative z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
               © 2025 Edu Zambia. Empowering Zambian students with AI-driven education.
-            </div>
+            </motion.div>
           </div>
           
           {/* Right Panel - Authentication Forms */}
-          <div className="p-6 lg:p-12 bg-card flex flex-col justify-center">
+          <motion.div 
+            className="p-6 lg:p-12 bg-gradient-card/50 flex flex-col justify-center glass-card backdrop-blur-md"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             <CardContent className="p-0">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg mb-8">
