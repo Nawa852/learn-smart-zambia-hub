@@ -444,6 +444,9 @@ function App() {
 
               {/* Cybersecurity New Pages */}
               <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
+              <Route path="/cybersecurity/vuln-scanner" element={<PG><CyberVulnScannerPage /></PG>} />
+              <Route path="/cybersecurity/kill-chain" element={<PG><CyberKillChainPage /></PG>} />
+              <Route path="/cybersecurity/report-writer" element={<PG><CyberReportWriterPage /></PG>} />
               <Route path="/cybersecurity/forensics" element={<PG><CyberForensicsPage /></PG>} />
               <Route path="/cybersecurity/crypto" element={<PG><CyberCryptoPage /></PG>} />
               <Route path="/cybersecurity/incident-response" element={<PG><CyberIncidentResponsePage /></PG>} />
