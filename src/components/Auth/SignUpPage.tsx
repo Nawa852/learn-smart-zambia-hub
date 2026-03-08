@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,6 @@ const SignUpPage = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
     if (!fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!email.trim()) newErrors.email = 'Email is required';
     if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
@@ -36,7 +34,6 @@ const SignUpPage = () => {
     if (!userType) newErrors.userType = 'Please select your role';
     if (userType === 'student' && !grade) newErrors.grade = 'Please select your grade';
     if (!agreeToTerms) newErrors.terms = 'You must agree to the terms and conditions';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -44,17 +41,12 @@ const SignUpPage = () => {
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
     try {
       const { error } = await signUp(email, password, fullName, userType, grade);
-
-      if (error) {
-        if (error.message.includes('User already exists')) {
-          setErrors({ ...errors, email: 'A user with this email already exists. Please sign in.' });
-        }
+      if (error?.message.includes('User already exists')) {
+        setErrors({ ...errors, email: 'A user with this email already exists.' });
       }
-      // Success handling and redirect is done in AuthProvider
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {
@@ -62,56 +54,24 @@ const SignUpPage = () => {
     }
   };
 
-  const handleFacebookSignUp = async () => {
-    setLoading(true);
-    try {
-      await signInWithFacebook();
-      // Redirect handling is done in AuthProvider
-    } catch (error) {
-      console.error('Facebook sign up error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    setLoading(true);
-    try {
-      await signInWithGoogle();
-      // Redirect handling is done in AuthProvider
-    } catch (error) {
-      console.error('Google sign up error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleFacebookSignUp = async () => { setLoading(true); try { await signInWithFacebook(); } catch (e) {} finally { setLoading(false); } };
+  const handleGoogleSignUp = async () => { setLoading(true); try { await signInWithGoogle(); } catch (e) {} finally { setLoading(false); } };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-green-400 to-blue-400 rounded-full opacity-15 animate-bounce" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-25 animate-ping" style={{ animationDuration: '2s' }}></div>
-      </div>
-
-      <Card className="w-full max-w-md relative z-10 shadow-2xl bg-white/95 backdrop-blur">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md relative z-10 shadow-card-hover bg-card">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-              <GraduationCap className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+              <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Join EDU ZAMBIA</CardTitle>
+          <CardTitle className="text-2xl font-bold">Join EDU ZAMBIA</CardTitle>
           <CardDescription className="text-lg">Start your learning journey with Africa's leading AI-powered education platform</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={handleGoogleSignUp}
-              variant="outline"
-              className="w-full h-12 border-2 hover:bg-red-50"
-              disabled={loading}
-            >
+            <Button onClick={handleGoogleSignUp} variant="outline" className="w-full h-12 border-2" disabled={loading}>
               <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                 <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -120,13 +80,8 @@ const SignUpPage = () => {
               </svg>
               Google
             </Button>
-            <Button
-              onClick={handleFacebookSignUp}
-              variant="outline"
-              className="w-full h-12 border-2 hover:bg-blue-50"
-              disabled={loading}
-            >
-              <Facebook className="mr-2 h-5 w-5 text-blue-600" />
+            <Button onClick={handleFacebookSignUp} variant="outline" className="w-full h-12 border-2" disabled={loading}>
+              <Facebook className="mr-2 h-5 w-5 text-primary" />
               Facebook
             </Button>
           </div>
@@ -134,7 +89,7 @@ const SignUpPage = () => {
           <div className="relative">
             <Separator />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-white px-3 text-sm text-gray-500 font-medium">OR</span>
+              <span className="bg-card px-3 text-sm text-muted-foreground font-medium">OR</span>
             </div>
           </div>
 
@@ -142,157 +97,85 @@ const SignUpPage = () => {
             <div className="space-y-2">
               <Label htmlFor="fullName" className="text-sm font-medium">Full Name *</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="fullName"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10 h-11"
-                  required
-                />
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input id="fullName" type="text" placeholder="Enter your full name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="pl-10 h-11" required />
               </div>
-              {errors.fullName && <p className="text-sm text-red-600">{errors.fullName}</p>}
+              {errors.fullName && <p className="text-sm text-destructive">{errors.fullName}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">Email Address *</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-11"
-                  required
-                />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input id="email" type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 h-11" required />
               </div>
-              {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="userType" className="text-sm font-medium">I am a *</Label>
               <Select value={userType} onValueChange={setUserType}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
+                <SelectTrigger className="h-11"><SelectValue placeholder="Select your role" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="student">
-                    <div className="flex items-center">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Student
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="teacher">
-                    <div className="flex items-center">
-                      <GraduationCap className="mr-2 h-4 w-4" />
-                      Teacher
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="parent">
-                    <div className="flex items-center">
-                      <Users className="mr-2 h-4 w-4" />
-                      Parent
-                    </div>
-                  </SelectItem>
+                  <SelectItem value="student"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Student</div></SelectItem>
+                  <SelectItem value="teacher"><div className="flex items-center"><GraduationCap className="mr-2 h-4 w-4" />Teacher</div></SelectItem>
+                  <SelectItem value="parent"><div className="flex items-center"><Users className="mr-2 h-4 w-4" />Parent</div></SelectItem>
                 </SelectContent>
               </Select>
-              {errors.userType && <p className="text-sm text-red-600">{errors.userType}</p>}
+              {errors.userType && <p className="text-sm text-destructive">{errors.userType}</p>}
             </div>
 
             {userType === 'student' && (
               <div className="space-y-2">
                 <Label htmlFor="grade" className="text-sm font-medium">Grade Level *</Label>
                 <Select value={grade} onValueChange={setGrade}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Select your grade" />
-                  </SelectTrigger>
+                  <SelectTrigger className="h-11"><SelectValue placeholder="Select your grade" /></SelectTrigger>
                   <SelectContent>
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((gradeNum) => (
-                      <SelectItem key={gradeNum} value={`grade-${gradeNum}`}>
-                        Grade {gradeNum}
-                      </SelectItem>
+                      <SelectItem key={gradeNum} value={`grade-${gradeNum}`}>Grade {gradeNum}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.grade && <p className="text-sm text-red-600">{errors.grade}</p>}
+                {errors.grade && <p className="text-sm text-destructive">{errors.grade}</p>}
               </div>
             )}
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-sm font-medium">Password *</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Create a password (min. 6 characters)"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-11"
-                  required
-                  minLength={6}
-                />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input id="password" type="password" placeholder="Create a password (min. 6 characters)" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 h-11" required minLength={6} />
               </div>
-              {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password *</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="pl-10 h-11"
-                  required
-                />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input id="confirmPassword" type="password" placeholder="Confirm your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pl-10 h-11" required />
               </div>
-              {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
             </div>
 
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="terms" 
-                checked={agreeToTerms}
-                onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)}
-              />
-              <Label htmlFor="terms" className="text-sm text-gray-600">
-                I agree to the{' '}
-                <Link to="/terms" className="text-blue-600 hover:underline">
-                  Terms & Conditions
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="text-blue-600 hover:underline">
-                  Privacy Policy
-                </Link>
+              <Checkbox id="terms" checked={agreeToTerms} onCheckedChange={(checked) => setAgreeToTerms(checked as boolean)} />
+              <Label htmlFor="terms" className="text-sm text-muted-foreground">
+                I agree to the <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
               </Label>
             </div>
-            {errors.terms && <p className="text-sm text-red-600">{errors.terms}</p>}
+            {errors.terms && <p className="text-sm text-destructive">{errors.terms}</p>}
 
-            <Button 
-              type="submit" 
-              className="w-full h-12 text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" 
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
               {loading ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
 
           <div className="text-center text-sm">
-            <span className="text-gray-600">Already have an account? </span>
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">
-              Sign in
-            </Link>
+            <span className="text-muted-foreground">Already have an account? </span>
+            <Link to="/login" className="text-primary hover:underline font-medium">Sign in</Link>
           </div>
-
-          <div className="text-center text-xs text-gray-500">
+          <div className="text-center text-xs text-muted-foreground">
             By signing up, you'll join over 50,000+ learners across Zambia
           </div>
         </CardContent>

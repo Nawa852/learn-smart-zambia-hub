@@ -112,7 +112,7 @@ const MFASetupPage = () => {
 
   const GlassCard = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay }}>
-      <Card className={`glass-card border border-border/30 shadow-lg ${className}`}>{children}</Card>
+      <Card className={`bg-card border border-border shadow-card ${className}`}>{children}</Card>
     </motion.div>
   );
 
@@ -133,11 +133,11 @@ const MFASetupPage = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate('/settings')} className="border border-border/30 hover:border-primary/30">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20 flex items-center justify-center glow-border">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
             <Shield className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold gradient-text">Two-Factor Authentication</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary">Two-Factor Authentication</h1>
             <p className="text-sm text-muted-foreground">Add an extra layer of security to your account</p>
           </div>
         </motion.div>
@@ -185,7 +185,7 @@ const MFASetupPage = () => {
               {/* Methods */}
               <GlassCard delay={0.1}>
                 <CardHeader>
-                  <CardTitle className="text-lg gradient-text">Authentication Methods</CardTitle>
+                  <CardTitle className="text-lg text-primary">Authentication Methods</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <button
@@ -271,7 +271,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <QrCode className="w-5 h-5 text-primary" />
-                    <span className="gradient-text">Scan QR Code</span>
+                    <span className="text-primary">Scan QR Code</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -281,7 +281,7 @@ const MFASetupPage = () => {
 
                   {/* QR Code */}
                   <div className="flex justify-center">
-                    <div className="p-4 bg-white rounded-2xl shadow-lg glow-border">
+                    <div className="p-4 bg-white rounded-2xl shadow-card border border-border">
                       {qrCode && <img src={qrCode} alt="MFA QR Code" className="w-48 h-48" />}
                     </div>
                   </div>
@@ -303,7 +303,7 @@ const MFASetupPage = () => {
                     </div>
                   </div>
 
-                  <Button onClick={() => setStep('verify')} className="w-full bg-primary text-primary-foreground glow-primary">
+                  <Button onClick={() => setStep('verify')} className="w-full bg-primary text-primary-foreground">
                     I've scanned the code
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -318,7 +318,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Lock className="w-5 h-5 text-primary" />
-                    <span className="gradient-text">Verify Setup</span>
+                    <span className="text-primary">Verify Setup</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -345,7 +345,7 @@ const MFASetupPage = () => {
                     <Button
                       onClick={verifyMFA}
                       disabled={verifyCode.length !== 6 || loading}
-                      className="flex-1 bg-primary text-primary-foreground glow-primary"
+                      className="flex-1 bg-primary text-primary-foreground"
                     >
                       {loading ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
                       Verify
@@ -362,7 +362,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Key className="w-5 h-5 text-warning" />
-                    <span className="gradient-text">Backup Codes</span>
+                    <span className="text-primary">Backup Codes</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-5">

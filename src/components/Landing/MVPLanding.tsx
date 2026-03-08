@@ -57,7 +57,7 @@ const MVPLanding = () => {
       </div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-card border-b border-border">
         <div className="container mx-auto px-4 flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
@@ -69,7 +69,7 @@ const MVPLanding = () => {
             <Button variant="ghost" size="sm" onClick={() => navigate('/auth')} className="text-muted-foreground hover:text-foreground">
               Log in
             </Button>
-            <Button size="sm" onClick={() => navigate('/auth?mode=signup')} className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/25">
+            <Button size="sm" onClick={() => navigate('/auth?mode=signup')} className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-card">
               Get Started
             </Button>
           </div>
@@ -95,7 +95,7 @@ const MVPLanding = () => {
             <span className="text-foreground">Learn Anything</span>
             <br />
             <span className="text-foreground">with </span>
-            <span className="gradient-text">AI That Gets You</span>
+            <span className="text-primary font-semibold">AI That Gets You</span>
           </motion.h1>
 
           <motion.p
@@ -116,7 +116,7 @@ const MVPLanding = () => {
             <Button
               size="lg"
               onClick={() => navigate('/auth?mode=signup')}
-              className="h-14 px-8 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-xl shadow-primary/30 glow-primary"
+              className="h-14 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-card"
             >
               Start Learning Free
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -175,7 +175,7 @@ const MVPLanding = () => {
             className="text-center mb-14"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything you need to <span className="gradient-text">succeed</span>
+              Everything you need to <span className="text-primary font-semibold">succeed</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-lg mx-auto">
               Powerful AI tools designed specifically for Zambian learners
@@ -251,7 +251,7 @@ const MVPLanding = () => {
               <Button
                 size="lg"
                 onClick={() => navigate('/auth?mode=signup')}
-                className="h-14 px-8 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-xl shadow-primary/30"
+                className="h-14 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-card"
               >
                 Get Started Free <ArrowRight className="ml-2 w-5 h-5" />
               </Button>

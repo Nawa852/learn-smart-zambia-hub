@@ -22,12 +22,10 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!email || !password) {
       toast.error("Please enter email and password");
       return;
     }
-
     setIsLoading(true);
     try {
       await signInWithEmail(email, password);
@@ -41,7 +39,6 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   };
 
   const handleQuickLogin = () => {
-    // Quick demo login
     const demoUser = {
       id: 'demo_user',
       email: 'demo@eduzambia.com',
@@ -81,43 +78,28 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Quick Demo Login Button */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <Button 
           type="button"
           onClick={handleQuickLogin}
-          className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground font-semibold shadow-lg glow-primary transition-all"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-card transition-all"
         >
           <Sparkles className="w-4 h-4 mr-2" />
           Quick Demo Login
         </Button>
       </motion.div>
 
-      <motion.div 
-        className="relative"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
-      >
+      <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.1 }}>
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-primary/20" />
+          <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-gradient-card px-2 text-muted-foreground font-medium">Or sign in with credentials</span>
+          <span className="bg-card px-2 text-muted-foreground font-medium">Or sign in with credentials</span>
         </div>
       </motion.div>
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <motion.div 
-          className="space-y-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
+        <motion.div className="space-y-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.2 }}>
           <Label htmlFor="email" className="flex items-center gap-2 font-semibold">
             <Mail className="w-4 h-4 text-primary" />
             Email Address
@@ -129,16 +111,11 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
-            className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
+            className="border-input focus:ring-ring transition-all"
           />
         </motion.div>
         
-        <motion.div 
-          className="space-y-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-        >
+        <motion.div className="space-y-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.3 }}>
           <div className="flex items-center justify-between">
             <Label htmlFor="password" className="flex items-center gap-2 font-semibold">
               <Lock className="w-4 h-4 text-primary" />
@@ -160,7 +137,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
-              className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all pr-10"
+              className="border-input focus:ring-ring transition-all pr-10"
             />
             <Button
               type="button"
@@ -175,38 +152,24 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           </div>
         </motion.div>
         
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.4 }}
-        >
-          <Button type="submit" className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold shadow-lg glow-primary hover:opacity-90 transition-all" disabled={isLoading}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-card transition-all" disabled={isLoading}>
             {isLoading ? 'Signing In...' : 'Sign In'}
           </Button>
         </motion.div>
       </form>
 
-      <motion.div 
-        className="relative"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.5 }}
-      >
+      <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.5 }}>
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-primary/20" />
+          <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-gradient-card px-2 text-muted-foreground font-medium">Or continue with</span>
+          <span className="bg-card px-2 text-muted-foreground font-medium">Or continue with</span>
         </div>
       </motion.div>
 
-      <motion.div 
-        className="grid grid-cols-2 gap-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.6 }}
-      >
-        <Button variant="outline" onClick={handleGoogleSignIn} disabled={isLoading} className="w-full glass-card border-primary/30 hover:glow-border hover:border-primary/60 transition-all group">
+      <motion.div className="grid grid-cols-2 gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.6 }}>
+        <Button variant="outline" onClick={handleGoogleSignIn} disabled={isLoading} className="w-full border-border hover:border-primary/50 transition-all group">
           <svg className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -216,7 +179,7 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           Google
         </Button>
 
-        <Button variant="outline" onClick={handleFacebookSignIn} disabled={isLoading} className="w-full glass-card border-primary/30 hover:glow-border hover:border-primary/60 transition-all group">
+        <Button variant="outline" onClick={handleFacebookSignIn} disabled={isLoading} className="w-full border-border hover:border-primary/50 transition-all group">
           <svg className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M20 10C20 4.477 15.523 0 10 0S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clipRule="evenodd" />
           </svg>

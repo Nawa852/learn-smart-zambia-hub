@@ -118,35 +118,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
-  /* Keep these for backward compat — now no-ops or subtle */
-  .glass-premium,
-  .glass-card,
-  .glass,
-  .glass-dark {
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-  }
-
-  .glass-nav {
-    background: hsl(var(--card));
-    border-bottom: 1px solid hsl(var(--border));
-  }
-
-  .glow-primary,
-  .glow-accent,
-  .glow-border,
-  .shadow-glow,
-  .shadow-neon {
-    /* removed — no glow */
-  }
-
-  .gradient-text,
-  .gradient-text-bright-sphere,
-  .gradient-text-cosmic,
-  .gradient-text-hero {
-    color: hsl(var(--primary));
-    /* no gradient clip — solid color */
-  }
+  /* Legacy compat — removed */
 
   /* Animations — keep useful ones */
   .animate-fade-in {
