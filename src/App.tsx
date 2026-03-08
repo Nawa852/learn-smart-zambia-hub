@@ -320,6 +320,7 @@ function App() {
 
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
+              <Route path="/teacher-gradebook" element={<PG><TeacherGradebookPage /></PG>} />
 
               {/* Ministry Pages */}
               <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
