@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -124,9 +125,8 @@ const StudyPlannerPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto py-6 px-4 space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-7 gap-2">{Array.from({ length: 7 }).map((_, i) => <Skeleton key={i} className="h-40" />)}</div>
+      <div className="max-w-5xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading planner..." />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -127,10 +128,8 @@ const MyAssignmentsPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-10 w-64" />
-        {[1, 2, 3].map(i => <Skeleton key={i} className="h-24 w-full" />)}
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading assignments..." />
       </div>
     );
   }

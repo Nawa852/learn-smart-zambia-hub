@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
@@ -84,8 +85,8 @@ const ProgressReportPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto py-6 px-4 space-y-4">
-        {[1, 2, 3].map(i => <div key={i} className="h-32 bg-muted rounded-xl animate-pulse" />)}
+      <div className="max-w-5xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading report..." />
       </div>
     );
   }

@@ -7,6 +7,7 @@ import ResetPasswordForm from '@/components/Auth/ResetPasswordForm';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { BookOpenCheck, Sparkles, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 
 const PasswordResetPage = () => {
   const { user, loading } = useAuth();
@@ -17,10 +18,7 @@ const PasswordResetPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
+        <LogoLoader size="lg" text="Loading..." />
       </div>
     );
   }

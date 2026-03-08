@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -80,9 +81,8 @@ const NotificationsPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
-        <Skeleton className="h-8 w-48" />
-        {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+      <div className="max-w-3xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading notifications..." />
       </div>
     );
   }

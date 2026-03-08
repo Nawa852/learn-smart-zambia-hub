@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
@@ -111,15 +112,8 @@ const CourseDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto py-6 px-4">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-1/3" />
-          <div className="h-4 bg-muted rounded w-1/2" />
-          <div className="grid md:grid-cols-3 gap-6 mt-6">
-            <div className="md:col-span-2 h-96 bg-muted rounded-lg" />
-            <div className="h-96 bg-muted rounded-lg" />
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading course..." />
       </div>
     );
   }

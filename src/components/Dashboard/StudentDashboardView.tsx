@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
@@ -155,14 +156,8 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-24 bg-muted rounded-xl" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <div key={i} className="h-20 bg-muted rounded-xl" />)}
-          </div>
-          <div className="h-48 bg-muted rounded-xl" />
-        </div>
+      <div className="py-12">
+        <LogoLoader text="Loading dashboard..." />
       </div>
     );
   }
