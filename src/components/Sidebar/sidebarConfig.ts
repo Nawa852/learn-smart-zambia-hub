@@ -90,9 +90,12 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "Progress Report", url: "/progress-report", icon: TrendingUp },
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
-      { title: "Achievements", url: "/achievements", icon: Trophy },
+      { title: "Leaderboard", url: "/leaderboard", icon: Trophy, badge: "NEW" },
+      { title: "Badges", url: "/badges", icon: Award, badge: "NEW" },
+      { title: "Achievements", url: "/achievements", icon: Gamepad2 },
       { title: "Goals", url: "/goals", icon: Target },
-      { title: "My Notes", url: "/my-notes", icon: PenTool, badge: "NEW" },
+      { title: "Screen Time", url: "/screen-time", icon: Monitor },
+      { title: "My Notes", url: "/my-notes", icon: PenTool },
     ],
   },
   {
