@@ -7,6 +7,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { Search, Download, Eye, BookOpen, FileText, Video, Image } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DocumentScanner } from '@/components/Camera/DocumentScanner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StudyMaterial {
   id: string;
