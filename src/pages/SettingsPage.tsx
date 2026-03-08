@@ -285,7 +285,7 @@ const SettingsPage = () => {
               <CardContent className="space-y-3">
                 {[
                   { icon: Key, label: 'Change Password', action: () => navigate('/password-reset') },
-                  { icon: Shield, label: 'Two-Factor Authentication' },
+                  { icon: Shield, label: 'Two-Factor Authentication', action: () => navigate('/mfa-setup') },
                   { icon: Eye, label: 'View Login History' },
                 ].map((item, i) => (
                   <button
