@@ -62,28 +62,31 @@ export function AppSidebar() {
       )} collapsible="icon">
         <SidebarContent className="bg-card border-r border-border">
           {/* Header */}
-          <div className="p-4 border-b border-border">
+          <div className={cn("border-b border-border", collapsed ? "p-3" : "p-4")}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden">
-                <img src={EduZambiaLogo} alt="Edu Zambia" className="w-8 h-8" />
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center overflow-hidden shadow-lg shadow-primary/20 shrink-0">
+                <img src={EduZambiaLogo} alt="Edu Zambia" className="w-7 h-7" />
               </div>
               {!collapsed && (
                 <div className="flex-1 min-w-0">
-                  <h2 className="font-bold text-sm bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  <h2 className="font-bold text-sm text-foreground tracking-tight">
                     BrightSphere
                   </h2>
-                  <p className="text-xs text-muted-foreground">AI Learning</p>
+                  <p className="text-[11px] text-muted-foreground">AI Learning</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* User Profile */}
-          <div className="p-3 mx-2 my-2 rounded-xl bg-accent/20 border border-border/50">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 ring-2 ring-primary/20">
+          <div className={cn(
+            "rounded-lg bg-secondary/50 border border-border/50",
+            collapsed ? "mx-2 my-2 p-2" : "mx-3 my-3 p-3"
+          )}>
+            <div className="flex items-center gap-2.5">
+              <Avatar className={cn("ring-2 ring-primary/20 shrink-0", collapsed ? "h-8 w-8" : "h-9 w-9")}>
                 <AvatarImage src="" />
-                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold text-sm">
+                <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">
                   {userName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -92,7 +95,7 @@ export function AppSidebar() {
                   <h3 className="font-semibold text-sm truncate">{userName}</h3>
                   <div className="flex items-center gap-1">
                     <Zap className="w-3 h-3 text-amber-500" />
-                    <span className="text-xs text-muted-foreground">Level 1</span>
+                    <span className="text-[11px] text-muted-foreground">Level 1</span>
                   </div>
                 </div>
               )}
@@ -100,32 +103,33 @@ export function AppSidebar() {
           </div>
 
           {/* Navigation */}
-          <SidebarGroup className="px-2 py-2 flex-1">
+          <SidebarGroup className="px-2 py-1 flex-1">
             <SidebarGroupContent>
-              <SidebarMenu className="space-y-1">
+              <SidebarMenu className="space-y-0.5">
                 {navItems.map((item) => {
+                  const active = isActive(item.url);
                   const link = (
                     <NavLink 
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
-                        isActive(item.url)
-                          ? "bg-primary text-primary-foreground shadow-md" 
-                          : "hover:bg-accent/50 text-foreground/80 hover:text-foreground"
+                        "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150",
+                        active
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+                          : "hover:bg-secondary text-muted-foreground hover:text-foreground"
                       )}
                     >
-                      <item.icon className="h-5 w-5 flex-shrink-0" />
-                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
+                      <item.icon className="h-[18px] w-[18px] flex-shrink-0" strokeWidth={active ? 2.5 : 2} />
+                      {!collapsed && <span className={cn("text-sm", active ? "font-semibold" : "font-medium")}>{item.title}</span>}
                     </NavLink>
                   );
 
                   return (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild className="h-10">
+                      <SidebarMenuButton asChild className="h-auto p-0">
                         {collapsed ? (
                           <Tooltip>
                             <TooltipTrigger asChild>{link}</TooltipTrigger>
-                            <TooltipContent side="right" className="text-xs">
+                            <TooltipContent side="right" className="text-xs font-medium">
                               {item.title}
                             </TooltipContent>
                           </Tooltip>
@@ -139,26 +143,36 @@ export function AppSidebar() {
           </SidebarGroup>
 
           {/* Footer */}
-          <div className="p-4 border-t border-border mt-auto">
+          <div className={cn("border-t border-border mt-auto", collapsed ? "p-2" : "p-3")}>
             {collapsed ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <NavLink 
                     to="/settings"
-                    className="flex items-center justify-center px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/30 transition-colors"
+                    className={cn(
+                      "flex items-center justify-center p-2.5 rounded-lg transition-colors",
+                      isActive('/settings')
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    )}
                   >
-                    <Settings className="h-4 w-4" />
+                    <Settings className="h-[18px] w-[18px]" />
                   </NavLink>
                 </TooltipTrigger>
-                <TooltipContent side="right" className="text-xs">Settings</TooltipContent>
+                <TooltipContent side="right" className="text-xs font-medium">Settings</TooltipContent>
               </Tooltip>
             ) : (
               <NavLink 
                 to="/settings"
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/30 transition-colors"
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors",
+                  isActive('/settings')
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                )}
               >
-                <Settings className="h-4 w-4" />
-                <span className="text-sm">Settings</span>
+                <Settings className="h-[18px] w-[18px]" />
+                <span className="text-sm font-medium">Settings</span>
               </NavLink>
             )}
           </div>

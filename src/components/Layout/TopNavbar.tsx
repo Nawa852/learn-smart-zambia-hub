@@ -43,10 +43,10 @@ export const TopNavbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-card/95 backdrop-blur-sm border-b border-border">
-      <div className="flex h-12 items-center px-3 gap-3">
+    <nav className="sticky top-0 z-50 w-full bg-card/95 backdrop-blur-xl border-b border-border">
+      <div className="flex h-14 items-center px-4 gap-3">
         {/* Mobile Sidebar Trigger */}
-        <SidebarTrigger className="lg:hidden" />
+        <SidebarTrigger className="lg:hidden -ml-1" />
         
         {/* Logo — mobile only since sidebar shows on desktop */}
         <Link to="/dashboard" className="flex items-center gap-2 lg:hidden">
@@ -57,8 +57,8 @@ export const TopNavbar = () => {
         </Link>
 
         {/* Greeting — desktop */}
-        <span className="hidden lg:block text-sm text-muted-foreground ml-1">
-          {getGreeting(timeOfDay)}{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''} 👋
+        <span className="hidden lg:block text-sm text-muted-foreground">
+          {getGreeting(timeOfDay)}{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}
         </span>
 
         {/* Spacer */}
@@ -67,22 +67,22 @@ export const TopNavbar = () => {
         {/* Quick search trigger — desktop */}
         <button
           onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-          className="hidden md:flex items-center gap-2 h-8 px-3 rounded-lg bg-secondary/60 border border-border/50 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors text-xs cursor-pointer"
+          className="hidden md:flex items-center gap-2 h-9 px-3.5 rounded-lg bg-secondary/60 border border-border/50 text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-border transition-all text-xs cursor-pointer"
         >
           <Search className="w-3.5 h-3.5" />
           <span>Search...</span>
-          <kbd className="ml-4 px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">⌘K</kbd>
+          <kbd className="ml-6 px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono border border-border/50">⌘K</kbd>
         </button>
 
         {/* Actions */}
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1">
           <ThemeSwitcher />
           <NotificationBell />
 
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg"
             onClick={() => navigate('/messenger')}
           >
             <MessageCircle className="h-4 w-4" />
@@ -90,10 +90,10 @@ export const TopNavbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0 ml-1">
-                <Avatar className="h-7 w-7">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 ml-0.5">
+                <Avatar className="h-8 w-8 ring-2 ring-border">
                   <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || 'User'} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-[11px] font-semibold">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
                     {profile?.full_name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
@@ -105,7 +105,7 @@ export const TopNavbar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-popover border-border" align="end" forceMount>
               <div className="flex items-center gap-3 p-3">
-                <Avatar className="h-9 w-9">
+                <Avatar className="h-10 w-10 ring-2 ring-border">
                   <AvatarImage src={profile?.avatar_url} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
                     {profile?.full_name?.charAt(0) || 'U'}
@@ -113,7 +113,7 @@ export const TopNavbar = () => {
                 </Avatar>
                 <div className="flex flex-col gap-0.5">
                   <p className="font-semibold text-sm leading-tight">{profile?.full_name || 'User'}</p>
-                  <Badge variant="secondary" className="text-[10px] w-fit px-1.5 py-0">{roleLabel}</Badge>
+                  <Badge variant="secondary" className="text-[10px] w-fit px-1.5 py-0 font-medium">{roleLabel}</Badge>
                 </div>
               </div>
               <DropdownMenuSeparator />

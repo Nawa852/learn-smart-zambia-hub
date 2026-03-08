@@ -64,38 +64,30 @@ export const MobileBottomNav = () => {
   const items = roleNavItems[role] || roleNavItems.student;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/95 backdrop-blur-sm border-t border-border safe-area-bottom">
-      <div className="flex items-center justify-around h-14 max-w-md mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card border-t border-border safe-area-bottom">
+      <div className="flex items-center justify-around h-16 max-w-md mx-auto px-2">
         {items.map((item) => {
           const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           return (
             <motion.button
               key={item.path}
               onClick={() => navigate(item.path)}
-              whileTap={{ scale: 0.85 }}
+              whileTap={{ scale: 0.9 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               className={cn(
-                'flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-150 relative',
-                isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
+                'flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors duration-150 relative',
+                isActive ? 'text-primary' : 'text-muted-foreground'
               )}
             >
               {isActive && (
                 <motion.div
                   layoutId="mobile-nav-indicator"
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-b-full bg-primary"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] rounded-b-full bg-primary"
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
-              <item.icon className={cn("w-5 h-5", isActive && "scale-110")} />
-              <span className={cn("text-[10px]", isActive ? "font-semibold" : "font-medium")}>{item.label}</span>
-              {/* Active dot indicator */}
-              {isActive && (
-                <motion.div
-                  layoutId="mobile-nav-dot"
-                  className="w-1 h-1 rounded-full bg-primary mt-0.5"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                />
-              )}
+              <item.icon className={cn("w-5 h-5", isActive && "scale-110")} strokeWidth={isActive ? 2.5 : 2} />
+              <span className={cn("text-[10px] leading-none", isActive ? "font-bold" : "font-medium")}>{item.label}</span>
             </motion.button>
           );
         })}
