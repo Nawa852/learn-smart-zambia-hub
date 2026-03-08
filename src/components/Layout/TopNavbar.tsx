@@ -8,6 +8,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { NotificationBell } from '@/components/Notifications/NotificationBell';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -34,34 +35,35 @@ export const TopNavbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full glass-nav">
+    <nav className="sticky top-0 z-50 w-full bg-card border-b border-border">
       <div className="flex h-14 items-center px-4 gap-4">
         {/* Mobile Sidebar Trigger */}
         <SidebarTrigger className="lg:hidden" />
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden shadow-md shadow-primary/20">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center overflow-hidden">
             <img src={EduZambiaLogo} alt="Edu Zambia" className="w-6 h-6" />
           </div>
-          <span className="hidden md:block font-bold text-sm gradient-text">
+          <span className="hidden md:block font-bold text-sm text-foreground">
             Edu Zambia
           </span>
         </Link>
 
-        {/* Search */}
+        {/* Search — Facebook style */}
         <div className="flex-1 max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search courses, people..."
-              className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50 focus:bg-secondary transition-all h-9 text-sm"
+              className="pl-10 rounded-full bg-secondary border-none focus:bg-secondary/80 transition-all h-9 text-sm"
             />
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex items-center space-x-1">
+          <ThemeSwitcher />
           <NotificationBell />
 
           <Button variant="ghost" size="icon" className="relative h-9 w-9 text-muted-foreground hover:text-foreground">
@@ -71,9 +73,9 @@ export const TopNavbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
-                <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+                <Avatar className="h-8 w-8">
                   <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || 'User'} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xs font-semibold">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
                     {profile?.full_name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
