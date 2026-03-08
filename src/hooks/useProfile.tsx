@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 
-type AppRole = 'student' | 'teacher' | 'guardian' | 'institution' | 'ministry' | 'doctor' | 'entrepreneur' | 'developer';
+type AppRole = 'student' | 'teacher' | 'guardian' | 'institution' | 'ministry' | 'doctor' | 'entrepreneur' | 'developer' | 'skills' | 'cybersecurity';
 
 export interface Profile {
   id: string;
