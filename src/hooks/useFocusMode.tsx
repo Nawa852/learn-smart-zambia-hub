@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 export type FocusPhase = 'idle' | 'focus' | 'break' | 'longBreak';
 
@@ -17,6 +18,7 @@ interface FocusState {
   isActive: boolean;
   startedAt: Date | null;
   subject: string;
+  currentSessionId: string | null;
 }
 
 const DEFAULT_SETTINGS: FocusSettings = {
@@ -40,17 +42,16 @@ export function useFocusMode() {
     isActive: false,
     startedAt: null,
     subject: '',
+    currentSessionId: null,
   });
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Save settings
   useEffect(() => {
     localStorage.setItem('focus-settings', JSON.stringify(settings));
   }, [settings]);
 
-  // Save daily stats
+  // Save daily stats to localStorage as backup
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
     const key = `focus-stats-${today}`;
@@ -60,9 +61,28 @@ export function useFocusMode() {
     localStorage.setItem(key, JSON.stringify(existing));
   }, [state.sessionsCompleted, state.totalFocusSeconds]);
 
+  // Persist completed focus session to DB
+  const saveSessionToDB = useCallback(async (subject: string, focusMinutes: number, sessionsCompleted: number, gaveUp: boolean, startedAt: Date) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await supabase.from('focus_sessions' as any).insert({
+        user_id: user.id,
+        subject,
+        focus_minutes: focusMinutes,
+        sessions_completed: sessionsCompleted,
+        gave_up: gaveUp,
+        started_at: startedAt.toISOString(),
+        ended_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error('Failed to save focus session:', err);
+    }
+  }, []);
+
   const playAlarm = useCallback(() => {
     try {
-      // Use Web Audio API for alarm sound
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -73,7 +93,6 @@ export function useFocusMode() {
       osc.start();
       setTimeout(() => { osc.stop(); ctx.close(); }, 500);
 
-      // Also try notification
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Focus Mode', {
           body: state.phase === 'focus' ? '🎉 Focus session complete! Take a break.' : '⏰ Break over! Time to focus.',
@@ -93,23 +112,30 @@ export function useFocusMode() {
       setState(prev => {
         if (prev.secondsRemaining <= 1) {
           playAlarm();
-          
+
           if (prev.phase === 'focus') {
             const newSessions = prev.sessionsCompleted + 1;
             const isLongBreak = newSessions % settings.sessionsBeforeLongBreak === 0;
+
+            // Save completed focus session to DB
+            if (prev.startedAt) {
+              saveSessionToDB(prev.subject, settings.focusMinutes, 1, false, prev.startedAt);
+            }
+
             return {
               ...prev,
               phase: isLongBreak ? 'longBreak' : 'break',
               secondsRemaining: (isLongBreak ? settings.longBreakMinutes : settings.breakMinutes) * 60,
               sessionsCompleted: newSessions,
               totalFocusSeconds: prev.totalFocusSeconds + settings.focusMinutes * 60,
+              startedAt: new Date(), // reset for next session
             };
           } else {
-            // Break ended, back to focus
             return {
               ...prev,
               phase: 'focus',
               secondsRemaining: settings.focusMinutes * 60,
+              startedAt: new Date(),
             };
           }
         }
@@ -120,10 +146,9 @@ export function useFocusMode() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [state.isActive, state.phase, settings, playAlarm]);
+  }, [state.isActive, state.phase, settings, playAlarm, saveSessionToDB]);
 
   const startFocus = useCallback((subject: string) => {
-    // Request notification permission
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -135,6 +160,7 @@ export function useFocusMode() {
       isActive: true,
       startedAt: new Date(),
       subject,
+      currentSessionId: null,
     }));
   }, [settings.focusMinutes]);
 
@@ -144,25 +170,54 @@ export function useFocusMode() {
 
   const stop = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    setState(prev => ({
-      ...prev,
-      phase: 'idle',
-      secondsRemaining: 0,
-      isActive: false,
-      startedAt: null,
-      subject: '',
-    }));
-  }, []);
+
+    // Save partial session if was in focus
+    setState(prev => {
+      if (prev.phase === 'focus' && prev.startedAt && prev.totalFocusSeconds > 0) {
+        const elapsedMinutes = Math.floor((Date.now() - prev.startedAt.getTime()) / 60000);
+        if (elapsedMinutes > 0) {
+          saveSessionToDB(prev.subject, elapsedMinutes, 0, false, prev.startedAt);
+        }
+      }
+      return {
+        ...prev,
+        phase: 'idle',
+        secondsRemaining: 0,
+        isActive: false,
+        startedAt: null,
+        subject: '',
+        currentSessionId: null,
+      };
+    });
+  }, [saveSessionToDB]);
 
   const giveUp = useCallback(() => {
-    // Penalty: lose the session, record a "gave up"
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    // Record give-up in DB
+    setState(prev => {
+      if (prev.startedAt) {
+        const elapsedMinutes = Math.max(1, Math.floor((Date.now() - prev.startedAt.getTime()) / 60000));
+        saveSessionToDB(prev.subject, elapsedMinutes, 0, true, prev.startedAt);
+      }
+      return {
+        ...prev,
+        phase: 'idle',
+        secondsRemaining: 0,
+        isActive: false,
+        startedAt: null,
+        subject: '',
+        currentSessionId: null,
+      };
+    });
+
+    // Also track locally
     const today = new Date().toISOString().slice(0, 10);
     const key = `focus-giveups-${today}`;
     const count = parseInt(localStorage.getItem(key) || '0') + 1;
     localStorage.setItem(key, String(count));
-    stop();
     return count;
-  }, [stop]);
+  }, [saveSessionToDB]);
 
   const updateSettings = useCallback((partial: Partial<FocusSettings>) => {
     setSettings(prev => ({ ...prev, ...partial }));
