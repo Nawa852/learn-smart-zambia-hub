@@ -189,6 +189,7 @@ function App() {
 
             {/* Courses & Learning */}
             <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
+            <Route path="/my-courses" element={<ProtectedRoute><MainLayout><MyCoursesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/course-catalog" element={<ProtectedRoute><MainLayout><CourseCatalogPage /></MainLayout></ProtectedRoute>} />
             <Route path="/create-course" element={<ProtectedRoute><MainLayout><CreateCoursePage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-chat" element={<ProtectedRoute><MainLayout><StudyGroupChatPage /></MainLayout></ProtectedRoute>} />
