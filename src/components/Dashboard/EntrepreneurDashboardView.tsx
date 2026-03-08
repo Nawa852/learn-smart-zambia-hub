@@ -36,6 +36,8 @@ export const EntrepreneurDashboardView = ({ userName }: EntrepreneurDashboardVie
     { icon: Presentation, title: "Pitch Deck", description: "Investor presentations", link: "/entrepreneur/pitch-deck", gradient: "from-emerald-500 to-teal-600" },
     { icon: Globe, title: "Market Research", description: "Zambian market data", link: "/entrepreneur/market-research", gradient: "from-purple-500 to-pink-600" },
     { icon: Target, title: "Milestones", description: "Track progress", link: "/entrepreneur/milestones", gradient: "from-red-500 to-rose-600" },
+    { icon: DollarSign, title: "Financials", description: "Revenue & expenses", link: "/entrepreneur/financials", gradient: "from-green-500 to-emerald-600" },
+    { icon: Briefcase, title: "Funding", description: "Find opportunities", link: "/entrepreneur/funding", gradient: "from-indigo-500 to-blue-600" },
     { icon: MessageSquare, title: "Mentor Connect", description: "Expert guidance", link: "/mentorship-hub", gradient: "from-cyan-500 to-blue-600" },
   ];
 
@@ -149,7 +151,7 @@ export const EntrepreneurDashboardView = ({ userName }: EntrepreneurDashboardVie
           <CardTitle className="flex items-center gap-2"><Zap className="w-5 h-5 text-amber-600" />Entrepreneur Toolkit</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
             {tools.map((tool, i) => (
               <Link key={i} to={tool.link}>
                 <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group">

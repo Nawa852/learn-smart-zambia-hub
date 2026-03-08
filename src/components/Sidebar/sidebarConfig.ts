@@ -230,10 +230,16 @@ export const institutionNavigation: NavGroup[] = [
   {
     label: "Management",
     items: [
-      { title: "User Management", url: "/admin-users", icon: Users },
-      { title: "Curriculum", url: "/admin-curriculum", icon: BookOpen },
-      { title: "Scheduling", url: "/admin-scheduling", icon: Calendar },
-      { title: "Analytics", url: "/admin-analytics", icon: BarChart3 },
+      { title: "User Management", url: "/admin/users", icon: Users },
+      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
+      { title: "Scheduling", url: "/admin/scheduling", icon: Calendar },
+      { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Communication",
+    items: [
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
@@ -257,9 +263,15 @@ export const ministryNavigation: NavGroup[] = [
   {
     label: "Management",
     items: [
-      { title: "Schools", url: "/admin-users", icon: Building2 },
-      { title: "Curriculum", url: "/admin-curriculum", icon: BookOpen },
+      { title: "Schools", url: "/admin/users", icon: Building2 },
+      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
       { title: "Resources", url: "/zambian-resources", icon: Library },
+    ],
+  },
+  {
+    label: "Communication",
+    items: [
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {
@@ -330,6 +342,7 @@ export const entrepreneurNavigation: NavGroup[] = [
     items: [
       { title: "My Ventures", url: "/entrepreneur/ventures", icon: Rocket, badge: "NEW" },
       { title: "Milestones", url: "/entrepreneur/milestones", icon: Target },
+      { title: "Financials", url: "/entrepreneur/financials", icon: PieChart, badge: "NEW" },
     ],
   },
   {
@@ -338,6 +351,7 @@ export const entrepreneurNavigation: NavGroup[] = [
       { title: "Business Plan", url: "/entrepreneur/business-plan", icon: FileText, badge: "AI" },
       { title: "Pitch Deck", url: "/entrepreneur/pitch-deck", icon: Presentation, badge: "AI" },
       { title: "Market Research", url: "/entrepreneur/market-research", icon: Globe, badge: "AI" },
+      { title: "Funding", url: "/entrepreneur/funding", icon: Briefcase, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
@@ -375,10 +389,32 @@ export const developerNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "Learning",
+    label: "Projects",
     items: [
+      { title: "My Projects", url: "/developer/projects", icon: Layers, badge: "NEW" },
+    ],
+  },
+  {
+    label: "AI Tools",
+    items: [
+      { title: "Code Challenges", url: "/developer/challenges", icon: Zap, badge: "AI" },
+      { title: "Code Review", url: "/developer/code-review", icon: Sparkles, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
-      { title: "Community", url: "/community", icon: Users },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
   {
