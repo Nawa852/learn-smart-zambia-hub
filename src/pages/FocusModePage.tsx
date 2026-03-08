@@ -61,8 +61,32 @@ const FocusModePage = () => {
   const [newSlot, setNewSlot] = useState({ subject: '', startTime: '08:00', endTime: '09:00', days: ['Mon'] });
   const [gaveUpCount, setGaveUpCount] = useState(0);
   const [showLockScreen, setShowLockScreen] = useState(false);
+  const [wakeLock, setWakeLock] = useState<any>(null);
+
+  const { distractionCount, showWarning, dismissWarning } = useDistractionDetector(
+    state.phase === 'focus' && state.isActive,
+    state.subject
+  );
+  const { schedules: dbSchedules, addSchedule: addDbSchedule, removeSchedule: removeDbSchedule } = useStudySchedule();
 
   const dailyStats = getDailyStats();
+
+  // Wake Lock during focus
+  useEffect(() => {
+    if (state.phase === 'focus' && state.isActive && 'wakeLock' in navigator) {
+      (navigator as any).wakeLock.request('screen').then((wl: any) => setWakeLock(wl)).catch(() => {});
+    }
+    return () => { if (wakeLock) { wakeLock.release(); setWakeLock(null); } };
+  }, [state.phase, state.isActive]);
+
+  // Fullscreen during focus lock screen
+  useEffect(() => {
+    if (showLockScreen && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else if (!showLockScreen && document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+  }, [showLockScreen]);
 
   // Save schedule
   useEffect(() => {
