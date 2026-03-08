@@ -362,7 +362,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Key className="w-5 h-5 text-warning" />
-                    <span className="gradient-text">Backup Codes</span>
+                    <span className="text-primary">Backup Codes</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-5">
