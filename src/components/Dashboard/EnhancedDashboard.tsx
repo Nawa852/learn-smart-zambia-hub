@@ -164,7 +164,7 @@ const EnhancedDashboard = () => {
                       style={{ width: `${subject.progress}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500">Next: {subject.nextTopic}</p>
+                  <p className="text-xs text-muted-foreground">Next: {subject.nextTopic}</p>
                 </div>
               ))}
             </CardContent>
