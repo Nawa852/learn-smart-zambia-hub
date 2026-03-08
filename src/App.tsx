@@ -437,6 +437,10 @@ function App() {
               <Route path="/ministry/digital-literacy" element={<PG><MinistryDigitalLiteracyPage /></PG>} />
               <Route path="/ministry/research" element={<PG><MinistryResearchPage /></PG>} />
               <Route path="/ministry/feedback" element={<PG><MinistryFeedbackPage /></PG>} />
+              <Route path="/ministry/audit" element={<PG><MinistryAuditPage /></PG>} />
+              <Route path="/ministry/school-comparison" element={<PG><MinistrySchoolComparisonPage /></PG>} />
+              <Route path="/ministry/live-stats" element={<PG><MinistryLiveStatsPage /></PG>} />
+              <Route path="/ministry/province-map" element={<PG><MinistryProvinceMapPage /></PG>} />
 
               {/* Cybersecurity New Pages */}
               <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
