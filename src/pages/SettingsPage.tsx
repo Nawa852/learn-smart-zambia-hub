@@ -286,7 +286,7 @@ const SettingsPage = () => {
                 {[
                   { icon: Key, label: 'Change Password', action: () => navigate('/password-reset') },
                   { icon: Shield, label: 'Two-Factor Authentication', action: () => navigate('/mfa-setup') },
-                  { icon: Eye, label: 'View Login History' },
+                  { icon: Eye, label: 'Active Sessions', action: () => navigate('/sessions') },
                 ].map((item, i) => (
                   <button
                     key={i}

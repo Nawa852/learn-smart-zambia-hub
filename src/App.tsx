@@ -93,6 +93,7 @@ import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
 import MFASetupPage from '@/pages/MFASetupPage';
+import SessionManagementPage from '@/pages/SessionManagementPage';
 
 // School Admin Pages
 import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
@@ -265,6 +266,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/mfa-setup" element={<ProtectedRoute><MainLayout><MFASetupPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/sessions" element={<ProtectedRoute><MainLayout><SessionManagementPage /></MainLayout></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
 
