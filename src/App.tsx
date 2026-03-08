@@ -330,11 +330,20 @@ function App() {
               {/* Skills Development Pages */}
               <Route path="/skills/dashboard" element={<PG><SkillsDashboardPage /></PG>} />
               <Route path="/skills/videos" element={<PG><SkillsVideoPage /></PG>} />
+              <Route path="/skills/categories" element={<PG><SkillsCategoryPage /></PG>} />
 
               {/* Cybersecurity Pages */}
               <Route path="/cybersecurity/dashboard" element={<PG><CybersecurityDashboardPage /></PG>} />
               <Route path="/cybersecurity/labs" element={<PG><CybersecurityLabsPage /></PG>} />
               <Route path="/cybersecurity/videos" element={<PG><CybersecurityVideoPage /></PG>} />
+              <Route path="/cybersecurity/terminal" element={<PG><HackingTerminalPage /></PG>} />
+
+              {/* Role-specific Video Hubs */}
+              <Route path="/student-videos" element={<PG><StudentVideoHubPage /></PG>} />
+              <Route path="/teacher-videos" element={<PG><RoleVideoHubPage role="teacher" /></PG>} />
+              <Route path="/parent-videos" element={<PG><RoleVideoHubPage role="guardian" /></PG>} />
+              <Route path="/medical-videos" element={<PG><RoleVideoHubPage role="doctor" /></PG>} />
+              <Route path="/developer-videos" element={<PG><RoleVideoHubPage role="developer" /></PG>} />
 
               {/* Developer Pages */}
               <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />
