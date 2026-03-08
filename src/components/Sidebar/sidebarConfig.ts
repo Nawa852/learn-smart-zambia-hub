@@ -152,6 +152,7 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "AI Tools",
     items: [
+      { title: "AI Lesson Plan", url: "/teacher-lesson-plan", icon: Sparkles, badge: "AI" },
       { title: "AI Quiz Creator", url: "/ai-quiz", icon: Sparkles },
       { title: "AI Assistant", url: "/ai", icon: Brain },
       { title: "Content Generator", url: "/flashcards", icon: FileText },
