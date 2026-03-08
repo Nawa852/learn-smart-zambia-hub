@@ -203,14 +203,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 <Home className="w-3.5 h-3.5" />
               </Link>
               {breadcrumbs.map((bc) => (
-                <React.Fragment key={bc.path}>
+                <span key={bc.path} className="inline-flex items-center gap-1.5">
                   <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
                   {bc.isLast ? (
                     <span className="text-foreground font-medium">{bc.label}</span>
                   ) : (
                     <Link to={bc.path} className="hover:text-foreground transition-colors">{bc.label}</Link>
                   )}
-                </React.Fragment>
+                </span>
               ))}
             </div>
           )}
