@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useProfile } from '@/hooks/useProfile';
 import { StudentDashboardView } from '@/components/Dashboard/StudentDashboardView';
 import { TeacherDashboardView } from '@/components/Dashboard/TeacherDashboardView';
 import { GuardianDashboardView } from '@/components/Dashboard/GuardianDashboardView';
@@ -7,144 +7,44 @@ import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDash
 import { MedicalDashboardView } from '@/components/Dashboard/MedicalDashboardView';
 import { EntrepreneurDashboardView } from '@/components/Dashboard/EntrepreneurDashboardView';
 import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboardView';
-import AIAPIStatus from '@/components/AI/AIAPIStatus';
-import { QuickCommandCenter } from '@/components/BrightSphere/QuickCommandCenter';
-import { ThemeSwitcher } from '@/components/ThemeSwitcher';
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, BarChart3, Command, User, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
-  
-  const [commandCenterOpen, setCommandCenterOpen] = useState(false);
-  
-  const [userType, setUserType] = useState<string>(() => {
-    return localStorage.getItem('edu-zambia-user-type') || 'student';
-  });
-  const [userName, setUserName] = useState(() => {
-    const onboardingData = localStorage.getItem('edu-zambia-onboarding');
-    if (onboardingData) {
-      const data = JSON.parse(onboardingData);
-      return data.fullName || 'Learner';
-    }
-    return 'Learner';
-  });
+  const { profile, loading } = useProfile();
 
-  useEffect(() => {
-    const onboardingData = localStorage.getItem('edu-zambia-onboarding');
-    if (onboardingData) {
-      const data = JSON.parse(onboardingData);
-      if (data.fullName) setUserName(data.fullName);
-      if (data.userType) setUserType(data.userType);
-    }
-  }, []);
+  const userName = profile?.full_name || 'Learner';
+  const userType = profile?.role || 'student';
 
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setCommandCenterOpen(true);
-      }
-    };
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse space-y-4 w-full max-w-4xl px-4">
+          <div className="h-24 bg-muted rounded-xl" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1,2,3,4].map(i => <div key={i} className="h-20 bg-muted rounded-xl" />)}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const renderDashboardView = () => {
     switch (userType) {
-      case 'teacher':
-        return <TeacherDashboardView userName={userName} />;
-      case 'guardian':
-        return <GuardianDashboardView userName={userName} />;
-      case 'institution':
-        return <InstitutionDashboardView userName={userName} />;
-      case 'doctor':
-        return <MedicalDashboardView userName={userName} />;
-      case 'entrepreneur':
-        return <EntrepreneurDashboardView userName={userName} />;
-      case 'developer':
-        return <DeveloperDashboardView userName={userName} />;
+      case 'teacher': return <TeacherDashboardView userName={userName} />;
+      case 'guardian': return <GuardianDashboardView userName={userName} />;
+      case 'institution': return <InstitutionDashboardView userName={userName} />;
+      case 'doctor': return <MedicalDashboardView userName={userName} />;
+      case 'entrepreneur': return <EntrepreneurDashboardView userName={userName} />;
+      case 'developer': return <DeveloperDashboardView userName={userName} />;
       case 'student':
-      default:
-        return <StudentDashboardView userName={userName} />;
+      default: return <StudentDashboardView userName={userName} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
-      
-      <QuickCommandCenter isOpen={commandCenterOpen} onClose={() => setCommandCenterOpen(false)} />
-      
-      <Tabs defaultValue="dashboard" className="w-full">
-        <div className="container mx-auto px-4 pt-6">
-          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-            <TabsList className="grid w-full grid-cols-2 max-w-md">
-              <TabsTrigger value="dashboard" className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Dashboard
-              </TabsTrigger>
-              <TabsTrigger value="ai-status" className="flex items-center gap-2">
-                <Brain className="w-4 h-4" />
-                AI Status
-              </TabsTrigger>
-            </TabsList>
-            
-            <div className="flex items-center gap-3">
-              {/* BrightSphere Branding */}
-              <div className="hidden md:flex items-center gap-1 text-sm text-muted-foreground">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span>Powered by BrightSphere</span>
-              </div>
-              
-              {/* Theme Switcher */}
-              <ThemeSwitcher />
-              
-              {/* Role Switcher for Demo */}
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-muted-foreground" />
-                <Select value={userType} onValueChange={(v) => { setUserType(v); localStorage.setItem('edu-zambia-user-type', v); }}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Select Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="teacher">Teacher</SelectItem>
-                    <SelectItem value="guardian">Guardian</SelectItem>
-                    <SelectItem value="institution">Institution</SelectItem>
-                    <SelectItem value="doctor">Doctor</SelectItem>
-                    <SelectItem value="entrepreneur">Entrepreneur</SelectItem>
-                    <SelectItem value="developer">Developer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <Button 
-                variant="outline" 
-                onClick={() => setCommandCenterOpen(true)}
-                className="gap-2"
-              >
-                <Command className="w-4 h-4" />
-                Quick Commands
-                <kbd className="ml-2 px-2 py-1 bg-muted rounded text-xs">Ctrl+K</kbd>
-              </Button>
-            </div>
-          </div>
-        </div>
-        
-        <TabsContent value="dashboard" className="mt-0">
-          <div className="container mx-auto px-4 pb-8">
-            {renderDashboardView()}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="ai-status" className="mt-0">
-          <div className="container mx-auto px-4 pb-8">
-            <AIAPIStatus />
-          </div>
-        </TabsContent>
-      </Tabs>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6">
+        {renderDashboardView()}
+      </div>
     </div>
   );
 };
