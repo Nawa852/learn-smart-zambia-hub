@@ -250,6 +250,13 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       case 4:
         return (
           <div className="max-w-4xl mx-auto p-6">
+            <DeviceSetupWizard onComplete={handleDeviceSetupComplete} onSkip={handleSkipDeviceSetup} />
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="max-w-4xl mx-auto p-6">
             <GamificationSetup onComplete={handleGamificationComplete} />
           </div>
         );
