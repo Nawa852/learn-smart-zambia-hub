@@ -152,6 +152,7 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "AI Tools",
     items: [
+      { title: "AI Lesson Plan", url: "/teacher-lesson-plan", icon: Sparkles, badge: "AI" },
       { title: "AI Quiz Creator", url: "/ai-quiz", icon: Sparkles },
       { title: "AI Assistant", url: "/ai", icon: Brain },
       { title: "Content Generator", url: "/flashcards", icon: FileText },
@@ -169,8 +170,10 @@ export const teacherNavigation: NavGroup[] = [
     label: "Assessment",
     items: [
       { title: "Class Analytics", url: "/teacher-analytics", icon: BarChart3 },
+      { title: "Assignment Analytics", url: "/teacher-assignment-analytics", icon: PieChart, badge: "NEW" },
       { title: "Gradebook", url: "/teacher-gradebook", icon: ClipboardCheck, badge: "NEW" },
-      { title: "Reports", url: "/teacher-analytics", icon: PieChart },
+      { title: "Bulk Grade Import", url: "/teacher-bulk-grades", icon: FileText, badge: "NEW" },
+      { title: "Attendance QR", url: "/teacher-attendance-qr", icon: UserCheck, badge: "NEW" },
     ],
   },
   {
@@ -204,6 +207,8 @@ export const guardianNavigation: NavGroup[] = [
     label: "Monitor",
     items: [
       { title: "Parental Controls", url: "/parental-controls", icon: Shield, badge: "NEW" },
+      { title: "Activity Feed", url: "/guardian-activity-feed", icon: Zap, badge: "LIVE" },
+      { title: "Weekly Digest", url: "/guardian-digest", icon: FileBarChart, badge: "NEW" },
       { title: "Grades", url: "/parent-grades", icon: BarChart3 },
       { title: "Attendance", url: "/parent-attendance", icon: Calendar },
       { title: "Progress Tracker", url: "/parent-progress", icon: TrendingUp },
@@ -274,7 +279,9 @@ export const ministryNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/ministry-dashboard", icon: LayoutDashboard },
       { title: "National Analytics", url: "/analytics", icon: BarChart3 },
+      { title: "Live Stats", url: "/ministry/live-stats", icon: Zap, badge: "LIVE" },
       { title: "ECZ Analytics", url: "/ministry/ecz-analytics", icon: PieChart },
+      { title: "Province Map", url: "/ministry/province-map", icon: Globe, badge: "NEW" },
     ],
   },
   {
@@ -313,6 +320,8 @@ export const ministryNavigation: NavGroup[] = [
       { title: "Announcements", url: "/ministry/announcements", icon: Megaphone, badge: "NEW" },
       { title: "Data Export", url: "/ministry/data-export", icon: Database, badge: "NEW" },
       { title: "Report Generator", url: "/ministry/reports", icon: FileText },
+      { title: "Audit Trail", url: "/ministry/audit", icon: Shield, badge: "NEW" },
+      { title: "School Comparison", url: "/ministry/school-comparison", icon: Building2, badge: "NEW" },
     ],
   },
   {
@@ -544,6 +553,10 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
       { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
       { title: "Hacking Terminal", url: "/cybersecurity/terminal", icon: Monitor, badge: "🔥" },
+      { title: "CTF Arena", url: "/cybersecurity/ctf", icon: Flag, badge: "LIVE" },
+      { title: "Kill Chain", url: "/cybersecurity/kill-chain", icon: Shield, badge: "NEW" },
+      { title: "Vuln Scanner", url: "/cybersecurity/vuln-scanner", icon: Search, badge: "NEW" },
+      { title: "Report Writer", url: "/cybersecurity/report-writer", icon: FileText, badge: "AI" },
     ],
   },
   {

@@ -512,6 +512,33 @@ export type Database = {
         }
         Relationships: []
       }
+      cyber_challenges: {
+        Row: {
+          challenge_name: string
+          completed_at: string
+          created_at: string
+          id: string
+          points: number
+          user_id: string
+        }
+        Insert: {
+          challenge_name: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          points?: number
+          user_id: string
+        }
+        Update: {
+          challenge_name?: string
+          completed_at?: string
+          created_at?: string
+          id?: string
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_checkins: {
         Row: {
           checkin_date: string

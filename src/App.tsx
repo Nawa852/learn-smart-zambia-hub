@@ -148,6 +148,19 @@ const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAna
 const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
 const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
 const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
+const TeacherLessonPlanPage = React.lazy(() => import('@/pages/TeacherLessonPlanPage'));
+const TeacherBulkGradePage = React.lazy(() => import('@/pages/TeacherBulkGradePage'));
+const TeacherAssignmentAnalyticsPage = React.lazy(() => import('@/pages/TeacherAssignmentAnalyticsPage'));
+const TeacherAttendanceQRPage = React.lazy(() => import('@/pages/TeacherAttendanceQRPage'));
+const GuardianDigestPage = React.lazy(() => import('@/pages/GuardianDigestPage'));
+const GuardianActivityFeedPage = React.lazy(() => import('@/pages/GuardianActivityFeedPage'));
+const MinistryAuditPage = React.lazy(() => import('@/pages/MinistryAuditPage'));
+const MinistrySchoolComparisonPage = React.lazy(() => import('@/pages/MinistrySchoolComparisonPage'));
+const MinistryLiveStatsPage = React.lazy(() => import('@/pages/MinistryLiveStatsPage'));
+const MinistryProvinceMapPage = React.lazy(() => import('@/pages/MinistryProvinceMapPage'));
+const CyberVulnScannerPage = React.lazy(() => import('@/pages/CyberVulnScannerPage'));
+const CyberKillChainPage = React.lazy(() => import('@/pages/CyberKillChainPage'));
+const CyberReportWriterPage = React.lazy(() => import('@/pages/CyberReportWriterPage'));
 const LeaderboardPage = React.lazy(() => import('@/pages/LeaderboardPage'));
 const BadgesPage = React.lazy(() => import('@/pages/BadgesPage'));
 const ScreenTimePage = React.lazy(() => import('@/pages/ScreenTimePage'));
@@ -329,6 +342,8 @@ function App() {
               <Route path="/parent-teacher-contact" element={<PG><ParentTeacherContactPage /></PG>} />
               <Route path="/parent-school-updates" element={<PG><ParentSchoolUpdatesPage /></PG>} />
               <Route path="/parent-progress" element={<PG><ParentProgressTrackerPage /></PG>} />
+              <Route path="/guardian-digest" element={<PG><GuardianDigestPage /></PG>} />
+              <Route path="/guardian-activity-feed" element={<PG><GuardianActivityFeedPage /></PG>} />
 
               {/* School Admin Management Pages */}
               <Route path="/admin/users" element={<PG><AdminUserManagementPage /></PG>} />
@@ -396,6 +411,10 @@ function App() {
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
               <Route path="/teacher-gradebook" element={<PG><TeacherGradebookPage /></PG>} />
+              <Route path="/teacher-lesson-plan" element={<PG><TeacherLessonPlanPage /></PG>} />
+              <Route path="/teacher-bulk-grades" element={<PG><TeacherBulkGradePage /></PG>} />
+              <Route path="/teacher-assignment-analytics" element={<PG><TeacherAssignmentAnalyticsPage /></PG>} />
+              <Route path="/teacher-attendance-qr" element={<PG><TeacherAttendanceQRPage /></PG>} />
 
               {/* Ministry Pages */}
               <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
@@ -420,9 +439,16 @@ function App() {
               <Route path="/ministry/digital-literacy" element={<PG><MinistryDigitalLiteracyPage /></PG>} />
               <Route path="/ministry/research" element={<PG><MinistryResearchPage /></PG>} />
               <Route path="/ministry/feedback" element={<PG><MinistryFeedbackPage /></PG>} />
+              <Route path="/ministry/audit" element={<PG><MinistryAuditPage /></PG>} />
+              <Route path="/ministry/school-comparison" element={<PG><MinistrySchoolComparisonPage /></PG>} />
+              <Route path="/ministry/live-stats" element={<PG><MinistryLiveStatsPage /></PG>} />
+              <Route path="/ministry/province-map" element={<PG><MinistryProvinceMapPage /></PG>} />
 
               {/* Cybersecurity New Pages */}
               <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
+              <Route path="/cybersecurity/vuln-scanner" element={<PG><CyberVulnScannerPage /></PG>} />
+              <Route path="/cybersecurity/kill-chain" element={<PG><CyberKillChainPage /></PG>} />
+              <Route path="/cybersecurity/report-writer" element={<PG><CyberReportWriterPage /></PG>} />
               <Route path="/cybersecurity/forensics" element={<PG><CyberForensicsPage /></PG>} />
               <Route path="/cybersecurity/crypto" element={<PG><CyberCryptoPage /></PG>} />
               <Route path="/cybersecurity/incident-response" element={<PG><CyberIncidentResponsePage /></PG>} />
