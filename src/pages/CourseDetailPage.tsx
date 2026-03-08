@@ -42,6 +42,9 @@ const CourseDetailPage = () => {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [noteContent, setNoteContent] = useState('');
+  const [showNotes, setShowNotes] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
