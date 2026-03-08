@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Settings, ChevronDown, Search, ChevronLeft } from "lucide-react";
+import { Settings, ChevronDown, Search, ChevronLeft, Sun, Moon } from "lucide-react";
 
 import {
   Sidebar,
@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { getNavigationByRole, roleLabels } from "./sidebarConfig";
 import { useProfile } from "@/hooks/useProfile";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export function RoleBasedSidebar() {
   const { state, toggleSidebar } = useSidebar();
