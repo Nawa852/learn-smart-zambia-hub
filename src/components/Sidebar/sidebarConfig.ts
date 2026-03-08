@@ -330,6 +330,7 @@ export const entrepreneurNavigation: NavGroup[] = [
     items: [
       { title: "My Ventures", url: "/entrepreneur/ventures", icon: Rocket, badge: "NEW" },
       { title: "Milestones", url: "/entrepreneur/milestones", icon: Target },
+      { title: "Financials", url: "/entrepreneur/financials", icon: PieChart, badge: "NEW" },
     ],
   },
   {
@@ -338,6 +339,7 @@ export const entrepreneurNavigation: NavGroup[] = [
       { title: "Business Plan", url: "/entrepreneur/business-plan", icon: FileText, badge: "AI" },
       { title: "Pitch Deck", url: "/entrepreneur/pitch-deck", icon: Presentation, badge: "AI" },
       { title: "Market Research", url: "/entrepreneur/market-research", icon: Globe, badge: "AI" },
+      { title: "Funding", url: "/entrepreneur/funding", icon: Briefcase, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
