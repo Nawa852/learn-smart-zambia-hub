@@ -91,6 +91,13 @@ import FocusModePage from '@/pages/FocusModePage';
 import SetupPage from '@/pages/SetupPage';
 import AppControlPage from '@/pages/AppControlPage';
 
+// Medical Pages
+import MedicalCaseSimulatorPage from '@/pages/MedicalCaseSimulatorPage';
+import MedicalDrugReferencePage from '@/pages/MedicalDrugReferencePage';
+import MedicalClinicalNotesPage from '@/pages/MedicalClinicalNotesPage';
+import MedicalCaseLogPage from '@/pages/MedicalCaseLogPage';
+import MedicalRotationsPage from '@/pages/MedicalRotationsPage';
+
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
