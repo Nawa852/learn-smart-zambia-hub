@@ -80,6 +80,14 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     setCurrentStep(4);
   };
 
+  const handleDeviceSetupComplete = () => {
+    setCurrentStep(5);
+  };
+
+  const handleSkipDeviceSetup = () => {
+    setCurrentStep(5);
+  };
+
   const handleGamificationComplete = async (gamificationData: any) => {
     setFormData({ ...formData, gamificationData });
     
