@@ -172,6 +172,19 @@ const AuthPage = () => {
     }
   };
 
+  const handleAppleAuth = async () => {
+    setLoading(true);
+    try {
+      const { error } = await lovable.auth.signInWithOAuth('apple', {
+        redirect_uri: window.location.origin,
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({ title: 'Apple sign in failed', description: error.message, variant: 'destructive' });
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex">
       {/* Left Panel - Branding */}
