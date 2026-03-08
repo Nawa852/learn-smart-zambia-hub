@@ -16,6 +16,7 @@ export interface LinkedStudent {
   recentActivity: ActivityItem[];
   quizStats: { totalAttempts: number; avgScore: number };
   lessonCompletionsCount: number;
+  focusStats: { totalMinutes: number; sessionsCompleted: number; gaveUpCount: number };
 }
 
 export interface StudentGrade {
