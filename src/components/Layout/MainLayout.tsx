@@ -59,6 +59,20 @@ const ROUTE_LABELS: Record<string, string> = {
   'entrepreneur/funding': 'Funding',
   'medical/case-simulator': 'Case Simulator',
   'medical/rotations': 'Rotations',
+  'teacher-lesson-plan': 'AI Lesson Plan',
+  'teacher-bulk-grades': 'Bulk Grade Import',
+  'teacher-assignment-analytics': 'Assignment Analytics',
+  'teacher-attendance-qr': 'Attendance QR',
+  'guardian-digest': 'Weekly Digest',
+  'guardian-activity-feed': 'Activity Feed',
+  'ministry/audit': 'Audit Trail',
+  'ministry/school-comparison': 'School Comparison',
+  'ministry/live-stats': 'Live Statistics',
+  'ministry/province-map': 'Province Map',
+  'cybersecurity/ctf': 'CTF Arena',
+  'cybersecurity/vuln-scanner': 'Vuln Scanner',
+  'cybersecurity/kill-chain': 'Kill Chain',
+  'cybersecurity/report-writer': 'Report Writer',
 };
 
 const COMMAND_ITEMS = [
