@@ -152,7 +152,49 @@ const LeaderboardPage = React.lazy(() => import('@/pages/LeaderboardPage'));
 const BadgesPage = React.lazy(() => import('@/pages/BadgesPage'));
 const ScreenTimePage = React.lazy(() => import('@/pages/ScreenTimePage'));
 const ParentalControlsPage = React.lazy(() => import('@/pages/ParentalControlsPage'));
-
+const MinistryBudgetPage = React.lazy(() => import('@/pages/MinistryBudgetPage'));
+const MinistryInspectionsPage = React.lazy(() => import('@/pages/MinistryInspectionsPage'));
+const MinistryTeacherDeploymentPage = React.lazy(() => import('@/pages/MinistryTeacherDeploymentPage'));
+const MinistryDropoutTrackerPage = React.lazy(() => import('@/pages/MinistryDropoutTrackerPage'));
+const MinistryInfrastructurePage = React.lazy(() => import('@/pages/MinistryInfrastructurePage'));
+const MinistryScholarshipsPage = React.lazy(() => import('@/pages/MinistryScholarshipsPage'));
+const MinistryAnnouncementsPage = React.lazy(() => import('@/pages/MinistryAnnouncementsPage'));
+const MinistryDataExportPage = React.lazy(() => import('@/pages/MinistryDataExportPage'));
+const MinistryCompliancePage = React.lazy(() => import('@/pages/MinistryCompliancePage'));
+const MinistryTeacherTrainingPage = React.lazy(() => import('@/pages/MinistryTeacherTrainingPage'));
+const MinistryResourceAllocationPage = React.lazy(() => import('@/pages/MinistryResourceAllocationPage'));
+const MinistryStudentWelfarePage = React.lazy(() => import('@/pages/MinistryStudentWelfarePage'));
+const MinistryDigitalLiteracyPage = React.lazy(() => import('@/pages/MinistryDigitalLiteracyPage'));
+const MinistryResearchPage = React.lazy(() => import('@/pages/MinistryResearchPage'));
+const MinistryFeedbackPage = React.lazy(() => import('@/pages/MinistryFeedbackPage'));
+const CyberCTFPage = React.lazy(() => import('@/pages/CyberCTFPage'));
+const CyberForensicsPage = React.lazy(() => import('@/pages/CyberForensicsPage'));
+const CyberCryptoPage = React.lazy(() => import('@/pages/CyberCryptoPage'));
+const CyberIncidentResponsePage = React.lazy(() => import('@/pages/CyberIncidentResponsePage'));
+const CyberOSINTPage = React.lazy(() => import('@/pages/CyberOSINTPage'));
+const CyberCertTrackerPage = React.lazy(() => import('@/pages/CyberCertTrackerPage'));
+const CyberThreatIntelPage = React.lazy(() => import('@/pages/CyberThreatIntelPage'));
+const CyberBugBountyPage = React.lazy(() => import('@/pages/CyberBugBountyPage'));
+const CyberSocialEngineeringPage = React.lazy(() => import('@/pages/CyberSocialEngineeringPage'));
+const CyberNetworkLabPage = React.lazy(() => import('@/pages/CyberNetworkLabPage'));
+const CyberWebSecPage = React.lazy(() => import('@/pages/CyberWebSecPage'));
+const CyberToolkitPage = React.lazy(() => import('@/pages/CyberToolkitPage'));
+const CyberRangePage = React.lazy(() => import('@/pages/CyberRangePage'));
+const SkillsApprenticeshipPage = React.lazy(() => import('@/pages/SkillsApprenticeshipPage'));
+const SkillsPortfolioPage = React.lazy(() => import('@/pages/SkillsPortfolioPage'));
+const SkillsResumeBuilderPage = React.lazy(() => import('@/pages/SkillsResumeBuilderPage'));
+const SkillsInterviewPrepPage = React.lazy(() => import('@/pages/SkillsInterviewPrepPage'));
+const SkillsJobBoardPage = React.lazy(() => import('@/pages/SkillsJobBoardPage'));
+const SkillsMentorshipPage = React.lazy(() => import('@/pages/SkillsMentorshipPage'));
+const SkillsWorkshopCalendarPage = React.lazy(() => import('@/pages/SkillsWorkshopCalendarPage'));
+const SkillsToolGuidePage = React.lazy(() => import('@/pages/SkillsToolGuidePage'));
+const SkillsCertificationsPage = React.lazy(() => import('@/pages/SkillsCertificationsPage'));
+const SkillsAssessmentPage = React.lazy(() => import('@/pages/SkillsAssessmentPage'));
+const SkillsIndustryConnectPage = React.lazy(() => import('@/pages/SkillsIndustryConnectPage'));
+const SkillsProjectsPage = React.lazy(() => import('@/pages/SkillsProjectsPage'));
+const SkillsSafetyPage = React.lazy(() => import('@/pages/SkillsSafetyPage'));
+const SkillsFinancialLiteracyPage = React.lazy(() => import('@/pages/SkillsFinancialLiteracyPage'));
+const SkillsEntrepreneurshipPage = React.lazy(() => import('@/pages/SkillsEntrepreneurshipPage'));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -363,6 +405,53 @@ function App() {
               <Route path="/ministry/ecz-analytics" element={<PG><MinistryECZAnalyticsPage /></PG>} />
               <Route path="/ministry/reports" element={<PG><MinistryReportGeneratorPage /></PG>} />
               <Route path="/ministry/partnerships" element={<PG><MinistryPartnershipsPage /></PG>} />
+              <Route path="/ministry/budget" element={<PG><MinistryBudgetPage /></PG>} />
+              <Route path="/ministry/inspections" element={<PG><MinistryInspectionsPage /></PG>} />
+              <Route path="/ministry/teacher-deployment" element={<PG><MinistryTeacherDeploymentPage /></PG>} />
+              <Route path="/ministry/dropout-tracker" element={<PG><MinistryDropoutTrackerPage /></PG>} />
+              <Route path="/ministry/infrastructure" element={<PG><MinistryInfrastructurePage /></PG>} />
+              <Route path="/ministry/scholarships" element={<PG><MinistryScholarshipsPage /></PG>} />
+              <Route path="/ministry/announcements" element={<PG><MinistryAnnouncementsPage /></PG>} />
+              <Route path="/ministry/data-export" element={<PG><MinistryDataExportPage /></PG>} />
+              <Route path="/ministry/compliance" element={<PG><MinistryCompliancePage /></PG>} />
+              <Route path="/ministry/teacher-training" element={<PG><MinistryTeacherTrainingPage /></PG>} />
+              <Route path="/ministry/resources" element={<PG><MinistryResourceAllocationPage /></PG>} />
+              <Route path="/ministry/welfare" element={<PG><MinistryStudentWelfarePage /></PG>} />
+              <Route path="/ministry/digital-literacy" element={<PG><MinistryDigitalLiteracyPage /></PG>} />
+              <Route path="/ministry/research" element={<PG><MinistryResearchPage /></PG>} />
+              <Route path="/ministry/feedback" element={<PG><MinistryFeedbackPage /></PG>} />
+
+              {/* Cybersecurity New Pages */}
+              <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
+              <Route path="/cybersecurity/forensics" element={<PG><CyberForensicsPage /></PG>} />
+              <Route path="/cybersecurity/crypto" element={<PG><CyberCryptoPage /></PG>} />
+              <Route path="/cybersecurity/incident-response" element={<PG><CyberIncidentResponsePage /></PG>} />
+              <Route path="/cybersecurity/osint" element={<PG><CyberOSINTPage /></PG>} />
+              <Route path="/cybersecurity/certifications" element={<PG><CyberCertTrackerPage /></PG>} />
+              <Route path="/cybersecurity/threat-intel" element={<PG><CyberThreatIntelPage /></PG>} />
+              <Route path="/cybersecurity/bug-bounty" element={<PG><CyberBugBountyPage /></PG>} />
+              <Route path="/cybersecurity/social-engineering" element={<PG><CyberSocialEngineeringPage /></PG>} />
+              <Route path="/cybersecurity/network-lab" element={<PG><CyberNetworkLabPage /></PG>} />
+              <Route path="/cybersecurity/web-security" element={<PG><CyberWebSecPage /></PG>} />
+              <Route path="/cybersecurity/toolkit" element={<PG><CyberToolkitPage /></PG>} />
+              <Route path="/cybersecurity/range" element={<PG><CyberRangePage /></PG>} />
+
+              {/* Skills New Pages */}
+              <Route path="/skills/apprenticeships" element={<PG><SkillsApprenticeshipPage /></PG>} />
+              <Route path="/skills/portfolio" element={<PG><SkillsPortfolioPage /></PG>} />
+              <Route path="/skills/resume" element={<PG><SkillsResumeBuilderPage /></PG>} />
+              <Route path="/skills/interview-prep" element={<PG><SkillsInterviewPrepPage /></PG>} />
+              <Route path="/skills/jobs" element={<PG><SkillsJobBoardPage /></PG>} />
+              <Route path="/skills/mentorship" element={<PG><SkillsMentorshipPage /></PG>} />
+              <Route path="/skills/workshops" element={<PG><SkillsWorkshopCalendarPage /></PG>} />
+              <Route path="/skills/tools" element={<PG><SkillsToolGuidePage /></PG>} />
+              <Route path="/skills/certifications" element={<PG><SkillsCertificationsPage /></PG>} />
+              <Route path="/skills/assessment" element={<PG><SkillsAssessmentPage /></PG>} />
+              <Route path="/skills/industry" element={<PG><SkillsIndustryConnectPage /></PG>} />
+              <Route path="/skills/projects" element={<PG><SkillsProjectsPage /></PG>} />
+              <Route path="/skills/safety" element={<PG><SkillsSafetyPage /></PG>} />
+              <Route path="/skills/financial-literacy" element={<PG><SkillsFinancialLiteracyPage /></PG>} />
+              <Route path="/skills/entrepreneurship" element={<PG><SkillsEntrepreneurshipPage /></PG>} />
 
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
