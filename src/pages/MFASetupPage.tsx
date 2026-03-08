@@ -133,7 +133,7 @@ const MFASetupPage = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate('/settings')} className="border border-border/30 hover:border-primary/30">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20 flex items-center justify-center glow-border">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
             <Shield className="w-6 h-6 text-primary" />
           </div>
           <div>
