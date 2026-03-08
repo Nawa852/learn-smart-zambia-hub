@@ -342,6 +342,8 @@ function App() {
               <Route path="/parent-teacher-contact" element={<PG><ParentTeacherContactPage /></PG>} />
               <Route path="/parent-school-updates" element={<PG><ParentSchoolUpdatesPage /></PG>} />
               <Route path="/parent-progress" element={<PG><ParentProgressTrackerPage /></PG>} />
+              <Route path="/guardian-digest" element={<PG><GuardianDigestPage /></PG>} />
+              <Route path="/guardian-activity-feed" element={<PG><GuardianActivityFeedPage /></PG>} />
 
               {/* School Admin Management Pages */}
               <Route path="/admin/users" element={<PG><AdminUserManagementPage /></PG>} />
