@@ -212,6 +212,23 @@ const SkillsJobTrackerPage = React.lazy(() => import('@/pages/SkillsJobTrackerPa
 const SkillsApprenticeshipMatchPage = React.lazy(() => import('@/pages/SkillsApprenticeshipMatchPage'));
 const SkillsPortfolioGalleryPage = React.lazy(() => import('@/pages/SkillsPortfolioGalleryPage'));
 const SkillsAssessmentQuizPage = React.lazy(() => import('@/pages/SkillsAssessmentQuizPage'));
+const PomodoroPage = React.lazy(() => import('@/pages/PomodoroPage'));
+const BookmarksPage = React.lazy(() => import('@/pages/BookmarksPage'));
+const SpacedRepetitionPage = React.lazy(() => import('@/pages/SpacedRepetitionPage'));
+const ReadingListPage = React.lazy(() => import('@/pages/ReadingListPage'));
+const DataExportPage = React.lazy(() => import('@/pages/DataExportPage'));
+const TeacherReportCardsPage = React.lazy(() => import('@/pages/TeacherReportCardsPage'));
+const TeacherAnnouncementsPage = React.lazy(() => import('@/pages/TeacherAnnouncementsPage'));
+const TeacherRubricBuilderPage = React.lazy(() => import('@/pages/TeacherRubricBuilderPage'));
+const GuardianHomeworkTrackerPage = React.lazy(() => import('@/pages/GuardianHomeworkTrackerPage'));
+const GuardianRewardSystemPage = React.lazy(() => import('@/pages/GuardianRewardSystemPage'));
+const GuardianStudyComparisonPage = React.lazy(() => import('@/pages/GuardianStudyComparisonPage'));
+const CyberPasswordAnalyzerPage = React.lazy(() => import('@/pages/CyberPasswordAnalyzerPage'));
+const CyberPhishingSimPage = React.lazy(() => import('@/pages/CyberPhishingSimPage'));
+const CyberGlossaryPage = React.lazy(() => import('@/pages/CyberGlossaryPage'));
+const DevAPIPlaygroundPage = React.lazy(() => import('@/pages/DevAPIPlaygroundPage'));
+const DevAlgorithmVisualizerPage = React.lazy(() => import('@/pages/DevAlgorithmVisualizerPage'));
+const NotificationPreferencesPage = React.lazy(() => import('@/pages/NotificationPreferencesPage'));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -495,6 +512,25 @@ function App() {
               <Route path="/badges" element={<PG><BadgesPage /></PG>} />
               <Route path="/screen-time" element={<PG><ScreenTimePage /></PG>} />
               <Route path="/parental-controls" element={<PG><ParentalControlsPage /></PG>} />
+
+              {/* New Feature Pages */}
+              <Route path="/pomodoro" element={<PG><PomodoroPage /></PG>} />
+              <Route path="/bookmarks" element={<PG><BookmarksPage /></PG>} />
+              <Route path="/spaced-repetition" element={<PG><SpacedRepetitionPage /></PG>} />
+              <Route path="/reading-list" element={<PG><ReadingListPage /></PG>} />
+              <Route path="/data-export" element={<PG><DataExportPage /></PG>} />
+              <Route path="/teacher-report-cards" element={<PG><TeacherReportCardsPage /></PG>} />
+              <Route path="/teacher-announcements" element={<PG><TeacherAnnouncementsPage /></PG>} />
+              <Route path="/teacher-rubric-builder" element={<PG><TeacherRubricBuilderPage /></PG>} />
+              <Route path="/guardian-homework" element={<PG><GuardianHomeworkTrackerPage /></PG>} />
+              <Route path="/guardian-rewards" element={<PG><GuardianRewardSystemPage /></PG>} />
+              <Route path="/guardian-study-comparison" element={<PG><GuardianStudyComparisonPage /></PG>} />
+              <Route path="/cybersecurity/password-analyzer" element={<PG><CyberPasswordAnalyzerPage /></PG>} />
+              <Route path="/cybersecurity/phishing-sim" element={<PG><CyberPhishingSimPage /></PG>} />
+              <Route path="/cybersecurity/glossary" element={<PG><CyberGlossaryPage /></PG>} />
+              <Route path="/developer/api-playground" element={<PG><DevAPIPlaygroundPage /></PG>} />
+              <Route path="/developer/algorithms" element={<PG><DevAlgorithmVisualizerPage /></PG>} />
+              <Route path="/notification-preferences" element={<PG><NotificationPreferencesPage /></PG>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />

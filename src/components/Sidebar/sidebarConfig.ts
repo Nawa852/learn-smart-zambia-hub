@@ -8,7 +8,7 @@ import {
   Timer, Award, Gamepad2, Headphones, PenTool, Camera, Presentation,
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
-  Flag, Lock, Eye, Bug, Wifi, Palette, Search,
+  Flag, Lock, Eye, Bug, Wifi, Palette, Search, Bookmark, Gift, Code,
   type LucideIcon
 } from "lucide-react";
 
@@ -67,11 +67,14 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "AI Study Buddy", url: "/ai", icon: Brain },
       { title: "Focus Mode", url: "/focus-mode", icon: Shield, badge: "NEW" },
+      { title: "Pomodoro Timer", url: "/pomodoro", icon: Timer, badge: "NEW" },
       { title: "App Control", url: "/app-control", icon: Wrench, badge: "NEW" },
       { title: "Study Planner", url: "/study-planner", icon: Calendar, badge: "NEW" },
       { title: "Flashcards", url: "/flashcards", icon: Layers },
+      { title: "Spaced Repetition", url: "/spaced-repetition", icon: Brain, badge: "NEW" },
       { title: "AI Quiz", url: "/ai-quiz", icon: Sparkles },
       { title: "Mind Maps", url: "/mind-maps", icon: Lightbulb },
+      { title: "Reading List", url: "/reading-list", icon: BookMarked, badge: "NEW" },
     ],
   },
   {
@@ -103,6 +106,8 @@ export const studentNavigation: NavGroup[] = [
       { title: "Goals", url: "/goals", icon: Target },
       { title: "Screen Time", url: "/screen-time", icon: Monitor },
       { title: "My Notes", url: "/my-notes", icon: PenTool },
+      { title: "Bookmarks", url: "/bookmarks", icon: Bookmark, badge: "NEW" },
+      { title: "Data Export", url: "/data-export", icon: Database, badge: "NEW" },
     ],
   },
   {
@@ -172,8 +177,11 @@ export const teacherNavigation: NavGroup[] = [
       { title: "Class Analytics", url: "/teacher-analytics", icon: BarChart3 },
       { title: "Assignment Analytics", url: "/teacher-assignment-analytics", icon: PieChart, badge: "NEW" },
       { title: "Gradebook", url: "/teacher-gradebook", icon: ClipboardCheck, badge: "NEW" },
+      { title: "Report Cards", url: "/teacher-report-cards", icon: FileText, badge: "NEW" },
       { title: "Bulk Grade Import", url: "/teacher-bulk-grades", icon: FileText, badge: "NEW" },
       { title: "Attendance QR", url: "/teacher-attendance-qr", icon: UserCheck, badge: "NEW" },
+      { title: "Rubric Builder", url: "/teacher-rubric-builder", icon: ClipboardCheck, badge: "NEW" },
+      { title: "Announcements", url: "/teacher-announcements", icon: Megaphone, badge: "NEW" },
     ],
   },
   {
@@ -209,9 +217,12 @@ export const guardianNavigation: NavGroup[] = [
       { title: "Parental Controls", url: "/parental-controls", icon: Shield, badge: "NEW" },
       { title: "Activity Feed", url: "/guardian-activity-feed", icon: Zap, badge: "LIVE" },
       { title: "Weekly Digest", url: "/guardian-digest", icon: FileBarChart, badge: "NEW" },
+      { title: "Homework Tracker", url: "/guardian-homework", icon: ClipboardCheck, badge: "NEW" },
       { title: "Grades", url: "/parent-grades", icon: BarChart3 },
       { title: "Attendance", url: "/parent-attendance", icon: Calendar },
       { title: "Progress Tracker", url: "/parent-progress", icon: TrendingUp },
+      { title: "Study Comparison", url: "/guardian-study-comparison", icon: Users, badge: "NEW" },
+      { title: "Rewards", url: "/guardian-rewards", icon: Gift, badge: "NEW" },
       { title: "Alerts", url: "/parent-alerts", icon: Bell },
     ],
   },
@@ -459,6 +470,8 @@ export const developerNavigation: NavGroup[] = [
     items: [
       { title: "Code Challenges", url: "/developer/challenges", icon: Zap, badge: "AI" },
       { title: "Code Review", url: "/developer/code-review", icon: Sparkles, badge: "AI" },
+      { title: "API Playground", url: "/developer/api-playground", icon: Globe, badge: "NEW" },
+      { title: "Algorithm Visualizer", url: "/developer/algorithms", icon: Code, badge: "NEW" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
@@ -569,6 +582,9 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Kill Chain", url: "/cybersecurity/kill-chain", icon: Shield, badge: "NEW" },
       { title: "Vuln Scanner", url: "/cybersecurity/vuln-scanner", icon: Search, badge: "NEW" },
       { title: "Report Writer", url: "/cybersecurity/report-writer", icon: FileText, badge: "AI" },
+      { title: "Password Analyzer", url: "/cybersecurity/password-analyzer", icon: Lock, badge: "NEW" },
+      { title: "Phishing Simulator", url: "/cybersecurity/phishing-sim", icon: AlertTriangle, badge: "NEW" },
+      { title: "Cyber Glossary", url: "/cybersecurity/glossary", icon: BookOpen, badge: "NEW" },
     ],
   },
   {

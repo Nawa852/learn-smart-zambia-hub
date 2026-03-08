@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox } from 'lucide-react';
+import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Note {
@@ -78,11 +78,18 @@ const MyNotesPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <StickyNote className="w-6 h-6 text-primary" /> My Notes
-        </h1>
-        <p className="text-sm text-muted-foreground">{notes.length} notes saved</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <StickyNote className="w-6 h-6 text-primary" /> My Notes
+          </h1>
+          <p className="text-sm text-muted-foreground">{notes.length} notes saved</p>
+        </div>
+        {notes.length > 0 && (
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer className="w-4 h-4 mr-2" />Export PDF
+          </Button>
+        )}
       </div>
 
       {notes.length === 0 ? (

@@ -198,6 +198,30 @@ export type Database = {
         }
         Relationships: []
       }
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_milestones: {
         Row: {
           completed: boolean | null
@@ -327,6 +351,36 @@ export type Database = {
         }
         Relationships: []
       }
+      class_announcements: {
+        Row: {
+          content: string | null
+          course_id: string
+          created_at: string
+          id: string
+          priority: string | null
+          teacher_id: string
+          title: string
+        }
+        Insert: {
+          content?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          priority?: string | null
+          teacher_id: string
+          title: string
+        }
+        Update: {
+          content?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          priority?: string | null
+          teacher_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       clinical_cases: {
         Row: {
           accuracy_score: number | null
@@ -402,6 +456,39 @@ export type Database = {
           status?: string | null
           supervisor_name?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      communication_logs: {
+        Row: {
+          communication_type: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          parent_id: string
+          student_id: string | null
+          subject: string
+          teacher_id: string
+        }
+        Insert: {
+          communication_type?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          parent_id: string
+          student_id?: string | null
+          subject: string
+          teacher_id: string
+        }
+        Update: {
+          communication_type?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          parent_id?: string
+          student_id?: string | null
+          subject?: string
+          teacher_id?: string
         }
         Relationships: []
       }
@@ -727,6 +814,74 @@ export type Database = {
           },
         ]
       }
+      flashcard_cards: {
+        Row: {
+          back: string
+          created_at: string
+          deck_id: string
+          ease_factor: number
+          front: string
+          id: string
+          interval_days: number
+          next_review_date: string
+          repetitions: number
+        }
+        Insert: {
+          back: string
+          created_at?: string
+          deck_id: string
+          ease_factor?: number
+          front: string
+          id?: string
+          interval_days?: number
+          next_review_date?: string
+          repetitions?: number
+        }
+        Update: {
+          back?: string
+          created_at?: string
+          deck_id?: string
+          ease_factor?: number
+          front?: string
+          id?: string
+          interval_days?: number
+          next_review_date?: string
+          repetitions?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_cards_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "flashcard_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flashcard_decks: {
+        Row: {
+          created_at: string
+          id: string
+          subject: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          subject?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          subject?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       focus_sessions: {
         Row: {
           created_at: string
@@ -880,6 +1035,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      guardian_rewards: {
+        Row: {
+          claimed: boolean | null
+          created_at: string
+          current_progress: number | null
+          guardian_id: string
+          id: string
+          student_id: string
+          target_lessons: number | null
+          title: string
+        }
+        Insert: {
+          claimed?: boolean | null
+          created_at?: string
+          current_progress?: number | null
+          guardian_id: string
+          id?: string
+          student_id: string
+          target_lessons?: number | null
+          title: string
+        }
+        Update: {
+          claimed?: boolean | null
+          created_at?: string
+          current_progress?: number | null
+          guardian_id?: string
+          id?: string
+          student_id?: string
+          target_lessons?: number | null
+          title?: string
+        }
+        Relationships: []
       }
       job_applications: {
         Row: {
@@ -1301,6 +1489,36 @@ export type Database = {
           subject?: string
           time_taken_seconds?: number | null
           total_questions?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reading_list: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          id: string
+          item_type: string | null
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          item_type?: string | null
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          item_type?: string | null
+          title?: string
+          url?: string | null
           user_id?: string
         }
         Relationships: []
