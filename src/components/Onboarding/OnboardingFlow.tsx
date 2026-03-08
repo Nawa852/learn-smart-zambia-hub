@@ -302,7 +302,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           </div>
         </div>
       )}
-      <div className={`relative z-10 ${currentStep > 0 && currentStep < 5 ? 'pt-24' : ''}`}>
+      <div className={`relative z-10 ${currentStep > 0 && currentStep < 7 ? 'pt-24' : ''}`}>
         {renderStep()}
       </div>
     </div>
