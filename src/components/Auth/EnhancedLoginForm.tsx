@@ -82,27 +82,46 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   return (
     <div className="space-y-6">
       {/* Quick Demo Login Button */}
-      <Button 
-        type="button"
-        onClick={handleQuickLogin}
-        className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90"
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
       >
-        <Sparkles className="w-4 h-4 mr-2" />
-        Quick Demo Login
-      </Button>
+        <Button 
+          type="button"
+          onClick={handleQuickLogin}
+          className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground font-semibold shadow-lg glow-primary transition-all"
+        >
+          <Sparkles className="w-4 h-4 mr-2" />
+          Quick Demo Login
+        </Button>
+      </motion.div>
 
-      <div className="relative">
+      <motion.div 
+        className="relative"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-border" />
+          <span className="w-full border-t border-primary/20" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-2 text-muted-foreground">Or sign in with credentials</span>
+          <span className="bg-gradient-card px-2 text-muted-foreground font-medium">Or sign in with credentials</span>
         </div>
-      </div>
+      </motion.div>
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address</Label>
+        <motion.div 
+          className="space-y-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <Label htmlFor="email" className="flex items-center gap-2 font-semibold">
+            <Mail className="w-4 h-4 text-primary" />
+            Email Address
+          </Label>
           <Input
             id="email"
             type="email"
@@ -110,8 +129,9 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
+            className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
           />
-        </div>
+        </motion.div>
         
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
