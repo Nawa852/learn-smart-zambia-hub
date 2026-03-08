@@ -177,8 +177,11 @@ export const teacherNavigation: NavGroup[] = [
       { title: "Class Analytics", url: "/teacher-analytics", icon: BarChart3 },
       { title: "Assignment Analytics", url: "/teacher-assignment-analytics", icon: PieChart, badge: "NEW" },
       { title: "Gradebook", url: "/teacher-gradebook", icon: ClipboardCheck, badge: "NEW" },
+      { title: "Report Cards", url: "/teacher-report-cards", icon: FileText, badge: "NEW" },
       { title: "Bulk Grade Import", url: "/teacher-bulk-grades", icon: FileText, badge: "NEW" },
       { title: "Attendance QR", url: "/teacher-attendance-qr", icon: UserCheck, badge: "NEW" },
+      { title: "Rubric Builder", url: "/teacher-rubric-builder", icon: ClipboardCheck, badge: "NEW" },
+      { title: "Announcements", url: "/teacher-announcements", icon: Megaphone, badge: "NEW" },
     ],
   },
   {
