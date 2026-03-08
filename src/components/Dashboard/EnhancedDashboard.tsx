@@ -181,15 +181,15 @@ const EnhancedDashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 line-clamp-2">{activity.title}</p>
+                      <p className="text-sm font-medium text-foreground line-clamp-2">{activity.title}</p>
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-gray-500">{activity.time}</span>
+                        <span className="text-xs text-muted-foreground">{activity.time}</span>
                         <div className="flex items-center gap-1">
                           {activity.score && (
-                            <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+                            <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-600">
                               {activity.score}%
                             </Badge>
                           )}
