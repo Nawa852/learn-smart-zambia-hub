@@ -207,6 +207,8 @@ export const guardianNavigation: NavGroup[] = [
     label: "Monitor",
     items: [
       { title: "Parental Controls", url: "/parental-controls", icon: Shield, badge: "NEW" },
+      { title: "Activity Feed", url: "/guardian-activity-feed", icon: Zap, badge: "LIVE" },
+      { title: "Weekly Digest", url: "/guardian-digest", icon: FileBarChart, badge: "NEW" },
       { title: "Grades", url: "/parent-grades", icon: BarChart3 },
       { title: "Attendance", url: "/parent-attendance", icon: Calendar },
       { title: "Progress Tracker", url: "/parent-progress", icon: TrendingUp },
