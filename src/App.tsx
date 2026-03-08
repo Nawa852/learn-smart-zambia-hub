@@ -101,6 +101,8 @@ import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
 import StudyGroupChatPage from '@/pages/StudyGroupChatPage';
 import CreateCoursePage from '@/pages/CreateCoursePage';
 import CourseCatalogPage from '@/pages/CourseCatalogPage';
+import CourseDetailPage from '@/pages/CourseDetailPage';
+import AssignmentPage from '@/pages/AssignmentPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
