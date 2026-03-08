@@ -63,7 +63,6 @@ export function RoleBasedSidebar() {
         <div className="p-3 mx-2 my-2 rounded-xl bg-accent/20 border border-border/50">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 ring-2 ring-primary/20 flex-shrink-0">
-              <AvatarImage src="" />
               <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold text-sm">
                 {userName.charAt(0).toUpperCase()}
               </AvatarFallback>
