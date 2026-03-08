@@ -91,6 +91,13 @@ import FocusModePage from '@/pages/FocusModePage';
 import SetupPage from '@/pages/SetupPage';
 import AppControlPage from '@/pages/AppControlPage';
 
+// Medical Pages
+import MedicalCaseSimulatorPage from '@/pages/MedicalCaseSimulatorPage';
+import MedicalDrugReferencePage from '@/pages/MedicalDrugReferencePage';
+import MedicalClinicalNotesPage from '@/pages/MedicalClinicalNotesPage';
+import MedicalCaseLogPage from '@/pages/MedicalCaseLogPage';
+import MedicalRotationsPage from '@/pages/MedicalRotationsPage';
+
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
@@ -284,6 +291,13 @@ function App() {
             <Route path="/sessions" element={<ProtectedRoute><MainLayout><SessionManagementPage /></MainLayout></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
+
+            {/* Medical Pages */}
+            <Route path="/medical/case-simulator" element={<ProtectedRoute><MainLayout><MedicalCaseSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/drug-reference" element={<ProtectedRoute><MainLayout><MedicalDrugReferencePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/clinical-notes" element={<ProtectedRoute><MainLayout><MedicalClinicalNotesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/case-log" element={<ProtectedRoute><MainLayout><MedicalCaseLogPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/rotations" element={<ProtectedRoute><MainLayout><MedicalRotationsPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />

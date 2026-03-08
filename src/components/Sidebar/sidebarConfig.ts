@@ -281,10 +281,30 @@ export const doctorNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "Learning",
+    label: "Clinical",
     items: [
+      { title: "Case Simulator", url: "/medical/case-simulator", icon: Microscope, badge: "AI" },
+      { title: "Case Log", url: "/medical/case-log", icon: FileText },
+      { title: "Rotations", url: "/medical/rotations", icon: Compass },
+      { title: "Clinical Notes", url: "/medical/clinical-notes", icon: PenTool, badge: "AI" },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "Drug Reference", url: "/medical/drug-reference", icon: FlaskConical, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
       { title: "Resources", url: "/materials", icon: FolderOpen },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
   {
