@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.funding-opportunities]
 verify_jwt = false
+
+[functions.guardian-weekly-digest]
+verify_jwt = false

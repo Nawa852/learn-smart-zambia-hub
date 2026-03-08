@@ -52,12 +52,12 @@ const GuardianActivityFeedPage = () => {
     const channel = supabase.channel('guardian-activity')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'lesson_completions' }, (p) => {
         if (studentIds.includes(p.new.user_id)) {
-          setLiveFeed(prev => [{ id: p.new.id, type: 'lesson', description: 'Completed a lesson', timestamp: p.new.completed_at, icon: BookOpen }, ...prev].slice(0, 5));
+          setLiveFeed(prev => [{ id: p.new.id, type: 'lesson' as const, description: 'Completed a lesson', timestamp: p.new.completed_at, icon: BookOpen }, ...prev].slice(0, 5));
         }
       })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quiz_attempts' }, (p) => {
         if (studentIds.includes(p.new.user_id)) {
-          setLiveFeed(prev => [{ id: p.new.id, type: 'quiz', description: `Quiz: ${p.new.correct_answers}/${p.new.total_questions} in ${p.new.subject}`, timestamp: p.new.created_at, icon: Brain }, ...prev].slice(0, 5));
+          setLiveFeed(prev => [{ id: p.new.id, type: 'quiz' as const, description: `Quiz: ${p.new.correct_answers}/${p.new.total_questions} in ${p.new.subject}`, timestamp: p.new.created_at, icon: Brain }, ...prev].slice(0, 5));
         }
       })
       .subscribe();
