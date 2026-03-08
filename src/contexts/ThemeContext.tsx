@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-export type ThemeType = 'light' | 'dark' | 'zambian' | 'ocean' | 'sunset' | 'forest';
+export type ThemeType = 'light' | 'dark' | 'zambian' | 'ocean' | 'sunset' | 'forest' | 'neon' | 'royal' | 'midnight';
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -11,20 +11,25 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const themes: { id: ThemeType; name: string; colors: string[] }[] = [
-  { id: 'light', name: 'Light', colors: ['#ffffff', '#6366f1', '#8b5cf6'] },
-  { id: 'dark', name: 'Dark', colors: ['#0f172a', '#6366f1', '#8b5cf6'] },
-  { id: 'zambian', name: 'Zambian Heritage', colors: ['#f97316', '#10b981', '#fbbf24'] },
-  { id: 'ocean', name: 'Ocean Blue', colors: ['#0ea5e9', '#06b6d4', '#3b82f6'] },
-  { id: 'sunset', name: 'Sunset', colors: ['#f97316', '#ef4444', '#ec4899'] },
-  { id: 'forest', name: 'Forest', colors: ['#22c55e', '#10b981', '#059669'] },
+  { id: 'dark', name: 'Dark Premium', colors: ['#0f1117', '#2dd4bf', '#a78bfa'] },
+  { id: 'light', name: 'Light', colors: ['#fafafa', '#14b8a6', '#8b5cf6'] },
+  { id: 'zambian', name: 'Zambian Heritage', colors: ['#1a120a', '#f97316', '#10b981'] },
+  { id: 'ocean', name: 'Deep Ocean', colors: ['#0a1628', '#0ea5e9', '#06b6d4'] },
+  { id: 'sunset', name: 'Sunset Blaze', colors: ['#1a0c0a', '#f97316', '#ec4899'] },
+  { id: 'forest', name: 'Emerald Forest', colors: ['#0a1a0f', '#22c55e', '#10b981'] },
+  { id: 'neon', name: 'Neon Pulse', colors: ['#0a0a14', '#00ff88', '#ff00ff'] },
+  { id: 'royal', name: 'Royal Gold', colors: ['#0f0d1a', '#fbbf24', '#7c3aed'] },
+  { id: 'midnight', name: 'Midnight Blue', colors: ['#060d1f', '#3b82f6', '#6366f1'] },
 ];
+
+const THEME_CLASSES = themes.map(t => t.id === 'dark' ? 'dark' : t.id === 'light' ? 'light' : `theme-${t.id}`);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeType>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'light';
+      return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'dark';
     }
-    return 'light';
+    return 'dark';
   });
 
   const setTheme = (newTheme: ThemeType) => {
@@ -34,14 +39,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    
     // Remove all theme classes
-    root.classList.remove('light', 'dark', 'theme-zambian', 'theme-ocean', 'theme-sunset', 'theme-forest');
-    
-    // Add new theme class
+    THEME_CLASSES.forEach(cls => root.classList.remove(cls));
+
     if (theme === 'dark') {
       root.classList.add('dark');
-    } else if (theme !== 'light') {
+    } else if (theme === 'light') {
+      root.classList.add('light');
+    } else {
       root.classList.add(`theme-${theme}`);
     }
   }, [theme]);
