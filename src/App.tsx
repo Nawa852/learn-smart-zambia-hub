@@ -98,6 +98,13 @@ import MedicalClinicalNotesPage from '@/pages/MedicalClinicalNotesPage';
 import MedicalCaseLogPage from '@/pages/MedicalCaseLogPage';
 import MedicalRotationsPage from '@/pages/MedicalRotationsPage';
 
+// Entrepreneur Pages
+import EntrepreneurVenturesPage from '@/pages/EntrepreneurVenturesPage';
+import EntrepreneurBusinessPlanPage from '@/pages/EntrepreneurBusinessPlanPage';
+import EntrepreneurPitchDeckPage from '@/pages/EntrepreneurPitchDeckPage';
+import EntrepreneurMarketResearchPage from '@/pages/EntrepreneurMarketResearchPage';
+import EntrepreneurMilestonesPage from '@/pages/EntrepreneurMilestonesPage';
+
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
@@ -298,6 +305,13 @@ function App() {
             <Route path="/medical/clinical-notes" element={<ProtectedRoute><MainLayout><MedicalClinicalNotesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/medical/case-log" element={<ProtectedRoute><MainLayout><MedicalCaseLogPage /></MainLayout></ProtectedRoute>} />
             <Route path="/medical/rotations" element={<ProtectedRoute><MainLayout><MedicalRotationsPage /></MainLayout></ProtectedRoute>} />
+
+            {/* Entrepreneur Pages */}
+            <Route path="/entrepreneur/ventures" element={<ProtectedRoute><MainLayout><EntrepreneurVenturesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/business-plan" element={<ProtectedRoute><MainLayout><EntrepreneurBusinessPlanPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/pitch-deck" element={<ProtectedRoute><MainLayout><EntrepreneurPitchDeckPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/market-research" element={<ProtectedRoute><MainLayout><EntrepreneurMarketResearchPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/milestones" element={<ProtectedRoute><MainLayout><EntrepreneurMilestonesPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />

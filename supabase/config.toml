@@ -11,3 +11,12 @@ verify_jwt = false
 
 [functions.medical-notes-generator]
 verify_jwt = false
+
+[functions.business-plan-generator]
+verify_jwt = false
+
+[functions.pitch-deck-generator]
+verify_jwt = false
+
+[functions.market-research-assistant]
+verify_jwt = false
