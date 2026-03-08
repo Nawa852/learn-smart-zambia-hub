@@ -582,6 +582,9 @@ export const cybersecurityNavigation: NavGroup[] = [
       { title: "Kill Chain", url: "/cybersecurity/kill-chain", icon: Shield, badge: "NEW" },
       { title: "Vuln Scanner", url: "/cybersecurity/vuln-scanner", icon: Search, badge: "NEW" },
       { title: "Report Writer", url: "/cybersecurity/report-writer", icon: FileText, badge: "AI" },
+      { title: "Password Analyzer", url: "/cybersecurity/password-analyzer", icon: Lock, badge: "NEW" },
+      { title: "Phishing Simulator", url: "/cybersecurity/phishing-sim", icon: Mail, badge: "NEW" },
+      { title: "Cyber Glossary", url: "/cybersecurity/glossary", icon: BookOpen, badge: "NEW" },
     ],
   },
   {
