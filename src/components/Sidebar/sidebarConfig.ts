@@ -8,7 +8,7 @@ import {
   Timer, Award, Gamepad2, Headphones, PenTool, Camera, Presentation,
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
-  Flag, Lock, Eye, Bug, Wifi, Palette, Search,
+  Flag, Lock, Eye, Bug, Wifi, Palette, Search, Bookmark, Gift, Code,
   type LucideIcon
 } from "lucide-react";
 
