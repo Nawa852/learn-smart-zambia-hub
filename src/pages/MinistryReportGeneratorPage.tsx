@@ -36,7 +36,8 @@ const MinistryReportGeneratorPage = () => {
     setReport(null);
 
     try {
-      const { data: stats } = await supabase.rpc('get_platform_stats');
+      const { data: rawStats } = await supabase.rpc('get_platform_stats');
+      const stats = rawStats as any;
       const sections: string[] = [];
       sections.push(`# National Education Report — ${year}`);
       sections.push(`**Province:** ${province}`);

@@ -307,6 +307,15 @@ function App() {
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
 
+              {/* Ministry Pages */}
+              <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
+              <Route path="/ministry/policies" element={<PG><MinistryPolicyTrackerPage /></PG>} />
+              <Route path="/ministry/schools" element={<PG><MinistrySchoolRegistryPage /></PG>} />
+              <Route path="/ministry/interventions" element={<PG><MinistryInterventionsPage /></PG>} />
+              <Route path="/ministry/ecz-analytics" element={<PG><MinistryECZAnalyticsPage /></PG>} />
+              <Route path="/ministry/reports" element={<PG><MinistryReportGeneratorPage /></PG>} />
+              <Route path="/ministry/partnerships" element={<PG><MinistryPartnershipsPage /></PG>} />
+
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
 

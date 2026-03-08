@@ -261,14 +261,25 @@ export const ministryNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/ministry-dashboard", icon: LayoutDashboard },
       { title: "National Analytics", url: "/analytics", icon: BarChart3 },
+      { title: "ECZ Analytics", url: "/ministry/ecz-analytics", icon: PieChart, badge: "NEW" },
     ],
   },
   {
     label: "Management",
     items: [
-      { title: "Schools", url: "/admin/users", icon: Building2 },
+      { title: "School Registry", url: "/ministry/schools", icon: Building2, badge: "NEW" },
+      { title: "Provincial Data", url: "/ministry/provinces", icon: Globe, badge: "NEW" },
       { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
       { title: "Resources", url: "/zambian-resources", icon: Library },
+    ],
+  },
+  {
+    label: "Policy & Impact",
+    items: [
+      { title: "Policy Tracker", url: "/ministry/policies", icon: Shield, badge: "NEW" },
+      { title: "Interventions", url: "/ministry/interventions", icon: Target, badge: "NEW" },
+      { title: "NGO Partnerships", url: "/ministry/partnerships", icon: Heart, badge: "NEW" },
+      { title: "Report Generator", url: "/ministry/reports", icon: FileText, badge: "NEW" },
     ],
   },
   {
