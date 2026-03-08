@@ -28,6 +28,7 @@ import CommunityHub from '@/pages/CommunityHub';
 
 // Learning Features
 import LearningAnalytics from '@/pages/LearningAnalytics';
+import TeacherAnalyticsPage from '@/pages/TeacherAnalyticsPage';
 import Achievements from '@/pages/Achievements';
 import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
 import StudyToolsPage from '@/pages/StudyToolsPage';
