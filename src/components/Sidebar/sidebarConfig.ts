@@ -470,6 +470,8 @@ export const developerNavigation: NavGroup[] = [
     items: [
       { title: "Code Challenges", url: "/developer/challenges", icon: Zap, badge: "AI" },
       { title: "Code Review", url: "/developer/code-review", icon: Sparkles, badge: "AI" },
+      { title: "API Playground", url: "/developer/api-playground", icon: Globe, badge: "NEW" },
+      { title: "Algorithm Visualizer", url: "/developer/algorithms", icon: Code, badge: "NEW" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
