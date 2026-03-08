@@ -319,6 +319,13 @@ function App() {
             <Route path="/entrepreneur/pitch-deck" element={<ProtectedRoute><MainLayout><EntrepreneurPitchDeckPage /></MainLayout></ProtectedRoute>} />
             <Route path="/entrepreneur/market-research" element={<ProtectedRoute><MainLayout><EntrepreneurMarketResearchPage /></MainLayout></ProtectedRoute>} />
             <Route path="/entrepreneur/milestones" element={<ProtectedRoute><MainLayout><EntrepreneurMilestonesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/financials" element={<ProtectedRoute><MainLayout><EntrepreneurFinancialsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/funding" element={<ProtectedRoute><MainLayout><EntrepreneurFundingPage /></MainLayout></ProtectedRoute>} />
+
+            {/* Developer Pages */}
+            <Route path="/developer/projects" element={<ProtectedRoute><MainLayout><DeveloperProjectsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/developer/challenges" element={<ProtectedRoute><MainLayout><DeveloperChallengesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/developer/code-review" element={<ProtectedRoute><MainLayout><DeveloperCodeReviewPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
