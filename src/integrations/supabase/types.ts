@@ -853,6 +853,51 @@ export type Database = {
         }
         Relationships: []
       }
+      past_papers: {
+        Row: {
+          created_at: string
+          external_url: string | null
+          file_url: string | null
+          grade: string
+          has_marking_scheme: boolean
+          id: string
+          paper: string
+          source: string | null
+          subject: string
+          title: string
+          uploaded_by: string | null
+          year: string
+        }
+        Insert: {
+          created_at?: string
+          external_url?: string | null
+          file_url?: string | null
+          grade: string
+          has_marking_scheme?: boolean
+          id?: string
+          paper?: string
+          source?: string | null
+          subject: string
+          title: string
+          uploaded_by?: string | null
+          year: string
+        }
+        Update: {
+          created_at?: string
+          external_url?: string | null
+          file_url?: string | null
+          grade?: string
+          has_marking_scheme?: boolean
+          id?: string
+          paper?: string
+          source?: string | null
+          subject?: string
+          title?: string
+          uploaded_by?: string | null
+          year?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

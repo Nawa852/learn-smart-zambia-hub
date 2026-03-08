@@ -11,6 +11,7 @@ import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { LogoLoader } from '@/components/UI/LogoLoader';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Core Pages (eagerly loaded)
 import Index from '@/pages/Index';
@@ -136,6 +137,7 @@ const MinistryInterventionsPage = React.lazy(() => import('@/pages/MinistryInter
 const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAnalyticsPage'));
 const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
 const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
+const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -159,6 +161,7 @@ const SuspenseWrap = ({ children }: { children: React.ReactNode }) => (
 
 function App() {
   return (
+    <ErrorBoundary>
     <ThemeProvider>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
@@ -317,6 +320,7 @@ function App() {
 
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
+              <Route path="/teacher-gradebook" element={<PG><TeacherGradebookPage /></PG>} />
 
               {/* Ministry Pages */}
               <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
@@ -342,6 +346,7 @@ function App() {
       </QueryClientProvider>
     </AuthProvider>
     </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
