@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { GraduationCap, Users, School, Heart, Volume2, VolumeX } from "lucide-react";
+import { Users, School, Heart, Volume2, VolumeX, GraduationCap } from "lucide-react";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import EduZambiaLogo from "@/assets/edu-zambia-logo.svg";
 
 interface WelcomeScreenProps {
   onRoleSelect: (role: 'student' | 'teacher' | 'institution' | 'guardian') => void;
