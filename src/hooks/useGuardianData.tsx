@@ -153,6 +153,7 @@ export function useGuardianData() {
         const totalFocusMinutes = studentFocus.reduce((sum: number, f: any) => sum + (f.focus_minutes || 0), 0);
         const focusCompleted = studentFocus.filter((f: any) => !f.gave_up).reduce((sum: number, f: any) => sum + (f.sessions_completed || 0), 0);
         const focusGaveUp = studentFocus.filter((f: any) => f.gave_up).length;
+        const focusDistractions = studentFocus.reduce((sum: number, f: any) => sum + (f.distraction_count || 0), 0);
 
         // Recent activity: combine lessons + quizzes + focus, sort by time
         const activity: ActivityItem[] = [
