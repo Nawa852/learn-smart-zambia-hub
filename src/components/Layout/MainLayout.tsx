@@ -5,6 +5,7 @@ import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
 import { MobileBottomNav } from '@/components/Layout/MobileBottomNav';
 import { OnboardingTour } from '@/components/Onboarding/OnboardingTour';
+import { QuickNoteButton } from '@/components/UI/QuickNoteButton';
 import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 import { useStudySchedule } from '@/hooks/useStudySchedule';
 import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
@@ -168,6 +169,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <SidebarProvider>
       <ScheduleEnforcer />
+      {/* Skip to content (a11y) */}
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
+        Skip to content
+      </a>
       <div className="min-h-screen flex w-full bg-background">
         <RoleBasedSidebar />
         <div className="flex-1 flex flex-col min-w-0">
@@ -210,11 +215,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
           
-          <main className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
+          <main id="main-content" className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
             {children}
           </main>
           
           <MobileBottomNav />
+          <QuickNoteButton />
         </div>
       </div>
 

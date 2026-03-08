@@ -9,6 +9,7 @@ import {
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
   Flag, Lock, Eye, Bug, Wifi, Palette, Search, Bookmark, Gift, Code,
+  Flame,
   type LucideIcon
 } from "lucide-react";
 
@@ -130,6 +131,8 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Study Streak", url: "/study-streak", icon: Flame },
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -196,6 +199,7 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -244,6 +248,7 @@ export const guardianNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -277,6 +282,7 @@ export const institutionNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -346,6 +352,7 @@ export const ministryNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -391,6 +398,7 @@ export const doctorNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -443,6 +451,7 @@ export const entrepreneurNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -493,6 +502,7 @@ export const developerNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -556,6 +566,7 @@ export const skillsNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
@@ -614,6 +625,7 @@ export const cybersecurityNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
