@@ -16,6 +16,7 @@ export interface LinkedStudent {
   recentActivity: ActivityItem[];
   quizStats: { totalAttempts: number; avgScore: number };
   lessonCompletionsCount: number;
+  focusStats: { totalMinutes: number; sessionsCompleted: number; gaveUpCount: number };
 }
 
 export interface StudentGrade {
@@ -44,13 +45,16 @@ export interface WeeklySummary {
   lessonsCompleted: number;
   quizzesTaken: number;
   avgScore: number;
+  focusMinutes: number;
+  focusSessions: number;
+  gaveUpCount: number;
 }
 
 export function useGuardianData() {
   const { user } = useAuth();
   const [students, setStudents] = useState<LinkedStudent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [weeklySummary, setWeeklySummary] = useState<WeeklySummary>({ lessonsCompleted: 0, quizzesTaken: 0, avgScore: 0 });
+  const [weeklySummary, setWeeklySummary] = useState<WeeklySummary>({ lessonsCompleted: 0, quizzesTaken: 0, avgScore: 0, focusMinutes: 0, focusSessions: 0, gaveUpCount: 0 });
 
   useEffect(() => {
     if (!user) return;
@@ -113,6 +117,14 @@ export function useGuardianData() {
         .gte('created_at', weekAgo)
         .order('created_at', { ascending: false });
 
+      // 7. Fetch focus sessions (last 7 days)
+      const { data: focusSessions } = await supabase
+        .from('focus_sessions' as any)
+        .select('*')
+        .in('user_id', studentIds)
+        .gte('created_at', weekAgo)
+        .order('created_at', { ascending: false });
+
       // 7. Fetch course titles for grades
       const courseIds = [...new Set([
         ...(grades || []).map(g => g.course_id),
@@ -132,11 +144,17 @@ export function useGuardianData() {
         const studentEnrollments = (enrollments || []).filter(e => e.user_id === link.student_id);
         const studentLessons = (lessonCompletions || []).filter(lc => lc.user_id === link.student_id);
         const studentQuizzes = (quizAttempts || []).filter(q => q.user_id === link.student_id);
+        const studentFocus = ((focusSessions as any[]) || []).filter((f: any) => f.user_id === link.student_id);
 
         const quizScores = studentQuizzes.map(q => (q.correct_answers / q.total_questions) * 100);
         const avgQuizScore = quizScores.length > 0 ? Math.round(quizScores.reduce((a, b) => a + b, 0) / quizScores.length) : 0;
 
-        // Recent activity: combine lessons + quizzes, sort by time
+        // Focus stats
+        const totalFocusMinutes = studentFocus.reduce((sum: number, f: any) => sum + (f.focus_minutes || 0), 0);
+        const focusCompleted = studentFocus.filter((f: any) => !f.gave_up).reduce((sum: number, f: any) => sum + (f.sessions_completed || 0), 0);
+        const focusGaveUp = studentFocus.filter((f: any) => f.gave_up).length;
+
+        // Recent activity: combine lessons + quizzes + focus, sort by time
         const activity: ActivityItem[] = [
           ...studentLessons.slice(0, 5).map(lc => ({
             type: 'lesson' as const,
@@ -176,6 +194,7 @@ export function useGuardianData() {
           recentActivity: activity,
           quizStats: { totalAttempts: studentQuizzes.length, avgScore: avgQuizScore },
           lessonCompletionsCount: studentLessons.length,
+          focusStats: { totalMinutes: totalFocusMinutes, sessionsCompleted: focusCompleted, gaveUpCount: focusGaveUp },
         };
       });
 
@@ -184,8 +203,12 @@ export function useGuardianData() {
       const totalQuizzes = (quizAttempts || []).length;
       const allScores = (quizAttempts || []).map(q => (q.correct_answers / q.total_questions) * 100);
       const overallAvg = allScores.length > 0 ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0;
+      const allFocus = ((focusSessions as any[]) || []);
+      const totalFocusMins = allFocus.reduce((s: number, f: any) => s + (f.focus_minutes || 0), 0);
+      const totalFocusSess = allFocus.filter((f: any) => !f.gave_up).reduce((s: number, f: any) => s + (f.sessions_completed || 0), 0);
+      const totalGaveUp = allFocus.filter((f: any) => f.gave_up).length;
 
-      setWeeklySummary({ lessonsCompleted: totalLessons, quizzesTaken: totalQuizzes, avgScore: overallAvg });
+      setWeeklySummary({ lessonsCompleted: totalLessons, quizzesTaken: totalQuizzes, avgScore: overallAvg, focusMinutes: totalFocusMins, focusSessions: totalFocusSess, gaveUpCount: totalGaveUp });
       setStudents(result);
     } catch (err) {
       console.error('Error fetching guardian data:', err);

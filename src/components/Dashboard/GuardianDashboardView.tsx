@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Heart, TrendingUp, AlertCircle, Calendar, MessageSquare, Award, BookOpen, Clock, Target, Users, Activity, Bell, UserPlus } from 'lucide-react';
+import { Heart, TrendingUp, AlertCircle, Calendar, MessageSquare, Award, BookOpen, Clock, Target, Users, Activity, Bell, UserPlus, Shield, AlertTriangle, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 import { useGuardianData } from '@/hooks/useGuardianData';
@@ -88,21 +88,36 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <BookOpen className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.lessonsCompleted}</p>
-                  <p className="text-xs text-muted-foreground">Lessons Completed</p>
+                  <p className="text-xs text-muted-foreground">Lessons</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <Target className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.quizzesTaken}</p>
-                  <p className="text-xs text-muted-foreground">Quizzes Taken</p>
+                  <p className="text-xs text-muted-foreground">Quizzes</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <TrendingUp className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.avgScore > 0 ? `${weeklySummary.avgScore}%` : '--'}</p>
-                  <p className="text-xs text-muted-foreground">Avg Quiz Score</p>
+                  <p className="text-xs text-muted-foreground">Avg Score</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.focusMinutes}m</p>
+                  <p className="text-xs text-muted-foreground">Focus Time</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Flame className="w-8 h-8 text-primary mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.focusSessions}</p>
+                  <p className="text-xs text-muted-foreground">Focus Sessions</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.gaveUpCount}</p>
+                  <p className="text-xs text-muted-foreground">Gave Up</p>
                 </div>
               </div>
             </CardContent>
@@ -153,7 +168,7 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
                 )}
 
                 {/* Quick Stats */}
-                <div className="flex gap-4 text-sm">
+                <div className="flex flex-wrap gap-4 text-sm">
                   <span className="text-muted-foreground">
                     <BookOpen className="w-4 h-4 inline mr-1" />
                     {student.lessonCompletionsCount} lessons this week
@@ -163,9 +178,15 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
                     {student.quizStats.totalAttempts} quizzes ({student.quizStats.avgScore > 0 ? `${student.quizStats.avgScore}% avg` : 'no data'})
                   </span>
                   <span className="text-muted-foreground">
-                    <Award className="w-4 h-4 inline mr-1" />
-                    {student.subjects.length} grades recorded
+                    <Shield className="w-4 h-4 inline mr-1" />
+                    {student.focusStats.totalMinutes}m focus ({student.focusStats.sessionsCompleted} sessions)
                   </span>
+                  {student.focusStats.gaveUpCount > 0 && (
+                    <span className="text-destructive">
+                      <AlertTriangle className="w-4 h-4 inline mr-1" />
+                      {student.focusStats.gaveUpCount} gave up
+                    </span>
+                  )}
                 </div>
               </CardContent>
             </Card>

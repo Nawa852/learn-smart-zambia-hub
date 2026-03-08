@@ -185,6 +185,42 @@ export type Database = {
           },
         ]
       }
+      focus_sessions: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          focus_minutes: number
+          gave_up: boolean
+          id: string
+          sessions_completed: number
+          started_at: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          focus_minutes?: number
+          gave_up?: boolean
+          id?: string
+          sessions_completed?: number
+          started_at?: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          focus_minutes?: number
+          gave_up?: boolean
+          id?: string
+          sessions_completed?: number
+          started_at?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       grades: {
         Row: {
           course_id: string
