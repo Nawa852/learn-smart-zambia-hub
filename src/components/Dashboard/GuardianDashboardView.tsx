@@ -88,21 +88,36 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <BookOpen className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.lessonsCompleted}</p>
-                  <p className="text-xs text-muted-foreground">Lessons Completed</p>
+                  <p className="text-xs text-muted-foreground">Lessons</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <Target className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.quizzesTaken}</p>
-                  <p className="text-xs text-muted-foreground">Quizzes Taken</p>
+                  <p className="text-xs text-muted-foreground">Quizzes</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <TrendingUp className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-2xl font-bold">{weeklySummary.avgScore > 0 ? `${weeklySummary.avgScore}%` : '--'}</p>
-                  <p className="text-xs text-muted-foreground">Avg Quiz Score</p>
+                  <p className="text-xs text-muted-foreground">Avg Score</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.focusMinutes}m</p>
+                  <p className="text-xs text-muted-foreground">Focus Time</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <Flame className="w-8 h-8 text-primary mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.focusSessions}</p>
+                  <p className="text-xs text-muted-foreground">Focus Sessions</p>
+                </div>
+                <div className="text-center p-4 bg-muted/50 rounded-lg">
+                  <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{weeklySummary.gaveUpCount}</p>
+                  <p className="text-xs text-muted-foreground">Gave Up</p>
                 </div>
               </div>
             </CardContent>
