@@ -28,6 +28,7 @@ interface Course {
   lesson_count?: number;
   enrollment_count?: number;
   total_duration?: number;
+  material_count?: number;
 }
 
 const subjectColors: Record<string, string> = {
