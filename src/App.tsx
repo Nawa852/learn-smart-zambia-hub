@@ -91,6 +91,7 @@ import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
 import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
+import MFASetupPage from '@/pages/MFASetupPage';
 
 // School Admin Pages
 import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
