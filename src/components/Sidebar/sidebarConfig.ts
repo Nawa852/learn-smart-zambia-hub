@@ -9,6 +9,7 @@ import {
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
   Flag, Lock, Eye, Bug, Wifi, Palette, Search, Bookmark, Gift, Code,
+  Flame,
   type LucideIcon
 } from "lucide-react";
 
