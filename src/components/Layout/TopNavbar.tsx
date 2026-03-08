@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
   MessageCircle, 
-  Heart, 
   User, 
   Settings,
   LogOut,
@@ -12,7 +11,6 @@ import { NotificationDropdown } from '@/components/Notifications/NotificationDro
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -35,79 +33,70 @@ export const TopNavbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="flex h-16 items-center px-4 gap-4">
+    <nav className="sticky top-0 z-50 w-full glass-nav">
+      <div className="flex h-14 items-center px-4 gap-4">
         {/* Mobile Sidebar Trigger */}
         <SidebarTrigger className="lg:hidden" />
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center space-x-2">
-          <img src="/favicon.svg" alt="Edu Zambia" className="w-8 h-8 rounded-lg" />
-          <span className="hidden md:block font-bold text-lg gradient-text-bright-sphere">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-xs">EZ</span>
+          </div>
+          <span className="hidden md:block font-bold text-sm gradient-text">
             Edu Zambia
           </span>
         </Link>
 
-        {/* Search Bar */}
+        {/* Search */}
         <div className="flex-1 max-w-md">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search for courses, people, or content..."
-              className="pl-10 bg-muted/50 border-0 focus:bg-background transition-colors"
+              placeholder="Search courses, people..."
+              className="pl-10 bg-secondary/50 border-border/50 focus:border-primary/50 focus:bg-secondary transition-all h-9 text-sm"
             />
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="flex items-center space-x-2">
-          {/* Notifications */}
+        {/* Actions */}
+        <div className="flex items-center space-x-1">
           <NotificationDropdown />
 
-          {/* Messages */}
-          <Button variant="ghost" size="icon" className="relative">
-            <MessageCircle className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="relative h-9 w-9 text-muted-foreground hover:text-foreground">
+            <MessageCircle className="h-4 w-4" />
           </Button>
 
-          {/* Likes/Activity */}
-          <Button variant="ghost" size="icon" className="hover-lift">
-            <Heart className="h-5 w-5" />
-          </Button>
-
-          {/* Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full hover-lift">
-                <Avatar className="h-10 w-10">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                   <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || 'User'} />
-                  <AvatarFallback className="gradient-bright-sphere text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-xs font-semibold">
                     {profile?.full_name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56 bg-popover border-border" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{profile?.full_name || 'User'}</p>
-                  <p className="w-[200px] truncate text-sm text-muted-foreground">
-                    {profile?.email}
+                  <p className="font-medium text-sm">{profile?.full_name || 'User'}</p>
+                  <p className="w-[200px] truncate text-xs text-muted-foreground">
+                    {profile?.role || 'student'}
                   </p>
                 </div>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/profile')}>
-                <User className="mr-2 h-4 w-4" />
-                Profile
+              <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" /> Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/settings')}>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
+              <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" /> Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
+              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
