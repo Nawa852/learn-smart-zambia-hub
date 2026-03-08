@@ -144,15 +144,15 @@ const StudyMaterialsPage = () => {
           </CardContent>
         </Card>
 
-        {/* Document Scanner */}
-        <div className="lg:col-span-1">
-          <DocumentScanner onUploadComplete={(url, name) => {
-            toast({ title: 'Document uploaded', description: `${name} is now available in your materials.` });
-          }} />
-        </div>
+        {/* Scanner + Materials Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <DocumentScanner onUploadComplete={(url, name) => {
+              toast({ title: 'Document uploaded', description: `${name} is now available in your materials.` });
+            }} />
+          </div>
 
-        {/* Materials Grid */}
-        <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredMaterials.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
