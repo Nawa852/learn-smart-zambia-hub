@@ -38,7 +38,7 @@ import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 import ChatEduLanding from '@/pages/ChatEduLanding';
 
 // Role-Specific Dashboards
-import TeacherDashboard from '@/pages/TeacherDashboard';
+// TeacherDashboard removed - using role-based Dashboard instead
 import ParentDashboard from '@/pages/ParentDashboard';
 import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
 import MinistryDashboard from '@/pages/MinistryDashboard';

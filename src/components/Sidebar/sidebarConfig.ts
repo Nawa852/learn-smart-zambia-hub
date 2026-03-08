@@ -123,7 +123,7 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Home",
     items: [
-      { title: "Dashboard", url: "/teacher-dashboard", icon: LayoutDashboard },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
       { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
       { title: "Create Course", url: "/create-course", icon: Layers, badge: "NEW" },
     ],
