@@ -163,6 +163,33 @@ const FocusModePage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Distraction Warning Overlay */}
+      <AnimatePresence>
+        {showWarning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-destructive/90 flex flex-col items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              className="text-center space-y-6 max-w-sm"
+            >
+              <AlertTriangle className="w-20 h-20 text-destructive-foreground mx-auto" />
+              <h1 className="text-3xl font-black text-destructive-foreground">You Left the App!</h1>
+              <p className="text-destructive-foreground/80">
+                Distraction #{distractionCount} detected. {distractionCount >= 3 ? 'Your guardian has been notified.' : 'Stay focused!'}
+              </p>
+              <Button onClick={dismissWarning} variant="secondary" size="lg">
+                Return to Study
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Lock Screen Overlay */}
       <AnimatePresence>
         {showLockScreen && (
