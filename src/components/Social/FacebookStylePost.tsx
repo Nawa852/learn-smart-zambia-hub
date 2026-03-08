@@ -174,7 +174,7 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
           <div className="flex items-center space-x-3">
             <Avatar className="h-12 w-12">
               <AvatarImage src={post.author.avatar} alt={post.author.name} />
-              <AvatarFallback className="gradient-bright-sphere text-white">
+              <AvatarFallback className="bg-primary text-primary-foreground">
                 {post.author.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
