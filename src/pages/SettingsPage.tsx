@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DeviceCapabilitiesPanel } from '@/components/PWA/DeviceCapabilitiesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
