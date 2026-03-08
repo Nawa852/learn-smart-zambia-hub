@@ -102,6 +102,7 @@ const AdminUserManagementPage = React.lazy(() => import('@/pages/AdminUserManage
 const AdminCurriculumPage = React.lazy(() => import('@/pages/AdminCurriculumPage'));
 const AdminSchedulingPage = React.lazy(() => import('@/pages/AdminSchedulingPage'));
 const AdminAnalyticsPage = React.lazy(() => import('@/pages/AdminAnalyticsPage'));
+const AdminAttendancePage = React.lazy(() => import('@/pages/AdminAttendancePage'));
 const StudyGroupChatPage = React.lazy(() => import('@/pages/StudyGroupChatPage'));
 const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
 const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
@@ -273,6 +274,7 @@ function App() {
               <Route path="/admin/curriculum" element={<PG><AdminCurriculumPage /></PG>} />
               <Route path="/admin/scheduling" element={<PG><AdminSchedulingPage /></PG>} />
               <Route path="/admin/analytics" element={<PG><AdminAnalyticsPage /></PG>} />
+              <Route path="/admin/attendance" element={<PG><AdminAttendancePage /></PG>} />
 
               {/* Analytics & Progress */}
               <Route path="/analytics" element={<PG><LearningAnalytics /></PG>} />

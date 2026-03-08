@@ -7,15 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, CheckCircle2, AlertTriangle, ArrowLeft, FileText, Layers, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
-const subjects = [
-  { name: 'Mathematics', grade: 'Grade 10-12', topics: 48, covered: 36, status: 'on-track', teacher: 'Mr. Banda' },
-  { name: 'Physics', grade: 'Grade 10-12', topics: 42, covered: 28, status: 'on-track', teacher: 'Dr. Mwansa' },
-  { name: 'English Language', grade: 'Grade 10-12', topics: 38, covered: 35, status: 'ahead', teacher: 'Ms. Phiri' },
-  { name: 'Biology', grade: 'Grade 10-12', topics: 44, covered: 20, status: 'behind', teacher: 'Mr. Mumba' },
-  { name: 'Chemistry', grade: 'Grade 10-12', topics: 40, covered: 30, status: 'on-track', teacher: 'Mrs. Lungu' },
-  { name: 'History', grade: 'Grade 10-12', topics: 32, covered: 28, status: 'ahead', teacher: 'Mr. Tembo' },
-];
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
+import { useProfile } from '@/hooks/useProfile';
 
 const eczStandards = [
   { standard: 'ECZ-2024-MATH-001', desc: 'Algebra and Number Theory', compliance: 95 },
@@ -41,30 +35,95 @@ const statusConfig: Record<string, { bg: string; text: string; dot: string }> = 
 
 const AdminCurriculumPage = () => {
   const navigate = useNavigate();
+  const { profile } = useProfile();
+  const schoolName = profile?.school || '';
+
+  const { data: schoolTeachers = [] } = useQuery({
+    queryKey: ['curriculum-teachers', schoolName],
+    queryFn: async () => {
+      if (!schoolName) return [];
+      const { data } = await supabase.from('profiles').select('id, full_name').eq('school', schoolName).eq('role', 'teacher');
+      return data || [];
+    },
+    enabled: !!schoolName,
+  });
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ['curriculum-courses', schoolTeachers],
+    queryFn: async () => {
+      if (!schoolTeachers.length) return [];
+      const { data } = await supabase.from('courses').select('id, title, subject, created_by').in('created_by', schoolTeachers.map(t => t.id));
+      return data || [];
+    },
+    enabled: schoolTeachers.length > 0,
+  });
+
+  const { data: lessons = [] } = useQuery({
+    queryKey: ['curriculum-lessons', courses],
+    queryFn: async () => {
+      if (!courses.length) return [];
+      const { data } = await supabase.from('lessons').select('id, course_id').in('course_id', courses.map(c => c.id));
+      return data || [];
+    },
+    enabled: courses.length > 0,
+  });
+
+  const { data: completions = [] } = useQuery({
+    queryKey: ['curriculum-completions', lessons],
+    queryFn: async () => {
+      if (!lessons.length) return [];
+      const { data } = await supabase.from('lesson_completions').select('lesson_id, course_id').in('course_id', courses.map(c => c.id));
+      return data || [];
+    },
+    enabled: lessons.length > 0,
+  });
+
+  // Build subject progress from live data
+  const subjects = React.useMemo(() => {
+    const subjectMap: Record<string, { courseIds: string[]; teacher: string }> = {};
+    courses.forEach(c => {
+      const subj = c.subject || 'Other';
+      if (!subjectMap[subj]) {
+        const teacher = schoolTeachers.find(t => t.id === c.created_by);
+        subjectMap[subj] = { courseIds: [], teacher: teacher?.full_name || 'Unknown' };
+      }
+      subjectMap[subj].courseIds.push(c.id);
+    });
+
+    return Object.entries(subjectMap).map(([name, info]) => {
+      const totalLessons = lessons.filter(l => info.courseIds.includes(l.course_id)).length;
+      const completedLessons = new Set(
+        completions.filter(c => info.courseIds.includes(c.course_id)).map(c => c.lesson_id)
+      ).size;
+      const pct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+      const status = pct >= 80 ? 'ahead' : pct >= 50 ? 'on-track' : 'behind';
+      return { name, teacher: info.teacher, topics: totalLessons, covered: completedLessons, status };
+    });
+  }, [courses, lessons, completions, schoolTeachers]);
+
+  const totalTopics = subjects.reduce((s, sub) => s + sub.topics, 0);
+  const totalCovered = subjects.reduce((s, sub) => s + sub.covered, 0);
+  const behindCount = subjects.filter(s => s.status === 'behind').length;
 
   const stats = [
-    { label: 'Total Subjects', value: '18', icon: BookOpen, gradient: 'from-primary/20 to-accent/10', iconColor: 'text-primary' },
-    { label: 'Topics Covered', value: '177/244', icon: CheckCircle2, gradient: 'from-green-500/15 to-emerald-500/10', iconColor: 'text-green-600' },
+    { label: 'Total Subjects', value: String(subjects.length), icon: BookOpen, gradient: 'from-primary/20 to-accent/10', iconColor: 'text-primary' },
+    { label: 'Lessons Covered', value: `${totalCovered}/${totalTopics}`, icon: CheckCircle2, gradient: 'from-green-500/15 to-emerald-500/10', iconColor: 'text-green-600' },
     { label: 'ECZ Compliance', value: '89%', icon: Target, gradient: 'from-purple-500/15 to-violet-500/10', iconColor: 'text-purple-600' },
-    { label: 'Behind Schedule', value: '3', icon: AlertTriangle, gradient: 'from-amber-500/15 to-orange-500/10', iconColor: 'text-amber-600' },
+    { label: 'Behind Schedule', value: String(behindCount), icon: AlertTriangle, gradient: 'from-amber-500/15 to-orange-500/10', iconColor: 'text-amber-600' },
   ];
 
   return (
     <motion.div className="space-y-6" variants={containerVariants} initial="hidden" animate="visible">
-      {/* Header */}
       <motion.div variants={itemVariants} className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="rounded-xl hover:bg-primary/10" onClick={() => navigate('/dashboard')}>
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Curriculum Management
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Curriculum Management</h1>
           <p className="text-muted-foreground text-sm mt-0.5">ECZ-aligned curriculum tracking and compliance</p>
         </div>
       </motion.div>
 
-      {/* Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s, i) => (
           <Card key={i} className="border-0 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group">
@@ -96,16 +155,12 @@ const AdminCurriculumPage = () => {
           </TabsList>
 
           <TabsContent value="subjects" className="space-y-3 mt-4">
+            {subjects.length === 0 && <p className="text-muted-foreground text-sm">No courses found for this school. Teachers need to create courses first.</p>}
             {subjects.map((subj, i) => {
-              const pct = Math.round((subj.covered / subj.topics) * 100);
+              const pct = subj.topics > 0 ? Math.round((subj.covered / subj.topics) * 100) : 0;
               const sc = statusConfig[subj.status] || statusConfig['on-track'];
               return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+                <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Card className="border-border/40 hover:border-primary/30 hover:shadow-md transition-all duration-300 group">
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between mb-3">
@@ -115,7 +170,7 @@ const AdminCurriculumPage = () => {
                           </div>
                           <div>
                             <h3 className="font-semibold">{subj.name}</h3>
-                            <p className="text-xs text-muted-foreground">{subj.grade} • {subj.teacher}</p>
+                            <p className="text-xs text-muted-foreground">{subj.teacher}</p>
                           </div>
                         </div>
                         <Badge className={`${sc.bg} ${sc.text} border-0 capitalize gap-1.5 rounded-lg`}>
@@ -125,7 +180,7 @@ const AdminCurriculumPage = () => {
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Topics: {subj.covered}/{subj.topics}</span>
+                          <span className="text-muted-foreground">Lessons: {subj.covered}/{subj.topics}</span>
                           <span className="font-semibold text-primary">{pct}%</span>
                         </div>
                         <Progress value={pct} className="h-2 rounded-full" />
@@ -140,37 +195,21 @@ const AdminCurriculumPage = () => {
           <TabsContent value="standards" className="mt-4">
             <Card className="border-border/40">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="w-5 h-5 text-primary" />
-                  ECZ Compliance Report
-                </CardTitle>
+                <CardTitle className="flex items-center gap-2"><Target className="w-5 h-5 text-primary" />ECZ Compliance Report</CardTitle>
                 <CardDescription>Alignment with Examinations Council of Zambia standards</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {eczStandards.map((std, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06 }}
-                    className="p-4 rounded-xl border border-border/40 hover:border-primary/20 hover:shadow-sm transition-all space-y-2.5"
-                  >
+                  <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
+                    className="p-4 rounded-xl border border-border/40 hover:border-primary/20 hover:shadow-sm transition-all space-y-2.5">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-semibold text-sm">{std.desc}</p>
                         <p className="text-[11px] text-muted-foreground font-mono">{std.standard}</p>
                       </div>
-                      <Badge
-                        className={`rounded-lg border-0 ${
-                          std.compliance >= 90
-                            ? 'bg-green-500/10 text-green-700'
-                            : std.compliance >= 80
-                            ? 'bg-amber-500/10 text-amber-700'
-                            : 'bg-destructive/10 text-destructive'
-                        }`}
-                      >
-                        {std.compliance}% compliant
-                      </Badge>
+                      <Badge className={`rounded-lg border-0 ${
+                        std.compliance >= 90 ? 'bg-green-500/10 text-green-700' : std.compliance >= 80 ? 'bg-amber-500/10 text-amber-700' : 'bg-destructive/10 text-destructive'
+                      }`}>{std.compliance}% compliant</Badge>
                     </div>
                     <Progress value={std.compliance} className="h-2 rounded-full" />
                   </motion.div>

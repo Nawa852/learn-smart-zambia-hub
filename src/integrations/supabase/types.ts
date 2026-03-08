@@ -955,6 +955,45 @@ export type Database = {
         }
         Relationships: []
       }
+      school_events: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          end_date: string | null
+          event_date: string
+          event_type: string
+          id: string
+          school_name: string
+          title: string
+          venue: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          end_date?: string | null
+          event_date: string
+          event_type?: string
+          id?: string
+          school_name: string
+          title: string
+          venue?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          end_date?: string | null
+          event_date?: string
+          event_type?: string
+          id?: string
+          school_name?: string
+          title?: string
+          venue?: string | null
+        }
+        Relationships: []
+      }
       student_notes: {
         Row: {
           content: string
