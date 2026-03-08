@@ -345,7 +345,7 @@ const MFASetupPage = () => {
                     <Button
                       onClick={verifyMFA}
                       disabled={verifyCode.length !== 6 || loading}
-                      className="flex-1 bg-primary text-primary-foreground glow-primary"
+                      className="flex-1 bg-primary text-primary-foreground"
                     >
                       {loading ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
                       Verify
