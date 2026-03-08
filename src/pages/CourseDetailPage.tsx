@@ -4,15 +4,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save, Users
+  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save, Users,
+  Download, FileDown, BookMarked, ExternalLink
 } from 'lucide-react';
 
 interface Lesson {
@@ -22,6 +24,15 @@ interface Lesson {
   video_url: string | null;
   duration_minutes: number | null;
   order_index: number;
+}
+
+interface CourseMaterial {
+  id: string;
+  title: string;
+  url: string;
+  type: string;
+  year: string | null;
+  paper: string | null;
 }
 
 interface Course {
@@ -46,6 +57,7 @@ const CourseDetailPage = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [materials, setMaterials] = useState<CourseMaterial[]>([]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isCreator, setIsCreator] = useState(false);
@@ -57,13 +69,15 @@ const CourseDetailPage = () => {
   const [showRoster, setShowRoster] = useState(false);
   const [students, setStudents] = useState<EnrolledStudent[]>([]);
   const [loadingRoster, setLoadingRoster] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState('lessons');
 
   useEffect(() => {
     if (!courseId) return;
     const fetchData = async () => {
-      const [{ data: courseData }, { data: lessonsData }] = await Promise.all([
+      const [{ data: courseData }, { data: lessonsData }, { data: materialsData }] = await Promise.all([
         supabase.from('courses').select('*').eq('id', courseId).single(),
         supabase.from('lessons').select('*').eq('course_id', courseId).order('order_index'),
+        supabase.from('course_materials').select('*').eq('course_id', courseId).order('created_at'),
       ]);
 
       if (courseData) {
@@ -74,6 +88,7 @@ const CourseDetailPage = () => {
         setLessons(lessonsData);
         if (lessonsData.length > 0) setActiveLesson(lessonsData[0]);
       }
+      if (materialsData) setMaterials(materialsData as CourseMaterial[]);
 
       if (user) {
         const [{ data: enrollment }, { data: completions }] = await Promise.all([
@@ -141,7 +156,6 @@ const CourseDetailPage = () => {
     const nextIndex = lessons.findIndex(l => l.id === lessonId) + 1;
     if (nextIndex < lessons.length) setActiveLesson(lessons[nextIndex]);
 
-    // Update enrollment progress
     const newProgress = ((completedLessons.size + 1) / lessons.length) * 100;
     await supabase.from('enrollments').update({ progress: Math.min(newProgress, 100) })
       .eq('user_id', user.id).eq('course_id', courseId);
@@ -169,6 +183,17 @@ const CourseDetailPage = () => {
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/);
     return match ? `https://www.youtube.com/embed/${match[1]}` : null;
   };
+
+  // Group materials
+  const notesMaterials = materials.filter(m => m.type === 'notes');
+  const pastPapers = materials.filter(m => m.type === 'past_paper');
+  const papersByYear = pastPapers.reduce((acc, p) => {
+    const year = p.year || 'Other';
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(p);
+    return acc;
+  }, {} as Record<string, CourseMaterial[]>);
+  const sortedYears = Object.keys(papersByYear).sort((a, b) => b.localeCompare(a));
 
   if (loading) {
     return (
@@ -201,6 +226,9 @@ const CourseDetailPage = () => {
             {course.subject && <Badge variant="secondary">{course.subject}</Badge>}
             {course.grade_level && <Badge variant="outline">{course.grade_level}</Badge>}
             <Badge variant="outline"><Layers className="w-3 h-3 mr-1" />{lessons.length} lessons</Badge>
+            {materials.length > 0 && (
+              <Badge variant="outline"><FileDown className="w-3 h-3 mr-1" />{materials.length} materials</Badge>
+            )}
           </div>
           {course.description && <p className="text-sm text-muted-foreground mt-2">{course.description}</p>}
           <div className="flex gap-2 mt-2">
@@ -282,7 +310,6 @@ const CourseDetailPage = () => {
             <motion.div key={activeLesson.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Card>
                 <CardContent className="p-0">
-                  {/* Video */}
                   {activeLesson.video_url && (() => {
                     const embedUrl = getYouTubeEmbedUrl(activeLesson.video_url);
                     return embedUrl ? (
@@ -334,7 +361,6 @@ const CourseDetailPage = () => {
                       </div>
                     )}
 
-                    {/* Notes Panel */}
                     {isEnrolled && (
                       <div className="border-t border-border/50 pt-4 mt-4">
                         <Button variant="ghost" size="sm" onClick={() => setShowNotes(!showNotes)} className="mb-2 text-muted-foreground">
@@ -369,48 +395,141 @@ const CourseDetailPage = () => {
           )}
         </div>
 
-        {/* Lesson List */}
+        {/* Sidebar with Tabs */}
         <div>
           <Card>
             <CardContent className="p-0">
-              <div className="p-3 border-b border-border">
-                <h3 className="font-semibold text-sm text-foreground">Course Lessons</h3>
-              </div>
-              <div className="divide-y divide-border">
-                {lessons.map((lesson, i) => {
-                  const isActive = activeLesson?.id === lesson.id;
-                  const isComplete = completedLessons.has(lesson.id);
-                  return (
-                    <button
-                      key={lesson.id}
-                      onClick={() => isEnrolled && setActiveLesson(lesson)}
-                      disabled={!isEnrolled}
-                      className={`w-full p-3 flex items-center gap-3 text-left transition-colors text-sm ${
-                        isActive ? 'bg-primary/5 border-l-2 border-l-primary' : 'hover:bg-muted/50'
-                      } ${!isEnrolled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-                    >
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium ${
-                        isComplete ? 'bg-emerald-500 text-white' : isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-                      }`}>
-                        {isComplete ? <CheckCircle className="w-4 h-4" /> : i + 1}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate text-foreground">{lesson.title}</p>
-                        {lesson.duration_minutes && (
-                          <p className="text-xs text-muted-foreground">{lesson.duration_minutes} min</p>
-                        )}
-                      </div>
-                      {!isEnrolled ? (
-                        <Lock className="w-3 h-3 text-muted-foreground" />
-                      ) : lesson.video_url ? (
-                        <Play className="w-3 h-3 text-muted-foreground" />
-                      ) : (
-                        <ChevronRight className="w-3 h-3 text-muted-foreground" />
+              <Tabs value={sidebarTab} onValueChange={setSidebarTab}>
+                <div className="p-2 border-b border-border">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="lessons" className="flex-1 text-xs gap-1">
+                      <Play className="w-3 h-3" /> Lessons
+                      {lessons.length > 0 && <span className="text-[10px] opacity-70">({lessons.length})</span>}
+                    </TabsTrigger>
+                    <TabsTrigger value="materials" className="flex-1 text-xs gap-1">
+                      <FileDown className="w-3 h-3" /> Materials
+                      {materials.length > 0 && <span className="text-[10px] opacity-70">({materials.length})</span>}
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+
+                {/* Lessons Tab */}
+                <TabsContent value="lessons" className="m-0">
+                  <div className="divide-y divide-border">
+                    {lessons.map((lesson, i) => {
+                      const isActive = activeLesson?.id === lesson.id;
+                      const isComplete = completedLessons.has(lesson.id);
+                      return (
+                        <button
+                          key={lesson.id}
+                          onClick={() => isEnrolled && setActiveLesson(lesson)}
+                          disabled={!isEnrolled}
+                          className={`w-full p-3 flex items-center gap-3 text-left transition-colors text-sm ${
+                            isActive ? 'bg-primary/5 border-l-2 border-l-primary' : 'hover:bg-muted/50'
+                          } ${!isEnrolled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium ${
+                            isComplete ? 'bg-emerald-500 text-white' : isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                          }`}>
+                            {isComplete ? <CheckCircle className="w-4 h-4" /> : i + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium truncate text-foreground">{lesson.title}</p>
+                            {lesson.duration_minutes && (
+                              <p className="text-xs text-muted-foreground">{lesson.duration_minutes} min</p>
+                            )}
+                          </div>
+                          {!isEnrolled ? (
+                            <Lock className="w-3 h-3 text-muted-foreground" />
+                          ) : lesson.video_url ? (
+                            <Play className="w-3 h-3 text-muted-foreground" />
+                          ) : (
+                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                          )}
+                        </button>
+                      );
+                    })}
+                    {lessons.length === 0 && (
+                      <div className="p-6 text-center text-sm text-muted-foreground">No lessons yet</div>
+                    )}
+                  </div>
+                </TabsContent>
+
+                {/* Materials Tab */}
+                <TabsContent value="materials" className="m-0">
+                  {materials.length === 0 ? (
+                    <div className="p-6 text-center text-sm text-muted-foreground">
+                      <FileText className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                      No study materials available yet
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-border">
+                      {/* Study Notes Section */}
+                      {notesMaterials.length > 0 && (
+                        <div>
+                          <div className="px-3 py-2 bg-muted/30">
+                            <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5 uppercase tracking-wide">
+                              <BookMarked className="w-3.5 h-3.5 text-primary" /> Study Notes ({notesMaterials.length})
+                            </h4>
+                          </div>
+                          {notesMaterials.map(m => (
+                            <a
+                              key={m.id}
+                              href={m.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2.5 p-3 hover:bg-muted/50 transition-colors text-sm group"
+                            >
+                              <div className="w-7 h-7 rounded bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                <BookMarked className="w-3.5 h-3.5 text-blue-500" />
+                              </div>
+                              <span className="flex-1 text-foreground group-hover:text-primary transition-colors truncate text-xs">
+                                {m.title}
+                              </span>
+                              <Download className="w-3.5 h-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                            </a>
+                          ))}
+                        </div>
                       )}
-                    </button>
-                  );
-                })}
-              </div>
+
+                      {/* Past Papers Section grouped by year */}
+                      {sortedYears.length > 0 && (
+                        <div>
+                          <div className="px-3 py-2 bg-muted/30">
+                            <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5 uppercase tracking-wide">
+                              <FileText className="w-3.5 h-3.5 text-orange-500" /> Past Papers ({pastPapers.length})
+                            </h4>
+                          </div>
+                          {sortedYears.map(year => (
+                            <div key={year}>
+                              <div className="px-3 py-1.5 bg-muted/10">
+                                <span className="text-[11px] font-semibold text-muted-foreground">{year}</span>
+                              </div>
+                              {papersByYear[year].map(m => (
+                                <a
+                                  key={m.id}
+                                  href={m.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2.5 px-3 py-2 hover:bg-muted/50 transition-colors text-sm group"
+                                >
+                                  <div className="w-6 h-6 rounded bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                                    <FileDown className="w-3 h-3 text-orange-500" />
+                                  </div>
+                                  <span className="flex-1 text-foreground group-hover:text-primary transition-colors truncate text-xs">
+                                    {m.title}
+                                  </span>
+                                  <Download className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                                </a>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>

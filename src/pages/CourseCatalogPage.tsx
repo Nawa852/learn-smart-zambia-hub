@@ -28,6 +28,7 @@ interface Course {
   lesson_count?: number;
   enrollment_count?: number;
   total_duration?: number;
+  material_count?: number;
 }
 
 const subjectColors: Record<string, string> = {
@@ -80,10 +81,11 @@ const CourseCatalogPage = () => {
     if (coursesData) {
       const courseIds = coursesData.map(c => c.id);
       
-      // Fetch lessons and enrollments in parallel
-      const [lessonsRes, enrollmentsCountRes] = await Promise.all([
+      // Fetch lessons, enrollments, and materials in parallel
+      const [lessonsRes, enrollmentsCountRes, materialsRes] = await Promise.all([
         supabase.from('lessons').select('course_id, duration_minutes').in('course_id', courseIds.length ? courseIds : ['none']),
         supabase.from('enrollments').select('course_id').in('course_id', courseIds.length ? courseIds : ['none']),
+        supabase.from('course_materials').select('course_id').in('course_id', courseIds.length ? courseIds : ['none']),
       ]);
 
       const lessonCounts: Record<string, number> = {};
@@ -98,11 +100,17 @@ const CourseCatalogPage = () => {
         enrollCounts[e.course_id] = (enrollCounts[e.course_id] || 0) + 1;
       });
 
+      const materialCounts: Record<string, number> = {};
+      (materialsRes.data || []).forEach((m: any) => {
+        materialCounts[m.course_id] = (materialCounts[m.course_id] || 0) + 1;
+      });
+
       setCourses(coursesData.map(c => ({
         ...c,
         lesson_count: lessonCounts[c.id] || 0,
         total_duration: totalDurations[c.id] || 0,
         enrollment_count: enrollCounts[c.id] || 0,
+        material_count: materialCounts[c.id] || 0,
       })));
     }
 
@@ -316,6 +324,11 @@ const CourseCatalogPage = () => {
                           <Clock className="w-3 h-3" /> {formatDuration(course.total_duration)}
                         </span>
                       ) : null}
+                      {(course.material_count || 0) > 0 && (
+                        <span className="flex items-center gap-1">
+                          <Download className="w-3 h-3" /> {course.material_count} papers
+                        </span>
+                      )}
                       <span className="flex items-center gap-1 ml-auto">
                         <Users className="w-3 h-3" /> {course.enrollment_count}
                       </span>
