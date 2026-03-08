@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FileText, Printer, User, BookOpen } from 'lucide-react';
+import { FileText, Printer, User, BookOpen, GraduationCap, TrendingUp } from 'lucide-react';
 
 interface StudentGrade { course_title: string; score: number | null; grade_letter: string | null; term: string | null; }
 
@@ -52,7 +53,7 @@ const TeacherReportCardsPage = () => {
   const avg = grades.length ? Math.round(grades.reduce((s, g) => s + (g.score || 0), 0) / grades.length) : 0;
 
   if (loading) return (
-    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+    <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">
       <Skeleton className="h-8 w-64" />
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-64 w-full" />
@@ -60,54 +61,106 @@ const TeacherReportCardsPage = () => {
   );
 
   return (
-    <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><FileText className="w-6 h-6 text-primary" /> Report Card Generator</h1>
-        <p className="text-sm text-muted-foreground">Generate printable report cards for your students</p>
+        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-primary" />
+          </div>
+          Report Card Generator
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">Generate and print professional report cards for your students</p>
       </div>
 
-      <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-        <SelectTrigger><SelectValue placeholder="Select a student" /></SelectTrigger>
-        <SelectContent>
-          {students.map(s => <SelectItem key={s.id} value={s.id}>{s.full_name || 'Unnamed'} {s.grade ? `(${s.grade})` : ''}</SelectItem>)}
-        </SelectContent>
-      </Select>
+      <Card>
+        <CardContent className="p-4">
+          <label className="text-sm font-medium text-foreground mb-1.5 block">Select Student</label>
+          <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+            <SelectTrigger><SelectValue placeholder="Choose a student..." /></SelectTrigger>
+            <SelectContent>
+              {students.map(s => (
+                <SelectItem key={s.id} value={s.id}>
+                  <span className="flex items-center gap-2">
+                    <User className="w-3 h-3 text-muted-foreground" />
+                    {s.full_name || 'Unnamed'} {s.grade ? `(${s.grade})` : ''}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
+      {!selectedStudent && (
+        <Card>
+          <CardContent className="py-16 text-center">
+            <GraduationCap className="w-14 h-14 mx-auto mb-4 text-muted-foreground/20" />
+            <h3 className="text-lg font-semibold text-foreground mb-1">Select a student</h3>
+            <p className="text-sm text-muted-foreground">Choose a student above to generate their report card</p>
+          </CardContent>
+        </Card>
+      )}
 
       {selectedStudent && (
         <Card id="report-card">
-          <CardHeader className="border-b">
+          <CardHeader className="border-b border-border">
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2"><User className="w-5 h-5" />{selectedProfile?.full_name || 'Student'}</CardTitle>
-                <p className="text-sm text-muted-foreground">Grade: {selectedProfile?.grade || 'N/A'}</p>
-              </div>
-              <Button variant="outline" onClick={() => window.print()}><Printer className="w-4 h-4 mr-2" />Print</Button>
-            </div>
-          </CardHeader>
-          <CardContent className="p-4">
-            {grades.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No grades recorded for this student.</p>
-            ) : (
-              <div className="space-y-4">
-                <table className="w-full text-sm">
-                  <thead><tr className="border-b text-left">
-                    <th className="py-2">Subject</th><th>Score</th><th>Grade</th><th>Term</th>
-                  </tr></thead>
-                  <tbody>
-                    {grades.map((g, i) => (
-                      <tr key={i} className="border-b border-border/30">
-                        <td className="py-2 flex items-center gap-2"><BookOpen className="w-3 h-3 text-muted-foreground" />{g.course_title}</td>
-                        <td>{g.score ?? '-'}</td>
-                        <td><Badge variant={g.grade_letter === 'A' ? 'default' : 'secondary'}>{g.grade_letter || '-'}</Badge></td>
-                        <td className="text-muted-foreground">{g.term || '-'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex justify-end">
-                  <Badge className="text-sm px-3 py-1">Average: {avg}%</Badge>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-base">{selectedProfile?.full_name || 'Student'}</CardTitle>
+                  <CardDescription>Grade: {selectedProfile?.grade || 'N/A'}</CardDescription>
                 </div>
               </div>
+              <Button variant="outline" size="sm" onClick={() => window.print()} className="gap-2">
+                <Printer className="w-4 h-4" /> Print
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            {grades.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-12">No grades recorded for this student.</p>
+            ) : (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/30">
+                      <TableHead>Subject</TableHead>
+                      <TableHead className="w-24 text-center">Score</TableHead>
+                      <TableHead className="w-20 text-center">Grade</TableHead>
+                      <TableHead className="w-24 text-center">Term</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {grades.map((g, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">
+                          <span className="flex items-center gap-2">
+                            <BookOpen className="w-3.5 h-3.5 text-muted-foreground" />
+                            {g.course_title}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-center font-semibold">{g.score ?? '—'}</TableCell>
+                        <TableCell className="text-center">
+                          <Badge variant={g.grade_letter === 'A' || g.grade_letter === 'B' ? 'default' : g.grade_letter === 'F' ? 'destructive' : 'secondary'}>
+                            {g.grade_letter || '—'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center text-muted-foreground text-sm">{g.term || '—'}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="flex items-center justify-between p-4 border-t border-border bg-muted/20">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <TrendingUp className="w-4 h-4" />
+                    {grades.length} subject{grades.length !== 1 ? 's' : ''} recorded
+                  </div>
+                  <Badge className="text-sm px-4 py-1.5">{avg}% Average</Badge>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
