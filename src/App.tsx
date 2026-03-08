@@ -341,6 +341,7 @@ function App() {
         </Router>
       </QueryClientProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
