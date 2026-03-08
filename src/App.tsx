@@ -111,6 +111,7 @@ import EntrepreneurFundingPage from '@/pages/EntrepreneurFundingPage';
 import DeveloperProjectsPage from '@/pages/DeveloperProjectsPage';
 import DeveloperChallengesPage from '@/pages/DeveloperChallengesPage';
 import DeveloperCodeReviewPage from '@/pages/DeveloperCodeReviewPage';
+import DeveloperIDEPage from '@/pages/DeveloperIDEPage';
 
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
