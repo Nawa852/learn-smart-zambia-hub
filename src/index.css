@@ -7,24 +7,24 @@
 @layer base {
   :root {
     /* GitHub Dark — Default */
-    --background: 215 28% 7%;
-    --foreground: 210 17% 82%;
+    --background: 220 14% 8%;
+    --foreground: 210 17% 88%;
 
-    --card: 215 25% 11%;
+    --card: 220 13% 11%;
     --card-foreground: 210 17% 90%;
 
-    --popover: 215 25% 10%;
+    --popover: 220 13% 10%;
     --popover-foreground: 210 17% 90%;
 
     /* Facebook Blue */
     --primary: 214 89% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 20% 15%;
+    --secondary: 220 14% 14%;
     --secondary-foreground: 210 17% 85%;
 
-    --muted: 215 20% 15%;
-    --muted-foreground: 213 10% 58%;
+    --muted: 220 14% 14%;
+    --muted-foreground: 213 10% 55%;
 
     /* GitHub Green accent */
     --accent: 137 66% 49%;
@@ -34,47 +34,47 @@
     --success-foreground: 0 0% 100%;
 
     --warning: 39 100% 57%;
-    --warning-foreground: 215 28% 7%;
+    --warning-foreground: 220 14% 8%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 14% 21%;
-    --input: 215 14% 18%;
+    --border: 220 10% 18%;
+    --input: 220 10% 16%;
     --ring: 214 89% 52%;
 
     --radius: 0.5rem;
 
     /* Sidebar tokens */
-    --sidebar-background: 215 28% 8%;
-    --sidebar-foreground: 210 17% 78%;
+    --sidebar-background: 220 14% 9%;
+    --sidebar-foreground: 210 17% 75%;
     --sidebar-primary: 214 89% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 20% 15%;
+    --sidebar-accent: 220 14% 14%;
     --sidebar-accent-foreground: 210 17% 90%;
-    --sidebar-border: 215 14% 18%;
+    --sidebar-border: 220 10% 16%;
     --sidebar-ring: 214 89% 52%;
   }
 
   /* Facebook Light */
   .light {
-    --background: 220 12% 95%;
-    --foreground: 215 25% 15%;
+    --background: 220 20% 97%;
+    --foreground: 220 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 220 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 220 20% 10%;
 
     --primary: 214 89% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 12% 92%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 220 15% 93%;
+    --secondary-foreground: 220 20% 10%;
 
-    --muted: 220 12% 92%;
-    --muted-foreground: 215 8% 42%;
+    --muted: 220 15% 93%;
+    --muted-foreground: 220 8% 46%;
 
     --accent: 114 62% 44%;
     --accent-foreground: 0 0% 100%;
@@ -82,17 +82,17 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 8% 86%;
-    --input: 220 8% 86%;
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
     --ring: 214 89% 52%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 215 25% 25%;
+    --sidebar-foreground: 220 20% 30%;
     --sidebar-primary: 214 89% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 12% 94%;
-    --sidebar-accent-foreground: 215 25% 15%;
-    --sidebar-border: 220 8% 90%;
+    --sidebar-accent: 220 15% 95%;
+    --sidebar-accent-foreground: 220 20% 10%;
+    --sidebar-border: 220 10% 92%;
     --sidebar-ring: 214 89% 52%;
   }
 }
@@ -105,36 +105,36 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer utilities {
-  /* Card shadows — Facebook style */
+  /* Card shadows */
   .shadow-card {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
   }
 
   .shadow-card-hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
 
-  /* Legacy compat — removed */
-
-  /* Animations — keep useful ones */
+  /* Animations */
   .animate-fade-in {
-    animation: fadeIn 0.4s ease forwards;
+    animation: fadeIn 0.3s ease forwards;
     opacity: 0;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.4s ease forwards;
-    transform: translateY(12px);
+    animation: slideUp 0.3s ease forwards;
+    transform: translateY(8px);
     opacity: 0;
   }
 
   .animate-scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
-    transform: scale(0.95);
+    animation: scaleIn 0.2s ease-out forwards;
+    transform: scale(0.97);
     opacity: 0;
   }
 
@@ -148,15 +148,15 @@
     animation: shimmer 1.5s infinite;
   }
 
-  /* Scrollbar — neutral gray */
-  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  /* Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar { width: 4px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 2px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
 
   /* Keyframes */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -171,5 +171,24 @@
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
+  }
+
+  /* Safe area for mobile bottom nav */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Page container utility */
+  .page-container {
+    @apply max-w-4xl mx-auto;
+  }
+
+  .page-container-wide {
+    @apply max-w-6xl mx-auto;
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 }
