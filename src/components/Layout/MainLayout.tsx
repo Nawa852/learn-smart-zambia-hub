@@ -4,13 +4,16 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
 import { MobileBottomNav } from '@/components/Layout/MobileBottomNav';
-
+import { ScrollToTop } from '@/components/UI/ScrollToTop';
 import { QuickNoteButton } from '@/components/UI/QuickNoteButton';
 import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 import { useStudySchedule } from '@/hooks/useStudySchedule';
+import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
 import { Button } from '@/components/ui/button';
-import { Calendar, Play, X, ChevronRight, Home, Search } from 'lucide-react';
+import { Calendar, Play, X, ChevronRight, Home, Search, Keyboard } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   CommandDialog,
   CommandEmpty,
@@ -19,6 +22,12 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -127,14 +136,23 @@ const COMMAND_ITEMS = [
   { label: 'Notification Preferences', url: '/notification-preferences', group: 'Account' },
 ];
 
+const SHORTCUTS = [
+  { keys: ['⌘', 'K'], description: 'Open command palette' },
+  { keys: ['?'], description: 'Show keyboard shortcuts' },
+  { keys: ['Esc'], description: 'Close dialogs' },
+  { keys: ['⌘', '/'], description: 'Focus search' },
+];
+
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useSecurityAlerts();
   const { getActiveNow } = useStudySchedule();
   const navigate = useNavigate();
   const location = useLocation();
+  const scrollProgress = useScrollProgress();
   const [activeSchedule, setActiveSchedule] = useState<ReturnType<typeof getActiveNow>>(undefined);
   const [dismissed, setDismissed] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setActiveSchedule(getActiveNow());
@@ -155,6 +173,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
+  // ? key for shortcuts overlay
+  useKeyboardShortcut({ key: '?' }, () => {
+    setShortcutsOpen(o => !o);
+  });
+
   // Generate breadcrumbs
   const breadcrumbs = location.pathname
     .split('/')
@@ -173,6 +196,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md">
         Skip to content
       </a>
+
+      {/* Reading progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-[60] h-0.5">
+        <div
+          className="h-full bg-primary/60 transition-[width] duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+
       <div className="min-h-screen flex w-full bg-background">
         <RoleBasedSidebar />
         <div className="flex-1 flex flex-col min-w-0">
@@ -182,7 +214,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           {activeSchedule && !dismissed && (
             <div className="bg-primary/5 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
-                <Calendar className="w-4 h-4 text-primary" />
+                <div className="relative">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full" />
+                </div>
                 <span className="text-foreground">Study time: <strong>{activeSchedule.subject}</strong></span>
               </div>
               <div className="flex items-center gap-2">
@@ -216,15 +252,24 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           )}
           
           <main id="main-content" className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
-            {children}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
           </main>
           
           <MobileBottomNav />
           <QuickNoteButton />
+          <ScrollToTop />
         </div>
       </div>
-
-      
 
       {/* Cmd+K Command Palette */}
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
@@ -247,6 +292,32 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           })}
         </CommandList>
       </CommandDialog>
+
+      {/* Keyboard Shortcuts Overlay */}
+      <Dialog open={shortcutsOpen} onOpenChange={setShortcutsOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Keyboard className="w-5 h-5 text-primary" />
+              Keyboard Shortcuts
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 pt-2">
+            {SHORTCUTS.map((s, i) => (
+              <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50">
+                <span className="text-sm text-foreground">{s.description}</span>
+                <div className="flex items-center gap-1">
+                  {s.keys.map((k, j) => (
+                    <kbd key={j} className="px-2 py-1 rounded-md bg-muted text-muted-foreground text-xs font-mono border border-border/50">
+                      {k}
+                    </kbd>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };

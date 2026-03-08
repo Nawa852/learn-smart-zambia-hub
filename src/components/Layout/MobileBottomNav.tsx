@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Brain, BookOpen, User, Trophy, Shield, Wrench, Building2, MessageCircle } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const roleNavItems: Record<string, { icon: typeof LayoutDashboard; label: string; path: string }[]> = {
   student: [
@@ -68,20 +69,34 @@ export const MobileBottomNav = () => {
         {items.map((item) => {
           const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           return (
-            <button
+            <motion.button
               key={item.path}
               onClick={() => navigate(item.path)}
+              whileTap={{ scale: 0.85 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               className={cn(
                 'flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-150 relative',
                 isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
               )}
             >
               {isActive && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-b-full bg-primary" />
+                <motion.div
+                  layoutId="mobile-nav-indicator"
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-b-full bg-primary"
+                />
               )}
               <item.icon className={cn("w-5 h-5", isActive && "scale-110")} />
               <span className={cn("text-[10px]", isActive ? "font-semibold" : "font-medium")}>{item.label}</span>
-            </button>
+              {/* Active dot indicator */}
+              {isActive && (
+                <motion.div
+                  layoutId="mobile-nav-dot"
+                  className="w-1 h-1 rounded-full bg-primary mt-0.5"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                />
+              )}
+            </motion.button>
           );
         })}
       </div>

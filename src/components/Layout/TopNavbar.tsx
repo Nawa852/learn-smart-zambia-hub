@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { NotificationBell } from '@/components/Notifications/NotificationBell';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { StatusDot } from '@/components/UI/StatusDot';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +24,8 @@ import {
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useTimeOfDay, getGreeting } from '@/hooks/useTimeOfDay';
 import { roleLabels } from '@/components/Sidebar/sidebarConfig';
 import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
 
@@ -30,6 +33,8 @@ export const TopNavbar = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { profile } = useProfile();
+  const isOnline = useOnlineStatus();
+  const timeOfDay = useTimeOfDay();
   const roleLabel = roleLabels[(profile?.role as string) || 'student'] || 'Student';
 
   const handleSignOut = async () => {
@@ -50,6 +55,11 @@ export const TopNavbar = () => {
           </div>
           <span className="font-bold text-sm text-foreground">Edu Zambia</span>
         </Link>
+
+        {/* Greeting — desktop */}
+        <span className="hidden lg:block text-sm text-muted-foreground ml-1">
+          {getGreeting(timeOfDay)}{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''} 👋
+        </span>
 
         {/* Spacer */}
         <div className="flex-1" />
@@ -87,6 +97,10 @@ export const TopNavbar = () => {
                     {profile?.full_name?.charAt(0) || 'U'}
                   </AvatarFallback>
                 </Avatar>
+                {/* Online status dot */}
+                <span className="absolute -bottom-0.5 -right-0.5">
+                  <StatusDot status={isOnline ? 'online' : 'offline'} size="sm" pulse />
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-popover border-border" align="end" forceMount>

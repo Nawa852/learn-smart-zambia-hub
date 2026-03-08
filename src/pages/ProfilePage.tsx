@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { ProgressRing } from '@/components/UI/ProgressRing';
 import {
   User, MapPin, Calendar, BookOpen, Settings, Camera, Edit3,
   Heart, MessageCircle, Trophy, Target, Star, Award, Zap, TrendingUp, CheckCircle
@@ -82,6 +83,23 @@ const ProfilePage = () => {
     load();
   }, [user]);
 
+  // Profile completion calculation
+  const profileFields = [
+    profile?.full_name,
+    profile?.grade,
+    profile?.school,
+    profile?.province,
+    profile?.bio,
+    profile?.avatar_url,
+  ];
+  const filledFields = profileFields.filter(Boolean).length;
+  const profileCompletion = Math.round((filledFields / profileFields.length) * 100);
+
+  // Member since
+  const memberSince = profile?.created_at
+    ? formatDistanceToNow(new Date(profile.created_at), { addSuffix: false })
+    : null;
+
   const stats = [
     { value: String(realStats.completedLessons), label: 'Lessons Done', color: 'text-primary' },
     { value: String(realStats.courses), label: 'Courses', color: 'text-emerald-500' },
@@ -144,16 +162,27 @@ const ProfilePage = () => {
                         <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> Zambia</span>
                         <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" /> Joined {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Recently'}</span>
                       </div>
-                      <Badge className="bg-primary/15 text-primary border-primary/30 capitalize">{profile?.role || 'Student'}</Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-primary/15 text-primary border-primary/30 capitalize">{profile?.role || 'Student'}</Badge>
+                        {memberSince && (
+                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                            🕐 Member for {memberSince}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => setIsEditing(!isEditing)} className="border-border/30 hover:border-primary/40 gap-2">
-                        <Edit3 className="h-4 w-4" />
-                        {isEditing ? 'Cancel' : 'Edit'}
-                      </Button>
-                      <Button variant="outline" size="icon" onClick={() => navigate('/settings')} className="border-border/30 hover:border-primary/40">
-                        <Settings className="h-4 w-4" />
-                      </Button>
+                    <div className="flex items-center gap-3">
+                      {/* Profile completion ring */}
+                      <ProgressRing progress={profileCompletion} size={56} strokeWidth={4} label="Profile" />
+                      <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => setIsEditing(!isEditing)} className="border-border/30 hover:border-primary/40 gap-2">
+                          <Edit3 className="h-4 w-4" />
+                          {isEditing ? 'Cancel' : 'Edit'}
+                        </Button>
+                        <Button variant="outline" size="icon" onClick={() => navigate('/settings')} className="border-border/30 hover:border-primary/40">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
