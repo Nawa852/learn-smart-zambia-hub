@@ -391,6 +391,18 @@ const SettingsPage = () => {
             </GlassCard>
           </div>
         );
+
+      case 'device':
+        return (
+          <div className="space-y-6">
+            <GlassCard delay={0.1}>
+              <CardHeader><CardTitle className="text-lg flex items-center gap-2"><Smartphone className="w-5 h-5 text-primary" /> Device Capabilities</CardTitle></CardHeader>
+              <CardContent>
+                <DeviceCapabilitiesPanel />
+              </CardContent>
+            </GlassCard>
+          </div>
+        );
     }
   };
 
