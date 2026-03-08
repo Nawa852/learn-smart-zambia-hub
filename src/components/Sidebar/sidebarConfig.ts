@@ -106,6 +106,8 @@ export const studentNavigation: NavGroup[] = [
       { title: "Goals", url: "/goals", icon: Target },
       { title: "Screen Time", url: "/screen-time", icon: Monitor },
       { title: "My Notes", url: "/my-notes", icon: PenTool },
+      { title: "Bookmarks", url: "/bookmarks", icon: Bookmark, badge: "NEW" },
+      { title: "Data Export", url: "/data-export", icon: Database, badge: "NEW" },
     ],
   },
   {
