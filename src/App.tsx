@@ -208,6 +208,10 @@ const SkillsProjectsPage = React.lazy(() => import('@/pages/SkillsProjectsPage')
 const SkillsSafetyPage = React.lazy(() => import('@/pages/SkillsSafetyPage'));
 const SkillsFinancialLiteracyPage = React.lazy(() => import('@/pages/SkillsFinancialLiteracyPage'));
 const SkillsEntrepreneurshipPage = React.lazy(() => import('@/pages/SkillsEntrepreneurshipPage'));
+const SkillsJobTrackerPage = React.lazy(() => import('@/pages/SkillsJobTrackerPage'));
+const SkillsApprenticeshipMatchPage = React.lazy(() => import('@/pages/SkillsApprenticeshipMatchPage'));
+const SkillsPortfolioGalleryPage = React.lazy(() => import('@/pages/SkillsPortfolioGalleryPage'));
+const SkillsAssessmentQuizPage = React.lazy(() => import('@/pages/SkillsAssessmentQuizPage'));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
