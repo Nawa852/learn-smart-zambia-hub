@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
+import { MobileBottomNav } from '@/components/Layout/MobileBottomNav';
+import { OnboardingTour } from '@/components/Onboarding/OnboardingTour';
 import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 import { useStudySchedule } from '@/hooks/useStudySchedule';
 import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
