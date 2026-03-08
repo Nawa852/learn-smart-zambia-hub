@@ -321,6 +321,16 @@ function App() {
               <Route path="/entrepreneur/milestones" element={<PG><EntrepreneurMilestonesPage /></PG>} />
               <Route path="/entrepreneur/financials" element={<PG><EntrepreneurFinancialsPage /></PG>} />
               <Route path="/entrepreneur/funding" element={<PG><EntrepreneurFundingPage /></PG>} />
+              <Route path="/entrepreneur/videos" element={<PG><EntrepreneurYouTubePage /></PG>} />
+
+              {/* Skills Development Pages */}
+              <Route path="/skills/dashboard" element={<PG><SkillsDashboardPage /></PG>} />
+              <Route path="/skills/videos" element={<PG><SkillsVideoPage /></PG>} />
+
+              {/* Cybersecurity Pages */}
+              <Route path="/cybersecurity/dashboard" element={<PG><CybersecurityDashboardPage /></PG>} />
+              <Route path="/cybersecurity/labs" element={<PG><CybersecurityLabsPage /></PG>} />
+              <Route path="/cybersecurity/videos" element={<PG><CybersecurityVideoPage /></PG>} />
 
               {/* Developer Pages */}
               <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />

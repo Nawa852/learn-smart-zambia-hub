@@ -26,7 +26,8 @@ const Dashboard = () => {
   }
 
   const renderDashboardView = () => {
-    switch (userType) {
+    const role = userType as string;
+    switch (role) {
       case 'teacher': return <TeacherDashboardView userName={userName} />;
       case 'guardian': return <GuardianDashboardView userName={userName} />;
       case 'institution': return <InstitutionDashboardView userName={userName} />;
