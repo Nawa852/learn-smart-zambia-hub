@@ -112,7 +112,7 @@ const MFASetupPage = () => {
 
   const GlassCard = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay }}>
-      <Card className={`glass-card border border-border/30 shadow-lg ${className}`}>{children}</Card>
+      <Card className={`bg-card border border-border shadow-card ${className}`}>{children}</Card>
     </motion.div>
   );
 
