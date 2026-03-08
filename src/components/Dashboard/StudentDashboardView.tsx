@@ -110,12 +110,26 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
         const totalLessons = enrolledCourses.reduce((s, c) => s + c.lesson_count, 0);
         const completedLessons = enrolledCourses.reduce((s, c) => s + c.completed_count, 0);
+        // Calculate streak from lesson completions
+        const allCompletionDates = completions?.map(c => new Date(c.completed_at).toISOString().split('T')[0]) || [];
+        const uniqueDates = [...new Set(allCompletionDates)].sort().reverse();
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+        let streak = 0;
+        if (uniqueDates[0] === today || uniqueDates[0] === yesterday) {
+          streak = 1;
+          for (let i = 1; i < uniqueDates.length; i++) {
+            const diff = (new Date(uniqueDates[i - 1]).getTime() - new Date(uniqueDates[i]).getTime()) / 86400000;
+            if (diff === 1) streak++; else break;
+          }
+        }
+
         setStats({
           totalCourses: enrolledCourses.length,
           completedLessons,
           totalLessons,
           averageProgress: enrolledCourses.length > 0 ? enrolledCourses.reduce((s, c) => s + c.progress, 0) / enrolledCourses.length : 0,
-          streak: 3,
+          streak,
         });
 
         // Fetch upcoming assignments
