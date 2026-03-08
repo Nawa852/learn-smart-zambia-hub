@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Bell, 
   Search, 
   MessageCircle, 
   Heart, 
   User, 
   Settings,
   LogOut,
-  Menu
 } from 'lucide-react';
+import { NotificationDropdown } from '@/components/Notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,8 +25,6 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 
 export const TopNavbar = () => {
-  const [notifications] = useState(5);
-  const [messages] = useState(3);
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { profile } = useProfile();
@@ -67,23 +64,11 @@ export const TopNavbar = () => {
         {/* Quick Actions */}
         <div className="flex items-center space-x-2">
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative hover-lift">
-            <Bell className="h-5 w-5" />
-            {notifications > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-destructive">
-                {notifications}
-              </Badge>
-            )}
-          </Button>
+          <NotificationDropdown />
 
           {/* Messages */}
-          <Button variant="ghost" size="icon" className="relative hover-lift">
+          <Button variant="ghost" size="icon" className="relative">
             <MessageCircle className="h-5 w-5" />
-            {messages > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-primary">
-                {messages}
-              </Badge>
-            )}
           </Button>
 
           {/* Likes/Activity */}
