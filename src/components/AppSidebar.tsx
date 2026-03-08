@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import BrightSphereLogo from "@/assets/brightsphere-logo.svg"
+import EduZambiaLogo from "@/assets/edu-zambia-logo.svg"
 
 export function AppSidebar() {
   const { state } = useSidebar()
