@@ -212,7 +212,23 @@ const SkillsJobTrackerPage = React.lazy(() => import('@/pages/SkillsJobTrackerPa
 const SkillsApprenticeshipMatchPage = React.lazy(() => import('@/pages/SkillsApprenticeshipMatchPage'));
 const SkillsPortfolioGalleryPage = React.lazy(() => import('@/pages/SkillsPortfolioGalleryPage'));
 const SkillsAssessmentQuizPage = React.lazy(() => import('@/pages/SkillsAssessmentQuizPage'));
-const queryClient = new QueryClient({
+const PomodoroPage = React.lazy(() => import('@/pages/PomodoroPage'));
+const BookmarksPage = React.lazy(() => import('@/pages/BookmarksPage'));
+const SpacedRepetitionPage = React.lazy(() => import('@/pages/SpacedRepetitionPage'));
+const ReadingListPage = React.lazy(() => import('@/pages/ReadingListPage'));
+const DataExportPage = React.lazy(() => import('@/pages/DataExportPage'));
+const TeacherReportCardsPage = React.lazy(() => import('@/pages/TeacherReportCardsPage'));
+const TeacherAnnouncementsPage = React.lazy(() => import('@/pages/TeacherAnnouncementsPage'));
+const TeacherRubricBuilderPage = React.lazy(() => import('@/pages/TeacherRubricBuilderPage'));
+const GuardianHomeworkTrackerPage = React.lazy(() => import('@/pages/GuardianHomeworkTrackerPage'));
+const GuardianRewardSystemPage = React.lazy(() => import('@/pages/GuardianRewardSystemPage'));
+const GuardianStudyComparisonPage = React.lazy(() => import('@/pages/GuardianStudyComparisonPage'));
+const CyberPasswordAnalyzerPage = React.lazy(() => import('@/pages/CyberPasswordAnalyzerPage'));
+const CyberPhishingSimPage = React.lazy(() => import('@/pages/CyberPhishingSimPage'));
+const CyberGlossaryPage = React.lazy(() => import('@/pages/CyberGlossaryPage'));
+const DevAPIPlaygroundPage = React.lazy(() => import('@/pages/DevAPIPlaygroundPage'));
+const DevAlgorithmVisualizerPage = React.lazy(() => import('@/pages/DevAlgorithmVisualizerPage'));
+const NotificationPreferencesPage = React.lazy(() => import('@/pages/NotificationPreferencesPage'));
   defaultOptions: {
     queries: {
       retry: 1,
