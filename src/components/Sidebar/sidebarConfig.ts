@@ -7,6 +7,8 @@ import {
   Calculator, FlaskConical, Atom, Languages, BookMarked, Layers,
   Timer, Award, Gamepad2, Headphones, PenTool, Camera, Presentation,
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
+  DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
+  Flag, Lock, Eye, Bug, Wifi, Palette, Search,
   type LucideIcon
 } from "lucide-react";
 
