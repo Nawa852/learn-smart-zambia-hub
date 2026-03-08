@@ -18,6 +18,7 @@ export interface Profile {
   grade_level?: string | null; // backward compat alias for grade
   province: string | null;
   onboarding_completed?: boolean;
+  device_setup_complete?: boolean;
   created_at: string;
   updated_at: string;
 }
