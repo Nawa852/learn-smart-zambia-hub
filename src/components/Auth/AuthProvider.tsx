@@ -14,6 +14,8 @@ interface AuthContextType {
   signInWithFacebook: () => Promise<void>;
   sendSMSVerification: (phone: string) => Promise<void>;
   verifyPhone: (phone: string, code: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: any }>;
+  updatePassword: (password: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
