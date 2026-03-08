@@ -141,14 +141,16 @@ export default function TeacherGradebookPage() {
   if (coursesLoading) return <div className="py-20"><LogoLoader size="lg" text="Loading..." /></div>;
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-            <BookOpen className="w-8 h-8 text-primary" /> Gradebook
-          </h1>
-          <p className="text-muted-foreground">Record and manage student grades</p>
-        </div>
+    <div className="max-w-6xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+            <BookOpen className="w-5 h-5 text-primary" />
+          </div>
+          Gradebook
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">Record and manage student grades</p>
+      </div>
 
         <Card>
           <CardContent className="p-6">
