@@ -70,16 +70,23 @@ const LoginPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background glow elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+      
       {/* Theme Switcher */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 z-50">
         <ThemeSwitcher />
       </div>
 
-      <div className="w-full max-w-6xl mx-auto">
-        <Card className="grid lg:grid-cols-2 overflow-hidden shadow-2xl border rounded-2xl bg-card">
+      <div className="w-full max-w-6xl mx-auto relative z-10">
+        <Card className="grid lg:grid-cols-2 overflow-hidden shadow-2xl glow-border rounded-2xl bg-gradient-card backdrop-blur-xl border border-primary/20">
           {/* Left Panel - Branding & Features */}
-          <div className="p-8 lg:p-12 bg-gradient-to-br from-primary to-accent text-primary-foreground flex flex-col justify-center">
+          <div className="p-8 lg:p-12 bg-gradient-to-br from-primary to-accent text-primary-foreground flex flex-col justify-center relative overflow-hidden">
+            {/* Decorative glowing orbs */}
+            <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-20 left-10 w-40 h-40 bg-accent/20 rounded-full blur-3xl" />
             <div className="flex items-center gap-4 mb-8">
               <div className="w-16 h-16 bg-background/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <BookOpenCheck size={32} />
