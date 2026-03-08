@@ -102,6 +102,7 @@ const AdminUserManagementPage = React.lazy(() => import('@/pages/AdminUserManage
 const AdminCurriculumPage = React.lazy(() => import('@/pages/AdminCurriculumPage'));
 const AdminSchedulingPage = React.lazy(() => import('@/pages/AdminSchedulingPage'));
 const AdminAnalyticsPage = React.lazy(() => import('@/pages/AdminAnalyticsPage'));
+const AdminAttendancePage = React.lazy(() => import('@/pages/AdminAttendancePage'));
 const StudyGroupChatPage = React.lazy(() => import('@/pages/StudyGroupChatPage'));
 const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
 const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
