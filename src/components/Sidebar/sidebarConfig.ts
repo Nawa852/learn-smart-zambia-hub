@@ -263,9 +263,15 @@ export const ministryNavigation: NavGroup[] = [
   {
     label: "Management",
     items: [
-      { title: "Schools", url: "/admin-users", icon: Building2 },
-      { title: "Curriculum", url: "/admin-curriculum", icon: BookOpen },
+      { title: "Schools", url: "/admin/users", icon: Building2 },
+      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
       { title: "Resources", url: "/zambian-resources", icon: Library },
+    ],
+  },
+  {
+    label: "Communication",
+    items: [
+      { title: "Notifications", url: "/notifications", icon: Bell },
     ],
   },
   {

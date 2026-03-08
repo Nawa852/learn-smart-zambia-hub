@@ -20,3 +20,12 @@ verify_jwt = false
 
 [functions.market-research-assistant]
 verify_jwt = false
+
+[functions.coding-challenge-generator]
+verify_jwt = false
+
+[functions.ai-code-review]
+verify_jwt = false
+
+[functions.funding-opportunities]
+verify_jwt = false
