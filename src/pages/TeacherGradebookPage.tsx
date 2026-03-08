@@ -266,6 +266,5 @@ export default function TeacherGradebookPage() {
           </Card>
         )}
       </div>
-    </div>
   );
 }
