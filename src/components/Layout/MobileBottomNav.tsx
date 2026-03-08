@@ -21,7 +21,7 @@ const roleNavItems: Record<string, { icon: typeof LayoutDashboard; label: string
   ],
   guardian: [
     { icon: LayoutDashboard, label: 'Home', path: '/dashboard' },
-    { icon: BookOpen, label: 'Reports', path: '/guardian/reports' },
+    { icon: BookOpen, label: 'Reports', path: '/guardian-reports' },
     { icon: MessageCircle, label: 'Messages', path: '/parent-messages' },
     { icon: Brain, label: 'AI', path: '/ai' },
     { icon: User, label: 'Profile', path: '/profile' },
