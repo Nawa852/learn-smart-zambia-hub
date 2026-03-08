@@ -9,6 +9,7 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 // Core Pages
 import Index from '@/pages/Index';
 import AuthPage from '@/pages/AuthPage';
+import PasswordResetPage from '@/pages/PasswordResetPage';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 
