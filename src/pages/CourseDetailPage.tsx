@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock, ClipboardCheck
+  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save
 } from 'lucide-react';
 
 interface Lesson {
