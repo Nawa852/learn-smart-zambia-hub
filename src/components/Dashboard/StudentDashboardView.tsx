@@ -208,13 +208,23 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
         </Card>
       </motion.div>
 
+      {/* XP & Gamification Bar */}
+      <motion.div variants={item}>
+        <Card>
+          <CardContent className="p-4">
+            <XPBar />
+          </CardContent>
+        </Card>
+      </motion.div>
+
       {/* Stats Grid */}
-      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-blue-500' },
+          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-primary' },
           { label: 'Lessons Done', value: stats.completedLessons, icon: CheckCircle, color: 'text-emerald-500' },
-          { label: 'Avg Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-purple-500' },
-          { label: 'Assignments', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-amber-500' },
+          { label: 'Avg Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-primary' },
+          { label: 'Assignments', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-accent-foreground' },
+          { label: 'Screen Time', value: `${Math.floor(todayMinutes / 60)}h ${todayMinutes % 60}m`, icon: Monitor, color: 'text-muted-foreground' },
         ].map((s, i) => (
           <Card key={i} className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
