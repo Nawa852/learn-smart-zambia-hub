@@ -25,6 +25,7 @@ const tabItems = [
   { id: 'notifications', label: 'Alerts', icon: Bell },
   { id: 'privacy', label: 'Privacy', icon: Shield },
   { id: 'accessibility', label: 'Access', icon: Eye },
+  { id: 'device', label: 'Device', icon: Smartphone },
   { id: 'account', label: 'Account', icon: User },
 ];
 
