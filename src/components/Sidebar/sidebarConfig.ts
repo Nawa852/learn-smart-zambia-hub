@@ -320,6 +320,8 @@ export const ministryNavigation: NavGroup[] = [
       { title: "Announcements", url: "/ministry/announcements", icon: Megaphone, badge: "NEW" },
       { title: "Data Export", url: "/ministry/data-export", icon: Database, badge: "NEW" },
       { title: "Report Generator", url: "/ministry/reports", icon: FileText },
+      { title: "Audit Trail", url: "/ministry/audit", icon: Shield, badge: "NEW" },
+      { title: "School Comparison", url: "/ministry/school-comparison", icon: Building2, badge: "NEW" },
     ],
   },
   {
