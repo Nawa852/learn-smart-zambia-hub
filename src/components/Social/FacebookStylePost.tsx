@@ -168,7 +168,7 @@ export const FacebookStylePost: React.FC<FacebookStylePostProps> = ({
   };
 
   return (
-    <Card className="glass-card hover-lift transition-all duration-300 border-0 shadow-lg">
+    <Card className="bg-card border border-border hover:shadow-card-hover transition-all duration-300 shadow-card">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
