@@ -7,7 +7,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import { NotificationDropdown } from '@/components/Notifications/NotificationDropdown';
+import { NotificationBell } from '@/components/Notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
