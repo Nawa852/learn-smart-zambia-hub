@@ -87,7 +87,7 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
         // Fetch lesson counts and completions in parallel
         const [{ data: lessons }, { data: completions }] = await Promise.all([
           supabase.from('lessons').select('id, course_id').in('course_id', courseIds.length ? courseIds : ['none']),
-          supabase.from('lesson_completions').select('lesson_id, course_id').eq('user_id', user.id),
+          supabase.from('lesson_completions').select('lesson_id, course_id, completed_at').eq('user_id', user.id),
         ]);
 
         const lessonMap: Record<string, number> = {};
