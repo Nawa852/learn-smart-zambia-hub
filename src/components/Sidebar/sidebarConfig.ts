@@ -93,9 +93,17 @@ export const studentNavigation: NavGroup[] = [
     ],
   },
   {
+    label: "Family",
+    items: [
+      { title: "My Guardian", url: "/guardian-link", icon: Shield },
+      { title: "Guardian Reports", url: "/guardian-reports", icon: FileBarChart },
+    ],
+  },
+  {
     label: "Community",
     items: [
-      { title: "Study Groups", url: "/study-chat", icon: MessageSquare, badge: "LIVE" },
+      { title: "Study Groups", url: "/study-groups", icon: Users, badge: "NEW" },
+      { title: "Group Chat", url: "/study-chat", icon: MessageSquare, badge: "LIVE" },
       { title: "Social Feed", url: "/social-feed", icon: MessagesSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],

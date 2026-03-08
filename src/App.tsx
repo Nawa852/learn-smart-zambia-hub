@@ -110,6 +110,8 @@ import MyAssignmentsPage from '@/pages/MyAssignmentsPage';
 import StudyPlannerPage from '@/pages/StudyPlannerPage';
 import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
 import NotificationsPage from '@/pages/NotificationsPage';
+import GuardianLinkPage from '@/pages/GuardianLinkPage';
+import GuardianReportsPage from '@/pages/GuardianReportsPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
@@ -230,6 +232,8 @@ function App() {
             {/* Student Feature Pages */}
             <Route path="/my-assignments" element={<ProtectedRoute><MainLayout><MyAssignmentsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-planner" element={<ProtectedRoute><MainLayout><StudyPlannerPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/guardian-link" element={<ProtectedRoute><MainLayout><GuardianLinkPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/guardian-reports" element={<ProtectedRoute><MainLayout><GuardianReportsPage /></MainLayout></ProtectedRoute>} />
 
             {/* Parent-Specific Pages */}
             <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />

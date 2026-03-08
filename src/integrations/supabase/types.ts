@@ -229,6 +229,74 @@ export type Database = {
           },
         ]
       }
+      guardian_links: {
+        Row: {
+          created_at: string
+          email: string | null
+          guardian_name: string
+          id: string
+          mode: string
+          phone: string
+          relationship: string
+          status: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          guardian_name: string
+          id?: string
+          mode?: string
+          phone: string
+          relationship: string
+          status?: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          guardian_name?: string
+          id?: string
+          mode?: string
+          phone?: string
+          relationship?: string
+          status?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
+      guardian_reports: {
+        Row: {
+          created_at: string
+          guardian_link_id: string | null
+          id: string
+          report_data: Json
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          guardian_link_id?: string | null
+          id?: string
+          report_data?: Json
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          guardian_link_id?: string | null
+          id?: string
+          report_data?: Json
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardian_reports_guardian_link_id_fkey"
+            columns: ["guardian_link_id"]
+            isOneToOne: false
+            referencedRelation: "guardian_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_completions: {
         Row: {
           completed_at: string
@@ -419,6 +487,27 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           school?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          subscription: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          subscription: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          subscription?: Json
+          user_id?: string
         }
         Relationships: []
       }
