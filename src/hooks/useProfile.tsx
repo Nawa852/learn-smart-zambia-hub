@@ -43,33 +43,50 @@ export const useProfile = () => {
     }
 
     try {
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (error || !data) {
-        // Fallback to user metadata
+      // Auto-create profile if missing (trigger may have failed)
+      if (!data) {
         const role = toAppRole(user.user_metadata?.user_type || localStorage.getItem('edu-zambia-user-type'));
-        setProfile({
-          id: user.id,
-          email: user.email,
-          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
-          avatar_url: user.user_metadata?.avatar_url || null,
-          role,
-          user_type: role,
-          bio: null,
-          phone: null,
-          school: null,
-          grade: null,
-          grade_level: null,
-          province: null,
-          onboarding_completed: false,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-      } else {
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '',
+            avatar_url: user.user_metadata?.avatar_url || null,
+            role,
+          });
+
+        if (!insertError) {
+          const retry = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle();
+          data = retry.data;
+          error = retry.error;
+        }
+
+        if (!data) {
+          // Still no profile — use metadata fallback
+          setProfile({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+            avatar_url: user.user_metadata?.avatar_url || null,
+            role,
+            user_type: role,
+            bio: null, phone: null, school: null, grade: null, grade_level: null, province: null,
+            onboarding_completed: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (data) {
         const role = toAppRole(data.role);
         setProfile({
           ...data,
