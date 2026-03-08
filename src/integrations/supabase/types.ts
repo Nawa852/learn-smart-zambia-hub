@@ -55,6 +55,47 @@ export type Database = {
           },
         ]
       }
+      business_milestones: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          order_index: number | null
+          title: string
+          user_id: string
+          venture_id: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          order_index?: number | null
+          title: string
+          user_id: string
+          venture_id?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          order_index?: number | null
+          title?: string
+          user_id?: string
+          venture_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_milestones_venture_id_fkey"
+            columns: ["venture_id"]
+            isOneToOne: false
+            referencedRelation: "ventures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_members: {
         Row: {
           id: string
@@ -839,6 +880,54 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ventures: {
+        Row: {
+          created_at: string
+          description: string | null
+          funding_amount: number | null
+          funding_status: string | null
+          id: string
+          name: string
+          notes: string | null
+          progress: number | null
+          sector: string | null
+          stage: string | null
+          team_size: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          funding_amount?: number | null
+          funding_status?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          progress?: number | null
+          sector?: string | null
+          stage?: string | null
+          team_size?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          funding_amount?: number | null
+          funding_status?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          progress?: number | null
+          sector?: string | null
+          stage?: string | null
+          team_size?: number | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
