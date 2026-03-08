@@ -12,8 +12,12 @@ import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, Brain, Target, Trophy, Clock, ArrowRight,
   Layers, CheckCircle, Flame, TrendingUp, Sparkles,
-  MessageSquare, ClipboardCheck, GraduationCap
+  MessageSquare, ClipboardCheck, GraduationCap, Zap,
+  Monitor, Shield, Award, Star, Coins
 } from 'lucide-react';
+import { XPBar } from '@/components/Gamification/XPBar';
+import { useUserStats } from '@/hooks/useUserStats';
+import { useScreenTime } from '@/hooks/useScreenTime';
 
 interface EnrolledCourse {
   id: string;
