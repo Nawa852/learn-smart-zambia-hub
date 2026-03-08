@@ -95,7 +95,7 @@ const MVPLanding = () => {
             <span className="text-foreground">Learn Anything</span>
             <br />
             <span className="text-foreground">with </span>
-            <span className="gradient-text">AI That Gets You</span>
+            <span className="text-primary font-semibold">AI That Gets You</span>
           </motion.h1>
 
           <motion.p
