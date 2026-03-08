@@ -138,6 +138,10 @@ const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAna
 const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
 const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
 const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
+const LeaderboardPage = React.lazy(() => import('@/pages/LeaderboardPage'));
+const BadgesPage = React.lazy(() => import('@/pages/BadgesPage'));
+const ScreenTimePage = React.lazy(() => import('@/pages/ScreenTimePage'));
+const ParentalControlsPage = React.lazy(() => import('@/pages/ParentalControlsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
