@@ -5,9 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import EnhancedLoginForm from './EnhancedLoginForm';
 import SecureSignUpForm from './SecureSignUpForm';
-import { BookOpenCheck, Globe, Brain, Users, Award, Sparkles } from 'lucide-react';
+import { BookOpenCheck, Globe, Brain, Users, Award, Sparkles, Zap } from 'lucide-react';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import NewOnboardingWizard from '@/components/Onboarding/NewOnboardingWizard';
+import { motion } from 'framer-motion';
 
 const LoginPage = () => {
   const { user, loading } = useAuth();
