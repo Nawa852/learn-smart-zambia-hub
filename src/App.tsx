@@ -7,6 +7,7 @@ import { InstallPrompt } from '@/components/PWA/InstallPrompt';
 import { OfflineBanner } from '@/components/PWA/OfflineBanner';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
 
 // Core Pages
@@ -87,6 +88,8 @@ import GoalsPage from '@/pages/GoalsPage';
 import JournalingPage from '@/pages/JournalingPage';
 import MentorshipPage from '@/pages/MentorshipPage';
 import FocusModePage from '@/pages/FocusModePage';
+import SetupPage from '@/pages/SetupPage';
+import AppControlPage from '@/pages/AppControlPage';
 
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
@@ -157,18 +160,23 @@ function App() {
             
             <Route path="/chatedu" element={<ChatEduLanding />} />
             
+            {/* Setup Route (no PostLoginGate) */}
+            <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
+            
             {/* Role-Specific Dashboards */}
-            <Route path="/teacher-dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/school-admin" element={<ProtectedRoute><MainLayout><SchoolAdminDashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/ministry-dashboard" element={<ProtectedRoute><MainLayout><MinistryDashboard /></MainLayout></ProtectedRoute>} />
+            <Route path="/teacher-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/parent-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/school-admin" element={<ProtectedRoute><PostLoginGate><MainLayout><SchoolAdminDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/ministry-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><MinistryDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
             
             {/* Main Dashboard */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
+                <PostLoginGate>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </PostLoginGate>
               </ProtectedRoute>
             } />
 
@@ -244,7 +252,8 @@ function App() {
             <Route path="/guardian-link" element={<ProtectedRoute><MainLayout><GuardianLinkPage /></MainLayout></ProtectedRoute>} />
             <Route path="/guardian-reports" element={<ProtectedRoute><MainLayout><GuardianReportsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/my-notes" element={<ProtectedRoute><MainLayout><MyNotesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/focus-mode" element={<ProtectedRoute><MainLayout><FocusModePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/focus-mode" element={<ProtectedRoute><PostLoginGate><MainLayout><FocusModePage /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/app-control" element={<ProtectedRoute><PostLoginGate><MainLayout><AppControlPage /></MainLayout></PostLoginGate></ProtectedRoute>} />
 
             <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />
             <Route path="/parent-attendance" element={<ProtectedRoute><MainLayout><ParentAttendancePage /></MainLayout></ProtectedRoute>} />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +54,8 @@ const FocusModePage = () => {
     state, settings, startFocus, pauseResume, stop, giveUp, updateSettings, getDailyStats
   } = useFocusMode();
 
-  const [subject, setSubject] = useState('');
+  const [searchParams] = useSearchParams();
+  const [subject, setSubject] = useState(() => searchParams.get('subject') || '');
   const [schedule, setSchedule] = useState<StudySlot[]>(() => {
     const saved = localStorage.getItem('study-schedule');
     return saved ? JSON.parse(saved) : [];
