@@ -177,8 +177,8 @@ const AuthPage = () => {
         <div className="relative z-10 flex flex-col justify-between h-full">
           <div>
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                <GraduationCap className="w-7 h-7" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                <img src={EduZambiaLogo} alt="Edu Zambia" className="w-9 h-9" />
               </div>
               <span className="text-2xl font-bold">Edu Zambia</span>
             </div>
