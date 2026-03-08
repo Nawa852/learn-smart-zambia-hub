@@ -93,6 +93,7 @@ import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
 import MFASetupPage from '@/pages/MFASetupPage';
+import SessionManagementPage from '@/pages/SessionManagementPage';
 
 // School Admin Pages
 import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
