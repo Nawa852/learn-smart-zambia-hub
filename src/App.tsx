@@ -103,6 +103,7 @@ import CreateCoursePage from '@/pages/CreateCoursePage';
 import CourseCatalogPage from '@/pages/CourseCatalogPage';
 import CourseDetailPage from '@/pages/CourseDetailPage';
 import AssignmentPage from '@/pages/AssignmentPage';
+import MyCoursesPage from '@/pages/MyCoursesPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
