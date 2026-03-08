@@ -25,9 +25,9 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 
 export const TopNavbar = () => {
-  const [notifications] = useState(5);
-  const [messages] = useState(3);
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { profile } = useProfile();
   const { signOut } = useAuth();
   const { profile } = useProfile();
 
