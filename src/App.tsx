@@ -306,6 +306,13 @@ function App() {
             <Route path="/medical/case-log" element={<ProtectedRoute><MainLayout><MedicalCaseLogPage /></MainLayout></ProtectedRoute>} />
             <Route path="/medical/rotations" element={<ProtectedRoute><MainLayout><MedicalRotationsPage /></MainLayout></ProtectedRoute>} />
 
+            {/* Entrepreneur Pages */}
+            <Route path="/entrepreneur/ventures" element={<ProtectedRoute><MainLayout><EntrepreneurVenturesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/business-plan" element={<ProtectedRoute><MainLayout><EntrepreneurBusinessPlanPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/pitch-deck" element={<ProtectedRoute><MainLayout><EntrepreneurPitchDeckPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/market-research" element={<ProtectedRoute><MainLayout><EntrepreneurMarketResearchPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/entrepreneur/milestones" element={<ProtectedRoute><MainLayout><EntrepreneurMilestonesPage /></MainLayout></ProtectedRoute>} />
+
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
 

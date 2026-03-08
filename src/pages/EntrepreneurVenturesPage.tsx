@@ -22,7 +22,7 @@ export default function EntrepreneurVenturesPage() {
   const handleSubmit = async () => {
     if (!form.name) return;
     await addVenture(form);
-    setForm({ name: '', sector: '', stage: 'ideation', description: '', funding_status: 'bootstrapped', funding_amount: 0, team_size: 1, progress: 0 });
+    setForm({ name: '', sector: '', stage: 'ideation', description: '', funding_status: 'bootstrapped', funding_amount: 0, team_size: 1, progress: 0, notes: '' });
     setOpen(false);
   };
 

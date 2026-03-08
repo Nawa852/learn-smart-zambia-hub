@@ -326,10 +326,34 @@ export const entrepreneurNavigation: NavGroup[] = [
     ],
   },
   {
-    label: "Learning",
+    label: "Business",
     items: [
+      { title: "My Ventures", url: "/entrepreneur/ventures", icon: Rocket, badge: "NEW" },
+      { title: "Milestones", url: "/entrepreneur/milestones", icon: Target },
+    ],
+  },
+  {
+    label: "AI Tools",
+    items: [
+      { title: "Business Plan", url: "/entrepreneur/business-plan", icon: FileText, badge: "AI" },
+      { title: "Pitch Deck", url: "/entrepreneur/pitch-deck", icon: Presentation, badge: "AI" },
+      { title: "Market Research", url: "/entrepreneur/market-research", icon: Globe, badge: "AI" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
-      { title: "Community", url: "/community", icon: Users },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
   {
