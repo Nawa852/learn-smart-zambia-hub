@@ -180,7 +180,7 @@ export const guardianNavigation: NavGroup[] = [
   {
     label: "Home",
     items: [
-      { title: "Dashboard", url: "/parent-dashboard", icon: LayoutDashboard },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
       { title: "My Children", url: "/parent-children", icon: Users },
     ],
   },

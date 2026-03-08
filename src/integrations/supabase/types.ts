@@ -233,6 +233,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string | null
+          guardian_id: string | null
           guardian_name: string
           id: string
           mode: string
@@ -244,6 +245,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email?: string | null
+          guardian_id?: string | null
           guardian_name: string
           id?: string
           mode?: string
@@ -255,6 +257,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string | null
+          guardian_id?: string | null
           guardian_name?: string
           id?: string
           mode?: string
