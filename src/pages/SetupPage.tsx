@@ -265,7 +265,7 @@ const SetupPage = () => {
                           >
                             {day}
                           </Badge>
-                        )))}
+                        ))}
                       </div>
                     </div>
                     <Button onClick={handleAddSchedule} className="w-full" disabled={!newSubject.trim()}>
