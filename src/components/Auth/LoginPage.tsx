@@ -168,16 +168,16 @@ const LoginPage = () => {
           >
             <CardContent className="p-0">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg mb-8">
+                <TabsList className="grid w-full grid-cols-2 bg-background/20 p-1 rounded-lg mb-8 glow-border">
                   <TabsTrigger 
                     value="login" 
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-md rounded-md font-medium"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/60 data-[state=active]:to-accent/60 data-[state=active]:shadow-lg data-[state=active]:glow-primary rounded-md font-semibold data-[state=active]:text-primary-foreground transition-all"
                   >
                     Sign In
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup" 
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-md rounded-md font-medium"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/60 data-[state=active]:to-accent/60 data-[state=active]:shadow-lg data-[state=active]:glow-primary rounded-md font-semibold data-[state=active]:text-primary-foreground transition-all"
                   >
                     Sign Up
                   </TabsTrigger>
