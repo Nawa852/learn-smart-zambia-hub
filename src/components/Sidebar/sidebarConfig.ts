@@ -107,6 +107,7 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "Study Groups", url: "/study-groups", icon: Users, badge: "NEW" },
       { title: "Group Chat", url: "/study-chat", icon: MessageSquare, badge: "LIVE" },
+      { title: "Messenger", url: "/messenger", icon: MessagesSquare },
       { title: "Social Feed", url: "/social-feed", icon: MessagesSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
@@ -165,6 +166,8 @@ export const teacherNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Teacher Hub", url: "/community", icon: Users },
+      { title: "Collaboration", url: "/teacher-collaboration", icon: MessagesSquare, badge: "NEW" },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
@@ -315,7 +318,7 @@ export const doctorNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
@@ -366,7 +369,7 @@ export const entrepreneurNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
@@ -414,7 +417,7 @@ export const developerNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Messenger", url: "/study-chat", icon: MessageSquare },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
