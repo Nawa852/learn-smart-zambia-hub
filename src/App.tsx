@@ -327,6 +327,7 @@ function App() {
             <Route path="/developer/projects" element={<ProtectedRoute><MainLayout><DeveloperProjectsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/developer/challenges" element={<ProtectedRoute><MainLayout><DeveloperChallengesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/developer/code-review" element={<ProtectedRoute><MainLayout><DeveloperCodeReviewPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/developer/ide" element={<ProtectedRoute><MainLayout><DeveloperIDEPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />

@@ -35,6 +35,7 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
     { icon: Database, title: "API Explorer", description: "Test endpoints", link: "/api-flowchart", gradient: "from-blue-500 to-indigo-600" },
     { icon: Terminal, title: "AI Assistant", description: "Dev help", link: "/ai", gradient: "from-purple-500 to-violet-600" },
     { icon: Bug, title: "Focus Mode", description: "Deep work", link: "/focus-mode", gradient: "from-amber-500 to-orange-600" },
+    { icon: FileCode, title: "IDE", description: "Code workspace", link: "/developer/ide", gradient: "from-cyan-500 to-sky-600" },
   ];
 
   return (
