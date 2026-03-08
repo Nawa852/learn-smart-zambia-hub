@@ -42,6 +42,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     { id: 'profile', label: 'Profile' },
     { id: 'guardian', label: 'Guardian' },
     { id: 'sphere', label: 'Learning Path' },
+    { id: 'device', label: 'Device Setup' },
     { id: 'gamification', label: 'Gamification' },
     { id: 'complete', label: 'Complete' },
   ];
