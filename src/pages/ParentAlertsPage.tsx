@@ -1,28 +1,60 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bell, AlertTriangle, CheckCircle, Info, Clock, TrendingDown, Award, BookOpen, Settings } from 'lucide-react';
+import { Bell, AlertTriangle, CheckCircle, Info, BookOpen, Settings } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useGuardianData } from '@/hooks/useGuardianData';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const alerts = [
-  { id: 1, type: 'urgent', icon: AlertTriangle, title: "Biology grade dropped below 70%", desc: "Brighton's Biology score decreased from 75% to 68%. Consider scheduling extra tutoring.", time: "2 hours ago", child: "Brighton", read: false },
-  { id: 2, type: 'success', icon: Award, title: "Sarah earned 'Perfect Week' badge!", desc: "Sarah completed all assignments on time and scored above 90% in every quiz this week.", time: "5 hours ago", child: "Sarah", read: false },
-  { id: 3, type: 'warning', icon: Clock, title: "Brighton was late to school", desc: "Arrived 15 minutes after the start of classes on Monday.", time: "1 day ago", child: "Brighton", read: true },
-  { id: 4, type: 'info', icon: BookOpen, title: "New assignment posted", desc: "Chemistry lab report due next Friday for Grade 12 students.", time: "1 day ago", child: "Brighton", read: true },
-  { id: 5, type: 'success', icon: CheckCircle, title: "Sarah reached 24-day study streak", desc: "Consistent daily learning maintained for over 3 weeks!", time: "2 days ago", child: "Sarah", read: true },
-  { id: 6, type: 'warning', icon: TrendingDown, title: "Study time decreased this week", desc: "Brighton's average daily study time dropped from 3h to 1.5h.", time: "3 days ago", child: "Brighton", read: true },
-  { id: 7, type: 'info', icon: Info, title: "Parent-Teacher meeting scheduled", desc: "Friday at 3:00 PM with Mrs. Phiri (Math department).", time: "3 days ago", child: "All", read: true },
-];
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string | null;
+  is_read: boolean;
+  created_at: string;
+  user_id: string;
+}
 
-const typeStyles: Record<string, { border: string; bg: string; badge: "default" | "secondary" | "destructive" | "outline" }> = {
-  urgent: { border: 'border-l-red-500', bg: 'bg-red-50', badge: 'destructive' },
-  warning: { border: 'border-l-yellow-500', bg: 'bg-yellow-50', badge: 'outline' },
-  success: { border: 'border-l-green-500', bg: 'bg-green-50', badge: 'default' },
-  info: { border: 'border-l-blue-500', bg: 'bg-blue-50', badge: 'secondary' },
+const typeConfig: Record<string, { icon: typeof Bell; border: string; bg: string; badge: "default" | "secondary" | "destructive" | "outline" }> = {
+  graded: { icon: CheckCircle, border: 'border-l-green-500', bg: 'bg-green-50 dark:bg-green-950/20', badge: 'default' },
+  new_assignment: { icon: BookOpen, border: 'border-l-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/20', badge: 'secondary' },
+  alert: { icon: AlertTriangle, border: 'border-l-red-500', bg: 'bg-red-50 dark:bg-red-950/20', badge: 'destructive' },
 };
 
 const ParentAlertsPage = () => {
-  const unread = alerts.filter(a => !a.read).length;
+  const { students, loading: guardianLoading } = useGuardianData();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (guardianLoading || students.length === 0) {
+      setLoading(false);
+      return;
+    }
+    fetchNotifications();
+  }, [guardianLoading, students]);
+
+  async function fetchNotifications() {
+    const studentIds = students.map(s => s.id);
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .in('user_id', studentIds)
+      .order('created_at', { ascending: false })
+      .limit(30);
+    setNotifications(data || []);
+    setLoading(false);
+  }
+
+  // Map student IDs to names
+  const studentNameMap = new Map(students.map(s => [s.id, s.name]));
+  const unread = notifications.filter(n => !n.is_read).length;
+
+  if (loading || guardianLoading) {
+    return <div className="space-y-6"><Skeleton className="h-16" /><Skeleton className="h-64" /></div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -32,42 +64,60 @@ const ParentAlertsPage = () => {
             <Bell className="w-8 h-8 text-primary" />
             Alerts & Notifications
           </h1>
-          <p className="text-muted-foreground mt-1">{unread} unread notifications</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">Mark all read</Button>
-          <Button variant="outline" size="sm"><Settings className="w-4 h-4 mr-1" />Preferences</Button>
+          <p className="text-muted-foreground mt-1">
+            {students.length > 0 ? `${unread} unread across ${students.length} student${students.length > 1 ? 's' : ''}` : 'No students linked'}
+          </p>
         </div>
       </div>
 
-      <div className="space-y-3">
-        {alerts.map((alert) => {
-          const style = typeStyles[alert.type];
-          return (
-            <Card key={alert.id} className={`border-l-4 ${style.border} ${!alert.read ? 'shadow-md' : 'opacity-80'} hover:shadow-lg transition-all`}>
-              <CardContent className="p-4 flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center flex-shrink-0`}>
-                  <alert.icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className={`font-semibold text-sm ${!alert.read ? '' : 'text-muted-foreground'}`}>{alert.title}</h4>
-                    {!alert.read && <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
+      {notifications.length === 0 ? (
+        <Card><CardContent className="p-12 text-center text-muted-foreground">
+          {students.length === 0 ? 'Link a student to see their notifications.' : 'No notifications yet for your linked students.'}
+        </CardContent></Card>
+      ) : (
+        <div className="space-y-3">
+          {notifications.map((notif) => {
+            const config = typeConfig[notif.type] || { icon: Info, border: 'border-l-blue-500', bg: 'bg-muted/50', badge: 'outline' as const };
+            const Icon = config.icon;
+            const studentName = studentNameMap.get(notif.user_id) || 'Student';
+            const timeAgo = getTimeAgo(notif.created_at);
+
+            return (
+              <Card key={notif.id} className={`border-l-4 ${config.border} ${!notif.is_read ? 'shadow-md' : 'opacity-80'} hover:shadow-lg transition-all`}>
+                <CardContent className="p-4 flex items-start gap-4">
+                  <div className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className="w-5 h-5" />
                   </div>
-                  <p className="text-xs text-muted-foreground mb-2">{alert.desc}</p>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={style.badge} className="text-[10px]">{alert.type}</Badge>
-                    <Badge variant="outline" className="text-[10px]">{alert.child}</Badge>
-                    <span className="text-[10px] text-muted-foreground ml-auto">{alert.time}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className={`font-semibold text-sm ${!notif.is_read ? '' : 'text-muted-foreground'}`}>{notif.title}</h4>
+                      {!notif.is_read && <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
+                    </div>
+                    {notif.message && <p className="text-xs text-muted-foreground mb-2">{notif.message}</p>}
+                    <div className="flex items-center gap-2">
+                      <Badge variant={config.badge} className="text-[10px]">{notif.type}</Badge>
+                      <Badge variant="outline" className="text-[10px]">{studentName}</Badge>
+                      <span className="text-[10px] text-muted-foreground ml-auto">{timeAgo}</span>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
+
+function getTimeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 
 export default ParentAlertsPage;
