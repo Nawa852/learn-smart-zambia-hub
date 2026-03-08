@@ -27,6 +27,7 @@ export function RoleBasedSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { profile } = useProfile();
+  const { theme, setTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
 
   const userType = profile?.role || "student";
