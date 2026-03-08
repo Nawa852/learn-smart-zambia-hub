@@ -67,11 +67,14 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "AI Study Buddy", url: "/ai", icon: Brain },
       { title: "Focus Mode", url: "/focus-mode", icon: Shield, badge: "NEW" },
+      { title: "Pomodoro Timer", url: "/pomodoro", icon: Timer, badge: "NEW" },
       { title: "App Control", url: "/app-control", icon: Wrench, badge: "NEW" },
       { title: "Study Planner", url: "/study-planner", icon: Calendar, badge: "NEW" },
       { title: "Flashcards", url: "/flashcards", icon: Layers },
+      { title: "Spaced Repetition", url: "/spaced-repetition", icon: Brain, badge: "NEW" },
       { title: "AI Quiz", url: "/ai-quiz", icon: Sparkles },
       { title: "Mind Maps", url: "/mind-maps", icon: Lightbulb },
+      { title: "Reading List", url: "/reading-list", icon: BookMarked, badge: "NEW" },
     ],
   },
   {
