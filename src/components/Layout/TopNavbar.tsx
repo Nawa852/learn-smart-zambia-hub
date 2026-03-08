@@ -21,6 +21,7 @@ import {
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
+import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
 
 export const TopNavbar = () => {
   const navigate = useNavigate();
