@@ -371,6 +371,11 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Study Leaderboard */}
+        <motion.div variants={item}>
+          <StudyLeaderboard />
+        </motion.div>
       </div>
     </motion.div>
   );
