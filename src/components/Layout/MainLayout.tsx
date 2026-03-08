@@ -5,6 +5,7 @@ import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
 import { useSecurityAlerts } from '@/hooks/useSecurityAlerts';
 import { useStudySchedule } from '@/hooks/useStudySchedule';
+import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
 import { Button } from '@/components/ui/button';
 import { Calendar, Play, X, ChevronRight, Home, Search } from 'lucide-react';
 import {
