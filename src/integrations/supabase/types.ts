@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      apprenticeships: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          description: string | null
+          duration_weeks: number | null
+          id: string
+          posted_by: string
+          province: string | null
+          skill_category: string
+          status: string
+          title: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          id?: string
+          posted_by: string
+          province?: string | null
+          skill_category: string
+          status?: string
+          title: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          id?: string
+          posted_by?: string
+          province?: string | null
+          skill_category?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       assignments: {
         Row: {
           course_id: string
@@ -92,6 +131,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: []
       }
       badges: {
         Row: {
@@ -336,6 +405,41 @@ export type Database = {
         }
         Relationships: []
       }
+      course_reviews: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          rating: number
+          review_text: string | null
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          review_text?: string | null
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          review_text?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           created_at: string
@@ -372,6 +476,66 @@ export type Database = {
           thumbnail_url?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      ctf_submissions: {
+        Row: {
+          category: string | null
+          challenge_name: string
+          created_at: string
+          flag: string
+          id: string
+          is_correct: boolean
+          points: number
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          challenge_name: string
+          created_at?: string
+          flag: string
+          id?: string
+          is_correct?: boolean
+          points?: number
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          challenge_name?: string
+          created_at?: string
+          flag?: string
+          id?: string
+          is_correct?: boolean
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_checkins: {
+        Row: {
+          checkin_date: string
+          created_at: string
+          id: string
+          mood: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          checkin_date?: string
+          created_at?: string
+          id?: string
+          mood: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          checkin_date?: string
+          created_at?: string
+          id?: string
+          mood?: string
+          note?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -689,6 +853,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      job_applications: {
+        Row: {
+          applied_at: string
+          company: string
+          created_at: string
+          id: string
+          notes: string | null
+          position: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          applied_at?: string
+          company: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          position: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          applied_at?: string
+          company?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          position?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       lesson_completions: {
         Row: {
