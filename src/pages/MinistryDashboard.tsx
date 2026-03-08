@@ -40,8 +40,9 @@ const MinistryDashboard = () => {
     { label: 'Avg Grade', value: platformStats?.avg_grade ? `${platformStats.avg_grade}%` : 'N/A', icon: Target, color: 'bg-warning', change: `${platformStats?.total_courses || 0} courses` },
   ];
 
+  if (statsLoading) return <LogoLoader text="Loading national data..." />;
+
   return (
-    <MainLayout>
       <div className="min-h-screen bg-background p-6">
         {/* Header */}
         <motion.div 
