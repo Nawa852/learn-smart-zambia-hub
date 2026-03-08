@@ -78,6 +78,7 @@ export const useProfile = () => {
           user_type: role,
           grade_level: data.grade,
           onboarding_completed: !!data.full_name,
+          device_setup_complete: data.device_setup_complete ?? false,
         });
         localStorage.setItem('edu-zambia-user-type', role);
       }
