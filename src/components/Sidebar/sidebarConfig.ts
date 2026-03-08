@@ -451,3 +451,103 @@ export const developerNavigation: NavGroup[] = [
     ],
   },
 ];
+
+// ─── Skills Development Navigation ──────────────────
+export const skillsNavigation: NavGroup[] = [
+  {
+    label: "Home",
+    items: [
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
+    ],
+  },
+  {
+    label: "Skills",
+    items: [
+      { title: "Skills Hub", url: "/skills/dashboard", icon: Wrench, badge: "NEW" },
+      { title: "Video Tutorials", url: "/skills/videos", icon: Video, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "AI Coach", url: "/ai", icon: Brain },
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+      { title: "Flashcards", url: "/flashcards", icon: Layers },
+    ],
+  },
+  {
+    label: "Progress",
+    items: [
+      { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
+      { title: "Badges", url: "/badges", icon: Award },
+      { title: "Goals", url: "/goals", icon: Target },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { title: "Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
+    ],
+  },
+];
+
+// ─── Cybersecurity Navigation ───────────────────────
+export const cybersecurityNavigation: NavGroup[] = [
+  {
+    label: "Home",
+    items: [
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
+    ],
+  },
+  {
+    label: "Cyber Training",
+    items: [
+      { title: "Cyber Dashboard", url: "/cybersecurity/dashboard", icon: Shield, badge: "NEW" },
+      { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
+      { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "AI Mentor", url: "/ai", icon: Brain },
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+      { title: "Flashcards", url: "/flashcards", icon: Layers },
+    ],
+  },
+  {
+    label: "Progress",
+    items: [
+      { title: "CTF Leaderboard", url: "/leaderboard", icon: Trophy },
+      { title: "Badges", url: "/badges", icon: Award },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { title: "Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
+    ],
+  },
+];
