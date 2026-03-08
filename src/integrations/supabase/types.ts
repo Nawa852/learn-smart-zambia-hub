@@ -375,6 +375,51 @@ export type Database = {
         }
         Relationships: []
       }
+      education_policies: {
+        Row: {
+          actual_result: string | null
+          budget: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          implemented_date: string | null
+          province: string | null
+          status: string
+          target: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          actual_result?: string | null
+          budget?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          implemented_date?: string | null
+          province?: string | null
+          status?: string
+          target?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          actual_result?: string | null
+          budget?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          implemented_date?: string | null
+          province?: string | null
+          status?: string
+          target?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           completed_at: string | null
@@ -723,6 +768,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ngo_partnerships: {
+        Row: {
+          contact_email: string | null
+          created_at: string
+          created_by: string | null
+          end_date: string | null
+          focus_area: string | null
+          funding_amount: number | null
+          id: string
+          ngo_name: string
+          notes: string | null
+          program_name: string
+          province: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          contact_email?: string | null
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          focus_area?: string | null
+          funding_amount?: number | null
+          id?: string
+          ngo_name: string
+          notes?: string | null
+          program_name: string
+          province?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          contact_email?: string | null
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          focus_area?: string | null
+          funding_amount?: number | null
+          id?: string
+          ngo_name?: string
+          notes?: string | null
+          program_name?: string
+          province?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       notifications: {
         Row: {

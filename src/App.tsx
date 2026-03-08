@@ -127,6 +127,13 @@ const ParentTeacherContactPage = React.lazy(() => import('@/pages/ParentTeacherC
 const ParentSchoolUpdatesPage = React.lazy(() => import('@/pages/ParentSchoolUpdatesPage'));
 const ParentProgressTrackerPage = React.lazy(() => import('@/pages/ParentProgressTrackerPage'));
 const TeacherCollaborationHubPage = React.lazy(() => import('@/pages/TeacherCollaborationHubPage'));
+const MinistryProvincesPage = React.lazy(() => import('@/pages/MinistryProvincesPage'));
+const MinistryPolicyTrackerPage = React.lazy(() => import('@/pages/MinistryPolicyTrackerPage'));
+const MinistrySchoolRegistryPage = React.lazy(() => import('@/pages/MinistrySchoolRegistryPage'));
+const MinistryInterventionsPage = React.lazy(() => import('@/pages/MinistryInterventionsPage'));
+const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAnalyticsPage'));
+const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
+const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -306,6 +313,15 @@ function App() {
 
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
+
+              {/* Ministry Pages */}
+              <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
+              <Route path="/ministry/policies" element={<PG><MinistryPolicyTrackerPage /></PG>} />
+              <Route path="/ministry/schools" element={<PG><MinistrySchoolRegistryPage /></PG>} />
+              <Route path="/ministry/interventions" element={<PG><MinistryInterventionsPage /></PG>} />
+              <Route path="/ministry/ecz-analytics" element={<PG><MinistryECZAnalyticsPage /></PG>} />
+              <Route path="/ministry/reports" element={<PG><MinistryReportGeneratorPage /></PG>} />
+              <Route path="/ministry/partnerships" element={<PG><MinistryPartnershipsPage /></PG>} />
 
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
