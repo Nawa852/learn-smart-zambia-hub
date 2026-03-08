@@ -6,7 +6,7 @@ import {
   Briefcase, Globe, Heart, Compass, Wrench, Sparkles, Youtube,
   Calculator, FlaskConical, Atom, Languages, BookMarked, Layers,
   Timer, Award, Gamepad2, Headphones, PenTool, Camera, Presentation,
-  MessagesSquare, Library, Microscope, Bot, Zap, Rocket,
+  MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   type LucideIcon
 } from "lucide-react";
 
