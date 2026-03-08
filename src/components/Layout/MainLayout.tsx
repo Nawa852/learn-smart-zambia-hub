@@ -198,9 +198,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       </a>
 
       {/* Reading progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-[60] h-0.5">
+      <div className="fixed top-0 left-0 right-0 z-[60] h-[2px]">
         <div
-          className="h-full bg-primary/60 transition-[width] duration-150 ease-out"
+          className="h-full bg-primary transition-[width] duration-150 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -212,14 +212,14 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           
           {/* Schedule enforcement banner */}
           {activeSchedule && !dismissed && (
-            <div className="bg-primary/5 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
+            <div className="bg-primary/5 border-b border-primary/20 px-4 py-2.5 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 <div className="relative">
                   <Calendar className="w-4 h-4 text-primary" />
                   <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
                   <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full" />
                 </div>
-                <span className="text-foreground">Study time: <strong>{activeSchedule.subject}</strong></span>
+                <span className="text-foreground text-sm">Study time: <strong>{activeSchedule.subject}</strong></span>
               </div>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => navigate(`/focus-mode?subject=${encodeURIComponent(activeSchedule.subject)}`)}>
@@ -234,13 +234,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           
           {/* Breadcrumbs */}
           {breadcrumbs.length > 0 && (
-            <div className="px-6 pt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="px-4 lg:px-6 pt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Link to="/dashboard" className="hover:text-foreground transition-colors p-0.5">
                 <Home className="w-3.5 h-3.5" />
               </Link>
               {breadcrumbs.map((bc) => (
                 <span key={bc.path} className="inline-flex items-center gap-1.5">
-                  <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
                   {bc.isLast ? (
                     <span className="text-foreground font-medium">{bc.label}</span>
                   ) : (
@@ -255,10 +255,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
               >
                 {children}
               </motion.div>
@@ -302,9 +302,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               Keyboard Shortcuts
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-2 pt-2">
+          <div className="space-y-1 pt-2">
             {SHORTCUTS.map((s, i) => (
-              <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50">
+              <div key={i} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-secondary/50">
                 <span className="text-sm text-foreground">{s.description}</span>
                 <div className="flex items-center gap-1">
                   {s.keys.map((k, j) => (
