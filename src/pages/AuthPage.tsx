@@ -43,6 +43,8 @@ const roles = [
   { value: 'doctor', label: 'Medical Student', icon: Stethoscope, description: 'Clinical learning with AI case simulations' },
   { value: 'entrepreneur', label: 'Entrepreneur', icon: Rocket, description: 'Build ventures with AI business tools' },
   { value: 'developer', label: 'Developer', icon: Code, description: 'Code, build, and learn with AI assistance' },
+  { value: 'skills', label: 'Skills Development', icon: Wrench, description: 'Hands-on vocational and trade skills training' },
+  { value: 'cybersecurity', label: 'Cybersecurity', icon: Shield, description: 'Ethical hacking, CTFs, and security training' },
   { value: 'institution', label: 'School Admin', icon: School, description: "Manage your institution's learning platform" },
   { value: 'ministry', label: 'Ministry/NGO', icon: Building2, description: 'Oversee educational programs at scale' },
 ];
