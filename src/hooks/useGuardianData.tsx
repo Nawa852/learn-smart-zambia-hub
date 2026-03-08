@@ -203,8 +203,12 @@ export function useGuardianData() {
       const totalQuizzes = (quizAttempts || []).length;
       const allScores = (quizAttempts || []).map(q => (q.correct_answers / q.total_questions) * 100);
       const overallAvg = allScores.length > 0 ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length) : 0;
+      const allFocus = ((focusSessions as any[]) || []);
+      const totalFocusMins = allFocus.reduce((s: number, f: any) => s + (f.focus_minutes || 0), 0);
+      const totalFocusSess = allFocus.filter((f: any) => !f.gave_up).reduce((s: number, f: any) => s + (f.sessions_completed || 0), 0);
+      const totalGaveUp = allFocus.filter((f: any) => f.gave_up).length;
 
-      setWeeklySummary({ lessonsCompleted: totalLessons, quizzesTaken: totalQuizzes, avgScore: overallAvg });
+      setWeeklySummary({ lessonsCompleted: totalLessons, quizzesTaken: totalQuizzes, avgScore: overallAvg, focusMinutes: totalFocusMins, focusSessions: totalFocusSess, gaveUpCount: totalGaveUp });
       setStudents(result);
     } catch (err) {
       console.error('Error fetching guardian data:', err);
