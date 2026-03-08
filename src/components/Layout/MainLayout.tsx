@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
 import { TopNavbar } from '@/components/Layout/TopNavbar';
@@ -18,7 +18,6 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Link } from 'react-router-dom';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -66,6 +65,8 @@ const ROUTE_LABELS: Record<string, string> = {
   'developer/challenges': 'Challenges',
   'developer/code-review': 'Code Review',
   'developer/ide': 'IDE',
+  'developer/api-playground': 'API Playground',
+  'developer/algorithms': 'Algorithm Visualizer',
   'entrepreneur/ventures': 'Ventures',
   'entrepreneur/financials': 'Financials',
   'entrepreneur/funding': 'Funding',
@@ -85,6 +86,9 @@ const ROUTE_LABELS: Record<string, string> = {
   'cybersecurity/vuln-scanner': 'Vuln Scanner',
   'cybersecurity/kill-chain': 'Kill Chain',
   'cybersecurity/report-writer': 'Report Writer',
+  'cybersecurity/password-analyzer': 'Password Analyzer',
+  'cybersecurity/phishing-sim': 'Phishing Simulator',
+  'cybersecurity/glossary': 'Cyber Glossary',
   'skills/job-tracker': 'Job Tracker',
   'skills/apprenticeship-match': 'Apprenticeship Match',
   'skills/portfolio-gallery': 'Portfolio Gallery',
@@ -94,21 +98,32 @@ const ROUTE_LABELS: Record<string, string> = {
 const COMMAND_ITEMS = [
   { label: 'Dashboard', url: '/dashboard', group: 'Navigation' },
   { label: 'Course Catalog', url: '/course-catalog', group: 'Navigation' },
+  { label: 'My Courses', url: '/my-courses', group: 'Navigation' },
+  { label: 'Bookmarks', url: '/bookmarks', group: 'Navigation' },
   { label: 'AI Study Buddy', url: '/ai', group: 'AI Tools' },
   { label: 'AI Quiz', url: '/ai-quiz', group: 'AI Tools' },
   { label: 'Flashcards', url: '/flashcards', group: 'AI Tools' },
+  { label: 'Spaced Repetition', url: '/spaced-repetition', group: 'AI Tools' },
   { label: 'Mind Maps', url: '/mind-maps', group: 'AI Tools' },
   { label: 'Focus Mode', url: '/focus-mode', group: 'Study' },
+  { label: 'Pomodoro Timer', url: '/pomodoro', group: 'Study' },
   { label: 'Study Planner', url: '/study-planner', group: 'Study' },
   { label: 'My Assignments', url: '/my-assignments', group: 'Study' },
   { label: 'My Notes', url: '/my-notes', group: 'Study' },
+  { label: 'Reading List', url: '/reading-list', group: 'Study' },
+  { label: 'Past Papers', url: '/ecz-past-papers', group: 'Resources' },
+  { label: 'Exam Simulator', url: '/ecz-exam-simulator', group: 'Resources' },
+  { label: 'Video Library', url: '/ecz-videos', group: 'Resources' },
   { label: 'Analytics', url: '/analytics', group: 'Progress' },
   { label: 'Achievements', url: '/achievements', group: 'Progress' },
   { label: 'Goals', url: '/goals', group: 'Progress' },
+  { label: 'Data Export', url: '/data-export', group: 'Progress' },
   { label: 'Study Groups', url: '/study-groups', group: 'Community' },
   { label: 'Messenger', url: '/messenger', group: 'Community' },
+  { label: 'Mentorship Hub', url: '/mentorship-hub', group: 'Community' },
   { label: 'Profile', url: '/profile', group: 'Account' },
   { label: 'Settings', url: '/settings', group: 'Account' },
+  { label: 'Notification Preferences', url: '/notification-preferences', group: 'Account' },
 ];
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
@@ -139,7 +154,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
-  // Generate breadcrumbs from current path
+  // Generate breadcrumbs
   const breadcrumbs = location.pathname
     .split('/')
     .filter(Boolean)
@@ -155,18 +170,19 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <ScheduleEnforcer />
       <div className="min-h-screen flex w-full bg-background">
         <RoleBasedSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <TopNavbar />
+          
           {/* Schedule enforcement banner */}
           {activeSchedule && !dismissed && (
-            <div className="bg-primary/10 border-b border-primary/30 px-4 py-2 flex items-center justify-between">
+            <div className="bg-primary/5 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="w-4 h-4 text-primary" />
-                <span className="font-medium text-foreground">It's study time for <strong>{activeSchedule.subject}</strong>!</span>
+                <span className="text-foreground">Study time: <strong>{activeSchedule.subject}</strong></span>
               </div>
               <div className="flex items-center gap-2">
-                <Button size="sm" onClick={() => navigate(`/focus-mode?subject=${encodeURIComponent(activeSchedule.subject)}`)}>
-                  <Play className="w-3 h-3 mr-1" />Start Focus
+                <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => navigate(`/focus-mode?subject=${encodeURIComponent(activeSchedule.subject)}`)}>
+                  <Play className="w-3 h-3 mr-1" />Start
                 </Button>
                 <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setDismissed(true)}>
                   <X className="w-3 h-3" />
@@ -174,15 +190,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               </div>
             </div>
           )}
+          
           {/* Breadcrumbs */}
           {breadcrumbs.length > 0 && (
-            <div className="px-6 pt-3 pb-0 flex items-center gap-1 text-sm text-muted-foreground">
-              <Link to="/dashboard" className="hover:text-foreground transition-colors">
+            <div className="px-6 pt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Link to="/dashboard" className="hover:text-foreground transition-colors p-0.5">
                 <Home className="w-3.5 h-3.5" />
               </Link>
               {breadcrumbs.map((bc) => (
                 <React.Fragment key={bc.path}>
-                  <ChevronRight className="w-3 h-3" />
+                  <ChevronRight className="w-3 h-3 text-muted-foreground/50" />
                   {bc.isLast ? (
                     <span className="text-foreground font-medium">{bc.label}</span>
                   ) : (
@@ -192,43 +209,36 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               ))}
             </div>
           )}
-          <main className="flex-1 p-6 pb-20 lg:pb-6 overflow-auto">
+          
+          <main className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
             {children}
           </main>
-          <footer className="hidden lg:block border-t bg-card p-4">
-            <div className="text-center text-sm text-muted-foreground">
-              Powered by{' '}
-              <span className="font-semibold text-primary">
-                Edu Zambia
-              </span>{' '}
-              - Smart Learning for Zambia •{' '}
-              <button onClick={() => setCmdOpen(true)} className="text-muted-foreground hover:text-foreground transition-colors">
-                <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono">⌘K</kbd> Search
-              </button>
-            </div>
-          </footer>
+          
           <MobileBottomNav />
         </div>
       </div>
 
-      {/* Onboarding Tour */}
       <OnboardingTour />
 
       {/* Cmd+K Command Palette */}
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
-        <CommandInput placeholder="Search pages, tools, features..." />
+        <CommandInput placeholder="Where do you want to go?" />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          {['Navigation', 'AI Tools', 'Study', 'Progress', 'Community', 'Account'].map(group => (
-            <CommandGroup key={group} heading={group}>
-              {COMMAND_ITEMS.filter(i => i.group === group).map(item => (
-                <CommandItem key={item.url} onSelect={() => { navigate(item.url); setCmdOpen(false); }}>
-                  <Search className="w-4 h-4 mr-2 text-muted-foreground" />
-                  {item.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          ))}
+          {['Navigation', 'AI Tools', 'Study', 'Resources', 'Progress', 'Community', 'Account'].map(group => {
+            const items = COMMAND_ITEMS.filter(i => i.group === group);
+            if (!items.length) return null;
+            return (
+              <CommandGroup key={group} heading={group}>
+                {items.map(item => (
+                  <CommandItem key={item.url} onSelect={() => { navigate(item.url); setCmdOpen(false); }}>
+                    <Search className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
+                    {item.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            );
+          })}
         </CommandList>
       </CommandDialog>
     </SidebarProvider>

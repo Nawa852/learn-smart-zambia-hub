@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Brain, BookOpen, User, Trophy, Shield, Wrench, Building2 } from 'lucide-react';
+import { LayoutDashboard, Brain, BookOpen, User, Trophy, Shield, Wrench, Building2, MessageCircle } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +9,7 @@ const roleNavItems: Record<string, { icon: typeof LayoutDashboard; label: string
     { icon: LayoutDashboard, label: 'Home', path: '/dashboard' },
     { icon: Brain, label: 'AI', path: '/ai' },
     { icon: BookOpen, label: 'Courses', path: '/my-courses' },
-    { icon: Trophy, label: 'Progress', path: '/analytics' },
+    { icon: MessageCircle, label: 'Chat', path: '/messenger' },
     { icon: User, label: 'Profile', path: '/profile' },
   ],
   teacher: [
@@ -22,6 +22,7 @@ const roleNavItems: Record<string, { icon: typeof LayoutDashboard; label: string
   guardian: [
     { icon: LayoutDashboard, label: 'Home', path: '/dashboard' },
     { icon: BookOpen, label: 'Reports', path: '/guardian/reports' },
+    { icon: MessageCircle, label: 'Messages', path: '/parent-messages' },
     { icon: Brain, label: 'AI', path: '/ai' },
     { icon: User, label: 'Profile', path: '/profile' },
   ],
@@ -62,8 +63,8 @@ export const MobileBottomNav = () => {
   const items = roleNavItems[role] || roleNavItems.student;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card border-t border-border safe-area-bottom">
-      <div className="flex items-center justify-around h-14">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/95 backdrop-blur-sm border-t border-border safe-area-bottom">
+      <div className="flex items-center justify-around h-14 max-w-md mx-auto">
         {items.map((item) => {
           const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           return (
@@ -71,12 +72,15 @@ export const MobileBottomNav = () => {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={cn(
-                'flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors',
-                isActive ? 'text-primary' : 'text-muted-foreground'
+                'flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-150 relative',
+                isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
               )}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{item.label}</span>
+              {isActive && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-b-full bg-primary" />
+              )}
+              <item.icon className={cn("w-5 h-5", isActive && "scale-110")} />
+              <span className={cn("text-[10px]", isActive ? "font-semibold" : "font-medium")}>{item.label}</span>
             </button>
           );
         })}
