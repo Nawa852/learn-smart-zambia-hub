@@ -92,7 +92,6 @@ const GoalsPage = () => {
   if (loading) {
     return <div className="max-w-4xl mx-auto py-12 px-4"><LogoLoader text="Loading goals..." /></div>;
   }
-  }
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="max-w-4xl mx-auto py-6 px-4 space-y-6">
