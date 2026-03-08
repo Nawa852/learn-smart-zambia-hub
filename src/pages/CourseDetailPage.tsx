@@ -107,6 +107,20 @@ const CourseDetailPage = () => {
     toast.success('Lesson completed!');
   };
 
+  const saveNote = async () => {
+    if (!user || !courseId || !activeLesson || !noteContent.trim()) return;
+    setSavingNote(true);
+    await (supabase as any).from('student_notes').insert({
+      user_id: user.id,
+      lesson_id: activeLesson.id,
+      course_id: courseId,
+      content: noteContent.trim(),
+    });
+    setNoteContent('');
+    setSavingNote(false);
+    toast.success('Note saved!');
+  };
+
   const progress = lessons.length > 0 ? (completedLessons.size / lessons.length) * 100 : 0;
 
   const getYouTubeEmbedUrl = (url: string) => {
