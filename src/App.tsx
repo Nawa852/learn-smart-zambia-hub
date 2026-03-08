@@ -87,6 +87,12 @@ const EntrepreneurMarketResearchPage = React.lazy(() => import('@/pages/Entrepre
 const EntrepreneurMilestonesPage = React.lazy(() => import('@/pages/EntrepreneurMilestonesPage'));
 const EntrepreneurFinancialsPage = React.lazy(() => import('@/pages/EntrepreneurFinancialsPage'));
 const EntrepreneurFundingPage = React.lazy(() => import('@/pages/EntrepreneurFundingPage'));
+const EntrepreneurYouTubePage = React.lazy(() => import('@/pages/EntrepreneurYouTubePage'));
+const SkillsDashboardPage = React.lazy(() => import('@/pages/SkillsDashboardPage'));
+const SkillsVideoPage = React.lazy(() => import('@/pages/SkillsVideoPage'));
+const CybersecurityDashboardPage = React.lazy(() => import('@/pages/CybersecurityDashboardPage'));
+const CybersecurityLabsPage = React.lazy(() => import('@/pages/CybersecurityLabsPage'));
+const CybersecurityVideoPage = React.lazy(() => import('@/pages/CybersecurityVideoPage'));
 const DeveloperProjectsPage = React.lazy(() => import('@/pages/DeveloperProjectsPage'));
 const DeveloperChallengesPage = React.lazy(() => import('@/pages/DeveloperChallengesPage'));
 const DeveloperCodeReviewPage = React.lazy(() => import('@/pages/DeveloperCodeReviewPage'));
