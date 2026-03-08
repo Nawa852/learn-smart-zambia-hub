@@ -1,43 +1,35 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Settings, Zap, ChevronDown } from "lucide-react";
+import { Settings, ChevronDown } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import { getNavigationByRole, roleLabels } from "./sidebarConfig";
+import { useProfile } from "@/hooks/useProfile";
 import EduZambiaLogo from "@/assets/edu-zambia-logo.svg";
 
 export function RoleBasedSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const { profile } = useProfile();
 
-  // Get user info from localStorage
-  const onboardingData = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem("edu-zambia-onboarding") || "{}");
-    } catch {
-      return {};
-    }
-  }, []);
-
-  const userType = localStorage.getItem("edu-zambia-user-type") || onboardingData.userType || "student";
-  const userName = onboardingData.fullName || "User";
+  const userType = profile?.role || "student";
+  const userName = profile?.full_name || "User";
   const navigation = getNavigationByRole(userType);
-  const roleLabel = roleLabels[userType?.toLowerCase()] || "Student";
+  const roleLabel = roleLabels[userType] || "Student";
 
   const isActive = (path: string) => location.pathname === path;
 
