@@ -22,6 +22,30 @@ export interface NavGroup {
   items: NavItem[];
 }
 
+export const roleLabels: Record<string, string> = {
+  student: 'Student',
+  teacher: 'Teacher',
+  guardian: 'Guardian',
+  institution: 'Institution',
+  ministry: 'Ministry',
+  doctor: 'Doctor',
+  entrepreneur: 'Entrepreneur',
+  developer: 'Developer',
+};
+
+export function getNavigationByRole(role: string): NavGroup[] {
+  switch (role) {
+    case 'teacher': return teacherNavigation;
+    case 'guardian': return guardianNavigation;
+    case 'institution': return institutionNavigation;
+    case 'ministry': return ministryNavigation;
+    case 'doctor': return doctorNavigation;
+    case 'entrepreneur': return entrepreneurNavigation;
+    case 'developer': return developerNavigation;
+    default: return studentNavigation;
+  }
+}
+
 // ─── Student Navigation ─────────────────────────────
 export const studentNavigation: NavGroup[] = [
   {
