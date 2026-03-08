@@ -117,11 +117,43 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                 </motion.button>
               )}
               <motion.div
-                className="inline-block mb-6"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                className="inline-block mb-6 relative"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
               >
-                <GraduationCap className="w-20 h-20 text-primary mx-auto" />
+                <motion.div
+                  animate={{ 
+                    y: [0, -8, 0],
+                    filter: [
+                      "drop-shadow(0 4px 12px hsl(var(--primary) / 0.2))",
+                      "drop-shadow(0 12px 24px hsl(var(--primary) / 0.4))",
+                      "drop-shadow(0 4px 12px hsl(var(--primary) / 0.2))"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <motion.img 
+                    src={EduZambiaLogo} 
+                    alt="Edu Zambia" 
+                    className="w-28 h-28 mx-auto rounded-2xl"
+                    whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
+                    transition={{ duration: 0.4 }}
+                  />
+                </motion.div>
+                {/* Pulse rings */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl border-2 border-primary/30 mx-auto"
+                  style={{ width: "7rem", height: "7rem", left: "50%", top: 0, marginLeft: "-3.5rem" }}
+                  animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                />
+                <motion.div
+                  className="absolute inset-0 rounded-2xl border-2 border-primary/20 mx-auto"
+                  style={{ width: "7rem", height: "7rem", left: "50%", top: 0, marginLeft: "-3.5rem" }}
+                  animate={{ scale: [1, 1.8], opacity: [0.4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+                />
               </motion.div>
               
               <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text-bright-sphere">

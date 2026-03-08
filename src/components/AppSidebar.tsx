@@ -63,7 +63,7 @@ export function AppSidebar() {
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden">
-              <img src={BrightSphereLogo} alt="BrightSphere" className="w-8 h-8" />
+              <img src={EduZambiaLogo} alt="Edu Zambia" className="w-8 h-8" />
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
