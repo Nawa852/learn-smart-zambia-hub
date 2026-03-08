@@ -195,7 +195,7 @@ export function useGuardianData() {
           recentActivity: activity,
           quizStats: { totalAttempts: studentQuizzes.length, avgScore: avgQuizScore },
           lessonCompletionsCount: studentLessons.length,
-          focusStats: { totalMinutes: totalFocusMinutes, sessionsCompleted: focusCompleted, gaveUpCount: focusGaveUp },
+          focusStats: { totalMinutes: totalFocusMinutes, sessionsCompleted: focusCompleted, gaveUpCount: focusGaveUp, distractionCount: focusDistractions },
         };
       });
 
