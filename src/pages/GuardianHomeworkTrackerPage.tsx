@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ClipboardCheck, Clock, CheckCircle, AlertTriangle, Inbox } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
 import { formatDistanceToNow, isPast } from 'date-fns';
 
 const GuardianHomeworkTrackerPage = () => {
@@ -15,7 +16,8 @@ const GuardianHomeworkTrackerPage = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: links } = await (supabase as any).from('guardian_links').select('student_id').eq('guardian_id', user.id).eq('status', 'active');
+      const { data: links, error } = await (supabase as any).from('guardian_links').select('student_id').eq('guardian_id', user.id).eq('status', 'active');
+      if (error) { toast.error('Failed to load data'); setLoading(false); return; }
       if (!links?.length) { setLoading(false); return; }
       const studentIds = links.map((l: any) => l.student_id);
       const { data: enrollments } = await supabase.from('enrollments').select('course_id, user_id').in('user_id', studentIds);
@@ -41,7 +43,13 @@ const GuardianHomeworkTrackerPage = () => {
     })();
   }, [user]);
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <div className="grid grid-cols-3 gap-3">{[1,2,3].map(i => <Skeleton key={i} className="h-20" />)}</div>
+      {[1,2,3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+    </div>
+  );
 
   const overdue = assignments.filter(a => a.overdue && !a.submitted);
   const pending = assignments.filter(a => !a.submitted && !a.overdue);
@@ -61,7 +69,7 @@ const GuardianHomeworkTrackerPage = () => {
       </div>
 
       {assignments.length === 0 ? (
-        <Card><CardContent className="py-16 text-center"><Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" /><p className="font-medium">No assignments found</p></CardContent></Card>
+        <Card><CardContent className="py-16 text-center"><Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" /><p className="font-medium">No assignments found</p><p className="text-sm text-muted-foreground mt-1">Your linked children have no assignments yet.</p></CardContent></Card>
       ) : (
         <div className="space-y-2">
           {[...overdue, ...pending, ...done].map((a, i) => (

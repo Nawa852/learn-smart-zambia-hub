@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Printer, User, BookOpen } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
 
 interface StudentGrade { course_title: string; score: number | null; grade_letter: string | null; term: string | null; }
 
@@ -20,11 +21,13 @@ const TeacherReportCardsPage = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: courses } = await supabase.from('courses').select('id').eq('created_by', user.id);
+      const { data: courses, error } = await supabase.from('courses').select('id').eq('created_by', user.id);
+      if (error) { toast.error('Failed to load courses'); setLoading(false); return; }
       if (!courses?.length) { setLoading(false); return; }
       const courseIds = courses.map(c => c.id) as string[];
       const { data: enrollments } = await supabase.from('enrollments').select('user_id').in('course_id', courseIds);
       const uniqueIds = [...new Set((enrollments || []).map(e => e.user_id))];
+      if (!uniqueIds.length) { setLoading(false); return; }
       const { data: profiles } = await supabase.from('profiles').select('id, full_name, grade').in('id', uniqueIds);
       setStudents(profiles || []);
       setLoading(false);
@@ -34,7 +37,8 @@ const TeacherReportCardsPage = () => {
   useEffect(() => {
     if (!selectedStudent) return;
     (async () => {
-      const { data } = await (supabase as any).from('grades').select('score, grade_letter, term, course_id').eq('student_id', selectedStudent);
+      const { data, error } = await (supabase as any).from('grades').select('score, grade_letter, term, course_id').eq('student_id', selectedStudent);
+      if (error) { toast.error('Failed to load grades'); return; }
       if (data) {
         const courseIds = [...new Set(data.map((g: any) => g.course_id))] as string[];
         const { data: courses } = await supabase.from('courses').select('id, title').in('id', courseIds);
@@ -47,7 +51,13 @@ const TeacherReportCardsPage = () => {
   const selectedProfile = students.find(s => s.id === selectedStudent);
   const avg = grades.length ? Math.round(grades.reduce((s, g) => s + (g.score || 0), 0) / grades.length) : 0;
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-64" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-64 w-full" />
+    </div>
+  );
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">

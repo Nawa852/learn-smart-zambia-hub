@@ -6,8 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Bookmark, BookOpen, FileText, Trash2, ExternalLink, Inbox } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +21,8 @@ const BookmarksPage = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await (supabase as any).from('bookmarks').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      const { data, error } = await (supabase as any).from('bookmarks').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      if (error) { toast.error('Failed to load bookmarks'); setLoading(false); return; }
       if (data) {
         const courseIds = data.filter((b: any) => b.item_type === 'course').map((b: any) => b.item_id);
         const lessonIds = data.filter((b: any) => b.item_type === 'lesson').map((b: any) => b.item_id);
@@ -39,7 +40,8 @@ const BookmarksPage = () => {
   }, [user]);
 
   const remove = async (id: string) => {
-    await (supabase as any).from('bookmarks').delete().eq('id', id);
+    const { error } = await (supabase as any).from('bookmarks').delete().eq('id', id);
+    if (error) { toast.error('Failed to remove bookmark'); return; }
     setBookmarks(prev => prev.filter(b => b.id !== id));
     toast.success('Bookmark removed');
   };
@@ -47,7 +49,13 @@ const BookmarksPage = () => {
   const types = ['all', 'course', 'lesson', 'past_paper', 'resource'];
   const filtered = (type: string) => type === 'all' ? bookmarks : bookmarks.filter(b => b.item_type === type);
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading bookmarks..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-4 w-32" />
+      {[1,2,3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+    </div>
+  );
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">
@@ -68,6 +76,7 @@ const BookmarksPage = () => {
               <Card><CardContent className="py-12 text-center">
                 <Inbox className="w-10 h-10 mx-auto text-muted-foreground/30 mb-2" />
                 <p className="text-muted-foreground text-sm">No bookmarks yet</p>
+                <Button variant="outline" size="sm" className="mt-3" asChild><Link to="/courses">Browse Courses</Link></Button>
               </CardContent></Card>
             ) : filtered(t).map(bm => (
               <Card key={bm.id} className="border-border/50">
