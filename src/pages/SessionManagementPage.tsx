@@ -61,14 +61,16 @@ const SessionManagementPage = () => {
   const [sessions, setSessions] = useState<SessionInfo[]>([]);
 
   useEffect(() => {
-    buildCurrentSession();
+    if (!user) return;
+    loadLoginEvents();
   }, [user]);
 
-  const buildCurrentSession = () => {
+  const loadLoginEvents = async () => {
     if (!user) return;
+    setLoading(true);
+
     const ua = navigator.userAgent;
     const parsed = parseUserAgent(ua);
-
     const currentSession: SessionInfo = {
       id: 'current',
       ...parsed,
@@ -78,33 +80,33 @@ const SessionManagementPage = () => {
       isCurrent: true,
     };
 
-    // Simulate additional sessions for demonstration
-    const pastSessions: SessionInfo[] = [
-      {
-        id: 'session-2',
-        device: 'Android Phone',
-        deviceType: 'mobile',
-        browser: 'Chrome',
-        os: 'Android',
-        ip: '•••.•••.•••.42',
-        location: 'Lusaka, Zambia',
-        lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    // Fetch recent login events from database
+    const { data: events } = await supabase
+      .from('login_events')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    const currentFingerprint = `${parsed.browser}-${parsed.os}-${parsed.deviceType}-${screen.width}x${screen.height}`;
+
+    const pastSessions: SessionInfo[] = (events || [])
+      .filter((e: any) => e.device_fingerprint !== currentFingerprint)
+      .slice(0, 5)
+      .map((e: any) => ({
+        id: e.id,
+        device: e.device_name || 'Unknown Device',
+        deviceType: (e.device_type as 'desktop' | 'mobile' | 'tablet') || 'desktop',
+        browser: e.browser || 'Unknown',
+        os: e.os || 'Unknown',
+        ip: '•••.•••.•••.••',
+        location: e.location || 'Unknown',
+        lastActive: e.created_at,
         isCurrent: false,
-      },
-      {
-        id: 'session-3',
-        device: 'Windows Desktop',
-        deviceType: 'desktop',
-        browser: 'Firefox',
-        os: 'Windows',
-        ip: '•••.•••.•••.78',
-        location: 'Kitwe, Zambia',
-        lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        isCurrent: false,
-      },
-    ];
+      }));
 
     setSessions([currentSession, ...pastSessions]);
+    setLoading(false);
   };
 
   const handleSignOutSession = async (sessionId: string) => {
