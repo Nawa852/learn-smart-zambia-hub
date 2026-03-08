@@ -117,6 +117,14 @@ export function useGuardianData() {
         .gte('created_at', weekAgo)
         .order('created_at', { ascending: false });
 
+      // 7. Fetch focus sessions (last 7 days)
+      const { data: focusSessions } = await supabase
+        .from('focus_sessions' as any)
+        .select('*')
+        .in('user_id', studentIds)
+        .gte('created_at', weekAgo)
+        .order('created_at', { ascending: false });
+
       // 7. Fetch course titles for grades
       const courseIds = [...new Set([
         ...(grades || []).map(g => g.course_id),
