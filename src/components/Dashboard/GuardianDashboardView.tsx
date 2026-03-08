@@ -168,7 +168,7 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
                 )}
 
                 {/* Quick Stats */}
-                <div className="flex gap-4 text-sm">
+                <div className="flex flex-wrap gap-4 text-sm">
                   <span className="text-muted-foreground">
                     <BookOpen className="w-4 h-4 inline mr-1" />
                     {student.lessonCompletionsCount} lessons this week
@@ -178,9 +178,15 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
                     {student.quizStats.totalAttempts} quizzes ({student.quizStats.avgScore > 0 ? `${student.quizStats.avgScore}% avg` : 'no data'})
                   </span>
                   <span className="text-muted-foreground">
-                    <Award className="w-4 h-4 inline mr-1" />
-                    {student.subjects.length} grades recorded
+                    <Shield className="w-4 h-4 inline mr-1" />
+                    {student.focusStats.totalMinutes}m focus ({student.focusStats.sessionsCompleted} sessions)
                   </span>
+                  {student.focusStats.gaveUpCount > 0 && (
+                    <span className="text-destructive">
+                      <AlertTriangle className="w-4 h-4 inline mr-1" />
+                      {student.focusStats.gaveUpCount} gave up
+                    </span>
+                  )}
                 </div>
               </CardContent>
             </Card>
