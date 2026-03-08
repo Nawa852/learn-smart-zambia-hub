@@ -159,6 +159,7 @@ export const teacherNavigation: NavGroup[] = [
     label: "Assessment",
     items: [
       { title: "Class Analytics", url: "/teacher-analytics", icon: BarChart3 },
+      { title: "Gradebook", url: "/teacher-gradebook", icon: ClipboardCheck, badge: "NEW" },
       { title: "Reports", url: "/teacher-analytics", icon: PieChart },
     ],
   },
