@@ -38,7 +38,7 @@ import VirtualClassroom from '@/components/Learning/VirtualClassroom';
 import ChatEduLanding from '@/pages/ChatEduLanding';
 
 // Role-Specific Dashboards
-import TeacherDashboard from '@/pages/TeacherDashboard';
+// TeacherDashboard removed - using role-based Dashboard instead
 import ParentDashboard from '@/pages/ParentDashboard';
 import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
 import MinistryDashboard from '@/pages/MinistryDashboard';
@@ -157,7 +157,7 @@ function App() {
             <Route path="/chatedu" element={<ChatEduLanding />} />
             
             {/* Role-Specific Dashboards */}
-            <Route path="/teacher-dashboard" element={<ProtectedRoute><MainLayout><TeacherDashboard /></MainLayout></ProtectedRoute>} />
+            <Route path="/teacher-dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
             <Route path="/parent-dashboard" element={<ProtectedRoute><MainLayout><ParentDashboard /></MainLayout></ProtectedRoute>} />
             <Route path="/school-admin" element={<ProtectedRoute><MainLayout><SchoolAdminDashboard /></MainLayout></ProtectedRoute>} />
             <Route path="/ministry-dashboard" element={<ProtectedRoute><MainLayout><MinistryDashboard /></MainLayout></ProtectedRoute>} />
