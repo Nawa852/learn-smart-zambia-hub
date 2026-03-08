@@ -188,11 +188,11 @@ export function RoleBasedSidebar() {
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-2 border-t border-sidebar-border mt-auto shrink-0">
+        <div className="p-2 border-t border-sidebar-border mt-auto shrink-0 flex items-center gap-1">
           <NavLink
             to="/settings"
             className={cn(
-              "flex items-center gap-2.5 px-2.5 py-2 rounded-md transition-all duration-150",
+              "flex items-center gap-2.5 px-2.5 py-2 rounded-md transition-all duration-150 flex-1",
               collapsed && "justify-center",
               isActive('/settings')
                 ? "bg-primary text-primary-foreground"
@@ -202,6 +202,13 @@ export function RoleBasedSidebar() {
             <Settings className="h-4 w-4" />
             {!collapsed && <span className="text-[13px] font-medium">Settings</span>}
           </NavLink>
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors flex-shrink-0"
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
         </div>
       </SidebarContent>
     </Sidebar>
