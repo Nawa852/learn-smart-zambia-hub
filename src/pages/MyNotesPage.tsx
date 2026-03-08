@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox } from 'lucide-react';
+import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Note {
