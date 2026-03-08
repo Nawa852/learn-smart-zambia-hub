@@ -66,7 +66,10 @@ const CourseDetailPage = () => {
         supabase.from('lessons').select('*').eq('course_id', courseId).order('order_index'),
       ]);
 
-      if (courseData) setCourse(courseData);
+      if (courseData) {
+        setCourse(courseData);
+        if (user && courseData.created_by === user.id) setIsCreator(true);
+      }
       if (lessonsData) {
         setLessons(lessonsData);
         if (lessonsData.length > 0) setActiveLesson(lessonsData[0]);
@@ -84,6 +87,33 @@ const CourseDetailPage = () => {
     };
     fetchData();
   }, [courseId, user]);
+
+  const fetchRoster = async () => {
+    if (!courseId) return;
+    setLoadingRoster(true);
+    const { data: enrollments } = await supabase
+      .from('enrollments')
+      .select('user_id, progress, enrolled_at')
+      .eq('course_id', courseId);
+
+    if (enrollments && enrollments.length > 0) {
+      const userIds = enrollments.map(e => e.user_id);
+      const { data: profiles } = await supabase.from('profiles').select('id, full_name').in('id', userIds);
+      const profileMap: Record<string, string> = {};
+      (profiles || []).forEach(p => { profileMap[p.id] = p.full_name || 'Unknown'; });
+
+      setStudents(enrollments.map(e => ({
+        user_id: e.user_id,
+        full_name: profileMap[e.user_id] || 'Unknown Student',
+        progress: Number(e.progress) || 0,
+        enrolled_at: e.enrolled_at,
+      })));
+    } else {
+      setStudents([]);
+    }
+    setLoadingRoster(false);
+    setShowRoster(true);
+  };
 
   const handleEnroll = async () => {
     if (!user || !courseId) return;
