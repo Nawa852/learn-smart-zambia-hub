@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { CookieConsent } from '@/components/CookieConsent';
+import { InstallPrompt } from '@/components/PWA/InstallPrompt';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -278,6 +279,7 @@ function App() {
           </Routes>
           <Toaster />
           <CookieConsent />
+          <InstallPrompt />
         </Router>
       </QueryClientProvider>
     </AuthProvider>
