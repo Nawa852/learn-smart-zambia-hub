@@ -40,16 +40,16 @@ const roleNavItems: Record<string, { icon: typeof LayoutDashboard; label: string
   ],
   cybersecurity: [
     { icon: LayoutDashboard, label: 'Home', path: '/dashboard' },
-    { icon: Shield, label: 'Labs', path: '/cyber/network-lab' },
+    { icon: Shield, label: 'Labs', path: '/cybersecurity/network-lab' },
     { icon: Brain, label: 'AI', path: '/ai' },
-    { icon: Trophy, label: 'CTF', path: '/cyber/ctf' },
+    { icon: Trophy, label: 'CTF', path: '/cybersecurity/ctf' },
     { icon: User, label: 'Profile', path: '/profile' },
   ],
   skills: [
     { icon: LayoutDashboard, label: 'Home', path: '/dashboard' },
     { icon: Wrench, label: 'Skills', path: '/skills/assessment' },
     { icon: Brain, label: 'AI', path: '/ai' },
-    { icon: BookOpen, label: 'Jobs', path: '/skills/job-board' },
+    { icon: BookOpen, label: 'Jobs', path: '/skills/jobs' },
     { icon: User, label: 'Profile', path: '/profile' },
   ],
 };

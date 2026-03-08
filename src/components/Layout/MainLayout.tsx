@@ -224,7 +224,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </div>
       </div>
 
-      <OnboardingTour />
+      
 
       {/* Cmd+K Command Palette */}
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
