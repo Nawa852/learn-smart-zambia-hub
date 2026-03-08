@@ -175,7 +175,7 @@ const MVPLanding = () => {
             className="text-center mb-14"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything you need to <span className="gradient-text">succeed</span>
+              Everything you need to <span className="text-primary font-semibold">succeed</span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-lg mx-auto">
               Powerful AI tools designed specifically for Zambian learners
