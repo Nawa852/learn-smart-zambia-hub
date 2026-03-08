@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock
+  ChevronRight, Layers, Lock, ClipboardCheck
 } from 'lucide-react';
 
 interface Lesson {
