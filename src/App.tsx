@@ -6,6 +6,7 @@ import { CookieConsent } from '@/components/CookieConsent';
 import { InstallPrompt } from '@/components/PWA/InstallPrompt';
 import { OfflineBanner } from '@/components/PWA/OfflineBanner';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -158,6 +159,7 @@ const SuspenseWrap = ({ children }: { children: React.ReactNode }) => (
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <Router>
@@ -339,6 +341,7 @@ function App() {
         </Router>
       </QueryClientProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
