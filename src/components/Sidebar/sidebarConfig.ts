@@ -376,6 +376,7 @@ export const entrepreneurNavigation: NavGroup[] = [
       { title: "Pitch Deck", url: "/entrepreneur/pitch-deck", icon: Presentation, badge: "AI" },
       { title: "Market Research", url: "/entrepreneur/market-research", icon: Globe, badge: "AI" },
       { title: "Funding", url: "/entrepreneur/funding", icon: Briefcase, badge: "AI" },
+      { title: "Video Academy", url: "/entrepreneur/videos", icon: Youtube, badge: "NEW" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
