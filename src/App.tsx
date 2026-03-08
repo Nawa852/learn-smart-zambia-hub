@@ -9,6 +9,7 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 // Core Pages
 import Index from '@/pages/Index';
 import AuthPage from '@/pages/AuthPage';
+import PasswordResetPage from '@/pages/PasswordResetPage';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 
@@ -143,6 +144,7 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
+            <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { Eye, EyeOff, Sparkles, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, Lock, Mail, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -139,10 +139,19 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
-          <Label htmlFor="password" className="flex items-center gap-2 font-semibold">
-            <Lock className="w-4 h-4 text-primary" />
-            Password
-          </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="flex items-center gap-2 font-semibold">
+              <Lock className="w-4 h-4 text-primary" />
+              Password
+            </Label>
+            <a 
+              href="/password-reset"
+              className="text-xs text-primary hover:text-primary/80 font-medium underline transition-colors flex items-center gap-1"
+            >
+              <HelpCircle className="w-3 h-3" />
+              Forgot?
+            </a>
+          </div>
           <div className="relative">
             <Input
               id="password"
