@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { Search, Download, Eye, BookOpen, FileText, Video, Image } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DocumentScanner } from '@/components/Camera/DocumentScanner';
 
 interface StudyMaterial {
   id: string;
@@ -142,8 +143,15 @@ const StudyMaterialsPage = () => {
           </CardContent>
         </Card>
 
-        {/* Materials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Scanner + Materials Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <DocumentScanner onUploadComplete={(url, name) => {
+              toast({ title: 'Document uploaded', description: `${name} is now available in your materials.` });
+            }} />
+          </div>
+
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredMaterials.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
@@ -203,6 +211,7 @@ const StudyMaterialsPage = () => {
               </Card>
             ))
           )}
+          </div>
         </div>
       </div>
     </div>

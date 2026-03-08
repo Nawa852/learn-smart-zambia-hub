@@ -27,9 +27,9 @@ const THEME_CLASSES = themes.map(t => t.id === 'dark' ? 'dark' : t.id === 'light
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeType>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'dark';
+      return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'zambian';
     }
-    return 'dark';
+    return 'zambian';
   });
 
   const setTheme = (newTheme: ThemeType) => {

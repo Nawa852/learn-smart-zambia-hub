@@ -21,6 +21,7 @@ import {
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
+import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
 
 export const TopNavbar = () => {
   const navigate = useNavigate();
@@ -40,8 +41,8 @@ export const TopNavbar = () => {
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center space-x-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-xs">EZ</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden shadow-md shadow-primary/20">
+            <img src={EduZambiaLogo} alt="Edu Zambia" className="w-6 h-6" />
           </div>
           <span className="hidden md:block font-bold text-sm gradient-text">
             Edu Zambia
