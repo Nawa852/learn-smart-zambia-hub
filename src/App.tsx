@@ -103,6 +103,7 @@ import CreateCoursePage from '@/pages/CreateCoursePage';
 import CourseCatalogPage from '@/pages/CourseCatalogPage';
 import CourseDetailPage from '@/pages/CourseDetailPage';
 import AssignmentPage from '@/pages/AssignmentPage';
+import MyCoursesPage from '@/pages/MyCoursesPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
@@ -188,6 +189,7 @@ function App() {
 
             {/* Courses & Learning */}
             <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
+            <Route path="/my-courses" element={<ProtectedRoute><MainLayout><MyCoursesPage /></MainLayout></ProtectedRoute>} />
             <Route path="/course-catalog" element={<ProtectedRoute><MainLayout><CourseCatalogPage /></MainLayout></ProtectedRoute>} />
             <Route path="/create-course" element={<ProtectedRoute><MainLayout><CreateCoursePage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-chat" element={<ProtectedRoute><MainLayout><StudyGroupChatPage /></MainLayout></ProtectedRoute>} />
