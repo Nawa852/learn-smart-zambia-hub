@@ -7,6 +7,8 @@ import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDash
 import { MedicalDashboardView } from '@/components/Dashboard/MedicalDashboardView';
 import { EntrepreneurDashboardView } from '@/components/Dashboard/EntrepreneurDashboardView';
 import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboardView';
+import SkillsDashboardView from '@/components/Dashboard/SkillsDashboardView';
+import CybersecurityDashboardView from '@/components/Dashboard/CybersecurityDashboardView';
 import { LogoLoader } from '@/components/UI/LogoLoader';
 
 const Dashboard = () => {
@@ -24,13 +26,16 @@ const Dashboard = () => {
   }
 
   const renderDashboardView = () => {
-    switch (userType) {
+    const role = userType as string;
+    switch (role) {
       case 'teacher': return <TeacherDashboardView userName={userName} />;
       case 'guardian': return <GuardianDashboardView userName={userName} />;
       case 'institution': return <InstitutionDashboardView userName={userName} />;
       case 'doctor': return <MedicalDashboardView userName={userName} />;
       case 'entrepreneur': return <EntrepreneurDashboardView userName={userName} />;
       case 'developer': return <DeveloperDashboardView userName={userName} />;
+      case 'skills': return <SkillsDashboardView />;
+      case 'cybersecurity': return <CybersecurityDashboardView />;
       case 'student':
       default: return <StudentDashboardView userName={userName} />;
     }

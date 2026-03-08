@@ -87,6 +87,12 @@ const EntrepreneurMarketResearchPage = React.lazy(() => import('@/pages/Entrepre
 const EntrepreneurMilestonesPage = React.lazy(() => import('@/pages/EntrepreneurMilestonesPage'));
 const EntrepreneurFinancialsPage = React.lazy(() => import('@/pages/EntrepreneurFinancialsPage'));
 const EntrepreneurFundingPage = React.lazy(() => import('@/pages/EntrepreneurFundingPage'));
+const EntrepreneurYouTubePage = React.lazy(() => import('@/pages/EntrepreneurYouTubePage'));
+const SkillsDashboardPage = React.lazy(() => import('@/pages/SkillsDashboardPage'));
+const SkillsVideoPage = React.lazy(() => import('@/pages/SkillsVideoPage'));
+const CybersecurityDashboardPage = React.lazy(() => import('@/pages/CybersecurityDashboardPage'));
+const CybersecurityLabsPage = React.lazy(() => import('@/pages/CybersecurityLabsPage'));
+const CybersecurityVideoPage = React.lazy(() => import('@/pages/CybersecurityVideoPage'));
 const DeveloperProjectsPage = React.lazy(() => import('@/pages/DeveloperProjectsPage'));
 const DeveloperChallengesPage = React.lazy(() => import('@/pages/DeveloperChallengesPage'));
 const DeveloperCodeReviewPage = React.lazy(() => import('@/pages/DeveloperCodeReviewPage'));
@@ -315,6 +321,16 @@ function App() {
               <Route path="/entrepreneur/milestones" element={<PG><EntrepreneurMilestonesPage /></PG>} />
               <Route path="/entrepreneur/financials" element={<PG><EntrepreneurFinancialsPage /></PG>} />
               <Route path="/entrepreneur/funding" element={<PG><EntrepreneurFundingPage /></PG>} />
+              <Route path="/entrepreneur/videos" element={<PG><EntrepreneurYouTubePage /></PG>} />
+
+              {/* Skills Development Pages */}
+              <Route path="/skills/dashboard" element={<PG><SkillsDashboardPage /></PG>} />
+              <Route path="/skills/videos" element={<PG><SkillsVideoPage /></PG>} />
+
+              {/* Cybersecurity Pages */}
+              <Route path="/cybersecurity/dashboard" element={<PG><CybersecurityDashboardPage /></PG>} />
+              <Route path="/cybersecurity/labs" element={<PG><CybersecurityLabsPage /></PG>} />
+              <Route path="/cybersecurity/videos" element={<PG><CybersecurityVideoPage /></PG>} />
 
               {/* Developer Pages */}
               <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />

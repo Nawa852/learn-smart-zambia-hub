@@ -120,6 +120,11 @@ const SignUpPage = () => {
                   <SelectItem value="student"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Student</div></SelectItem>
                   <SelectItem value="teacher"><div className="flex items-center"><GraduationCap className="mr-2 h-4 w-4" />Teacher</div></SelectItem>
                   <SelectItem value="parent"><div className="flex items-center"><Users className="mr-2 h-4 w-4" />Parent</div></SelectItem>
+                  <SelectItem value="entrepreneur"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Entrepreneur</div></SelectItem>
+                  <SelectItem value="developer"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Developer</div></SelectItem>
+                  <SelectItem value="doctor"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Medical Student</div></SelectItem>
+                  <SelectItem value="skills"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Skills Development</div></SelectItem>
+                  <SelectItem value="cybersecurity"><div className="flex items-center"><BookOpen className="mr-2 h-4 w-4" />Cybersecurity</div></SelectItem>
                 </SelectContent>
               </Select>
               {errors.userType && <p className="text-sm text-destructive">{errors.userType}</p>}

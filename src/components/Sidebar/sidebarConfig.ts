@@ -31,6 +31,8 @@ export const roleLabels: Record<string, string> = {
   doctor: 'Doctor',
   entrepreneur: 'Entrepreneur',
   developer: 'Developer',
+  skills: 'Skills Development',
+  cybersecurity: 'Cybersecurity',
 };
 
 export function getNavigationByRole(role: string): NavGroup[] {
@@ -42,6 +44,8 @@ export function getNavigationByRole(role: string): NavGroup[] {
     case 'doctor': return doctorNavigation;
     case 'entrepreneur': return entrepreneurNavigation;
     case 'developer': return developerNavigation;
+    case 'skills': return skillsNavigation;
+    case 'cybersecurity': return cybersecurityNavigation;
     default: return studentNavigation;
   }
 }
@@ -372,6 +376,7 @@ export const entrepreneurNavigation: NavGroup[] = [
       { title: "Pitch Deck", url: "/entrepreneur/pitch-deck", icon: Presentation, badge: "AI" },
       { title: "Market Research", url: "/entrepreneur/market-research", icon: Globe, badge: "AI" },
       { title: "Funding", url: "/entrepreneur/funding", icon: Briefcase, badge: "AI" },
+      { title: "Video Academy", url: "/entrepreneur/videos", icon: Youtube, badge: "NEW" },
       { title: "AI Assistant", url: "/ai", icon: Brain },
     ],
   },
@@ -428,6 +433,106 @@ export const developerNavigation: NavGroup[] = [
     items: [
       { title: "Focus Mode", url: "/focus-mode", icon: Shield },
       { title: "Study Planner", url: "/study-planner", icon: Calendar },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { title: "Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
+    ],
+  },
+];
+
+// ─── Skills Development Navigation ──────────────────
+export const skillsNavigation: NavGroup[] = [
+  {
+    label: "Home",
+    items: [
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
+    ],
+  },
+  {
+    label: "Skills",
+    items: [
+      { title: "Skills Hub", url: "/skills/dashboard", icon: Wrench, badge: "NEW" },
+      { title: "Video Tutorials", url: "/skills/videos", icon: Video, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "AI Coach", url: "/ai", icon: Brain },
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+      { title: "Flashcards", url: "/flashcards", icon: Layers },
+    ],
+  },
+  {
+    label: "Progress",
+    items: [
+      { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
+      { title: "Badges", url: "/badges", icon: Award },
+      { title: "Goals", url: "/goals", icon: Target },
+    ],
+  },
+  {
+    label: "Community",
+    items: [
+      { title: "Study Groups", url: "/study-groups", icon: Users },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
+      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { title: "Profile", url: "/profile", icon: User },
+      { title: "Settings", url: "/settings", icon: Settings },
+    ],
+  },
+];
+
+// ─── Cybersecurity Navigation ───────────────────────
+export const cybersecurityNavigation: NavGroup[] = [
+  {
+    label: "Home",
+    items: [
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
+    ],
+  },
+  {
+    label: "Cyber Training",
+    items: [
+      { title: "Cyber Dashboard", url: "/cybersecurity/dashboard", icon: Shield, badge: "NEW" },
+      { title: "Practice Labs", url: "/cybersecurity/labs", icon: Monitor, badge: "NEW" },
+      { title: "Video Academy", url: "/cybersecurity/videos", icon: Video, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { title: "AI Mentor", url: "/ai", icon: Brain },
+      { title: "Focus Mode", url: "/focus-mode", icon: Shield },
+      { title: "Study Planner", url: "/study-planner", icon: Calendar },
+      { title: "Flashcards", url: "/flashcards", icon: Layers },
+    ],
+  },
+  {
+    label: "Progress",
+    items: [
+      { title: "CTF Leaderboard", url: "/leaderboard", icon: Trophy },
+      { title: "Badges", url: "/badges", icon: Award },
     ],
   },
   {
