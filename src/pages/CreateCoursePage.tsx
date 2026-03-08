@@ -145,7 +145,7 @@ const CreateCoursePage = () => {
             <Label>Description</Label>
             <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="What will students learn?" rows={3} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label>Subject</Label>
               <Select value={subject} onValueChange={setSubject}>
