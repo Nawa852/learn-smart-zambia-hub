@@ -281,6 +281,7 @@ function App() {
           <Toaster />
           <CookieConsent />
           <InstallPrompt />
+          <OfflineBanner />
         </Router>
       </QueryClientProvider>
     </AuthProvider>
