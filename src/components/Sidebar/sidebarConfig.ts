@@ -132,6 +132,7 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Community",
     items: [
+      { title: "Study Group Chat", url: "/study-chat", icon: MessageSquare, badge: "LIVE" },
       { title: "Community Hub", url: "/community", icon: Users },
       { title: "Study Groups", url: "/study-groups", icon: MessageSquare },
       { title: "Social Feed", url: "/social-feed", icon: MessagesSquare },
