@@ -36,7 +36,7 @@ const TeacherReportCardsPage = () => {
     (async () => {
       const { data } = await (supabase as any).from('grades').select('score, grade_letter, term, course_id').eq('student_id', selectedStudent);
       if (data) {
-        const courseIds = [...new Set(data.map((g: any) => g.course_id))];
+        const courseIds = [...new Set(data.map((g: any) => g.course_id))] as string[];
         const { data: courses } = await supabase.from('courses').select('id, title').in('id', courseIds);
         const cMap = Object.fromEntries((courses || []).map(c => [c.id, c.title]));
         setGrades(data.map((g: any) => ({ ...g, course_title: cMap[g.course_id] || 'Unknown' })));
