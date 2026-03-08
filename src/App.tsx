@@ -137,6 +137,7 @@ const MinistryInterventionsPage = React.lazy(() => import('@/pages/MinistryInter
 const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAnalyticsPage'));
 const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
 const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
+const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
