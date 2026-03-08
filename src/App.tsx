@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -9,152 +9,124 @@ import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
+import { LogoLoader } from '@/components/UI/LogoLoader';
 
-// Core Pages
+// Core Pages (eagerly loaded)
 import Index from '@/pages/Index';
 import AuthPage from '@/pages/AuthPage';
-import PasswordResetPage from '@/pages/PasswordResetPage';
-import About from '@/pages/About';
-import Contact from '@/pages/Contact';
-
 import NotFound from '@/pages/NotFound';
-import Dashboard from '@/pages/Dashboard';
-import Courses from '@/pages/Courses';
-import ProfilePage from '@/pages/ProfilePage';
 
-
-// Unified Pages
-import AIChat from '@/pages/AIChat';
-import CommunityHub from '@/pages/CommunityHub';
-
-// Learning Features
-import LearningAnalytics from '@/pages/LearningAnalytics';
-import TeacherAnalyticsPage from '@/pages/TeacherAnalyticsPage';
-import Achievements from '@/pages/Achievements';
-import StudyMaterialRepository from '@/pages/StudyMaterialRepository';
-import StudyToolsPage from '@/pages/StudyToolsPage';
-import InteractiveLessons from '@/components/Learning/InteractiveLessons';
-import VirtualClassroom from '@/components/Learning/VirtualClassroom';
-
-// ChatEdu Landing
-import ChatEduLanding from '@/pages/ChatEduLanding';
-
-// Role-Specific Dashboards
-// TeacherDashboard removed - using role-based Dashboard instead
-// ParentDashboard removed - using role-based Dashboard instead
-import SchoolAdminDashboard from '@/pages/SchoolAdminDashboard';
-import MinistryDashboard from '@/pages/MinistryDashboard';
-
-// AI Quiz Pages (AceQuiz-style)
-import AIQuizGeneratorPage from '@/pages/AIQuizGeneratorPage';
-import AIMathQuizPage from '@/pages/AIMathQuizPage';
-import AIScienceQuizPage from '@/pages/AIScienceQuizPage';
-import AIYouTubeQuizPage from '@/pages/AIYouTubeQuizPage';
-import AIVocabularyQuizPage from '@/pages/AIVocabularyQuizPage';
-
-// AI Features
-import AIFlashcardPage from '@/pages/AIFlashcardPage';
-import AITutorPage from '@/pages/AITutorPage';
-import AILearningPathPage from '@/pages/AILearningPathPage';
-import ComprehensiveAIPage from '@/pages/ComprehensiveAIPage';
-import StudyAssistantPage from '@/pages/StudyAssistantPage';
-import DailyGoalCoachPage from '@/pages/DailyGoalCoachPage';
-import VisualMindMapPage from '@/pages/VisualMindMapPage';
-import AdaptiveDifficultyPage from '@/pages/AdaptiveDifficultyPage';
-import ClaudeJournalingPage from '@/pages/ClaudeJournalingPage';
-import TeachBackPage from '@/pages/TeachBackPage';
-import MultiAITutorPage from '@/pages/MultiAITutorPage';
-
-// Social & Community
-import StudyGroupsPage from '@/pages/StudyGroupsPage';
-import SocialFeedPage from '@/pages/SocialFeedPage';
-import CampusMapPage from '@/pages/CampusMapPage';
-import AcademicProfilePage from '@/pages/AcademicProfilePage';
-
-// Other Pages
-import VideoLearningPage from '@/pages/VideoLearningPage';
-import AdaptiveContentPage from '@/pages/AdaptiveContentPage';
-import SmartRecommendationsPage from '@/pages/SmartRecommendationsPage';
-import YouTubeLearningPage from '@/pages/YouTubeLearningPage';
-import MealPlannerPage from '@/pages/MealPlannerPage';
-import StudyMaterialsPage from '@/pages/StudyMaterialsPage';
-import CommunityPage from '@/pages/CommunityPage';
-import SkillPassportPage from '@/pages/SkillPassportPage';
-import LiveLearningPage from '@/pages/LiveLearningPage';
-import MentorshipHubPage from '@/pages/MentorshipHubPage';
-import LessonsPage from '@/pages/LessonsPage';
-import VirtualClassroomPage from '@/pages/VirtualClassroomPage';
-import GoalsPage from '@/pages/GoalsPage';
-import JournalingPage from '@/pages/JournalingPage';
-import MentorshipPage from '@/pages/MentorshipPage';
-import FocusModePage from '@/pages/FocusModePage';
-import SetupPage from '@/pages/SetupPage';
-import AppControlPage from '@/pages/AppControlPage';
-
-// Medical Pages
-import MedicalCaseSimulatorPage from '@/pages/MedicalCaseSimulatorPage';
-import MedicalDrugReferencePage from '@/pages/MedicalDrugReferencePage';
-import MedicalClinicalNotesPage from '@/pages/MedicalClinicalNotesPage';
-import MedicalCaseLogPage from '@/pages/MedicalCaseLogPage';
-import MedicalRotationsPage from '@/pages/MedicalRotationsPage';
-
-// Entrepreneur Pages
-import EntrepreneurVenturesPage from '@/pages/EntrepreneurVenturesPage';
-import EntrepreneurBusinessPlanPage from '@/pages/EntrepreneurBusinessPlanPage';
-import EntrepreneurPitchDeckPage from '@/pages/EntrepreneurPitchDeckPage';
-import EntrepreneurMarketResearchPage from '@/pages/EntrepreneurMarketResearchPage';
-import EntrepreneurMilestonesPage from '@/pages/EntrepreneurMilestonesPage';
-import EntrepreneurFinancialsPage from '@/pages/EntrepreneurFinancialsPage';
-import EntrepreneurFundingPage from '@/pages/EntrepreneurFundingPage';
-
-// Developer Pages
-import DeveloperProjectsPage from '@/pages/DeveloperProjectsPage';
-import DeveloperChallengesPage from '@/pages/DeveloperChallengesPage';
-import DeveloperCodeReviewPage from '@/pages/DeveloperCodeReviewPage';
-import DeveloperIDEPage from '@/pages/DeveloperIDEPage';
-
-import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
-import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
-import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
-import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
-import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
-import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
-import SettingsPage from '@/pages/SettingsPage';
-import MFASetupPage from '@/pages/MFASetupPage';
-import SessionManagementPage from '@/pages/SessionManagementPage';
-
-// School Admin Pages
-import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
-import AdminCurriculumPage from '@/pages/AdminCurriculumPage';
-import AdminSchedulingPage from '@/pages/AdminSchedulingPage';
-import AdminAnalyticsPage from '@/pages/AdminAnalyticsPage';
-
-// New Feature Pages
-import StudyGroupChatPage from '@/pages/StudyGroupChatPage';
-import CreateCoursePage from '@/pages/CreateCoursePage';
-import CourseCatalogPage from '@/pages/CourseCatalogPage';
-import CourseDetailPage from '@/pages/CourseDetailPage';
-import AssignmentPage from '@/pages/AssignmentPage';
-import MyCoursesPage from '@/pages/MyCoursesPage';
-import ProgressReportPage from '@/pages/ProgressReportPage';
-import ECZPracticeQuizPage from '@/pages/ECZPracticeQuizPage';
-import MyAssignmentsPage from '@/pages/MyAssignmentsPage';
-import StudyPlannerPage from '@/pages/StudyPlannerPage';
-import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
-import NotificationsPage from '@/pages/NotificationsPage';
-import GuardianLinkPage from '@/pages/GuardianLinkPage';
-import GuardianReportsPage from '@/pages/GuardianReportsPage';
-import MyNotesPage from '@/pages/MyNotesPage';
-
-// Parent-Specific Pages
-import ParentChildrenPage from '@/pages/ParentChildrenPage';
-import ParentAttendancePage from '@/pages/ParentAttendancePage';
-import ParentGradesPage from '@/pages/ParentGradesPage';
-import ParentAlertsPage from '@/pages/ParentAlertsPage';
-import ParentMessagesPage from '@/pages/ParentMessagesPage';
-import ParentTeacherContactPage from '@/pages/ParentTeacherContactPage';
-import ParentSchoolUpdatesPage from '@/pages/ParentSchoolUpdatesPage';
-import ParentProgressTrackerPage from '@/pages/ParentProgressTrackerPage';
+// Lazy-loaded pages
+const PasswordResetPage = React.lazy(() => import('@/pages/PasswordResetPage'));
+const About = React.lazy(() => import('@/pages/About'));
+const Contact = React.lazy(() => import('@/pages/Contact'));
+const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
+const Courses = React.lazy(() => import('@/pages/Courses'));
+const ProfilePage = React.lazy(() => import('@/pages/ProfilePage'));
+const AIChat = React.lazy(() => import('@/pages/AIChat'));
+const CommunityHub = React.lazy(() => import('@/pages/CommunityHub'));
+const LearningAnalytics = React.lazy(() => import('@/pages/LearningAnalytics'));
+const TeacherAnalyticsPage = React.lazy(() => import('@/pages/TeacherAnalyticsPage'));
+const Achievements = React.lazy(() => import('@/pages/Achievements'));
+const StudyMaterialRepository = React.lazy(() => import('@/pages/StudyMaterialRepository'));
+const StudyToolsPage = React.lazy(() => import('@/pages/StudyToolsPage'));
+const InteractiveLessons = React.lazy(() => import('@/components/Learning/InteractiveLessons'));
+const VirtualClassroom = React.lazy(() => import('@/components/Learning/VirtualClassroom'));
+const ChatEduLanding = React.lazy(() => import('@/pages/ChatEduLanding'));
+const SchoolAdminDashboard = React.lazy(() => import('@/pages/SchoolAdminDashboard'));
+const MinistryDashboard = React.lazy(() => import('@/pages/MinistryDashboard'));
+const AIQuizGeneratorPage = React.lazy(() => import('@/pages/AIQuizGeneratorPage'));
+const AIMathQuizPage = React.lazy(() => import('@/pages/AIMathQuizPage'));
+const AIScienceQuizPage = React.lazy(() => import('@/pages/AIScienceQuizPage'));
+const AIYouTubeQuizPage = React.lazy(() => import('@/pages/AIYouTubeQuizPage'));
+const AIVocabularyQuizPage = React.lazy(() => import('@/pages/AIVocabularyQuizPage'));
+const AIFlashcardPage = React.lazy(() => import('@/pages/AIFlashcardPage'));
+const AITutorPage = React.lazy(() => import('@/pages/AITutorPage'));
+const AILearningPathPage = React.lazy(() => import('@/pages/AILearningPathPage'));
+const ComprehensiveAIPage = React.lazy(() => import('@/pages/ComprehensiveAIPage'));
+const StudyAssistantPage = React.lazy(() => import('@/pages/StudyAssistantPage'));
+const DailyGoalCoachPage = React.lazy(() => import('@/pages/DailyGoalCoachPage'));
+const VisualMindMapPage = React.lazy(() => import('@/pages/VisualMindMapPage'));
+const AdaptiveDifficultyPage = React.lazy(() => import('@/pages/AdaptiveDifficultyPage'));
+const ClaudeJournalingPage = React.lazy(() => import('@/pages/ClaudeJournalingPage'));
+const TeachBackPage = React.lazy(() => import('@/pages/TeachBackPage'));
+const MultiAITutorPage = React.lazy(() => import('@/pages/MultiAITutorPage'));
+const StudyGroupsPage = React.lazy(() => import('@/pages/StudyGroupsPage'));
+const SocialFeedPage = React.lazy(() => import('@/pages/SocialFeedPage'));
+const CampusMapPage = React.lazy(() => import('@/pages/CampusMapPage'));
+const AcademicProfilePage = React.lazy(() => import('@/pages/AcademicProfilePage'));
+const VideoLearningPage = React.lazy(() => import('@/pages/VideoLearningPage'));
+const AdaptiveContentPage = React.lazy(() => import('@/pages/AdaptiveContentPage'));
+const SmartRecommendationsPage = React.lazy(() => import('@/pages/SmartRecommendationsPage'));
+const YouTubeLearningPage = React.lazy(() => import('@/pages/YouTubeLearningPage'));
+const MealPlannerPage = React.lazy(() => import('@/pages/MealPlannerPage'));
+const StudyMaterialsPage = React.lazy(() => import('@/pages/StudyMaterialsPage'));
+const CommunityPage = React.lazy(() => import('@/pages/CommunityPage'));
+const SkillPassportPage = React.lazy(() => import('@/pages/SkillPassportPage'));
+const LiveLearningPage = React.lazy(() => import('@/pages/LiveLearningPage'));
+const MentorshipHubPage = React.lazy(() => import('@/pages/MentorshipHubPage'));
+const LessonsPage = React.lazy(() => import('@/pages/LessonsPage'));
+const VirtualClassroomPage = React.lazy(() => import('@/pages/VirtualClassroomPage'));
+const GoalsPage = React.lazy(() => import('@/pages/GoalsPage'));
+const JournalingPage = React.lazy(() => import('@/pages/JournalingPage'));
+const MentorshipPage = React.lazy(() => import('@/pages/MentorshipPage'));
+const FocusModePage = React.lazy(() => import('@/pages/FocusModePage'));
+const SetupPage = React.lazy(() => import('@/pages/SetupPage'));
+const AppControlPage = React.lazy(() => import('@/pages/AppControlPage'));
+const MedicalCaseSimulatorPage = React.lazy(() => import('@/pages/MedicalCaseSimulatorPage'));
+const MedicalDrugReferencePage = React.lazy(() => import('@/pages/MedicalDrugReferencePage'));
+const MedicalClinicalNotesPage = React.lazy(() => import('@/pages/MedicalClinicalNotesPage'));
+const MedicalCaseLogPage = React.lazy(() => import('@/pages/MedicalCaseLogPage'));
+const MedicalRotationsPage = React.lazy(() => import('@/pages/MedicalRotationsPage'));
+const EntrepreneurVenturesPage = React.lazy(() => import('@/pages/EntrepreneurVenturesPage'));
+const EntrepreneurBusinessPlanPage = React.lazy(() => import('@/pages/EntrepreneurBusinessPlanPage'));
+const EntrepreneurPitchDeckPage = React.lazy(() => import('@/pages/EntrepreneurPitchDeckPage'));
+const EntrepreneurMarketResearchPage = React.lazy(() => import('@/pages/EntrepreneurMarketResearchPage'));
+const EntrepreneurMilestonesPage = React.lazy(() => import('@/pages/EntrepreneurMilestonesPage'));
+const EntrepreneurFinancialsPage = React.lazy(() => import('@/pages/EntrepreneurFinancialsPage'));
+const EntrepreneurFundingPage = React.lazy(() => import('@/pages/EntrepreneurFundingPage'));
+const DeveloperProjectsPage = React.lazy(() => import('@/pages/DeveloperProjectsPage'));
+const DeveloperChallengesPage = React.lazy(() => import('@/pages/DeveloperChallengesPage'));
+const DeveloperCodeReviewPage = React.lazy(() => import('@/pages/DeveloperCodeReviewPage'));
+const DeveloperIDEPage = React.lazy(() => import('@/pages/DeveloperIDEPage'));
+const ECZExamSimulatorPage = React.lazy(() => import('@/pages/ECZExamSimulatorPage'));
+const ECZParentSupportHubPage = React.lazy(() => import('@/pages/ECZParentSupportHubPage'));
+const ZambianResourcesHubPage = React.lazy(() => import('@/pages/ZambianResourcesHubPage'));
+const ECZVideoLibraryPage = React.lazy(() => import('@/pages/ECZVideoLibraryPage'));
+const ECZPastPapersPage = React.lazy(() => import('@/pages/ECZPastPapersPage'));
+const ECZResourceLibraryPage = React.lazy(() => import('@/pages/ECZResourceLibraryPage'));
+const SettingsPage = React.lazy(() => import('@/pages/SettingsPage'));
+const MFASetupPage = React.lazy(() => import('@/pages/MFASetupPage'));
+const SessionManagementPage = React.lazy(() => import('@/pages/SessionManagementPage'));
+const AdminUserManagementPage = React.lazy(() => import('@/pages/AdminUserManagementPage'));
+const AdminCurriculumPage = React.lazy(() => import('@/pages/AdminCurriculumPage'));
+const AdminSchedulingPage = React.lazy(() => import('@/pages/AdminSchedulingPage'));
+const AdminAnalyticsPage = React.lazy(() => import('@/pages/AdminAnalyticsPage'));
+const StudyGroupChatPage = React.lazy(() => import('@/pages/StudyGroupChatPage'));
+const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
+const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
+const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
+const AssignmentPage = React.lazy(() => import('@/pages/AssignmentPage'));
+const MyCoursesPage = React.lazy(() => import('@/pages/MyCoursesPage'));
+const ProgressReportPage = React.lazy(() => import('@/pages/ProgressReportPage'));
+const ECZPracticeQuizPage = React.lazy(() => import('@/pages/ECZPracticeQuizPage'));
+const ECZResourcesExpandedPage = React.lazy(() => import('@/pages/ECZResourcesExpandedPage'));
+const MyAssignmentsPage = React.lazy(() => import('@/pages/MyAssignmentsPage'));
+const StudyPlannerPage = React.lazy(() => import('@/pages/StudyPlannerPage'));
+const NotificationsPage = React.lazy(() => import('@/pages/NotificationsPage'));
+const GuardianLinkPage = React.lazy(() => import('@/pages/GuardianLinkPage'));
+const GuardianReportsPage = React.lazy(() => import('@/pages/GuardianReportsPage'));
+const MyNotesPage = React.lazy(() => import('@/pages/MyNotesPage'));
+const MessengerPage = React.lazy(() => import('@/pages/MessengerPage'));
+const ParentChildrenPage = React.lazy(() => import('@/pages/ParentChildrenPage'));
+const ParentAttendancePage = React.lazy(() => import('@/pages/ParentAttendancePage'));
+const ParentGradesPage = React.lazy(() => import('@/pages/ParentGradesPage'));
+const ParentAlertsPage = React.lazy(() => import('@/pages/ParentAlertsPage'));
+const ParentMessagesPage = React.lazy(() => import('@/pages/ParentMessagesPage'));
+const ParentTeacherContactPage = React.lazy(() => import('@/pages/ParentTeacherContactPage'));
+const ParentSchoolUpdatesPage = React.lazy(() => import('@/pages/ParentSchoolUpdatesPage'));
+const ParentProgressTrackerPage = React.lazy(() => import('@/pages/ParentProgressTrackerPage'));
+const TeacherCollaborationHubPage = React.lazy(() => import('@/pages/TeacherCollaborationHubPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -165,176 +137,183 @@ const queryClient = new QueryClient({
   },
 });
 
+// Helper: Protected route with PostLoginGate and MainLayout
+const PG = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute><PostLoginGate><MainLayout>{children}</MainLayout></PostLoginGate></ProtectedRoute>
+);
+
+const SuspenseWrap = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><LogoLoader text="Loading..." /></div>}>
+    {children}
+  </Suspense>
+);
+
 function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <Router>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/login" element={<AuthPage />} />
-            <Route path="/signup" element={<AuthPage />} />
-            <Route path="/password-reset" element={<PasswordResetPage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            
-            <Route path="/chatedu" element={<ChatEduLanding />} />
-            
-            {/* Setup Route (no PostLoginGate) */}
-            <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
-            
-            {/* Role-Specific Dashboards */}
-            <Route path="/teacher-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
-            <Route path="/parent-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
-            <Route path="/school-admin" element={<ProtectedRoute><PostLoginGate><MainLayout><SchoolAdminDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
-            <Route path="/ministry-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><MinistryDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
-            
-            {/* Main Dashboard */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <PostLoginGate>
-                  <MainLayout>
-                    <Dashboard />
-                  </MainLayout>
-                </PostLoginGate>
-              </ProtectedRoute>
-            } />
+          <SuspenseWrap>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/login" element={<AuthPage />} />
+              <Route path="/signup" element={<AuthPage />} />
+              <Route path="/password-reset" element={<PasswordResetPage />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/chatedu" element={<ChatEduLanding />} />
 
+              {/* Setup Route (no PostLoginGate) */}
+              <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
 
+              {/* Role-Specific Dashboards */}
+              <Route path="/teacher-dashboard" element={<PG><Dashboard /></PG>} />
+              <Route path="/parent-dashboard" element={<PG><Dashboard /></PG>} />
+              <Route path="/school-admin" element={<PG><SchoolAdminDashboard /></PG>} />
+              <Route path="/ministry-dashboard" element={<PG><MinistryDashboard /></PG>} />
 
-            {/* AI Quiz Tools (AceQuiz-style) */}
-            <Route path="/ai-quiz" element={<ProtectedRoute><MainLayout><AIQuizGeneratorPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/math-quiz" element={<ProtectedRoute><MainLayout><AIMathQuizPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/science-quiz" element={<ProtectedRoute><MainLayout><AIScienceQuizPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/youtube-quiz" element={<ProtectedRoute><MainLayout><AIYouTubeQuizPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/vocabulary-quiz" element={<ProtectedRoute><MainLayout><AIVocabularyQuizPage /></MainLayout></ProtectedRoute>} />
+              {/* Main Dashboard */}
+              <Route path="/dashboard" element={<PG><Dashboard /></PG>} />
 
-            {/* AI Features */}
-            <Route path="/ai" element={<ProtectedRoute><MainLayout><AIChat /></MainLayout></ProtectedRoute>} />
-            <Route path="/flashcards" element={<ProtectedRoute><MainLayout><AIFlashcardPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ai-tutor" element={<ProtectedRoute><MainLayout><AITutorPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/learning-path" element={<ProtectedRoute><MainLayout><AILearningPathPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/comprehensive-ai" element={<ProtectedRoute><MainLayout><ComprehensiveAIPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-assistant" element={<ProtectedRoute><MainLayout><StudyAssistantPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/goals" element={<ProtectedRoute><MainLayout><GoalsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/mind-maps" element={<ProtectedRoute><MainLayout><VisualMindMapPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/adaptive-difficulty" element={<ProtectedRoute><MainLayout><AdaptiveDifficultyPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/journaling" element={<ProtectedRoute><MainLayout><ClaudeJournalingPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/teach-back" element={<ProtectedRoute><MainLayout><TeachBackPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/multi-ai-tutor" element={<ProtectedRoute><MainLayout><MultiAITutorPage /></MainLayout></ProtectedRoute>} />
+              {/* AI Quiz Tools */}
+              <Route path="/ai-quiz" element={<PG><AIQuizGeneratorPage /></PG>} />
+              <Route path="/math-quiz" element={<PG><AIMathQuizPage /></PG>} />
+              <Route path="/science-quiz" element={<PG><AIScienceQuizPage /></PG>} />
+              <Route path="/youtube-quiz" element={<PG><AIYouTubeQuizPage /></PG>} />
+              <Route path="/vocabulary-quiz" element={<PG><AIVocabularyQuizPage /></PG>} />
 
-            {/* Community & Social */}
-            <Route path="/community" element={<ProtectedRoute><MainLayout><CommunityHub /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-groups" element={<ProtectedRoute><MainLayout><StudyGroupsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/social-feed" element={<ProtectedRoute><MainLayout><SocialFeedPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/campus-map" element={<ProtectedRoute><MainLayout><CampusMapPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/academic-profile" element={<ProtectedRoute><MainLayout><AcademicProfilePage /></MainLayout></ProtectedRoute>} />
-            <Route path="/mentorship" element={<ProtectedRoute><MainLayout><CommunityPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/mentorship-hub" element={<ProtectedRoute><MainLayout><MentorshipHubPage /></MainLayout></ProtectedRoute>} />
+              {/* AI Features */}
+              <Route path="/ai" element={<PG><AIChat /></PG>} />
+              <Route path="/flashcards" element={<PG><AIFlashcardPage /></PG>} />
+              <Route path="/ai-tutor" element={<PG><AITutorPage /></PG>} />
+              <Route path="/learning-path" element={<PG><AILearningPathPage /></PG>} />
+              <Route path="/comprehensive-ai" element={<PG><ComprehensiveAIPage /></PG>} />
+              <Route path="/study-assistant" element={<PG><StudyAssistantPage /></PG>} />
+              <Route path="/goals" element={<PG><GoalsPage /></PG>} />
+              <Route path="/mind-maps" element={<PG><VisualMindMapPage /></PG>} />
+              <Route path="/adaptive-difficulty" element={<PG><AdaptiveDifficultyPage /></PG>} />
+              <Route path="/journaling" element={<PG><ClaudeJournalingPage /></PG>} />
+              <Route path="/teach-back" element={<PG><TeachBackPage /></PG>} />
+              <Route path="/multi-ai-tutor" element={<PG><MultiAITutorPage /></PG>} />
 
-            {/* Courses & Learning */}
-            <Route path="/courses" element={<ProtectedRoute><MainLayout><Courses /></MainLayout></ProtectedRoute>} />
-            <Route path="/my-courses" element={<ProtectedRoute><MainLayout><MyCoursesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/course-catalog" element={<ProtectedRoute><MainLayout><CourseCatalogPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/create-course" element={<ProtectedRoute><MainLayout><CreateCoursePage /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-chat" element={<ProtectedRoute><MainLayout><StudyGroupChatPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/course/:courseId" element={<ProtectedRoute><MainLayout><CourseDetailPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/course/:courseId/assignments" element={<ProtectedRoute><MainLayout><AssignmentPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/lessons" element={<ProtectedRoute><MainLayout><LessonsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/classroom" element={<ProtectedRoute><MainLayout><VirtualClassroomPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/video-learning" element={<ProtectedRoute><MainLayout><VideoLearningPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/youtube-learning" element={<ProtectedRoute><MainLayout><YouTubeLearningPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/adaptive-content" element={<ProtectedRoute><MainLayout><AdaptiveContentPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/live-learning" element={<ProtectedRoute><MainLayout><LiveLearningPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/goals-tracker" element={<ProtectedRoute><MainLayout><GoalsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/journal" element={<ProtectedRoute><MainLayout><JournalingPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/mentors" element={<ProtectedRoute><MainLayout><MentorshipPage /></MainLayout></ProtectedRoute>} />
+              {/* Community & Social */}
+              <Route path="/community" element={<PG><CommunityHub /></PG>} />
+              <Route path="/study-groups" element={<PG><StudyGroupsPage /></PG>} />
+              <Route path="/social-feed" element={<PG><SocialFeedPage /></PG>} />
+              <Route path="/campus-map" element={<PG><CampusMapPage /></PG>} />
+              <Route path="/academic-profile" element={<PG><AcademicProfilePage /></PG>} />
+              <Route path="/mentorship" element={<PG><CommunityPage /></PG>} />
+              <Route path="/mentorship-hub" element={<PG><MentorshipHubPage /></PG>} />
+              <Route path="/messenger" element={<PG><MessengerPage /></PG>} />
 
-            {/* Study Materials & Resources */}
-            <Route path="/materials" element={<ProtectedRoute><MainLayout><StudyMaterialRepository /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-tools" element={<ProtectedRoute><MainLayout><StudyToolsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-materials" element={<ProtectedRoute><MainLayout><StudyMaterialsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/skill-passport" element={<ProtectedRoute><MainLayout><SkillPassportPage /></MainLayout></ProtectedRoute>} />
-            
-            {/* ECZ & Zambian Resources */}
-            <Route path="/zambian-resources" element={<ProtectedRoute><MainLayout><ZambianResourcesHubPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-resources" element={<ProtectedRoute><MainLayout><ZambianResourcesHubPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-past-papers" element={<ProtectedRoute><MainLayout><ECZPastPapersPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-videos" element={<ProtectedRoute><MainLayout><ECZVideoLibraryPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-exam-simulator" element={<ProtectedRoute><MainLayout><ECZExamSimulatorPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-practice-quiz" element={<ProtectedRoute><MainLayout><ECZPracticeQuizPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-resource-library" element={<ProtectedRoute><MainLayout><ECZResourcesExpandedPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/ecz-parent-support" element={<ProtectedRoute><MainLayout><ECZParentSupportHubPage /></MainLayout></ProtectedRoute>} />
+              {/* Courses & Learning */}
+              <Route path="/courses" element={<PG><Courses /></PG>} />
+              <Route path="/my-courses" element={<PG><MyCoursesPage /></PG>} />
+              <Route path="/course-catalog" element={<PG><CourseCatalogPage /></PG>} />
+              <Route path="/create-course" element={<PG><CreateCoursePage /></PG>} />
+              <Route path="/study-chat" element={<PG><StudyGroupChatPage /></PG>} />
+              <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
+              <Route path="/course/:courseId/assignments" element={<PG><AssignmentPage /></PG>} />
+              <Route path="/lessons" element={<PG><LessonsPage /></PG>} />
+              <Route path="/classroom" element={<PG><VirtualClassroomPage /></PG>} />
+              <Route path="/video-learning" element={<PG><VideoLearningPage /></PG>} />
+              <Route path="/youtube-learning" element={<PG><YouTubeLearningPage /></PG>} />
+              <Route path="/adaptive-content" element={<PG><AdaptiveContentPage /></PG>} />
+              <Route path="/live-learning" element={<PG><LiveLearningPage /></PG>} />
+              <Route path="/goals-tracker" element={<PG><GoalsPage /></PG>} />
+              <Route path="/journal" element={<PG><JournalingPage /></PG>} />
+              <Route path="/mentors" element={<PG><MentorshipPage /></PG>} />
 
-            {/* Student Feature Pages */}
-            <Route path="/my-assignments" element={<ProtectedRoute><MainLayout><MyAssignmentsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/study-planner" element={<ProtectedRoute><MainLayout><StudyPlannerPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/guardian-link" element={<ProtectedRoute><MainLayout><GuardianLinkPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/guardian-reports" element={<ProtectedRoute><MainLayout><GuardianReportsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/my-notes" element={<ProtectedRoute><MainLayout><MyNotesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/focus-mode" element={<ProtectedRoute><PostLoginGate><MainLayout><FocusModePage /></MainLayout></PostLoginGate></ProtectedRoute>} />
-            <Route path="/app-control" element={<ProtectedRoute><PostLoginGate><MainLayout><AppControlPage /></MainLayout></PostLoginGate></ProtectedRoute>} />
+              {/* Study Materials & Resources */}
+              <Route path="/materials" element={<PG><StudyMaterialRepository /></PG>} />
+              <Route path="/study-tools" element={<PG><StudyToolsPage /></PG>} />
+              <Route path="/study-materials" element={<PG><StudyMaterialsPage /></PG>} />
+              <Route path="/skill-passport" element={<PG><SkillPassportPage /></PG>} />
 
-            <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-attendance" element={<ProtectedRoute><MainLayout><ParentAttendancePage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-grades" element={<ProtectedRoute><MainLayout><ParentGradesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-alerts" element={<ProtectedRoute><MainLayout><ParentAlertsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-messages" element={<ProtectedRoute><MainLayout><ParentMessagesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-teacher-contact" element={<ProtectedRoute><MainLayout><ParentTeacherContactPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-school-updates" element={<ProtectedRoute><MainLayout><ParentSchoolUpdatesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-progress" element={<ProtectedRoute><MainLayout><ParentProgressTrackerPage /></MainLayout></ProtectedRoute>} />
+              {/* ECZ & Zambian Resources */}
+              <Route path="/zambian-resources" element={<PG><ZambianResourcesHubPage /></PG>} />
+              <Route path="/ecz-resources" element={<PG><ZambianResourcesHubPage /></PG>} />
+              <Route path="/ecz-past-papers" element={<PG><ECZPastPapersPage /></PG>} />
+              <Route path="/ecz-videos" element={<PG><ECZVideoLibraryPage /></PG>} />
+              <Route path="/ecz-exam-simulator" element={<PG><ECZExamSimulatorPage /></PG>} />
+              <Route path="/ecz-practice-quiz" element={<PG><ECZPracticeQuizPage /></PG>} />
+              <Route path="/ecz-resource-library" element={<PG><ECZResourcesExpandedPage /></PG>} />
+              <Route path="/ecz-parent-support" element={<PG><ECZParentSupportHubPage /></PG>} />
 
-            {/* School Admin Management Pages */}
-            <Route path="/admin/users" element={<ProtectedRoute><MainLayout><AdminUserManagementPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/admin/curriculum" element={<ProtectedRoute><MainLayout><AdminCurriculumPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/admin/scheduling" element={<ProtectedRoute><MainLayout><AdminSchedulingPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/admin/analytics" element={<ProtectedRoute><MainLayout><AdminAnalyticsPage /></MainLayout></ProtectedRoute>} />
+              {/* Student Feature Pages */}
+              <Route path="/my-assignments" element={<PG><MyAssignmentsPage /></PG>} />
+              <Route path="/study-planner" element={<PG><StudyPlannerPage /></PG>} />
+              <Route path="/guardian-link" element={<PG><GuardianLinkPage /></PG>} />
+              <Route path="/guardian-reports" element={<PG><GuardianReportsPage /></PG>} />
+              <Route path="/my-notes" element={<PG><MyNotesPage /></PG>} />
+              <Route path="/focus-mode" element={<PG><FocusModePage /></PG>} />
+              <Route path="/app-control" element={<PG><AppControlPage /></PG>} />
 
-            {/* Analytics & Progress */}
-            <Route path="/analytics" element={<ProtectedRoute><MainLayout><LearningAnalytics /></MainLayout></ProtectedRoute>} />
-            <Route path="/teacher-analytics" element={<ProtectedRoute><MainLayout><TeacherAnalyticsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/achievements" element={<ProtectedRoute><MainLayout><Achievements /></MainLayout></ProtectedRoute>} />
-            <Route path="/progress-report" element={<ProtectedRoute><MainLayout><ProgressReportPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/smart-recommendations" element={<ProtectedRoute><MainLayout><SmartRecommendationsPage /></MainLayout></ProtectedRoute>} />
+              {/* Parent Pages */}
+              <Route path="/parent-children" element={<PG><ParentChildrenPage /></PG>} />
+              <Route path="/parent-attendance" element={<PG><ParentAttendancePage /></PG>} />
+              <Route path="/parent-grades" element={<PG><ParentGradesPage /></PG>} />
+              <Route path="/parent-alerts" element={<PG><ParentAlertsPage /></PG>} />
+              <Route path="/parent-messages" element={<PG><ParentMessagesPage /></PG>} />
+              <Route path="/parent-teacher-contact" element={<PG><ParentTeacherContactPage /></PG>} />
+              <Route path="/parent-school-updates" element={<PG><ParentSchoolUpdatesPage /></PG>} />
+              <Route path="/parent-progress" element={<PG><ParentProgressTrackerPage /></PG>} />
 
-            {/* Profile & Settings */}
-            <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
-            <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/mfa-setup" element={<ProtectedRoute><MainLayout><MFASetupPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/sessions" element={<ProtectedRoute><MainLayout><SessionManagementPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
+              {/* School Admin Management Pages */}
+              <Route path="/admin/users" element={<PG><AdminUserManagementPage /></PG>} />
+              <Route path="/admin/curriculum" element={<PG><AdminCurriculumPage /></PG>} />
+              <Route path="/admin/scheduling" element={<PG><AdminSchedulingPage /></PG>} />
+              <Route path="/admin/analytics" element={<PG><AdminAnalyticsPage /></PG>} />
 
-            {/* Medical Pages */}
-            <Route path="/medical/case-simulator" element={<ProtectedRoute><MainLayout><MedicalCaseSimulatorPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/medical/drug-reference" element={<ProtectedRoute><MainLayout><MedicalDrugReferencePage /></MainLayout></ProtectedRoute>} />
-            <Route path="/medical/clinical-notes" element={<ProtectedRoute><MainLayout><MedicalClinicalNotesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/medical/case-log" element={<ProtectedRoute><MainLayout><MedicalCaseLogPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/medical/rotations" element={<ProtectedRoute><MainLayout><MedicalRotationsPage /></MainLayout></ProtectedRoute>} />
+              {/* Analytics & Progress */}
+              <Route path="/analytics" element={<PG><LearningAnalytics /></PG>} />
+              <Route path="/teacher-analytics" element={<PG><TeacherAnalyticsPage /></PG>} />
+              <Route path="/achievements" element={<PG><Achievements /></PG>} />
+              <Route path="/progress-report" element={<PG><ProgressReportPage /></PG>} />
+              <Route path="/smart-recommendations" element={<PG><SmartRecommendationsPage /></PG>} />
 
-            {/* Entrepreneur Pages */}
-            <Route path="/entrepreneur/ventures" element={<ProtectedRoute><MainLayout><EntrepreneurVenturesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/business-plan" element={<ProtectedRoute><MainLayout><EntrepreneurBusinessPlanPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/pitch-deck" element={<ProtectedRoute><MainLayout><EntrepreneurPitchDeckPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/market-research" element={<ProtectedRoute><MainLayout><EntrepreneurMarketResearchPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/milestones" element={<ProtectedRoute><MainLayout><EntrepreneurMilestonesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/financials" element={<ProtectedRoute><MainLayout><EntrepreneurFinancialsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/entrepreneur/funding" element={<ProtectedRoute><MainLayout><EntrepreneurFundingPage /></MainLayout></ProtectedRoute>} />
+              {/* Profile & Settings */}
+              <Route path="/profile" element={<PG><ProfilePage /></PG>} />
+              <Route path="/settings" element={<PG><SettingsPage /></PG>} />
+              <Route path="/mfa-setup" element={<PG><MFASetupPage /></PG>} />
+              <Route path="/sessions" element={<PG><SessionManagementPage /></PG>} />
+              <Route path="/notifications" element={<PG><NotificationsPage /></PG>} />
+              <Route path="/resource-library" element={<PG><ECZResourceLibraryPage /></PG>} />
 
-            {/* Developer Pages */}
-            <Route path="/developer/projects" element={<ProtectedRoute><MainLayout><DeveloperProjectsPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/developer/challenges" element={<ProtectedRoute><MainLayout><DeveloperChallengesPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/developer/code-review" element={<ProtectedRoute><MainLayout><DeveloperCodeReviewPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/developer/ide" element={<ProtectedRoute><MainLayout><DeveloperIDEPage /></MainLayout></ProtectedRoute>} />
+              {/* Medical Pages */}
+              <Route path="/medical/case-simulator" element={<PG><MedicalCaseSimulatorPage /></PG>} />
+              <Route path="/medical/drug-reference" element={<PG><MedicalDrugReferencePage /></PG>} />
+              <Route path="/medical/clinical-notes" element={<PG><MedicalClinicalNotesPage /></PG>} />
+              <Route path="/medical/case-log" element={<PG><MedicalCaseLogPage /></PG>} />
+              <Route path="/medical/rotations" element={<PG><MedicalRotationsPage /></PG>} />
 
-            {/* Meal Planner */}
-            <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
+              {/* Entrepreneur Pages */}
+              <Route path="/entrepreneur/ventures" element={<PG><EntrepreneurVenturesPage /></PG>} />
+              <Route path="/entrepreneur/business-plan" element={<PG><EntrepreneurBusinessPlanPage /></PG>} />
+              <Route path="/entrepreneur/pitch-deck" element={<PG><EntrepreneurPitchDeckPage /></PG>} />
+              <Route path="/entrepreneur/market-research" element={<PG><EntrepreneurMarketResearchPage /></PG>} />
+              <Route path="/entrepreneur/milestones" element={<PG><EntrepreneurMilestonesPage /></PG>} />
+              <Route path="/entrepreneur/financials" element={<PG><EntrepreneurFinancialsPage /></PG>} />
+              <Route path="/entrepreneur/funding" element={<PG><EntrepreneurFundingPage /></PG>} />
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* Developer Pages */}
+              <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />
+              <Route path="/developer/challenges" element={<PG><DeveloperChallengesPage /></PG>} />
+              <Route path="/developer/code-review" element={<PG><DeveloperCodeReviewPage /></PG>} />
+              <Route path="/developer/ide" element={<PG><DeveloperIDEPage /></PG>} />
+
+              {/* Teacher Pages */}
+              <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
+
+              {/* Meal Planner */}
+              <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
+
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </SuspenseWrap>
           <Toaster />
           <CookieConsent />
           <InstallPrompt />
