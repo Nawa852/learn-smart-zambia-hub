@@ -298,37 +298,37 @@ const EnhancedDashboard = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               <Link to="/study-assistant">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-blue-500/10 hover:border-blue-400 transition-all duration-300">
                   <Brain className="h-6 w-6 text-blue-600" />
                   <span className="text-xs">AI Tutor</span>
                 </Button>
               </Link>
               <Link to="/ai-flashcards">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-purple-500/10 hover:border-purple-400 transition-all duration-300">
                   <Lightbulb className="h-6 w-6 text-purple-600" />
                   <span className="text-xs">Smart Cards</span>
                 </Button>
               </Link>
               <Link to="/multilingual-translator">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-green-50 hover:border-green-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all duration-300">
                   <Globe className="h-6 w-6 text-green-600" />
                   <span className="text-xs">Translator</span>
                 </Button>
               </Link>
               <Link to="/visual-mind-map">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-pink-500/10 hover:border-pink-400 transition-all duration-300">
                   <Eye className="h-6 w-6 text-pink-600" />
                   <span className="text-xs">Mind Maps</span>
                 </Button>
               </Link>
               <Link to="/smart-recommendations">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-orange-50 hover:border-orange-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-orange-500/10 hover:border-orange-400 transition-all duration-300">
                   <Target className="h-6 w-6 text-orange-600" />
                   <span className="text-xs">Career AI</span>
                 </Button>
               </Link>
               <Link to="/comprehensive-ai-study">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-cyan-50 hover:border-cyan-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300">
                   <Mic className="h-6 w-6 text-cyan-600" />
                   <span className="text-xs">Voice Learn</span>
                 </Button>
