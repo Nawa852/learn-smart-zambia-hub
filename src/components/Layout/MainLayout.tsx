@@ -119,7 +119,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      <div className="min-h-screen flex w-full bg-background">
         <RoleBasedSidebar />
         <div className="flex-1 flex flex-col">
           <TopNavbar />
