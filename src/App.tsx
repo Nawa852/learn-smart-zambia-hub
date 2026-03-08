@@ -106,6 +106,9 @@ import AssignmentPage from '@/pages/AssignmentPage';
 import MyCoursesPage from '@/pages/MyCoursesPage';
 import ProgressReportPage from '@/pages/ProgressReportPage';
 import ECZPracticeQuizPage from '@/pages/ECZPracticeQuizPage';
+import MyAssignmentsPage from '@/pages/MyAssignmentsPage';
+import StudyPlannerPage from '@/pages/StudyPlannerPage';
+import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
