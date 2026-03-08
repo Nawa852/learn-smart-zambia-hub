@@ -7,6 +7,7 @@ import { InstallPrompt } from '@/components/PWA/InstallPrompt';
 import { OfflineBanner } from '@/components/PWA/OfflineBanner';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
 
 // Core Pages
