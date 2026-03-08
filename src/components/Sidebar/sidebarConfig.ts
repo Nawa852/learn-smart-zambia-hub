@@ -31,6 +31,8 @@ export const roleLabels: Record<string, string> = {
   doctor: 'Doctor',
   entrepreneur: 'Entrepreneur',
   developer: 'Developer',
+  skills: 'Skills Development',
+  cybersecurity: 'Cybersecurity',
 };
 
 export function getNavigationByRole(role: string): NavGroup[] {
@@ -42,6 +44,8 @@ export function getNavigationByRole(role: string): NavGroup[] {
     case 'doctor': return doctorNavigation;
     case 'entrepreneur': return entrepreneurNavigation;
     case 'developer': return developerNavigation;
+    case 'skills': return skillsNavigation;
+    case 'cybersecurity': return cybersecurityNavigation;
     default: return studentNavigation;
   }
 }

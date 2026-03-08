@@ -7,6 +7,8 @@ import { InstitutionDashboardView } from '@/components/Dashboard/InstitutionDash
 import { MedicalDashboardView } from '@/components/Dashboard/MedicalDashboardView';
 import { EntrepreneurDashboardView } from '@/components/Dashboard/EntrepreneurDashboardView';
 import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboardView';
+import SkillsDashboardView from '@/components/Dashboard/SkillsDashboardView';
+import CybersecurityDashboardView from '@/components/Dashboard/CybersecurityDashboardView';
 import { LogoLoader } from '@/components/UI/LogoLoader';
 
 const Dashboard = () => {
@@ -31,6 +33,8 @@ const Dashboard = () => {
       case 'doctor': return <MedicalDashboardView userName={userName} />;
       case 'entrepreneur': return <EntrepreneurDashboardView userName={userName} />;
       case 'developer': return <DeveloperDashboardView userName={userName} />;
+      case 'skills': return <SkillsDashboardView />;
+      case 'cybersecurity': return <CybersecurityDashboardView />;
       case 'student':
       default: return <StudentDashboardView userName={userName} />;
     }
