@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { CookieConsent } from '@/components/CookieConsent';
 import { InstallPrompt } from '@/components/PWA/InstallPrompt';
+import { OfflineBanner } from '@/components/PWA/OfflineBanner';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { MainLayout } from '@/components/Layout/MainLayout';
