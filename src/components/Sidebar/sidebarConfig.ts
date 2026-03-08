@@ -166,6 +166,8 @@ export const teacherNavigation: NavGroup[] = [
     label: "Community",
     items: [
       { title: "Teacher Hub", url: "/community", icon: Users },
+      { title: "Collaboration", url: "/teacher-collaboration", icon: MessagesSquare, badge: "NEW" },
+      { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
     ],
   },
