@@ -279,6 +279,7 @@ function App() {
           </Routes>
           <Toaster />
           <CookieConsent />
+          <InstallPrompt />
         </Router>
       </QueryClientProvider>
     </AuthProvider>
