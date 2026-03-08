@@ -188,6 +188,7 @@ export type Database = {
       focus_sessions: {
         Row: {
           created_at: string
+          distraction_count: number
           ended_at: string | null
           focus_minutes: number
           gave_up: boolean
@@ -199,6 +200,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          distraction_count?: number
           ended_at?: string | null
           focus_minutes?: number
           gave_up?: boolean
@@ -210,6 +212,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          distraction_count?: number
           ended_at?: string | null
           focus_minutes?: number
           gave_up?: boolean
@@ -534,6 +537,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          device_setup_complete: boolean
           full_name: string | null
           grade: string | null
           id: string
@@ -547,6 +551,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          device_setup_complete?: boolean
           full_name?: string | null
           grade?: string | null
           id: string
@@ -560,6 +565,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          device_setup_complete?: boolean
           full_name?: string | null
           grade?: string | null
           id?: string
@@ -660,6 +666,39 @@ export type Database = {
           id?: string
           target?: number
           title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_schedules: {
+        Row: {
+          created_at: string
+          days: string[]
+          end_time: string
+          id: string
+          is_active: boolean
+          start_time: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days?: string[]
+          end_time: string
+          id?: string
+          is_active?: boolean
+          start_time: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days?: string[]
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          start_time?: string
+          subject?: string
           user_id?: string
         }
         Relationships: []
