@@ -99,6 +99,8 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Courses & Lessons",
     items: [
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen, badge: "NEW" },
+      { title: "Create Course", url: "/create-course", icon: Layers },
       { title: "My Courses", url: "/courses", icon: BookOpen },
       { title: "Lessons", url: "/lessons", icon: GraduationCap },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },
