@@ -272,7 +272,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
-      {currentStep > 0 && currentStep < 5 && (
+      {currentStep > 0 && currentStep < 7 && (
         <div className="fixed top-0 left-0 right-0 z-50 glass-nav">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-2">
