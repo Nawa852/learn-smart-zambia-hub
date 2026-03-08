@@ -151,7 +151,7 @@ export const EntrepreneurDashboardView = ({ userName }: EntrepreneurDashboardVie
           <CardTitle className="flex items-center gap-2"><Zap className="w-5 h-5 text-amber-600" />Entrepreneur Toolkit</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
             {tools.map((tool, i) => (
               <Link key={i} to={tool.link}>
                 <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group">

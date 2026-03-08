@@ -4,62 +4,41 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import {
-  Code, Terminal, GitBranch, Bug, Cpu, Globe,
-  Database, Zap, Award, BookOpen, Users, TrendingUp,
-  FileCode, Braces, Server, Layers
+  Code, Terminal, GitBranch, Bug, Cpu, Database, Zap, Award, BookOpen,
+  FileCode, Braces, Server, Layers, Sparkles
 } from 'lucide-react';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
+import { useDeveloperProjects } from '@/hooks/useDeveloperProjects';
 
 interface DeveloperDashboardViewProps {
   userName: string;
 }
 
 export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps) => {
+  const { projects, loading } = useDeveloperProjects();
+
+  const activeProjects = projects.filter(p => p.status === 'active').length;
+  const completedProjects = projects.filter(p => p.status === 'completed').length;
+  const avgProgress = projects.length > 0 ? Math.round(projects.reduce((s, p) => s + p.progress, 0) / projects.length) : 0;
+
   const stats = [
-    { title: "Projects Built", value: "12", icon: Code, color: "text-cyan-600", bg: "bg-cyan-50", change: "3 active" },
-    { title: "Challenges Solved", value: "87", icon: Bug, color: "text-green-600", bg: "bg-green-50", change: "+8 this week" },
-    { title: "Skill Level", value: "Lvl 14", icon: Zap, color: "text-purple-600", bg: "bg-purple-50", change: "Advanced" },
-    { title: "Contributions", value: "234", icon: GitBranch, color: "text-orange-600", bg: "bg-orange-50", change: "Open source" },
-  ];
-
-  const activeProjects = [
-    { name: "Zambia Transit API", language: "TypeScript", progress: 75, stars: 42, status: "active" },
-    { name: "EduMobile React Native", language: "React Native", progress: 45, stars: 18, status: "active" },
-    { name: "AgriData Dashboard", language: "Python", progress: 92, stars: 67, status: "review" },
-  ];
-
-  const learningTracks = [
-    { title: "Full-Stack Development", progress: 82, tech: "React + Node.js" },
-    { title: "Cloud & DevOps", progress: 55, tech: "AWS + Docker" },
-    { title: "AI/ML Engineering", progress: 38, tech: "Python + TensorFlow" },
-    { title: "Mobile Development", progress: 70, tech: "React Native" },
-  ];
-
-  const codingChallenges = [
-    { title: "Binary Tree Traversal", difficulty: "Medium", xp: 50, solved: true },
-    { title: "API Rate Limiter", difficulty: "Hard", xp: 100, solved: true },
-    { title: "Graph Shortest Path", difficulty: "Hard", xp: 100, solved: false },
-    { title: "REST API Design", difficulty: "Easy", xp: 25, solved: false },
+    { title: "Total Projects", value: String(projects.length), icon: Code, color: "text-cyan-600", bg: "bg-cyan-50", change: `${activeProjects} active` },
+    { title: "Completed", value: String(completedProjects), icon: Zap, color: "text-green-600", bg: "bg-green-50", change: `${avgProgress}% avg progress` },
+    { title: "Languages", value: String(new Set(projects.map(p => p.language).filter(Boolean)).size), icon: Braces, color: "text-purple-600", bg: "bg-purple-50", change: "unique" },
+    { title: "In Review", value: String(projects.filter(p => p.status === 'review').length), icon: GitBranch, color: "text-orange-600", bg: "bg-orange-50", change: "" },
   ];
 
   const tools = [
-    { icon: Terminal, title: "Code Sandbox", description: "Live coding environment", link: "/ai-learning-lab", gradient: "from-gray-700 to-gray-900" },
-    { icon: Bug, title: "Debug Assistant", description: "AI error resolver", link: "/ai-chat", gradient: "from-red-500 to-rose-600" },
-    { icon: Database, title: "API Explorer", description: "Test endpoints live", link: "/api-flowchart", gradient: "from-blue-500 to-indigo-600" },
-    { icon: Braces, title: "Code Review", description: "AI code analysis", link: "/ai-study-buddy", gradient: "from-emerald-500 to-teal-600" },
-    { icon: Server, title: "Deploy Lab", description: "CI/CD simulation", link: "/ai-resource-center", gradient: "from-purple-500 to-violet-600" },
-    { icon: Layers, title: "Architecture", description: "System design tools", link: "/visual-mind-map", gradient: "from-amber-500 to-orange-600" },
-  ];
-
-  const leaderboard = [
-    { rank: 1, name: "Alice Mwamba", xp: 4520, badge: "🏆" },
-    { rank: 2, name: userName, xp: 3890, badge: "🥈" },
-    { rank: 3, name: "Peter Banda", xp: 3450, badge: "🥉" },
+    { icon: Layers, title: "Projects", description: "Manage projects", link: "/developer/projects", gradient: "from-gray-700 to-gray-900" },
+    { icon: Cpu, title: "Challenges", description: "AI coding problems", link: "/developer/challenges", gradient: "from-red-500 to-rose-600" },
+    { icon: Sparkles, title: "Code Review", description: "AI code analysis", link: "/developer/code-review", gradient: "from-emerald-500 to-teal-600" },
+    { icon: Database, title: "API Explorer", description: "Test endpoints", link: "/api-flowchart", gradient: "from-blue-500 to-indigo-600" },
+    { icon: Terminal, title: "AI Assistant", description: "Dev help", link: "/ai", gradient: "from-purple-500 to-violet-600" },
+    { icon: Bug, title: "Focus Mode", description: "Deep work", link: "/focus-mode", gradient: "from-amber-500 to-orange-600" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Welcome */}
       <Card className="border-0 shadow-lg bg-gradient-to-r from-cyan-500/10 via-primary/5 to-background">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -68,14 +47,8 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
               <p className="text-muted-foreground font-mono text-sm">$ developer-hub --mode=productive</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">
-                <GitBranch className="w-4 h-4 mr-2" />
-                New Project
-              </Button>
-              <Button>
-                <Terminal className="w-4 h-4 mr-2" />
-                Open Sandbox
-              </Button>
+              <Link to="/developer/projects"><Button variant="outline"><GitBranch className="w-4 h-4 mr-2" />My Projects</Button></Link>
+              <Link to="/developer/challenges"><Button><Cpu className="w-4 h-4 mr-2" />Challenges</Button></Link>
             </div>
           </div>
         </CardContent>
@@ -87,14 +60,13 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
         emoji="💻"
         subtitle="Here's how to level up your coding skills."
         tips={[
-          { icon: Terminal, title: 'Code Sandbox', desc: 'Write and test code in a live environment.' },
-          { icon: Bug, title: 'Debug Assistant', desc: 'AI-powered error resolution and code fixes.' },
-          { icon: Braces, title: 'Code Review', desc: 'Get AI analysis and improvement suggestions.' },
+          { icon: Layers, title: 'Projects', desc: 'Track your coding projects with progress and language tags.' },
+          { icon: Cpu, title: 'Code Challenges', desc: 'AI-generated coding problems by difficulty.' },
+          { icon: Sparkles, title: 'Code Review', desc: 'Get AI analysis and improvement suggestions.' },
           { icon: GitBranch, title: 'Open Source', desc: 'Contribute to projects and build your portfolio.' },
         ]}
       />
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
           <Card key={i} className="hover:shadow-lg transition-all duration-300 group">
@@ -103,7 +75,7 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
                   <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.change}</p>
+                  {stat.change && <p className="text-xs text-muted-foreground">{stat.change}</p>}
                 </div>
                 <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
                   <stat.icon className={`w-6 h-6 ${stat.color}`} />
@@ -115,122 +87,63 @@ export const DeveloperDashboardView = ({ userName }: DeveloperDashboardViewProps
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Active Projects */}
         <Card className="lg:col-span-2 border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Code className="w-5 h-5 text-primary" />
-              Active Projects
-            </CardTitle>
+            <CardTitle className="flex items-center gap-2"><Code className="w-5 h-5 text-primary" />Recent Projects</CardTitle>
             <CardDescription>Your coding projects</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {activeProjects.map((p, i) => (
-              <div key={i} className="p-4 border rounded-lg hover:shadow-md transition-all">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h4 className="font-semibold">{p.name}</h4>
-                    <p className="text-sm text-muted-foreground">{p.language} • ⭐ {p.stars}</p>
+            {loading ? <p className="text-muted-foreground">Loading...</p> :
+              projects.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-muted-foreground mb-2">No projects yet</p>
+                  <Link to="/developer/projects"><Button size="sm">Create Your First Project</Button></Link>
+                </div>
+              ) : projects.slice(0, 4).map(p => (
+                <div key={p.id} className="p-4 border rounded-lg hover:shadow-md transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-semibold">{p.name}</h4>
+                      <p className="text-sm text-muted-foreground">{p.language || 'N/A'}</p>
+                    </div>
+                    <Badge variant={p.status === 'active' ? 'default' : p.status === 'completed' ? 'secondary' : 'outline'}>{p.status}</Badge>
                   </div>
-                  <Badge variant={p.status === 'active' ? 'default' : 'secondary'}>
-                    {p.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Progress value={p.progress} className="h-2 flex-1" />
+                    <span className="text-sm font-bold">{p.progress}%</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Progress value={p.progress} className="h-2 flex-1" />
-                  <span className="text-sm font-bold">{p.progress}%</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            {projects.length > 4 && (
+              <Link to="/developer/projects"><Button variant="outline" className="w-full">View All Projects</Button></Link>
+            )}
           </CardContent>
         </Card>
 
-        {/* Leaderboard */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-amber-600" />
-              Dev Leaderboard
-            </CardTitle>
+            <CardTitle className="flex items-center gap-2"><Award className="w-5 h-5 text-amber-600" />Quick Stats</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {leaderboard.map((l, i) => (
-              <div key={i} className={`flex items-center justify-between p-3 rounded-lg ${l.name === userName ? 'bg-primary/10 border border-primary/20' : 'border'}`}>
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{l.badge}</span>
-                  <div>
-                    <p className="font-semibold text-sm">{l.name}</p>
-                    <p className="text-xs text-muted-foreground">Rank #{l.rank}</p>
-                  </div>
-                </div>
-                <Badge variant="outline">{l.xp} XP</Badge>
-              </div>
-            ))}
+            <div className="p-3 border rounded-lg">
+              <p className="text-sm text-muted-foreground">Active Projects</p>
+              <p className="text-xl font-bold">{activeProjects}</p>
+            </div>
+            <div className="p-3 border rounded-lg">
+              <p className="text-sm text-muted-foreground">Average Progress</p>
+              <p className="text-xl font-bold">{avgProgress}%</p>
+            </div>
+            <div className="p-3 border rounded-lg">
+              <p className="text-sm text-muted-foreground">Completed</p>
+              <p className="text-xl font-bold">{completedProjects}</p>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Learning Tracks */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-blue-600" />
-              Learning Tracks
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {learningTracks.map((t, i) => (
-              <div key={i} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">{t.title}</span>
-                  <Badge variant="outline" className="text-xs font-mono">{t.tech}</Badge>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Progress value={t.progress} className="h-2 flex-1" />
-                  <span className="text-sm font-bold">{t.progress}%</span>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Coding Challenges */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-green-600" />
-              Coding Challenges
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {codingChallenges.map((ch, i) => (
-              <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${ch.solved ? 'bg-green-500 border-green-500' : 'border-muted-foreground/30'}`}>
-                    {ch.solved && <Zap className="w-3 h-3 text-white" />}
-                  </div>
-                  <div>
-                    <p className={`text-sm ${ch.solved ? 'text-muted-foreground' : 'font-medium'}`}>{ch.title}</p>
-                    <p className="text-xs text-muted-foreground">+{ch.xp} XP</p>
-                  </div>
-                </div>
-                <Badge variant={ch.difficulty === 'Hard' ? 'destructive' : ch.difficulty === 'Medium' ? 'default' : 'secondary'}>
-                  {ch.difficulty}
-                </Badge>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Dev Tools */}
       <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileCode className="w-5 h-5 text-cyan-600" />
-            Developer Toolkit
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2"><FileCode className="w-5 h-5 text-cyan-600" />Developer Toolkit</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
