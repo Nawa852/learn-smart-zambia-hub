@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, User, Globe, Sparkles } from "lucide-react";
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -58,9 +58,9 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     
     const age = parseInt(formData.age);
     if (age < 18 && userRole === 'student') {
-      setCurrentStep(2); // Go to guardian linking
+      setCurrentStep(2);
     } else {
-      setCurrentStep(3); // Skip guardian linking
+      setCurrentStep(3);
     }
   };
 
@@ -110,48 +110,53 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
         return (
           <div className="max-w-2xl mx-auto space-y-6 p-6">
             <div className="text-center space-y-2 mb-8">
-              <h2 className="text-3xl font-bold gradient-text-bright-sphere">Create Your Living Profile</h2>
+              <h2 className="text-3xl font-bold gradient-text">Create Your Living Profile</h2>
               <p className="text-muted-foreground">Tell us who you are becoming</p>
             </div>
 
-            <Card>
+            <Card className="glass-card glow-border">
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <User className="w-5 h-5 text-primary" />
+                  Personal Information
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name *</Label>
+                  <Label htmlFor="fullName" className="font-semibold">Full Name *</Label>
                   <Input
                     id="fullName"
                     placeholder="Your full name"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                   />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="age">Age *</Label>
+                    <Label htmlFor="age" className="font-semibold">Age *</Label>
                     <Input
                       id="age"
                       type="number"
                       placeholder="Your age"
                       value={formData.age}
                       onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
 
                   {userRole === 'student' && (
                     <div className="space-y-2">
-                      <Label htmlFor="grade">Grade</Label>
+                      <Label htmlFor="grade" className="font-semibold">Grade</Label>
                       <Select
                         value={formData.grade}
                         onValueChange={(value) => setFormData({ ...formData, grade: value })}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="glass-card border-primary/30">
                           <SelectValue placeholder="Select grade" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="glass-premium border-primary/20">
                           {[...Array(12)].map((_, i) => (
                             <SelectItem key={i + 1} value={`Grade ${i + 1}`}>
                               Grade {i + 1}
@@ -164,15 +169,18 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="language">Preferred Language</Label>
+                  <Label htmlFor="language" className="flex items-center gap-2 font-semibold">
+                    <Globe className="w-4 h-4 text-primary" />
+                    Preferred Language
+                  </Label>
                   <Select
                     value={formData.preferredLanguage}
                     onValueChange={(value) => setFormData({ ...formData, preferredLanguage: value })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-card border-primary/30">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-premium border-primary/20">
                       <SelectItem value="English">English</SelectItem>
                       <SelectItem value="Bemba">Bemba</SelectItem>
                       <SelectItem value="Nyanja">Nyanja</SelectItem>
@@ -182,15 +190,18 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="motivation">Personal Motivation</Label>
+                  <Label htmlFor="motivation" className="flex items-center gap-2 font-semibold">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    Personal Motivation
+                  </Label>
                   <Select
                     value={formData.motivation}
                     onValueChange={(value) => setFormData({ ...formData, motivation: value })}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-card border-primary/30">
                       <SelectValue placeholder="What drives you?" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-premium border-primary/20">
                       <SelectItem value="exam_prep">Exam Preparation</SelectItem>
                       <SelectItem value="career_growth">Career Growth</SelectItem>
                       <SelectItem value="curiosity">Pure Curiosity</SelectItem>
@@ -200,7 +211,12 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                 </div>
 
                 <div className="flex justify-end">
-                  <Button onClick={handleProfileSubmit}>Continue</Button>
+                  <Button 
+                    onClick={handleProfileSubmit}
+                    className="bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold glow-primary hover:opacity-90 transition-all"
+                  >
+                    Continue
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -234,13 +250,17 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background relative overflow-hidden">
+      {/* Ambient glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+
       {currentStep > 0 && currentStep < 5 && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b">
+        <div className="fixed top-0 left-0 right-0 z-50 glass-nav">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold">Setup Progress</h3>
-              <span className="text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground">Setup Progress</h3>
+              <span className="text-sm text-primary font-semibold">
                 Step {currentStep} of {steps.length - 1}
               </span>
             </div>
@@ -249,15 +269,15 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
               {steps.slice(1).map((step, index) => (
                 <div
                   key={step.id}
-                  className={`text-xs ${
+                  className={`text-xs font-medium ${
                     index + 1 === currentStep
-                      ? 'text-primary font-semibold'
+                      ? 'text-primary'
                       : index + 1 < currentStep
-                      ? 'text-green-500'
+                      ? 'text-primary/60'
                       : 'text-muted-foreground'
                   }`}
                 >
-                  {index + 1 < currentStep && <CheckCircle2 className="w-3 h-3 inline mr-1" />}
+                  {index + 1 < currentStep && <CheckCircle2 className="w-3 h-3 inline mr-1 text-primary" />}
                   {step.label}
                 </div>
               ))}
@@ -265,7 +285,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           </div>
         </div>
       )}
-      <div className={currentStep > 0 && currentStep < 5 ? 'pt-24' : ''}>
+      <div className={`relative z-10 ${currentStep > 0 && currentStep < 5 ? 'pt-24' : ''}`}>
         {renderStep()}
       </div>
     </div>

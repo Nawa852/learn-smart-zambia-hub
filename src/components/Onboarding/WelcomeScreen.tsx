@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Users, School, Heart, Volume2, VolumeX, GraduationCap } from "lucide-react";
+import { Users, School, Heart, Volume2, VolumeX, GraduationCap, ChevronRight } from "lucide-react";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import EduZambiaLogo from "@/assets/edu-zambia-logo.svg";
 
@@ -42,48 +42,33 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
       icon: GraduationCap,
       label: "I am a Student",
       description: "Begin your learning journey",
-      gradient: "from-blue-500 to-cyan-500"
     },
     {
       id: 'teacher' as const,
       icon: Users,
       label: "I am a Teacher",
       description: "Shape the future minds",
-      gradient: "from-purple-500 to-pink-500"
     },
     {
       id: 'institution' as const,
       icon: School,
       label: "I am an Institution",
       description: "Transform education at scale",
-      gradient: "from-green-500 to-emerald-500"
     },
     {
       id: 'guardian' as const,
       icon: Heart,
       label: "I am a Guardian",
       description: "Guide and support learning",
-      gradient: "from-orange-500 to-red-500"
     }
   ];
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-background flex items-center justify-center p-4">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            background: [
-              "radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 80% 50%, hsl(var(--primary) / 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 50% 80%, hsl(var(--primary) / 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.15) 0%, transparent 50%)",
-            ]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
+      {/* Animated ambient glows */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
 
       <AnimatePresence>
         {showContent && (
@@ -106,7 +91,7 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1 }}
                   onClick={toggleSpeech}
-                  className="absolute top-0 right-4 p-3 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+                  className="absolute top-0 right-4 p-3 rounded-full glass-card glow-border hover:glow-primary transition-all"
                   title={speaking ? "Stop voice" : "Play voice"}
                 >
                   {speaking ? (
@@ -116,6 +101,8 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                   )}
                 </motion.button>
               )}
+
+              {/* Logo with glow */}
               <motion.div
                 className="inline-block mb-6 relative"
                 initial={{ scale: 0, rotate: -180 }}
@@ -125,38 +112,33 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                 <motion.div
                   animate={{ 
                     y: [0, -8, 0],
-                    filter: [
-                      "drop-shadow(0 4px 12px hsl(var(--primary) / 0.2))",
-                      "drop-shadow(0 12px 24px hsl(var(--primary) / 0.4))",
-                      "drop-shadow(0 4px 12px hsl(var(--primary) / 0.2))"
-                    ]
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <motion.img 
                     src={EduZambiaLogo} 
                     alt="Edu Zambia" 
-                    className="w-28 h-28 mx-auto rounded-2xl"
+                    className="w-28 h-28 mx-auto rounded-2xl glow-primary"
                     whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
                     transition={{ duration: 0.4 }}
                   />
                 </motion.div>
                 {/* Pulse rings */}
                 <motion.div
-                  className="absolute inset-0 rounded-2xl border-2 border-primary/30 mx-auto"
+                  className="absolute rounded-2xl border-2 border-primary/30"
                   style={{ width: "7rem", height: "7rem", left: "50%", top: 0, marginLeft: "-3.5rem" }}
                   animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
                 />
                 <motion.div
-                  className="absolute inset-0 rounded-2xl border-2 border-primary/20 mx-auto"
+                  className="absolute rounded-2xl border-2 border-accent/20"
                   style={{ width: "7rem", height: "7rem", left: "50%", top: 0, marginLeft: "-3.5rem" }}
                   animate={{ scale: [1, 1.8], opacity: [0.4, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
                 />
               </motion.div>
               
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text-bright-sphere">
+              <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text">
                 Welcome, Dreamer.
               </h1>
               
@@ -175,7 +157,7 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                Powered by <span className="font-semibold gradient-text-bright-sphere">BrightSphere</span>
+                Powered by <span className="font-semibold gradient-text">BrightSphere</span>
               </motion.p>
               
               <motion.p
@@ -205,25 +187,28 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Card
-                    className="relative overflow-hidden cursor-pointer group h-full border-2 hover:border-primary/50 transition-all duration-300"
+                    className="relative overflow-hidden cursor-pointer group h-full glass-card glow-border hover:glow-primary transition-all duration-300"
                     onClick={() => onRoleSelect(role.id)}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${role.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
                     <div className="relative p-8 text-center space-y-4">
                       <motion.div
-                        className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br ${role.gradient} shadow-lg`}
+                        className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent shadow-lg glow-primary"
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
                       >
-                        <role.icon className="w-10 h-10 text-white" />
+                        <role.icon className="w-10 h-10 text-primary-foreground" />
                       </motion.div>
                       
-                      <h3 className="text-xl font-bold">{role.label}</h3>
+                      <h3 className="text-xl font-bold text-foreground">{role.label}</h3>
                       <p className="text-sm text-muted-foreground">{role.description}</p>
                       
-                      <Button className="w-full group-hover:shadow-lg transition-shadow" variant="outline">
-                        Select
+                      <Button 
+                        className="w-full bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 hover:from-primary/40 hover:to-accent/40 text-foreground hover:glow-primary transition-all group-hover:shadow-lg"
+                        variant="outline"
+                      >
+                        Select <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
                   </Card>
@@ -238,7 +223,7 @@ export const WelcomeScreen = ({ onRoleSelect }: WelcomeScreenProps) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.6 }}
             >
-              Powered by <span className="gradient-text-bright-sphere font-semibold">BrightSphere</span> Intelligence
+              Powered by <span className="gradient-text font-semibold">BrightSphere</span> Intelligence
             </motion.p>
           </motion.div>
         )}

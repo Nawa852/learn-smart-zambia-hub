@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { 
   GraduationCap, Building2, Users, ChevronRight, ChevronLeft, 
   Sparkles, Volume2, VolumeX, Check, Palette, Sun, Moon,
-  Waves, Sunset, TreePine, MapPin
+  Waves, Sunset, TreePine, MapPin, User, Phone, Mail, Globe
 } from "lucide-react";
 import { useTextToSpeech } from "@/hooks/useTextToSpeech";
 import { toast } from "sonner";
@@ -39,7 +39,7 @@ interface NewOnboardingWizardProps {
 
 const themes: { id: ThemeChoice; name: string; icon: React.ElementType; gradient: string }[] = [
   { id: 'light', name: 'Light', icon: Sun, gradient: 'from-gray-100 to-white' },
-  { id: 'dark', name: 'Dark', icon: Moon, gradient: 'from-slate-800 to-slate-900' },
+  { id: 'dark', name: 'Dark Premium', icon: Moon, gradient: 'from-slate-800 to-slate-900' },
   { id: 'zambian', name: 'Zambian', icon: MapPin, gradient: 'from-orange-500 to-emerald-500' },
   { id: 'ocean', name: 'Ocean', icon: Waves, gradient: 'from-cyan-500 to-blue-500' },
   { id: 'sunset', name: 'Sunset', icon: Sunset, gradient: 'from-orange-500 to-pink-500' },
@@ -52,21 +52,18 @@ const userTypes = [
     icon: GraduationCap,
     title: "I am a Student / Pupil",
     description: "Begin your learning journey with AI-powered education",
-    gradient: "from-blue-500 to-indigo-600"
   },
   {
     id: 'parent' as const,
     icon: Users,
     title: "I am a Parent / Guardian",
     description: "Monitor and support your child's education",
-    gradient: "from-pink-500 to-rose-600"
   },
   {
     id: 'organisation' as const,
     icon: Building2,
     title: "I am an Organisation",
     description: "Schools, Colleges, Universities & Training Centers",
-    gradient: "from-emerald-500 to-teal-600"
   }
 ];
 
@@ -90,7 +87,7 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
     location: '',
     childrenCount: '',
     preferredLanguage: 'English',
-    theme: 'light',
+    theme: 'dark',
   });
 
   const { speak, speaking, supported, cancel } = useTextToSpeech({ rate: 0.9 });
@@ -114,7 +111,6 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
 
   const handleNext = () => {
     if (step === 1) {
-      // Validate based on user type
       if (data.userType === 'student') {
         if (!data.fullName || !data.age) {
           toast.error("Please fill in your name and age");
@@ -148,7 +144,6 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
   };
 
   const handleComplete = () => {
-    // Apply theme
     const root = document.documentElement;
     root.classList.remove('light', 'dark', 'theme-zambian', 'theme-ocean', 'theme-sunset', 'theme-forest');
     if (data.theme === 'dark') {
@@ -181,13 +176,15 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                 transition={{ duration: 2, repeat: Infinity }}
                 className="inline-block"
               >
-                <Sparkles className="w-16 h-16 text-primary mx-auto" />
+                <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mx-auto glow-primary">
+                  <Sparkles className="w-10 h-10 text-primary-foreground" />
+                </div>
               </motion.div>
               <h1 className="text-4xl md:text-5xl font-bold">
-                Welcome to <span className="text-primary">Edu Zambia</span>
+                Welcome to <span className="gradient-text">Edu Zambia</span>
               </h1>
               <p className="text-xl text-muted-foreground">
-                Powered by <span className="font-semibold text-primary">BrightSphere</span> AI
+                Powered by <span className="font-semibold gradient-text">BrightSphere</span> AI
               </p>
               <p className="text-muted-foreground max-w-lg mx-auto">
                 Tell us who you are so we can personalize your learning experience
@@ -205,20 +202,23 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                   whileTap={{ scale: 0.98 }}
                 >
                   <Card
-                    className="relative overflow-hidden cursor-pointer group h-full border-2 hover:border-primary/50 transition-all duration-300 p-6"
+                    className="relative overflow-hidden cursor-pointer group h-full glass-card glow-border hover:glow-primary transition-all duration-300 p-6"
                     onClick={() => handleUserTypeSelect(type.id)}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${type.gradient} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                     
                     <div className="relative text-center space-y-4">
-                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${type.gradient}`}>
-                        <type.icon className="w-8 h-8 text-white" />
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent glow-primary">
+                        <type.icon className="w-8 h-8 text-primary-foreground" />
                       </div>
                       
-                      <h3 className="text-lg font-bold">{type.title}</h3>
+                      <h3 className="text-lg font-bold text-foreground">{type.title}</h3>
                       <p className="text-sm text-muted-foreground">{type.description}</p>
                       
-                      <Button variant="outline" className="w-full">
+                      <Button 
+                        variant="outline" 
+                        className="w-full glass-card border-primary/30 hover:glow-border hover:border-primary/60 transition-all"
+                      >
                         Select <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
@@ -238,7 +238,7 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
             className="max-w-xl mx-auto space-y-6"
           >
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold">Tell us about yourself</h2>
+              <h2 className="text-3xl font-bold gradient-text">Tell us about yourself</h2>
               <p className="text-muted-foreground">
                 {data.userType === 'student' && "Let's set up your student profile"}
                 {data.userType === 'parent' && "Let's set up your guardian profile"}
@@ -246,34 +246,39 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
               </p>
             </div>
 
-            <Card className="p-6 space-y-4">
+            <Card className="p-6 space-y-4 glass-card glow-border">
               {data.userType === 'student' && (
                 <>
                   <div className="space-y-2">
-                    <Label>Full Name *</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <User className="w-4 h-4 text-primary" />
+                      Full Name *
+                    </Label>
                     <Input
                       placeholder="Enter your full name"
                       value={data.fullName}
                       onChange={(e) => setData({ ...data, fullName: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Age *</Label>
+                      <Label className="font-semibold">Age *</Label>
                       <Input
                         type="number"
                         placeholder="Your age"
                         value={data.age}
                         onChange={(e) => setData({ ...data, age: e.target.value })}
+                        className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Grade / Class</Label>
+                      <Label className="font-semibold">Grade / Class</Label>
                       <Select value={data.grade} onValueChange={(v) => setData({ ...data, grade: v })}>
-                        <SelectTrigger>
+                        <SelectTrigger className="glass-card border-primary/30">
                           <SelectValue placeholder="Select grade" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="glass-premium border-primary/20">
                           {[...Array(12)].map((_, i) => (
                             <SelectItem key={i} value={`Grade ${i + 1}`}>Grade {i + 1}</SelectItem>
                           ))}
@@ -284,11 +289,15 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Phone Number</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <Phone className="w-4 h-4 text-primary" />
+                      Phone Number
+                    </Label>
                     <Input
                       placeholder="+260..."
                       value={data.phone}
                       onChange={(e) => setData({ ...data, phone: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                 </>
@@ -297,37 +306,49 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
               {data.userType === 'parent' && (
                 <>
                   <div className="space-y-2">
-                    <Label>Full Name *</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <User className="w-4 h-4 text-primary" />
+                      Full Name *
+                    </Label>
                     <Input
                       placeholder="Enter your full name"
                       value={data.fullName}
                       onChange={(e) => setData({ ...data, fullName: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Phone Number *</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <Phone className="w-4 h-4 text-primary" />
+                      Phone Number *
+                    </Label>
                     <Input
                       placeholder="+260..."
                       value={data.phone}
                       onChange={(e) => setData({ ...data, phone: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Email</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <Mail className="w-4 h-4 text-primary" />
+                      Email
+                    </Label>
                     <Input
                       type="email"
                       placeholder="your@email.com"
                       value={data.email}
                       onChange={(e) => setData({ ...data, email: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Number of Children</Label>
+                    <Label className="font-semibold">Number of Children</Label>
                     <Select value={data.childrenCount} onValueChange={(v) => setData({ ...data, childrenCount: v })}>
-                      <SelectTrigger>
+                      <SelectTrigger className="glass-card border-primary/30">
                         <SelectValue placeholder="How many children?" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="glass-premium border-primary/20">
                         {[1, 2, 3, 4, 5, '6+'].map((n) => (
                           <SelectItem key={n} value={String(n)}>{n}</SelectItem>
                         ))}
@@ -340,21 +361,21 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
               {data.userType === 'organisation' && (
                 <>
                   <div className="space-y-2">
-                    <Label>Organisation Type *</Label>
+                    <Label className="font-semibold">Organisation Type *</Label>
                     <div className="grid grid-cols-2 gap-3">
                       {organisationTypes.map((org) => (
                         <Card
                           key={org.id}
-                          className={`p-4 cursor-pointer transition-all ${
+                          className={`p-4 cursor-pointer transition-all glass-card ${
                             data.organisationType === org.id 
-                              ? 'border-primary bg-primary/5' 
-                              : 'hover:border-primary/50'
+                              ? 'glow-primary border-primary bg-primary/10' 
+                              : 'border-primary/20 hover:glow-border hover:border-primary/50'
                           }`}
                           onClick={() => setData({ ...data, organisationType: org.id })}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-2xl">{org.icon}</span>
-                            <span className="font-medium text-sm">{org.name}</span>
+                            <span className="font-medium text-sm text-foreground">{org.name}</span>
                             {data.organisationType === org.id && (
                               <Check className="w-4 h-4 text-primary ml-auto" />
                             )}
@@ -364,27 +385,39 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Organisation Name *</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <Building2 className="w-4 h-4 text-primary" />
+                      Organisation Name *
+                    </Label>
                     <Input
                       placeholder="Enter organisation name"
                       value={data.organisationName}
                       onChange={(e) => setData({ ...data, organisationName: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Location</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Location
+                    </Label>
                     <Input
                       placeholder="City, Province"
                       value={data.location}
                       onChange={(e) => setData({ ...data, location: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Contact Person Name</Label>
+                    <Label className="flex items-center gap-2 font-semibold">
+                      <User className="w-4 h-4 text-primary" />
+                      Contact Person Name
+                    </Label>
                     <Input
                       placeholder="Admin/Contact name"
                       value={data.fullName}
                       onChange={(e) => setData({ ...data, fullName: e.target.value })}
+                      className="glass-card border-primary/30 focus:glow-primary focus:border-primary/60 transition-all"
                     />
                   </div>
                 </>
@@ -402,24 +435,25 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
             className="max-w-xl mx-auto space-y-6"
           >
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold">Language Preference</h2>
+              <Globe className="w-12 h-12 text-primary mx-auto" />
+              <h2 className="text-3xl font-bold gradient-text">Language Preference</h2>
               <p className="text-muted-foreground">Choose your preferred language for the platform</p>
             </div>
 
-            <Card className="p-6">
+            <Card className="p-6 glass-card glow-border">
               <div className="grid grid-cols-2 gap-3">
                 {['English', 'Bemba', 'Nyanja', 'Tonga', 'Lozi', 'Lunda', 'Kaonde'].map((lang) => (
                   <Card
                     key={lang}
-                    className={`p-4 cursor-pointer transition-all ${
+                    className={`p-4 cursor-pointer transition-all glass-card ${
                       data.preferredLanguage === lang 
-                        ? 'border-primary bg-primary/5' 
-                        : 'hover:border-primary/50'
+                        ? 'glow-primary border-primary bg-primary/10' 
+                        : 'border-primary/20 hover:glow-border hover:border-primary/50'
                     }`}
                     onClick={() => setData({ ...data, preferredLanguage: lang })}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{lang}</span>
+                      <span className="font-medium text-foreground">{lang}</span>
                       {data.preferredLanguage === lang && (
                         <Check className="w-4 h-4 text-primary" />
                       )}
@@ -441,7 +475,7 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
           >
             <div className="text-center space-y-2">
               <Palette className="w-12 h-12 text-primary mx-auto" />
-              <h2 className="text-3xl font-bold">Choose Your Theme</h2>
+              <h2 className="text-3xl font-bold gradient-text">Choose Your Theme</h2>
               <p className="text-muted-foreground">Personalize your Edu Zambia experience</p>
             </div>
 
@@ -453,10 +487,10 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                   whileTap={{ scale: 0.98 }}
                 >
                   <Card
-                    className={`p-4 cursor-pointer transition-all ${
+                    className={`p-4 cursor-pointer transition-all glass-card ${
                       data.theme === theme.id 
-                        ? 'border-2 border-primary ring-2 ring-primary/20' 
-                        : 'hover:border-primary/50'
+                        ? 'glow-primary border-primary ring-2 ring-primary/20' 
+                        : 'border-primary/20 hover:glow-border hover:border-primary/50'
                     }`}
                     onClick={() => setData({ ...data, theme: theme.id })}
                   >
@@ -465,7 +499,7 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
                         <theme.icon className={`w-8 h-8 ${theme.id === 'light' ? 'text-gray-700' : 'text-white'}`} />
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="font-medium">{theme.name}</span>
+                        <span className="font-medium text-foreground">{theme.name}</span>
                         {data.theme === theme.id && (
                           <Check className="w-5 h-5 text-primary" />
                         )}
@@ -484,35 +518,42 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background flex flex-col relative overflow-hidden">
+      {/* Ambient glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+
       {/* Header */}
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-4 flex items-center justify-between glass-nav relative z-20">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-6 h-6 text-primary" />
-          <span className="font-bold text-lg">Edu Zambia</span>
+          <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center glow-primary">
+            <Sparkles className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-bold text-lg text-foreground">Edu Zambia</span>
         </div>
         
         {supported && (
           <Button
             variant="ghost"
             size="icon"
+            className="glass-card border-primary/20 hover:glow-border"
             onClick={() => {
               if (speaking) cancel();
               setVoiceEnabled(!voiceEnabled);
             }}
           >
-            {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            {voiceEnabled ? <Volume2 className="w-5 h-5 text-primary" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
           </Button>
         )}
       </div>
 
       {/* Progress */}
       {step > 0 && (
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 relative z-10">
           <div className="max-w-xl mx-auto">
             <div className="flex items-center justify-between mb-2 text-sm">
               <span className="text-muted-foreground">Step {step} of {totalSteps}</span>
-              <span className="text-muted-foreground">{Math.round((step / totalSteps) * 100)}%</span>
+              <span className="text-primary font-semibold">{Math.round((step / totalSteps) * 100)}%</span>
             </div>
             <Progress value={(step / totalSteps) * 100} className="h-2" />
           </div>
@@ -520,7 +561,7 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
       )}
 
       {/* Content */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
         <AnimatePresence mode="wait">
           {renderStep()}
         </AnimatePresence>
@@ -528,18 +569,28 @@ export const NewOnboardingWizard = ({ onComplete }: NewOnboardingWizardProps) =>
 
       {/* Footer Navigation */}
       {step > 0 && (
-        <div className="p-4 border-t bg-background/80 backdrop-blur-lg">
+        <div className="p-4 glass-nav relative z-20">
           <div className="max-w-xl mx-auto flex items-center justify-between">
-            <Button variant="outline" onClick={handleBack}>
+            <Button 
+              variant="outline" 
+              onClick={handleBack}
+              className="glass-card border-primary/30 hover:glow-border hover:border-primary/60 transition-all"
+            >
               <ChevronLeft className="w-4 h-4 mr-2" /> Back
             </Button>
             
             {step < totalSteps ? (
-              <Button onClick={handleNext}>
+              <Button 
+                onClick={handleNext}
+                className="bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold glow-primary hover:opacity-90 transition-all"
+              >
                 Continue <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <Button onClick={handleComplete} className="bg-gradient-to-r from-primary to-accent">
+              <Button 
+                onClick={handleComplete} 
+                className="bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold glow-primary hover:opacity-90 transition-all"
+              >
                 Complete Setup <Sparkles className="w-4 h-4 ml-2" />
               </Button>
             )}
