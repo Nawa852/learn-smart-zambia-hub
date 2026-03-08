@@ -1,32 +1,55 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/Auth/AuthProvider';
-import { BookOpen, Brain, Award, Target, TrendingUp, Users, Clock, Star, Globe, Zap, Heart, MessageSquare, Upload, Calendar, Bell, Eye, GraduationCap, Lightbulb, Mic, Shield, Map, Coins, Wifi, Radio, Truck } from 'lucide-react';
+import AnimatedCounter from '@/components/UI/AnimatedCounter';
+import { GlowBadge } from '@/components/UI/GlowBadge';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { BookOpen, Brain, Award, Target, TrendingUp, Users, Clock, Star, Globe, Zap, Heart, MessageSquare, Upload, Calendar, Bell, Eye, GraduationCap, Lightbulb, Mic, Shield, Map, Coins, Wifi, Radio, Truck, CloudSun, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+const zambianProverbs = [
+  "Umwana ashenda atasha nyina ukunaya. — A child who travels learns more than the one who stays home.",
+  "Icisungu cimo tacingala calo. — One finger cannot lift a grain.",
+  "Ubuchende bwa mfumu buishiba na bakapaso. — Knowledge is revealed through action.",
+  "Akabanga kakula mu mushi. — Great things start small.",
+  "Ubwali bushya bwafuma ku ntanda. — New wisdom comes from learning.",
+  "Umulilo gwa ku matanga tawunyeshi. — Focus your energy where it matters most.",
+  "Umuti umo taushibika. — A single tree cannot make a forest.",
+  "Insala yalya umunwe — Hunger (for knowledge) drives progress.",
+];
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
+  const [dismissedBadges, setDismissedBadges] = useLocalStorage<string[]>('dismissed-new-badges', []);
+
+  const dailyProverb = useMemo(() => {
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    return zambianProverbs[dayOfYear % zambianProverbs.length];
+  }, []);
+
+  const dismissBadge = (id: string) => setDismissedBadges(prev => [...prev, id]);
+  const isNew = (id: string) => !dismissedBadges.includes(id);
 
   const quickStats = [
-    { title: "Study Sessions", value: "24", icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10", change: "+5 this week" },
-    { title: "ECZ Progress", value: "78%", icon: BookOpen, color: "text-green-600", bg: "bg-green-500/10", change: "+12% this month" },
-    { title: "AI Interactions", value: "156", icon: Brain, color: "text-purple-600", bg: "bg-purple-500/10", change: "Daily avg: 8" },
-    { title: "Community Points", value: "1,250", icon: Award, color: "text-orange-600", bg: "bg-orange-500/10", change: "Top 10%" },
+    { title: "Study Sessions", value: 24, icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10", change: "+5 this week" },
+    { title: "ECZ Progress", value: 78, icon: BookOpen, color: "text-green-600", bg: "bg-green-500/10", change: "+12% this month", suffix: "%" },
+    { title: "AI Interactions", value: 156, icon: Brain, color: "text-purple-600", bg: "bg-purple-500/10", change: "Daily avg: 8" },
+    { title: "Community Points", value: 1250, icon: Award, color: "text-orange-600", bg: "bg-orange-500/10", change: "Top 10%" },
   ];
 
   const aiPoweredFeatures = [
-    { title: "AI Study Assistant", description: "24/7 multilingual tutor with GPT-4o", icon: Brain, link: "/study-assistant", gradient: "from-blue-500 to-purple-600", apiPowered: "GPT-4o, Claude 3" },
-    { title: "Smart ECZ Prep", description: "Adaptive exam preparation", icon: GraduationCap, link: "/ai-study-helper", gradient: "from-green-500 to-blue-500", apiPowered: "DeepSeek, Qwen" },
-    { title: "Multilingual Translator", description: "Learn in Bemba, Nyanja, Tonga, Lozi", icon: Globe, link: "/multilingual-translator", gradient: "from-purple-500 to-pink-500", apiPowered: "Qwen, Whisper" },
-    { title: "AI Flashcards", description: "Auto-generated from your notes", icon: Lightbulb, link: "/ai-flashcards", gradient: "from-orange-500 to-red-500", apiPowered: "GPT-4o, Gemini" },
-    { title: "Career Predictions", description: "AI-powered career pathways", icon: Target, link: "/smart-recommendations", gradient: "from-teal-500 to-cyan-500", apiPowered: "Moonshot AI, DeepSeek" },
-    { title: "Voice Learning", description: "Audio lessons and voice Q&A", icon: Mic, link: "/comprehensive-ai-study", gradient: "from-indigo-500 to-purple-500", apiPowered: "Whisper, Azure Speech" },
-    { title: "Visual Mind Maps", description: "AI-generated concept maps", icon: Eye, link: "/visual-mind-map", gradient: "from-pink-500 to-red-500", apiPowered: "Gemini 1.5, MiniMax" },
-    { title: "Offline Learning", description: "Study without internet", icon: Wifi, link: "/study-materials", gradient: "from-cyan-500 to-blue-500", apiPowered: "LLaMA 3, Firebase ML" },
+    { id: 'ai-tutor', title: "AI Study Assistant", description: "24/7 multilingual tutor with GPT-4o", icon: Brain, link: "/study-assistant", gradient: "from-blue-500 to-purple-600", apiPowered: "GPT-4o, Claude 3" },
+    { id: 'ecz-prep', title: "Smart ECZ Prep", description: "Adaptive exam preparation", icon: GraduationCap, link: "/ai-study-helper", gradient: "from-green-500 to-blue-500", apiPowered: "DeepSeek, Qwen" },
+    { id: 'translator', title: "Multilingual Translator", description: "Learn in Bemba, Nyanja, Tonga, Lozi", icon: Globe, link: "/multilingual-translator", gradient: "from-purple-500 to-pink-500", apiPowered: "Qwen, Whisper" },
+    { id: 'flashcards', title: "AI Flashcards", description: "Auto-generated from your notes", icon: Lightbulb, link: "/ai-flashcards", gradient: "from-orange-500 to-red-500", apiPowered: "GPT-4o, Gemini", isNew: true },
+    { id: 'career', title: "Career Predictions", description: "AI-powered career pathways", icon: Target, link: "/smart-recommendations", gradient: "from-teal-500 to-cyan-500", apiPowered: "Moonshot AI, DeepSeek" },
+    { id: 'voice', title: "Voice Learning", description: "Audio lessons and voice Q&A", icon: Mic, link: "/comprehensive-ai-study", gradient: "from-indigo-500 to-purple-500", apiPowered: "Whisper, Azure Speech", isNew: true },
+    { id: 'mindmap', title: "Visual Mind Maps", description: "AI-generated concept maps", icon: Eye, link: "/visual-mind-map", gradient: "from-pink-500 to-red-500", apiPowered: "Gemini 1.5, MiniMax" },
+    { id: 'offline', title: "Offline Learning", description: "Study without internet", icon: Wifi, link: "/study-materials", gradient: "from-cyan-500 to-blue-500", apiPowered: "LLaMA 3, Firebase ML" },
   ];
 
   const zambianFeatures = [
@@ -81,14 +104,20 @@ const EnhancedDashboard = () => {
                   <p className="text-blue-100">Your AI-powered learning companion is ready!</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right hidden md:block">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-sm">All AI APIs Active</span>
                 </div>
-                <p className="text-xs text-blue-200">GPT-4o, Claude 3, Qwen, Gemini, DeepSeek...</p>
+                {/* Weather widget stub */}
+                <div className="flex items-center gap-1.5 text-blue-100">
+                  <CloudSun className="w-4 h-4" />
+                  <span className="text-xs">26°C Lusaka</span>
+                </div>
               </div>
             </div>
+            {/* Motivational proverb */}
+            <p className="text-xs text-blue-200 italic mb-3 max-w-2xl">💡 {dailyProverb}</p>
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/30">
                 <Globe className="w-3 h-3 mr-1" />
@@ -110,7 +139,7 @@ const EnhancedDashboard = () => {
           </div>
         </div>
 
-        {/* Enhanced Quick Stats */}
+        {/* Enhanced Quick Stats with AnimatedCounter */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {quickStats.map((stat, index) => (
             <Card key={index} className="hover:shadow-lg transition-all duration-300 group border-0 shadow-md">
@@ -118,7 +147,9 @@ const EnhancedDashboard = () => {
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                    <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                    <p className="text-3xl font-bold text-foreground">
+                      <AnimatedCounter end={stat.value} suffix={stat.suffix || ''} duration={1500} />
+                    </p>
                     <p className="text-xs text-muted-foreground">{stat.change}</p>
                   </div>
                   <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -241,7 +272,19 @@ const EnhancedDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {aiPoweredFeatures.map((feature, index) => (
                 <Link key={index} to={feature.link}>
-                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card group">
+                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card group relative">
+                    {/* NEW badge */}
+                    {feature.isNew && isNew(feature.id) && (
+                      <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
+                        <GlowBadge>NEW</GlowBadge>
+                        <button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); dismissBadge(feature.id); }}
+                          className="w-4 h-4 rounded-full bg-muted hover:bg-muted-foreground/20 flex items-center justify-center"
+                        >
+                          <X className="w-2.5 h-2.5 text-muted-foreground" />
+                        </button>
+                      </div>
+                    )}
                     <CardContent className="p-4 text-center">
                       <div className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <feature.icon className="w-6 h-6 text-white" />
