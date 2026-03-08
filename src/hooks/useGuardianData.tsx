@@ -51,7 +51,7 @@ export function useGuardianData() {
   const { user } = useAuth();
   const [students, setStudents] = useState<LinkedStudent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [weeklySummary, setWeeklySummary] = useState<WeeklySummary>({ lessonsCompleted: 0, quizzesTaken: 0, avgScore: 0 });
+  const [weeklySummary, setWeeklySummary] = useState<WeeklySummary>({ lessonsCompleted: 0, quizzesTaken: 0, avgScore: 0, focusMinutes: 0, focusSessions: 0, gaveUpCount: 0 });
 
   useEffect(() => {
     if (!user) return;
