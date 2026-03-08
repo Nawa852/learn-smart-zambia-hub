@@ -215,11 +215,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
           
-          <main className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
+          <main id="main-content" className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
             {children}
           </main>
           
           <MobileBottomNav />
+          <QuickNoteButton />
         </div>
       </div>
 
