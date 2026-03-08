@@ -217,6 +217,12 @@ const FocusModePage = () => {
                   <p className="text-2xl font-bold text-primary">{Math.floor(state.totalFocusSeconds / 60)}m</p>
                   <p className="text-xs text-muted-foreground">Focused</p>
                 </div>
+                {distractionCount > 0 && (
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-destructive">{distractionCount}</p>
+                    <p className="text-xs text-muted-foreground">Distractions</p>
+                  </div>
+                )}
               </div>
 
               {/* Controls */}
