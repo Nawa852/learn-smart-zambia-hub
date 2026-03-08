@@ -171,7 +171,7 @@ function App() {
             <Route path="/learning-path" element={<ProtectedRoute><MainLayout><AILearningPathPage /></MainLayout></ProtectedRoute>} />
             <Route path="/comprehensive-ai" element={<ProtectedRoute><MainLayout><ComprehensiveAIPage /></MainLayout></ProtectedRoute>} />
             <Route path="/study-assistant" element={<ProtectedRoute><MainLayout><StudyAssistantPage /></MainLayout></ProtectedRoute>} />
-            <Route path="/goals" element={<ProtectedRoute><MainLayout><DailyGoalCoachPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/goals" element={<ProtectedRoute><MainLayout><GoalsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/mind-maps" element={<ProtectedRoute><MainLayout><VisualMindMapPage /></MainLayout></ProtectedRoute>} />
             <Route path="/adaptive-difficulty" element={<ProtectedRoute><MainLayout><AdaptiveDifficultyPage /></MainLayout></ProtectedRoute>} />
             <Route path="/journaling" element={<ProtectedRoute><MainLayout><ClaudeJournalingPage /></MainLayout></ProtectedRoute>} />
