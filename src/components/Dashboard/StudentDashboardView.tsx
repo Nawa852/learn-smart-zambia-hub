@@ -12,8 +12,12 @@ import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, Brain, Target, Trophy, Clock, ArrowRight,
   Layers, CheckCircle, Flame, TrendingUp, Sparkles,
-  MessageSquare, ClipboardCheck, GraduationCap
+  MessageSquare, ClipboardCheck, GraduationCap, Zap,
+  Monitor, Shield, Award, Star, Coins
 } from 'lucide-react';
+import { XPBar } from '@/components/Gamification/XPBar';
+import { useUserStats } from '@/hooks/useUserStats';
+import { useScreenTime } from '@/hooks/useScreenTime';
 
 interface EnrolledCourse {
   id: string;
@@ -69,6 +73,8 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
   const [assignments, setAssignments] = useState<UpcomingAssignment[]>([]);
   const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, completedLessons: 0, totalLessons: 0, averageProgress: 0, streak: 0 });
   const [loading, setLoading] = useState(true);
+  const { stats: userStats } = useUserStats();
+  const { todayMinutes, dailyLimit } = useScreenTime();
 
   const displayName = profile?.full_name || userName || 'Learner';
 
@@ -202,13 +208,23 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
         </Card>
       </motion.div>
 
+      {/* XP & Gamification Bar */}
+      <motion.div variants={item}>
+        <Card>
+          <CardContent className="p-4">
+            <XPBar />
+          </CardContent>
+        </Card>
+      </motion.div>
+
       {/* Stats Grid */}
-      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-blue-500' },
+          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-primary' },
           { label: 'Lessons Done', value: stats.completedLessons, icon: CheckCircle, color: 'text-emerald-500' },
-          { label: 'Avg Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-purple-500' },
-          { label: 'Assignments', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-amber-500' },
+          { label: 'Avg Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-primary' },
+          { label: 'Assignments', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-accent-foreground' },
+          { label: 'Screen Time', value: `${Math.floor(todayMinutes / 60)}h ${todayMinutes % 60}m`, icon: Monitor, color: 'text-muted-foreground' },
         ].map((s, i) => (
           <Card key={i} className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
@@ -327,10 +343,12 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
             </CardHeader>
             <CardContent className="space-y-2">
               {[
-                { label: 'AI Study Buddy', icon: Brain, path: '/ai', color: 'text-purple-500' },
-                { label: 'Study Groups', icon: MessageSquare, path: '/study-chat', color: 'text-blue-500' },
-                { label: 'ECZ Past Papers', icon: Target, path: '/ecz-past-papers', color: 'text-amber-500' },
-                { label: 'Achievements', icon: Trophy, path: '/achievements', color: 'text-emerald-500' },
+                { label: 'Focus Mode', icon: Shield, path: '/focus-mode', color: 'text-primary' },
+                { label: 'AI Study Buddy', icon: Brain, path: '/ai', color: 'text-primary' },
+                { label: 'Leaderboard', icon: Trophy, path: '/leaderboard', color: 'text-primary' },
+                { label: 'Badges', icon: Award, path: '/badges', color: 'text-primary' },
+                { label: 'Screen Time', icon: Monitor, path: '/screen-time', color: 'text-muted-foreground' },
+                { label: 'ECZ Past Papers', icon: Target, path: '/ecz-past-papers', color: 'text-primary' },
               ].map(action => (
                 <Button
                   key={action.path}

@@ -93,6 +93,42 @@ export type Database = {
           },
         ]
       }
+      badges: {
+        Row: {
+          category: string
+          condition_type: string
+          condition_value: number
+          created_at: string
+          description: string | null
+          icon: string
+          id: string
+          name: string
+          xp_reward: number
+        }
+        Insert: {
+          category?: string
+          condition_type: string
+          condition_value?: number
+          created_at?: string
+          description?: string | null
+          icon?: string
+          id?: string
+          name: string
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          condition_type?: string
+          condition_value?: number
+          created_at?: string
+          description?: string | null
+          icon?: string
+          id?: string
+          name?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       business_milestones: {
         Row: {
           completed: boolean | null
@@ -372,6 +408,51 @@ export type Database = {
           repo_url?: string | null
           status?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      device_controls: {
+        Row: {
+          allowed_hours_end: string | null
+          allowed_hours_start: string | null
+          auto_lock_during_schedule: boolean
+          content_filter_level: string
+          created_at: string
+          daily_screen_limit_minutes: number
+          focus_required_before_free_time: boolean
+          guardian_id: string
+          id: string
+          min_focus_minutes_per_day: number
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_hours_end?: string | null
+          allowed_hours_start?: string | null
+          auto_lock_during_schedule?: boolean
+          content_filter_level?: string
+          created_at?: string
+          daily_screen_limit_minutes?: number
+          focus_required_before_free_time?: boolean
+          guardian_id: string
+          id?: string
+          min_focus_minutes_per_day?: number
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_hours_end?: string | null
+          allowed_hours_start?: string | null
+          auto_lock_during_schedule?: boolean
+          content_filter_level?: string
+          created_at?: string
+          daily_screen_limit_minutes?: number
+          focus_required_before_free_time?: boolean
+          guardian_id?: string
+          id?: string
+          min_focus_minutes_per_day?: number
+          student_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1039,6 +1120,36 @@ export type Database = {
         }
         Relationships: []
       }
+      screen_time_logs: {
+        Row: {
+          app_name: string
+          category: string
+          created_at: string
+          date: string
+          id: string
+          minutes_used: number
+          user_id: string
+        }
+        Insert: {
+          app_name?: string
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          minutes_used?: number
+          user_id: string
+        }
+        Update: {
+          app_name?: string
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          minutes_used?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       student_notes: {
         Row: {
           content: string
@@ -1268,6 +1379,35 @@ export type Database = {
           },
         ]
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -1283,6 +1423,48 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          current_streak: number
+          edu_coins: number
+          last_activity_date: string | null
+          level: number
+          longest_streak: number
+          total_focus_minutes: number
+          total_lessons_completed: number
+          total_quizzes_passed: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          current_streak?: number
+          edu_coins?: number
+          last_activity_date?: string | null
+          level?: number
+          longest_streak?: number
+          total_focus_minutes?: number
+          total_lessons_completed?: number
+          total_quizzes_passed?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          current_streak?: number
+          edu_coins?: number
+          last_activity_date?: string | null
+          level?: number
+          longest_streak?: number
+          total_focus_minutes?: number
+          total_lessons_completed?: number
+          total_quizzes_passed?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
         }
         Relationships: []
       }
@@ -1383,6 +1565,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_xp: {
+        Args: { p_coins?: number; p_user_id: string; p_xp: number }
+        Returns: undefined
+      }
       calculate_user_streak: { Args: { p_user_id: string }; Returns: number }
       get_platform_stats: { Args: never; Returns: Json }
       has_role: {

@@ -6,7 +6,7 @@ import {
   Briefcase, Globe, Heart, Compass, Wrench, Sparkles, Youtube,
   Calculator, FlaskConical, Atom, Languages, BookMarked, Layers,
   Timer, Award, Gamepad2, Headphones, PenTool, Camera, Presentation,
-  MessagesSquare, Library, Microscope, Bot, Zap, Rocket,
+  MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor, Coins,
   type LucideIcon
 } from "lucide-react";
 
@@ -90,9 +90,12 @@ export const studentNavigation: NavGroup[] = [
     items: [
       { title: "Progress Report", url: "/progress-report", icon: TrendingUp },
       { title: "Analytics", url: "/analytics", icon: BarChart3 },
-      { title: "Achievements", url: "/achievements", icon: Trophy },
+      { title: "Leaderboard", url: "/leaderboard", icon: Trophy, badge: "NEW" },
+      { title: "Badges", url: "/badges", icon: Award, badge: "NEW" },
+      { title: "Achievements", url: "/achievements", icon: Gamepad2 },
       { title: "Goals", url: "/goals", icon: Target },
-      { title: "My Notes", url: "/my-notes", icon: PenTool, badge: "NEW" },
+      { title: "Screen Time", url: "/screen-time", icon: Monitor },
+      { title: "My Notes", url: "/my-notes", icon: PenTool },
     ],
   },
   {
@@ -193,6 +196,7 @@ export const guardianNavigation: NavGroup[] = [
   {
     label: "Monitor",
     items: [
+      { title: "Parental Controls", url: "/parental-controls", icon: Shield, badge: "NEW" },
       { title: "Grades", url: "/parent-grades", icon: BarChart3 },
       { title: "Attendance", url: "/parent-attendance", icon: Calendar },
       { title: "Progress Tracker", url: "/parent-progress", icon: TrendingUp },

@@ -138,6 +138,10 @@ const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAna
 const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
 const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
 const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
+const LeaderboardPage = React.lazy(() => import('@/pages/LeaderboardPage'));
+const BadgesPage = React.lazy(() => import('@/pages/BadgesPage'));
+const ScreenTimePage = React.lazy(() => import('@/pages/ScreenTimePage'));
+const ParentalControlsPage = React.lazy(() => import('@/pages/ParentalControlsPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -333,6 +337,12 @@ function App() {
 
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
+
+              {/* Gamification & Device Control */}
+              <Route path="/leaderboard" element={<PG><LeaderboardPage /></PG>} />
+              <Route path="/badges" element={<PG><BadgesPage /></PG>} />
+              <Route path="/screen-time" element={<PG><ScreenTimePage /></PG>} />
+              <Route path="/parental-controls" element={<PG><ParentalControlsPage /></PG>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
