@@ -282,6 +282,7 @@ export const institutionNavigation: NavGroup[] = [
   {
     label: "Account",
     items: [
+      { title: "Notification Prefs", url: "/notification-preferences", icon: Bell },
       { title: "Profile", url: "/profile", icon: User },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
