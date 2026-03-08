@@ -279,7 +279,9 @@ export const ministryNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/ministry-dashboard", icon: LayoutDashboard },
       { title: "National Analytics", url: "/analytics", icon: BarChart3 },
+      { title: "Live Stats", url: "/ministry/live-stats", icon: Zap, badge: "LIVE" },
       { title: "ECZ Analytics", url: "/ministry/ecz-analytics", icon: PieChart },
+      { title: "Province Map", url: "/ministry/province-map", icon: Globe, badge: "NEW" },
     ],
   },
   {
