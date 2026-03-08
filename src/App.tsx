@@ -11,6 +11,7 @@ import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { LogoLoader } from '@/components/UI/LogoLoader';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Core Pages (eagerly loaded)
 import Index from '@/pages/Index';
