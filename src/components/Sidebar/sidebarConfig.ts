@@ -86,6 +86,7 @@ export const studentNavigation: NavGroup[] = [
       { title: "Practice Quiz", url: "/ecz-practice-quiz", icon: Timer },
       { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Calculator },
       { title: "Video Library", url: "/ecz-videos", icon: Youtube },
+      { title: "ECZ Video Hub", url: "/student-videos", icon: Youtube, badge: "NEW" },
       { title: "Resources Hub", url: "/zambian-resources", icon: Globe },
     ],
   },
