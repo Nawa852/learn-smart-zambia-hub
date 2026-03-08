@@ -409,6 +409,10 @@ function App() {
               {/* Teacher Pages */}
               <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
               <Route path="/teacher-gradebook" element={<PG><TeacherGradebookPage /></PG>} />
+              <Route path="/teacher-lesson-plan" element={<PG><TeacherLessonPlanPage /></PG>} />
+              <Route path="/teacher-bulk-grades" element={<PG><TeacherBulkGradePage /></PG>} />
+              <Route path="/teacher-assignment-analytics" element={<PG><TeacherAssignmentAnalyticsPage /></PG>} />
+              <Route path="/teacher-attendance-qr" element={<PG><TeacherAttendanceQRPage /></PG>} />
 
               {/* Ministry Pages */}
               <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
