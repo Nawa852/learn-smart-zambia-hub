@@ -73,6 +73,10 @@ const ROUTE_LABELS: Record<string, string> = {
   'cybersecurity/vuln-scanner': 'Vuln Scanner',
   'cybersecurity/kill-chain': 'Kill Chain',
   'cybersecurity/report-writer': 'Report Writer',
+  'skills/job-tracker': 'Job Tracker',
+  'skills/apprenticeship-match': 'Apprenticeship Match',
+  'skills/portfolio-gallery': 'Portfolio Gallery',
+  'skills/assessment-quiz': 'Skills Assessment',
 };
 
 const COMMAND_ITEMS = [

@@ -482,6 +482,10 @@ function App() {
               <Route path="/skills/safety" element={<PG><SkillsSafetyPage /></PG>} />
               <Route path="/skills/financial-literacy" element={<PG><SkillsFinancialLiteracyPage /></PG>} />
               <Route path="/skills/entrepreneurship" element={<PG><SkillsEntrepreneurshipPage /></PG>} />
+              <Route path="/skills/job-tracker" element={<PG><SkillsJobTrackerPage /></PG>} />
+              <Route path="/skills/apprenticeship-match" element={<PG><SkillsApprenticeshipMatchPage /></PG>} />
+              <Route path="/skills/portfolio-gallery" element={<PG><SkillsPortfolioGalleryPage /></PG>} />
+              <Route path="/skills/assessment-quiz" element={<PG><SkillsAssessmentQuizPage /></PG>} />
 
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />

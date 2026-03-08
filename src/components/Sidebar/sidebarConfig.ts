@@ -501,6 +501,18 @@ export const skillsNavigation: NavGroup[] = [
       { title: "Skills Hub", url: "/skills/dashboard", icon: Wrench, badge: "NEW" },
       { title: "Choose Focus", url: "/skills/categories", icon: Target, badge: "NEW" },
       { title: "Video Tutorials", url: "/skills/videos", icon: Video, badge: "NEW" },
+      { title: "Assessment Quiz", url: "/skills/assessment-quiz", icon: Target, badge: "NEW" },
+      { title: "Portfolio Gallery", url: "/skills/portfolio-gallery", icon: Palette, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Career",
+    items: [
+      { title: "Job Tracker", url: "/skills/job-tracker", icon: Briefcase, badge: "NEW" },
+      { title: "Apprenticeship Match", url: "/skills/apprenticeship-match", icon: Search, badge: "NEW" },
+      { title: "Job Board", url: "/skills/jobs", icon: Globe },
+      { title: "Resume Builder", url: "/skills/resume", icon: FileText },
+      { title: "Interview Prep", url: "/skills/interview-prep", icon: Users },
     ],
   },
   {
