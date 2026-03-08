@@ -111,6 +111,84 @@ export type Database = {
         }
         Relationships: []
       }
+      clinical_cases: {
+        Row: {
+          accuracy_score: number | null
+          body_system: string | null
+          condition: string
+          created_at: string
+          diagnosis: string | null
+          id: string
+          notes: string | null
+          outcome: string | null
+          patient_summary: string | null
+          presenting_complaint: string | null
+          user_id: string
+        }
+        Insert: {
+          accuracy_score?: number | null
+          body_system?: string | null
+          condition: string
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          outcome?: string | null
+          patient_summary?: string | null
+          presenting_complaint?: string | null
+          user_id: string
+        }
+        Update: {
+          accuracy_score?: number | null
+          body_system?: string | null
+          condition?: string
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          notes?: string | null
+          outcome?: string | null
+          patient_summary?: string | null
+          presenting_complaint?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      clinical_rotations: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          id: string
+          notes: string | null
+          rotation_name: string
+          start_date: string | null
+          status: string | null
+          supervisor_name: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          rotation_name: string
+          start_date?: string | null
+          status?: string | null
+          supervisor_name?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          rotation_name?: string
+          start_date?: string | null
+          status?: string | null
+          supervisor_name?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string
