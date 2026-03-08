@@ -18,6 +18,8 @@ import {
 import { XPBar } from '@/components/Gamification/XPBar';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useScreenTime } from '@/hooks/useScreenTime';
+import { DailyCheckin } from '@/components/Dashboard/DailyCheckin';
+import { StudyLeaderboard } from '@/components/Dashboard/StudyLeaderboard';
 
 interface EnrolledCourse {
   id: string;
