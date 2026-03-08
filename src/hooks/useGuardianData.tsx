@@ -45,6 +45,9 @@ export interface WeeklySummary {
   lessonsCompleted: number;
   quizzesTaken: number;
   avgScore: number;
+  focusMinutes: number;
+  focusSessions: number;
+  gaveUpCount: number;
 }
 
 export function useGuardianData() {
