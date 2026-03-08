@@ -87,17 +87,26 @@ const LoginPage = () => {
             {/* Decorative glowing orbs */}
             <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
             <div className="absolute bottom-20 left-10 w-40 h-40 bg-accent/20 rounded-full blur-3xl" />
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-16 h-16 bg-background/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+            <motion.div 
+              className="flex items-center gap-4 mb-8 relative z-10"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.div 
+                className="w-16 h-16 bg-background/20 rounded-xl flex items-center justify-center backdrop-blur-sm glow-border"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 200 }}
+              >
                 <BookOpenCheck size={32} />
-              </div>
+              </motion.div>
               <div>
-                <h1 className="text-3xl lg:text-4xl font-bold">Edu Zambia</h1>
-                <p className="opacity-80 text-sm flex items-center gap-1">
-                  Powered by <Sparkles className="w-3 h-3" /> BrightSphere
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight">Edu Zambia</h1>
+                <p className="opacity-90 text-sm flex items-center gap-1 font-medium">
+                  <Zap className="w-3 h-3" /> Powered by BrightSphere
                 </p>
               </div>
-            </div>
+            </motion.div>
             
             <div className="space-y-6 mb-8">
               <h2 className="text-xl lg:text-2xl font-semibold">
