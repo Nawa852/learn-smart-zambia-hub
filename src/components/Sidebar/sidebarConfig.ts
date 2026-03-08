@@ -175,6 +175,8 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Teaching",
     items: [
+      { title: "Course Catalog", url: "/course-catalog", icon: BookOpen },
+      { title: "Create Course", url: "/create-course", icon: Layers, badge: "NEW" },
       { title: "Curriculum", url: "/courses", icon: BookOpen },
       { title: "Create Lesson", url: "/lessons", icon: FileText },
       { title: "Virtual Classroom", url: "/classroom", icon: Video },

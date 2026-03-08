@@ -79,10 +79,26 @@ const CourseDetailPage = () => {
     }
   };
 
-  const markComplete = (lessonId: string) => {
+  const markComplete = async (lessonId: string) => {
+    if (!user || !courseId) return;
+    const { error } = await supabase.from('lesson_completions').insert({
+      user_id: user.id,
+      lesson_id: lessonId,
+      course_id: courseId,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast.error('Failed to save progress');
+      return;
+    }
     setCompletedLessons(prev => new Set([...prev, lessonId]));
     const nextIndex = lessons.findIndex(l => l.id === lessonId) + 1;
     if (nextIndex < lessons.length) setActiveLesson(lessons[nextIndex]);
+
+    // Update enrollment progress
+    const newProgress = ((completedLessons.size + 1) / lessons.length) * 100;
+    await supabase.from('enrollments').update({ progress: Math.min(newProgress, 100) })
+      .eq('user_id', user.id).eq('course_id', courseId);
+
     toast.success('Lesson completed!');
   };
 
