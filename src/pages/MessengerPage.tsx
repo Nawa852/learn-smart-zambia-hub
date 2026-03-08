@@ -3,12 +3,10 @@ import MessengerChat from '@/components/Social/MessengerChat';
 
 const MessengerPage = () => {
   return (
-    <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold gradient-text-bright-sphere mb-2">Messages</h1>
-        <p className="text-muted-foreground">
-          Connect and collaborate with your learning community
-        </p>
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Messages</h1>
+        <p className="text-sm text-muted-foreground">Connect and collaborate with your learning community</p>
       </div>
       <MessengerChat />
     </div>
