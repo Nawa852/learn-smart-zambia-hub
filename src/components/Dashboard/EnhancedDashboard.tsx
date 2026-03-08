@@ -12,10 +12,10 @@ const EnhancedDashboard = () => {
   const { user } = useAuth();
 
   const quickStats = [
-    { title: "Study Sessions", value: "24", icon: Clock, color: "text-blue-600", bg: "bg-blue-50", change: "+5 this week" },
-    { title: "ECZ Progress", value: "78%", icon: BookOpen, color: "text-green-600", bg: "bg-green-50", change: "+12% this month" },
-    { title: "AI Interactions", value: "156", icon: Brain, color: "text-purple-600", bg: "bg-purple-50", change: "Daily avg: 8" },
-    { title: "Community Points", value: "1,250", icon: Award, color: "text-orange-600", bg: "bg-orange-50", change: "Top 10%" },
+    { title: "Study Sessions", value: "24", icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10", change: "+5 this week" },
+    { title: "ECZ Progress", value: "78%", icon: BookOpen, color: "text-green-600", bg: "bg-green-500/10", change: "+12% this month" },
+    { title: "AI Interactions", value: "156", icon: Brain, color: "text-purple-600", bg: "bg-purple-500/10", change: "Daily avg: 8" },
+    { title: "Community Points", value: "1,250", icon: Award, color: "text-orange-600", bg: "bg-orange-500/10", change: "Top 10%" },
   ];
 
   const aiPoweredFeatures = [
@@ -117,9 +117,9 @@ const EnhancedDashboard = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-xs text-gray-500">{stat.change}</p>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                    <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.change}</p>
                   </div>
                   <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <stat.icon className={`w-6 h-6 ${stat.color}`} />
@@ -164,7 +164,7 @@ const EnhancedDashboard = () => {
                       style={{ width: `${subject.progress}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500">Next: {subject.nextTopic}</p>
+                  <p className="text-xs text-muted-foreground">Next: {subject.nextTopic}</p>
                 </div>
               ))}
             </CardContent>
@@ -181,15 +181,15 @@ const EnhancedDashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 line-clamp-2">{activity.title}</p>
+                      <p className="text-sm font-medium text-foreground line-clamp-2">{activity.title}</p>
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-gray-500">{activity.time}</span>
+                        <span className="text-xs text-muted-foreground">{activity.time}</span>
                         <div className="flex items-center gap-1">
                           {activity.score && (
-                            <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+                            <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-600">
                               {activity.score}%
                             </Badge>
                           )}
@@ -218,10 +218,10 @@ const EnhancedDashboard = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {aiInsights.map((insight, index) => (
-                <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer group bg-white">
+                <div key={index} className="p-4 border border-border rounded-lg hover:shadow-md transition-all duration-300 cursor-pointer group bg-card">
                   <insight.icon className={`h-8 w-8 ${insight.color} mb-2 group-hover:scale-110 transition-transform duration-300`} />
-                  <h3 className="font-semibold text-gray-900 mb-1">{insight.title}</h3>
-                  <p className="text-sm text-gray-600">{insight.description}</p>
+                  <h3 className="font-semibold text-foreground mb-1">{insight.title}</h3>
+                  <p className="text-sm text-muted-foreground">{insight.description}</p>
                 </div>
               ))}
             </div>
@@ -241,14 +241,14 @@ const EnhancedDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {aiPoweredFeatures.map((feature, index) => (
                 <Link key={index} to={feature.link}>
-                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 bg-gradient-to-br from-white to-gray-50 group">
+                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 bg-card group">
                     <CardContent className="p-4 text-center">
                       <div className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <feature.icon className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{feature.description}</p>
-                      <Badge variant="outline" className="text-xs bg-purple-50">
+                      <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-2">{feature.description}</p>
+                      <Badge variant="outline" className="text-xs bg-primary/10">
                         {feature.apiPowered}
                       </Badge>
                     </CardContent>
@@ -272,11 +272,11 @@ const EnhancedDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {zambianFeatures.map((feature, index) => (
                 <Link key={index} to={feature.link}>
-                  <div className="p-4 border rounded-lg hover:shadow-md transition-all duration-300 hover:border-green-300 cursor-pointer group bg-white">
+                  <div className="p-4 border border-border rounded-lg hover:shadow-md transition-all duration-300 hover:border-emerald-400 cursor-pointer group bg-card">
                     <feature.icon className={`h-8 w-8 ${feature.color} mb-2 group-hover:scale-110 transition-transform duration-300`} />
-                    <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{feature.description}</p>
-                    <Badge variant="outline" className="text-xs bg-green-50">
+                    <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-2">{feature.description}</p>
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10">
                       AI: {feature.aiPowered}
                     </Badge>
                   </div>
@@ -298,37 +298,37 @@ const EnhancedDashboard = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               <Link to="/study-assistant">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-blue-500/10 hover:border-blue-400 transition-all duration-300">
                   <Brain className="h-6 w-6 text-blue-600" />
                   <span className="text-xs">AI Tutor</span>
                 </Button>
               </Link>
               <Link to="/ai-flashcards">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-purple-500/10 hover:border-purple-400 transition-all duration-300">
                   <Lightbulb className="h-6 w-6 text-purple-600" />
                   <span className="text-xs">Smart Cards</span>
                 </Button>
               </Link>
               <Link to="/multilingual-translator">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-green-50 hover:border-green-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-emerald-500/10 hover:border-emerald-400 transition-all duration-300">
                   <Globe className="h-6 w-6 text-green-600" />
                   <span className="text-xs">Translator</span>
                 </Button>
               </Link>
               <Link to="/visual-mind-map">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-pink-500/10 hover:border-pink-400 transition-all duration-300">
                   <Eye className="h-6 w-6 text-pink-600" />
                   <span className="text-xs">Mind Maps</span>
                 </Button>
               </Link>
               <Link to="/smart-recommendations">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-orange-50 hover:border-orange-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-orange-500/10 hover:border-orange-400 transition-all duration-300">
                   <Target className="h-6 w-6 text-orange-600" />
                   <span className="text-xs">Career AI</span>
                 </Button>
               </Link>
               <Link to="/comprehensive-ai-study">
-                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-cyan-50 hover:border-cyan-300 transition-all duration-300">
+                <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300">
                   <Mic className="h-6 w-6 text-cyan-600" />
                   <span className="text-xs">Voice Learn</span>
                 </Button>

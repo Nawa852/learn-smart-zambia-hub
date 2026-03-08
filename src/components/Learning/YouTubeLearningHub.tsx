@@ -91,6 +91,31 @@ const CURATED_VIDEOS: Record<string, YouTubeVideo[]> = {
     { id: 'dKA3YvFB4cs', title: 'Soil Science Basics', description: 'Understanding soil types, pH levels, nutrients, and soil management for farming.', thumbnail: 'https://img.youtube.com/vi/dKA3YvFB4cs/mqdefault.jpg', duration: '15:20', viewCount: '1500000', likeCount: '38000', channelTitle: 'Jimi Sol', publishedAt: '2021-08-20', tags: ['soil', 'science'] },
     { id: 'GH2R6_7rqUk', title: 'Plant Biology — Growth and Development', description: 'How plants grow, reproduce, and respond to their environment.', thumbnail: 'https://img.youtube.com/vi/GH2R6_7rqUk/mqdefault.jpg', duration: '18:10', viewCount: '2100000', likeCount: '52000', channelTitle: 'Amoeba Sisters', publishedAt: '2022-02-28', tags: ['plants', 'biology'] },
   ],
+  biology: [
+    { id: 'URUJD5NEXC8', title: 'DNA, Chromosomes, Genes & Traits', description: 'Introduction to heredity and genetics — DNA structure, chromosomes, and how traits are inherited.', thumbnail: 'https://img.youtube.com/vi/URUJD5NEXC8/mqdefault.jpg', duration: '8:42', viewCount: '5400000', likeCount: '130000', channelTitle: 'Amoeba Sisters', publishedAt: '2021-03-15', tags: ['genetics', 'dna'] },
+    { id: '0pk3MJnAXmc', title: 'The Human Digestive System', description: 'Complete journey through the digestive system — from mouth to large intestine.', thumbnail: 'https://img.youtube.com/vi/0pk3MJnAXmc/mqdefault.jpg', duration: '14:20', viewCount: '3800000', likeCount: '92000', channelTitle: 'Nucleus Medical Media', publishedAt: '2020-08-10', tags: ['digestion', 'anatomy'] },
+    { id: 'dQCsA2cCdvA', title: 'Mitosis vs Meiosis — Cell Division', description: 'Comparing mitosis and meiosis with clear diagrams and explanations.', thumbnail: 'https://img.youtube.com/vi/dQCsA2cCdvA/mqdefault.jpg', duration: '10:15', viewCount: '6100000', likeCount: '145000', channelTitle: 'Amoeba Sisters', publishedAt: '2022-01-20', tags: ['cells', 'division'] },
+    { id: 'GVU_UHidVPs', title: 'The Respiratory System Explained', description: 'How breathing works — lungs, gas exchange, and respiratory health.', thumbnail: 'https://img.youtube.com/vi/GVU_UHidVPs/mqdefault.jpg', duration: '12:30', viewCount: '2900000', likeCount: '72000', channelTitle: 'Nucleus Medical Media', publishedAt: '2021-06-05', tags: ['respiratory', 'anatomy'] },
+    { id: 'x-IADFnFONk', title: 'Ecology — Ecosystems and Biomes', description: 'Understanding ecosystems, food chains, food webs, and major world biomes.', thumbnail: 'https://img.youtube.com/vi/x-IADFnFONk/mqdefault.jpg', duration: '18:45', viewCount: '3200000', likeCount: '85000', channelTitle: 'CrashCourse', publishedAt: '2022-04-12', tags: ['ecology', 'ecosystems'] },
+  ],
+  chemistry: [
+    { id: 'bka20Q9TN6M', title: 'Chemical Bonding — Ionic, Covalent & Metallic', description: 'Understanding the three main types of chemical bonds with examples.', thumbnail: 'https://img.youtube.com/vi/bka20Q9TN6M/mqdefault.jpg', duration: '16:30', viewCount: '4500000', likeCount: '110000', channelTitle: 'The Organic Chemistry Tutor', publishedAt: '2021-05-18', tags: ['bonding', 'chemistry'] },
+    { id: 'MEL_5bFo7B4', title: 'Balancing Chemical Equations — Practice', description: 'Step-by-step guide to balancing chemical equations with practice problems.', thumbnail: 'https://img.youtube.com/vi/MEL_5bFo7B4/mqdefault.jpg', duration: '22:15', viewCount: '3800000', likeCount: '95000', channelTitle: 'Tyler DeWitt', publishedAt: '2020-09-22', tags: ['equations', 'balancing'] },
+    { id: 'TZMLKJdHj3s', title: 'Acids, Bases and pH Scale', description: 'Complete guide to acids, bases, pH, and neutralisation reactions.', thumbnail: 'https://img.youtube.com/vi/TZMLKJdHj3s/mqdefault.jpg', duration: '14:50', viewCount: '2700000', likeCount: '68000', channelTitle: 'FuseSchool', publishedAt: '2022-02-14', tags: ['acids', 'bases', 'ph'] },
+    { id: 'RKbuTM1JNtQ', title: 'Organic Chemistry Introduction', description: 'Introduction to organic chemistry — hydrocarbons, functional groups, and naming.', thumbnail: 'https://img.youtube.com/vi/RKbuTM1JNtQ/mqdefault.jpg', duration: '28:40', viewCount: '5100000', likeCount: '125000', channelTitle: 'The Organic Chemistry Tutor', publishedAt: '2021-11-08', tags: ['organic', 'chemistry'] },
+  ],
+  physics: [
+    { id: 'kKKM8Y-u7ds', title: 'Work, Energy and Power Explained', description: 'Understanding work, kinetic energy, potential energy, and power with calculations.', thumbnail: 'https://img.youtube.com/vi/kKKM8Y-u7ds/mqdefault.jpg', duration: '20:15', viewCount: '3600000', likeCount: '88000', channelTitle: 'The Organic Chemistry Tutor', publishedAt: '2021-07-20', tags: ['energy', 'work', 'power'] },
+    { id: 'KDp1tiUsZw8', title: 'Waves — Sound and Light', description: 'Properties of waves, sound waves, light waves, and the electromagnetic spectrum.', thumbnail: 'https://img.youtube.com/vi/KDp1tiUsZw8/mqdefault.jpg', duration: '18:30', viewCount: '2800000', likeCount: '72000', channelTitle: 'CrashCourse', publishedAt: '2022-03-15', tags: ['waves', 'sound', 'light'] },
+    { id: 'AEIn3T6nDAo', title: 'Thermal Physics — Heat Transfer', description: 'Conduction, convection, radiation, and specific heat capacity explained.', thumbnail: 'https://img.youtube.com/vi/AEIn3T6nDAo/mqdefault.jpg', duration: '15:45', viewCount: '2100000', likeCount: '55000', channelTitle: 'Khan Academy', publishedAt: '2021-10-12', tags: ['thermal', 'heat'] },
+    { id: 'w4QFJb9a8vo', title: 'Magnetism and Electromagnetism', description: 'Understanding magnets, magnetic fields, electromagnets, and electromagnetic induction.', thumbnail: 'https://img.youtube.com/vi/w4QFJb9a8vo/mqdefault.jpg', duration: '22:10', viewCount: '3400000', likeCount: '82000', channelTitle: 'The Engineering Mindset', publishedAt: '2022-05-08', tags: ['magnetism', 'electromagnetism'] },
+  ],
+  business: [
+    { id: 'MHYrvFW2cL0', title: 'Introduction to Business Studies', description: 'Core concepts of business — entrepreneurship, marketing, finance, and management.', thumbnail: 'https://img.youtube.com/vi/MHYrvFW2cL0/mqdefault.jpg', duration: '16:20', viewCount: '2400000', likeCount: '58000', channelTitle: 'Two Teachers', publishedAt: '2021-09-15', tags: ['business', 'introduction'] },
+    { id: 'ukJHBORdaP8', title: 'Supply and Demand — Economics Basics', description: 'Understanding supply and demand curves, market equilibrium, and price determination.', thumbnail: 'https://img.youtube.com/vi/ukJHBORdaP8/mqdefault.jpg', duration: '12:45', viewCount: '3900000', likeCount: '95000', channelTitle: 'CrashCourse', publishedAt: '2020-11-20', tags: ['economics', 'supply', 'demand'] },
+    { id: 'cmJT6TG7SUQ', title: 'Marketing Fundamentals', description: 'The 4 Ps of marketing — product, price, place, and promotion explained.', thumbnail: 'https://img.youtube.com/vi/cmJT6TG7SUQ/mqdefault.jpg', duration: '14:30', viewCount: '1800000', likeCount: '45000', channelTitle: 'The Business Channel', publishedAt: '2022-02-28', tags: ['marketing', '4ps'] },
+    { id: 'WEDIj9JBTC8', title: 'Financial Literacy for Students', description: 'Budgeting, saving, investing, and financial planning basics for young people.', thumbnail: 'https://img.youtube.com/vi/WEDIj9JBTC8/mqdefault.jpg', duration: '18:15', viewCount: '2600000', likeCount: '65000', channelTitle: 'Practical Wisdom', publishedAt: '2021-04-10', tags: ['finance', 'literacy'] },
+  ],
 };
 
 const SUBJECT_ICONS: Record<string, React.ReactNode> = {
@@ -102,6 +127,10 @@ const SUBJECT_ICONS: Record<string, React.ReactNode> = {
   coding: <Code className="w-4 h-4" />,
   civic_education: <Star className="w-4 h-4" />,
   agriculture: <Beaker className="w-4 h-4" />,
+  biology: <Atom className="w-4 h-4" />,
+  chemistry: <Beaker className="w-4 h-4" />,
+  physics: <Atom className="w-4 h-4" />,
+  business: <GraduationCap className="w-4 h-4" />,
 };
 
 const item = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } };
