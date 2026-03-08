@@ -271,7 +271,7 @@ const MFASetupPage = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <QrCode className="w-5 h-5 text-primary" />
-                    <span className="gradient-text">Scan QR Code</span>
+                    <span className="text-primary">Scan QR Code</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
