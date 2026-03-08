@@ -210,7 +210,12 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
         </Card>
       </motion.div>
 
-      {/* XP & Gamification Bar */}
+      {/* Daily Check-in */}
+      <motion.div variants={item}>
+        <DailyCheckin />
+      </motion.div>
+
+
       <motion.div variants={item}>
         <Card>
           <CardContent className="p-4">
