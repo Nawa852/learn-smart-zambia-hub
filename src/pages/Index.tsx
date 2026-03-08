@@ -1,15 +1,7 @@
 import { useAuth } from "@/components/Auth/AuthProvider";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ChatEduNavbar,
-  ChatEduHero,
-  ChatEduFeatures,
-  ChatEduRoles,
-  ChatEduTestimonials,
-  ChatEduCTA,
-  ChatEduFooter
-} from '@/components/ChatEdu';
+import MVPLanding from "@/components/Landing/MVPLanding";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -24,25 +16,12 @@ const Index = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
-          <p className="text-muted-foreground animate-pulse">Loading Edu Zambia...</p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <ChatEduNavbar />
-      <ChatEduHero />
-      <ChatEduFeatures />
-      <ChatEduRoles />
-      <ChatEduTestimonials />
-      <ChatEduCTA />
-      <ChatEduFooter />
-    </div>
-  );
+  return <MVPLanding />;
 };
 
 export default Index;
