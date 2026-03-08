@@ -86,8 +86,8 @@ import VirtualClassroomPage from '@/pages/VirtualClassroomPage';
 import GoalsPage from '@/pages/GoalsPage';
 import JournalingPage from '@/pages/JournalingPage';
 import MentorshipPage from '@/pages/MentorshipPage';
+import FocusModePage from '@/pages/FocusModePage';
 
-// ECZ & Zambian Resources
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
@@ -244,8 +244,8 @@ function App() {
             <Route path="/guardian-link" element={<ProtectedRoute><MainLayout><GuardianLinkPage /></MainLayout></ProtectedRoute>} />
             <Route path="/guardian-reports" element={<ProtectedRoute><MainLayout><GuardianReportsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/my-notes" element={<ProtectedRoute><MainLayout><MyNotesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/focus-mode" element={<ProtectedRoute><MainLayout><FocusModePage /></MainLayout></ProtectedRoute>} />
 
-            {/* Parent-Specific Pages */}
             <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />
             <Route path="/parent-attendance" element={<ProtectedRoute><MainLayout><ParentAttendancePage /></MainLayout></ProtectedRoute>} />
             <Route path="/parent-grades" element={<ProtectedRoute><MainLayout><ParentGradesPage /></MainLayout></ProtectedRoute>} />

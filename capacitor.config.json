@@ -1,0 +1,9 @@
+{
+  "appId": "app.lovable.7ee78fd588544bfbbc1a38e0c56b2a95",
+  "appName": "learn-smart-zambia-hub",
+  "webDir": "dist",
+  "server": {
+    "url": "https://7ee78fd5-8854-4bfb-bc1a-38e0c56b2a95.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  }
+}
