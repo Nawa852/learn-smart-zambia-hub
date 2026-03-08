@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
-  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save
+  ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save, Users
 } from 'lucide-react';
 
 interface Lesson {
@@ -30,6 +30,14 @@ interface Course {
   description: string | null;
   subject: string | null;
   grade_level: string | null;
+  created_by: string | null;
+}
+
+interface EnrolledStudent {
+  user_id: string;
+  full_name: string;
+  progress: number;
+  enrolled_at: string;
 }
 
 const CourseDetailPage = () => {
@@ -40,11 +48,15 @@ const CourseDetailPage = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [noteContent, setNoteContent] = useState('');
   const [showNotes, setShowNotes] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
+  const [showRoster, setShowRoster] = useState(false);
+  const [students, setStudents] = useState<EnrolledStudent[]>([]);
+  const [loadingRoster, setLoadingRoster] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
@@ -54,7 +66,10 @@ const CourseDetailPage = () => {
         supabase.from('lessons').select('*').eq('course_id', courseId).order('order_index'),
       ]);
 
-      if (courseData) setCourse(courseData);
+      if (courseData) {
+        setCourse(courseData);
+        if (user && courseData.created_by === user.id) setIsCreator(true);
+      }
       if (lessonsData) {
         setLessons(lessonsData);
         if (lessonsData.length > 0) setActiveLesson(lessonsData[0]);
@@ -72,6 +87,33 @@ const CourseDetailPage = () => {
     };
     fetchData();
   }, [courseId, user]);
+
+  const fetchRoster = async () => {
+    if (!courseId) return;
+    setLoadingRoster(true);
+    const { data: enrollments } = await supabase
+      .from('enrollments')
+      .select('user_id, progress, enrolled_at')
+      .eq('course_id', courseId);
+
+    if (enrollments && enrollments.length > 0) {
+      const userIds = enrollments.map(e => e.user_id);
+      const { data: profiles } = await supabase.from('profiles').select('id, full_name').in('id', userIds);
+      const profileMap: Record<string, string> = {};
+      (profiles || []).forEach(p => { profileMap[p.id] = p.full_name || 'Unknown'; });
+
+      setStudents(enrollments.map(e => ({
+        user_id: e.user_id,
+        full_name: profileMap[e.user_id] || 'Unknown Student',
+        progress: Number(e.progress) || 0,
+        enrolled_at: e.enrolled_at,
+      })));
+    } else {
+      setStudents([]);
+    }
+    setLoadingRoster(false);
+    setShowRoster(true);
+  };
 
   const handleEnroll = async () => {
     if (!user || !courseId) return;
@@ -161,13 +203,52 @@ const CourseDetailPage = () => {
             <Badge variant="outline"><Layers className="w-3 h-3 mr-1" />{lessons.length} lessons</Badge>
           </div>
           {course.description && <p className="text-sm text-muted-foreground mt-2">{course.description}</p>}
-          {isEnrolled && (
-            <Button variant="outline" size="sm" className="mt-2" onClick={() => navigate(`/course/${courseId}/assignments`)}>
-              <ClipboardCheck className="w-4 h-4 mr-1" /> Assignments
-            </Button>
-          )}
+          <div className="flex gap-2 mt-2">
+            {isEnrolled && (
+              <Button variant="outline" size="sm" onClick={() => navigate(`/course/${courseId}/assignments`)}>
+                <ClipboardCheck className="w-4 h-4 mr-1" /> Assignments
+              </Button>
+            )}
+            {isCreator && (
+              <Button variant="outline" size="sm" onClick={fetchRoster} disabled={loadingRoster}>
+                <Users className="w-4 h-4 mr-1" /> {loadingRoster ? 'Loading...' : 'Student Roster'}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Student Roster (Creator only) */}
+      {showRoster && isCreator && (
+        <Card className="border-primary/20">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-foreground flex items-center gap-2"><Users className="w-4 h-4" />Enrolled Students ({students.length})</h3>
+              <Button variant="ghost" size="sm" onClick={() => setShowRoster(false)}>Close</Button>
+            </div>
+            {students.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-4">No students enrolled yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {students.map(s => (
+                  <div key={s.user_id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium text-sm text-foreground">{s.full_name}</p>
+                      <p className="text-xs text-muted-foreground">Enrolled {new Date(s.enrolled_at).toLocaleDateString()}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-foreground">{Math.round(s.progress)}%</p>
+                        <Progress value={s.progress} className="h-1.5 w-20" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Enrollment banner */}
       {!isEnrolled && (
