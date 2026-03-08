@@ -30,10 +30,11 @@ const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
   const deviceSetup = !!(profile as any)?.device_setup_complete;
   const hasSchedule = schedules.length > 0;
 
-  // Only enforce for students
-  const isStudent = profile?.role === 'student';
+  // Enforce setup for learner-type roles (not institution/ministry)
+  const exemptRoles = ['institution', 'ministry'];
+  const needsSetup = !exemptRoles.includes(profile?.role || '');
 
-  if (isStudent && (!profileComplete || !deviceSetup || !hasSchedule)) {
+  if (needsSetup && (!profileComplete || !deviceSetup || !hasSchedule)) {
     return <Navigate to="/setup" replace state={{ from: location }} />;
   }
 

@@ -25,16 +25,35 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return 'dark';
   });
 
-  const setTheme = (newTheme: ThemeType) => {
+  const setTheme = useCallback(async (newTheme: ThemeType) => {
     setThemeState(newTheme);
     localStorage.setItem('edu-zambia-theme', newTheme);
-  };
+    // Persist to profile if logged in
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      supabase.from('profiles').update({ theme_preference: newTheme }).eq('id', user.id).then();
+    }
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('dark', 'light');
     root.classList.add(theme);
   }, [theme]);
+
+  // Sync theme from profile on auth
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const { data } = await supabase.from('profiles').select('theme_preference').eq('id', session.user.id).single();
+        if (data?.theme_preference && (data.theme_preference === 'light' || data.theme_preference === 'dark')) {
+          setThemeState(data.theme_preference as ThemeType);
+          localStorage.setItem('edu-zambia-theme', data.theme_preference);
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, themes }}>
