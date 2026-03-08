@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Send, Users, Search, MessageCircle, Plus, Loader2,
   Hash, Smile, ImageIcon, Mic, MoreHorizontal, Phone, Video,
-  Pin, ArrowLeft, Sparkles, Circle
+  Pin, ArrowLeft, Sparkles, Circle, CheckCheck
 } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
@@ -19,6 +19,7 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface ChatRoom {
   id: string;
@@ -57,6 +58,25 @@ function getAvatarColor(id: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
+// Typing indicator dots
+function TypingIndicator() {
+  return (
+    <div className="flex items-center gap-1 px-3 py-2">
+      <div className="flex gap-0.5">
+        {[0, 1, 2].map(i => (
+          <motion.div
+            key={i}
+            className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50"
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+          />
+        ))}
+      </div>
+      <span className="text-[10px] text-muted-foreground ml-1">typing...</span>
+    </div>
+  );
+}
+
 const MessengerChat = () => {
   const { user } = useAuth();
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
@@ -71,6 +91,7 @@ const MessengerChat = () => {
   const [profileMap, setProfileMap] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [showMobileChat, setShowMobileChat] = useState(false);
+  const [showTyping, setShowTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -149,6 +170,17 @@ const MessengerChat = () => {
   }, [selectedRoom, user]);
 
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
+
+  // Simulate typing indicator when user types
+  useEffect(() => {
+    if (newMessage.trim().length > 0) {
+      setShowTyping(true);
+      const timer = setTimeout(() => setShowTyping(false), 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowTyping(false);
+    }
+  }, [newMessage]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedRoom || !user) return;
@@ -421,16 +453,24 @@ const MessengerChat = () => {
                           )}>
                             <p>{msg.content}</p>
                           </div>
-                          <p className={cn(
-                            "text-[10px] text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity",
-                            isMe ? "text-right mr-1" : "ml-1"
+                          <div className={cn(
+                            "flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity",
+                            isMe ? "justify-end mr-1" : "ml-1"
                           )}>
-                            {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
-                          </p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
+                            </p>
+                            {/* Read receipt for own messages */}
+                            {isMe && (
+                              <CheckCheck className="w-3 h-3 text-primary/60" />
+                            )}
+                          </div>
                         </div>
                       </div>
                     );
                   })}
+                  {/* Typing indicator */}
+                  {showTyping && <TypingIndicator />}
                   <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
