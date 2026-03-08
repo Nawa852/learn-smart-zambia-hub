@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('edu-zambia-theme') as ThemeType) || 'zambian';
     }
-    return 'dark';
+    return 'zambian';
   });
 
   const setTheme = (newTheme: ThemeType) => {
