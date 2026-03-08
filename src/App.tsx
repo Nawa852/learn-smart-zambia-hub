@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
+import { CookieConsent } from '@/components/CookieConsent';
 import { AuthProvider } from '@/components/Auth/AuthProvider';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -91,6 +92,7 @@ import ECZVideoLibraryPage from '@/pages/ECZVideoLibraryPage';
 import ECZPastPapersPage from '@/pages/ECZPastPapersPage';
 import ECZResourceLibraryPage from '@/pages/ECZResourceLibraryPage';
 import SettingsPage from '@/pages/SettingsPage';
+import MFASetupPage from '@/pages/MFASetupPage';
 
 // School Admin Pages
 import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
@@ -262,6 +264,7 @@ function App() {
             {/* Profile & Settings */}
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/mfa-setup" element={<ProtectedRoute><MainLayout><MFASetupPage /></MainLayout></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
 
@@ -272,6 +275,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
+          <CookieConsent />
         </Router>
       </QueryClientProvider>
     </AuthProvider>
