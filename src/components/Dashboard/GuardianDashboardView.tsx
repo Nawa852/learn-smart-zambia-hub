@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Heart, TrendingUp, AlertCircle, Calendar, MessageSquare, Award, BookOpen, Clock, Target, Users, Activity, Bell, UserPlus } from 'lucide-react';
+import { Heart, TrendingUp, AlertCircle, Calendar, MessageSquare, Award, BookOpen, Clock, Target, Users, Activity, Bell, UserPlus, Shield, AlertTriangle, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 import { useGuardianData } from '@/hooks/useGuardianData';
