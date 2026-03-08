@@ -17,17 +17,16 @@ export const useUserStats = () => {
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('user_stats')
         .select('*')
         .eq('user_id', user.id)
         .maybeSingle();
 
       if (data) {
-        setStats(data as any);
+        setStats(data);
       } else {
-        // Create initial stats
-        await supabase.from('user_stats').insert({ user_id: user.id } as any);
+        await (supabase as any).from('user_stats').insert({ user_id: user.id });
       }
       setLoading(false);
     };
@@ -37,7 +36,6 @@ export const useUserStats = () => {
   const recalculateStreak = useCallback(async () => {
     if (!user) return;
 
-    // Get distinct active dates from lesson_completions
     const { data: completions } = await supabase
       .from('lesson_completions')
       .select('completed_at')
@@ -72,14 +70,14 @@ export const useUserStats = () => {
       updated_at: new Date().toISOString(),
     };
 
-    await supabase.from('user_stats').update(newStats as any).eq('user_id', user.id);
+    await (supabase as any).from('user_stats').update(newStats).eq('user_id', user.id);
     setStats(prev => ({ ...prev, ...newStats }));
   }, [user, stats.longest_streak]);
 
   const addXP = useCallback(async (amount: number) => {
     if (!user) return;
     const newXP = stats.total_xp + amount;
-    await supabase.from('user_stats').update({ total_xp: newXP, updated_at: new Date().toISOString() } as any).eq('user_id', user.id);
+    await (supabase as any).from('user_stats').update({ total_xp: newXP, updated_at: new Date().toISOString() }).eq('user_id', user.id);
     setStats(prev => ({ ...prev, total_xp: newXP }));
   }, [user, stats.total_xp]);
 

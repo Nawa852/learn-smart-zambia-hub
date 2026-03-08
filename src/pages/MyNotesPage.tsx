@@ -4,7 +4,7 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,24 +32,23 @@ const MyNotesPage = () => {
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('student_notes')
         .select('*')
         .eq('user_id', user.id)
-        .order('updated_at', { ascending: false }) as any;
+        .order('updated_at', { ascending: false });
 
       if (data) {
-        // Fetch course/lesson titles
-        const courseIds = [...new Set(data.filter((n: any) => n.course_id).map((n: any) => n.course_id))];
-        const lessonIds = [...new Set(data.filter((n: any) => n.lesson_id).map((n: any) => n.lesson_id))];
+        const courseIds = [...new Set(data.filter((n: any) => n.course_id).map((n: any) => n.course_id))] as string[];
+        const lessonIds = [...new Set(data.filter((n: any) => n.lesson_id).map((n: any) => n.lesson_id))] as string[];
 
         const [{ data: courses }, { data: lessons }] = await Promise.all([
-          courseIds.length ? supabase.from('courses').select('id, title').in('id', courseIds) : { data: [] },
-          lessonIds.length ? supabase.from('lessons').select('id, title').in('id', lessonIds) : { data: [] },
+          courseIds.length ? supabase.from('courses').select('id, title').in('id', courseIds) : { data: [] as any[] },
+          lessonIds.length ? supabase.from('lessons').select('id, title').in('id', lessonIds) : { data: [] as any[] },
         ]);
 
-        const courseMap = Object.fromEntries((courses || []).map(c => [c.id, c.title]));
-        const lessonMap = Object.fromEntries((lessons || []).map(l => [l.id, l.title]));
+        const courseMap = Object.fromEntries((courses || []).map((c: any) => [c.id, c.title]));
+        const lessonMap = Object.fromEntries((lessons || []).map((l: any) => [l.id, l.title]));
 
         setNotes(data.map((n: any) => ({
           ...n,
@@ -63,13 +62,13 @@ const MyNotesPage = () => {
   }, [user]);
 
   const deleteNote = async (id: string) => {
-    await supabase.from('student_notes').delete().eq('id', id);
+    await (supabase as any).from('student_notes').delete().eq('id', id);
     setNotes(prev => prev.filter(n => n.id !== id));
     toast.success('Note deleted');
   };
 
   const saveEdit = async (id: string) => {
-    await supabase.from('student_notes').update({ content: editContent, updated_at: new Date().toISOString() } as any).eq('id', id);
+    await (supabase as any).from('student_notes').update({ content: editContent, updated_at: new Date().toISOString() }).eq('id', id);
     setNotes(prev => prev.map(n => n.id === id ? { ...n, content: editContent, updated_at: new Date().toISOString() } : n));
     setEditingId(null);
     toast.success('Note updated');
