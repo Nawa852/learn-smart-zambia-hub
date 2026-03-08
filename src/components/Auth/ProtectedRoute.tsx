@@ -23,14 +23,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (!user) {
     // Avoid redirect loops by checking current path
-    if (location.pathname === '/login' || location.pathname === '/signup') {
+    const publicPaths = ['/login', '/signup', '/welcome'];
+    if (publicPaths.some(p => location.pathname.startsWith(p))) {
       return <>{children}</>;
     }
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // If user is authenticated and trying to access login/signup, redirect to dashboard
-  if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
+  // If user is authenticated and trying to access login/signup/welcome, redirect to dashboard
+  if (user && ['/login', '/signup', '/welcome'].includes(location.pathname)) {
     return <Navigate to="/dashboard" replace />;
   }
 

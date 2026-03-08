@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 
-type AppRole = 'student' | 'teacher' | 'guardian' | 'institution' | 'ministry' | 'doctor' | 'entrepreneur' | 'developer';
+type AppRole = 'student' | 'teacher' | 'guardian' | 'institution' | 'ministry' | 'doctor' | 'entrepreneur' | 'developer' | 'skills' | 'cybersecurity';
 
 export interface Profile {
   id: string;
@@ -23,7 +23,7 @@ export interface Profile {
   updated_at: string;
 }
 
-const validRoles: AppRole[] = ['student', 'teacher', 'guardian', 'institution', 'ministry', 'doctor', 'entrepreneur', 'developer'];
+const validRoles: AppRole[] = ['student', 'teacher', 'guardian', 'institution', 'ministry', 'doctor', 'entrepreneur', 'developer', 'skills', 'cybersecurity'];
 
 function toAppRole(value: string | null | undefined): AppRole {
   if (value && validRoles.includes(value as AppRole)) return value as AppRole;
