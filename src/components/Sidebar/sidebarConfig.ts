@@ -274,31 +274,53 @@ export const ministryNavigation: NavGroup[] = [
     items: [
       { title: "Dashboard", url: "/ministry-dashboard", icon: LayoutDashboard },
       { title: "National Analytics", url: "/analytics", icon: BarChart3 },
-      { title: "ECZ Analytics", url: "/ministry/ecz-analytics", icon: PieChart, badge: "NEW" },
+      { title: "ECZ Analytics", url: "/ministry/ecz-analytics", icon: PieChart },
     ],
   },
   {
-    label: "Management",
+    label: "Schools & Teachers",
     items: [
-      { title: "School Registry", url: "/ministry/schools", icon: Building2, badge: "NEW" },
-      { title: "Provincial Data", url: "/ministry/provinces", icon: Globe, badge: "NEW" },
-      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
-      { title: "Resources", url: "/zambian-resources", icon: Library },
+      { title: "School Registry", url: "/ministry/schools", icon: Building2 },
+      { title: "Provincial Data", url: "/ministry/provinces", icon: Globe },
+      { title: "School Inspections", url: "/ministry/inspections", icon: ClipboardCheck, badge: "NEW" },
+      { title: "Teacher Deployment", url: "/ministry/teacher-deployment", icon: Users, badge: "NEW" },
+      { title: "Teacher Training", url: "/ministry/teacher-training", icon: GraduationCap, badge: "NEW" },
+      { title: "Infrastructure Audit", url: "/ministry/infrastructure", icon: Building2, badge: "NEW" },
+    ],
+  },
+  {
+    label: "Students & Welfare",
+    items: [
+      { title: "Dropout Tracker", url: "/ministry/dropout-tracker", icon: AlertTriangle, badge: "NEW" },
+      { title: "Scholarships", url: "/ministry/scholarships", icon: Award, badge: "NEW" },
+      { title: "Student Welfare", url: "/ministry/welfare", icon: Heart, badge: "NEW" },
     ],
   },
   {
     label: "Policy & Impact",
     items: [
-      { title: "Policy Tracker", url: "/ministry/policies", icon: Shield, badge: "NEW" },
-      { title: "Interventions", url: "/ministry/interventions", icon: Target, badge: "NEW" },
-      { title: "NGO Partnerships", url: "/ministry/partnerships", icon: Heart, badge: "NEW" },
-      { title: "Report Generator", url: "/ministry/reports", icon: FileText, badge: "NEW" },
+      { title: "Policy Tracker", url: "/ministry/policies", icon: Shield },
+      { title: "Interventions", url: "/ministry/interventions", icon: Target },
+      { title: "NGO Partnerships", url: "/ministry/partnerships", icon: Heart },
+      { title: "Compliance", url: "/ministry/compliance", icon: Shield, badge: "NEW" },
     ],
   },
   {
-    label: "Communication",
+    label: "Operations",
     items: [
-      { title: "Notifications", url: "/notifications", icon: Bell },
+      { title: "Budget Allocation", url: "/ministry/budget", icon: DollarSign, badge: "NEW" },
+      { title: "Resource Allocation", url: "/ministry/resources", icon: Package, badge: "NEW" },
+      { title: "Announcements", url: "/ministry/announcements", icon: Megaphone, badge: "NEW" },
+      { title: "Data Export", url: "/ministry/data-export", icon: Database, badge: "NEW" },
+      { title: "Report Generator", url: "/ministry/reports", icon: FileText },
+    ],
+  },
+  {
+    label: "Programs",
+    items: [
+      { title: "Digital Literacy", url: "/ministry/digital-literacy", icon: Laptop, badge: "NEW" },
+      { title: "Research Hub", url: "/ministry/research", icon: BookOpen, badge: "NEW" },
+      { title: "Feedback", url: "/ministry/feedback", icon: MessageSquare, badge: "NEW" },
     ],
   },
   {
