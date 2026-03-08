@@ -29,6 +29,7 @@ import {
   Code
 } from 'lucide-react';
 import { z } from 'zod';
+import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(8, 'Password must be at least 8 characters');
