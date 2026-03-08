@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Megaphone, Plus, Trash2, Inbox } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
 import { formatDistanceToNow } from 'date-fns';
 
 const TeacherAnnouncementsPage = () => {
@@ -27,9 +27,11 @@ const TeacherAnnouncementsPage = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: c } = await supabase.from('courses').select('id, title').eq('created_by', user.id);
+      const { data: c, error: cErr } = await supabase.from('courses').select('id, title').eq('created_by', user.id);
+      if (cErr) { toast.error('Failed to load courses'); setLoading(false); return; }
       setCourses(c || []);
-      const { data: a } = await (supabase as any).from('class_announcements').select('*').eq('teacher_id', user.id).order('created_at', { ascending: false });
+      const { data: a, error: aErr } = await (supabase as any).from('class_announcements').select('*').eq('teacher_id', user.id).order('created_at', { ascending: false });
+      if (aErr) { toast.error('Failed to load announcements'); setLoading(false); return; }
       if (a && c) {
         const cMap = Object.fromEntries((c || []).map((x: any) => [x.id, x.title]));
         setAnnouncements(a.map((x: any) => ({ ...x, course_title: cMap[x.course_id] })));
@@ -40,7 +42,8 @@ const TeacherAnnouncementsPage = () => {
 
   const post = async () => {
     if (!title.trim() || !courseId) return;
-    const { data } = await (supabase as any).from('class_announcements').insert({ course_id: courseId, teacher_id: user!.id, title, content, priority }).select().single();
+    const { data, error } = await (supabase as any).from('class_announcements').insert({ course_id: courseId, teacher_id: user!.id, title, content, priority }).select().single();
+    if (error) { toast.error('Failed to post announcement'); return; }
     if (data) {
       const cTitle = courses.find(c => c.id === courseId)?.title;
       setAnnouncements([{ ...data, course_title: cTitle }, ...announcements]);
@@ -49,11 +52,17 @@ const TeacherAnnouncementsPage = () => {
   };
 
   const remove = async (id: string) => {
-    await (supabase as any).from('class_announcements').delete().eq('id', id);
+    const { error } = await (supabase as any).from('class_announcements').delete().eq('id', id);
+    if (error) { toast.error('Failed to delete'); return; }
     setAnnouncements(announcements.filter(a => a.id !== id)); toast.success('Deleted');
   };
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-48" />
+      {[1,2,3].map(i => <Skeleton key={i} className="h-24 w-full" />)}
+    </div>
+  );
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">
@@ -76,7 +85,7 @@ const TeacherAnnouncementsPage = () => {
       </div>
 
       {announcements.length === 0 ? (
-        <Card><CardContent className="py-16 text-center"><Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" /><p className="font-medium">No announcements</p></CardContent></Card>
+        <Card><CardContent className="py-16 text-center"><Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" /><p className="font-medium">No announcements</p><p className="text-sm text-muted-foreground mt-1">Post your first announcement to a class.</p></CardContent></Card>
       ) : announcements.map(a => (
         <Card key={a.id} className="border-border/50">
           <CardContent className="p-4">

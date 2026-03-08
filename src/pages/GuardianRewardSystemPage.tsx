@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Gift, Plus, Trophy, Star, Inbox } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
 
 const GuardianRewardSystemPage = () => {
   const { user } = useAuth();
@@ -25,12 +25,14 @@ const GuardianRewardSystemPage = () => {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: links } = await (supabase as any).from('guardian_links').select('student_id').eq('guardian_id', user.id).eq('status', 'active');
+      const { data: links, error } = await (supabase as any).from('guardian_links').select('student_id').eq('guardian_id', user.id).eq('status', 'active');
+      if (error) { toast.error('Failed to load data'); setLoading(false); return; }
       if (links?.length) {
         const ids = links.map((l: any) => l.student_id);
         const { data: profiles } = await supabase.from('profiles').select('id, full_name').in('id', ids);
         setChildren(profiles || []);
-        const { data: r } = await (supabase as any).from('guardian_rewards').select('*').eq('guardian_id', user.id).order('created_at', { ascending: false });
+        const { data: r, error: rErr } = await (supabase as any).from('guardian_rewards').select('*').eq('guardian_id', user.id).order('created_at', { ascending: false });
+        if (rErr) { toast.error('Failed to load rewards'); setLoading(false); return; }
         if (r && profiles) {
           const pMap = Object.fromEntries((profiles || []).map(p => [p.id, p.full_name]));
           setRewards(r.map((x: any) => ({ ...x, student_name: pMap[x.student_id] })));
@@ -42,7 +44,8 @@ const GuardianRewardSystemPage = () => {
 
   const create = async () => {
     if (!title.trim() || !childId) return;
-    const { data } = await (supabase as any).from('guardian_rewards').insert({ guardian_id: user!.id, student_id: childId, title, target_lessons: parseInt(target) }).select().single();
+    const { data, error } = await (supabase as any).from('guardian_rewards').insert({ guardian_id: user!.id, student_id: childId, title, target_lessons: parseInt(target) }).select().single();
+    if (error) { toast.error('Failed to create reward'); return; }
     if (data) {
       const name = children.find(c => c.id === childId)?.full_name;
       setRewards([{ ...data, student_name: name }, ...rewards]);
@@ -51,12 +54,18 @@ const GuardianRewardSystemPage = () => {
   };
 
   const claim = async (id: string) => {
-    await (supabase as any).from('guardian_rewards').update({ claimed: true }).eq('id', id);
+    const { error } = await (supabase as any).from('guardian_rewards').update({ claimed: true }).eq('id', id);
+    if (error) { toast.error('Failed to claim reward'); return; }
     setRewards(rewards.map(r => r.id === id ? { ...r, claimed: true } : r));
     toast.success('Reward claimed! 🎉');
   };
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-48" />
+      {[1,2,3].map(i => <Skeleton key={i} className="h-24 w-full" />)}
+    </div>
+  );
 
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-6">

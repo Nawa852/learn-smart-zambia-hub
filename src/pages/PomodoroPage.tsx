@@ -15,6 +15,22 @@ type Mode = 'focus' | 'short-break' | 'long-break';
 const DURATIONS: Record<Mode, number> = { focus: 25 * 60, 'short-break': 5 * 60, 'long-break': 15 * 60 };
 const SUBJECTS = ['Mathematics', 'Science', 'English', 'History', 'Geography', 'Biology', 'Chemistry', 'Physics', 'ICT', 'General'];
 
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.8);
+  } catch {}
+}
+
 const PomodoroPage = () => {
   const { user } = useAuth();
   const [mode, setMode] = useState<Mode>('focus');
@@ -31,7 +47,7 @@ const PomodoroPage = () => {
 
   const playSound = useCallback(() => {
     if (!soundOn) return;
-    try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbsGczE').play(); } catch {}
+    playBeep();
   }, [soundOn]);
 
   useEffect(() => {
@@ -64,11 +80,12 @@ const PomodoroPage = () => {
 
   const saveSession = async () => {
     if (!user) return;
-    await (supabase as any).from('focus_sessions').insert({
+    const { error } = await (supabase as any).from('focus_sessions').insert({
       user_id: user.id, subject, focus_minutes: 25, sessions_completed: 1,
       started_at: startTimeRef.current?.toISOString() || new Date().toISOString(),
       ended_at: new Date().toISOString(), gave_up: false, distraction_count: 0,
     });
+    if (error) toast.error('Failed to save session');
   };
 
   const toggle = () => {

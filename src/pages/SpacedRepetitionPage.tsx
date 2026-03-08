@@ -9,13 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Brain, Plus, RotateCcw, Check, X, Layers, Inbox } from 'lucide-react';
-import { LogoLoader } from '@/components/UI/LogoLoader';
+import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Deck { id: string; title: string; subject: string | null; created_at: string; card_count?: number; due_count?: number; }
 interface FlashCard { id: string; front: string; back: string; ease_factor: number; interval_days: number; repetitions: number; next_review_date: string; }
 
-// SM-2 algorithm
 function sm2(card: FlashCard, quality: number) {
   let { ease_factor, interval_days, repetitions } = card;
   if (quality >= 3) {
@@ -52,7 +51,8 @@ const SpacedRepetitionPage = () => {
   }, [user]);
 
   const loadDecks = async () => {
-    const { data } = await (supabase as any).from('flashcard_decks').select('*').eq('user_id', user!.id).order('created_at', { ascending: false });
+    const { data, error } = await (supabase as any).from('flashcard_decks').select('*').eq('user_id', user!.id).order('created_at', { ascending: false });
+    if (error) { toast.error('Failed to load decks'); setLoading(false); return; }
     if (data) {
       const withCounts = await Promise.all(data.map(async (d: any) => {
         const { count } = await (supabase as any).from('flashcard_cards').select('*', { count: 'exact', head: true }).eq('deck_id', d.id);
@@ -66,34 +66,65 @@ const SpacedRepetitionPage = () => {
 
   const createDeck = async () => {
     if (!newTitle.trim()) return;
-    await (supabase as any).from('flashcard_decks').insert({ user_id: user!.id, title: newTitle, subject: newSubject || null });
+    const { error } = await (supabase as any).from('flashcard_decks').insert({ user_id: user!.id, title: newTitle, subject: newSubject || null });
+    if (error) { toast.error('Failed to create deck'); return; }
     setNewTitle(''); setNewSubject(''); setDialogOpen(false);
     toast.success('Deck created!'); loadDecks();
   };
 
   const startReview = async (deckId: string) => {
     const today = new Date().toISOString().split('T')[0];
-    const { data } = await (supabase as any).from('flashcard_cards').select('*').eq('deck_id', deckId).lte('next_review_date', today).order('next_review_date');
-    setCards(data || []); setActiveDeck(deckId); setCurrentIdx(0); setFlipped(false);
+    const { data, error } = await (supabase as any).from('flashcard_cards').select('*').eq('deck_id', deckId).lte('next_review_date', today).order('next_review_date');
+    if (error) { toast.error('Failed to load cards'); return; }
+    if (!data?.length) {
+      toast.info('No cards due for review. Add some cards first!');
+      setActiveDeck(deckId);
+      setCards([]);
+      setAddCardOpen(true);
+      return;
+    }
+    setCards(data); setActiveDeck(deckId); setCurrentIdx(0); setFlipped(false);
+  };
+
+  const openAddCard = (deckId: string) => {
+    setActiveDeck(deckId);
+    setAddCardOpen(true);
   };
 
   const addCard = async () => {
     if (!newFront.trim() || !newBack.trim() || !activeDeck) return;
-    await (supabase as any).from('flashcard_cards').insert({ deck_id: activeDeck, front: newFront, back: newBack });
+    const { error } = await (supabase as any).from('flashcard_cards').insert({ deck_id: activeDeck, front: newFront, back: newBack });
+    if (error) { toast.error('Failed to add card'); return; }
     setNewFront(''); setNewBack(''); setAddCardOpen(false);
-    toast.success('Card added!'); startReview(activeDeck);
+    toast.success('Card added!');
+    // Reload due cards for this deck
+    const today = new Date().toISOString().split('T')[0];
+    const { data } = await (supabase as any).from('flashcard_cards').select('*').eq('deck_id', activeDeck).lte('next_review_date', today).order('next_review_date');
+    if (data?.length) {
+      setCards(data);
+      setCurrentIdx(0);
+      setFlipped(false);
+    }
+    loadDecks();
   };
 
   const rateCard = async (quality: number) => {
     const card = cards[currentIdx];
     const updates = sm2(card, quality);
-    await (supabase as any).from('flashcard_cards').update(updates).eq('id', card.id);
+    const { error } = await (supabase as any).from('flashcard_cards').update(updates).eq('id', card.id);
+    if (error) { toast.error('Failed to save rating'); return; }
     setFlipped(false);
     if (currentIdx + 1 < cards.length) setCurrentIdx(currentIdx + 1);
-    else { toast.success('Review complete! 🎉'); setActiveDeck(null); loadDecks(); }
+    else { toast.success('Review complete! 🎉'); setActiveDeck(null); setCards([]); loadDecks(); }
   };
 
-  if (loading) return <div className="max-w-3xl mx-auto py-12 px-4"><LogoLoader text="Loading decks..." /></div>;
+  if (loading) return (
+    <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
+      <Skeleton className="h-8 w-64" />
+      <Skeleton className="h-4 w-48" />
+      {[1,2,3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+    </div>
+  );
 
   if (activeDeck && cards.length > 0) {
     const card = cards[currentIdx];
@@ -103,7 +134,7 @@ const SpacedRepetitionPage = () => {
           <h1 className="text-xl font-bold flex items-center gap-2"><Brain className="w-5 h-5 text-primary" /> Review</h1>
           <div className="flex gap-2">
             <Badge variant="outline">{currentIdx + 1}/{cards.length}</Badge>
-            <Button variant="ghost" size="sm" onClick={() => setActiveDeck(null)}>Exit</Button>
+            <Button variant="ghost" size="sm" onClick={() => { setActiveDeck(null); setCards([]); }}>Exit</Button>
             <Button variant="outline" size="sm" onClick={() => setAddCardOpen(true)}><Plus className="w-3 h-3 mr-1" />Add</Button>
           </div>
         </div>
@@ -162,6 +193,7 @@ const SpacedRepetitionPage = () => {
           <Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
           <p className="font-medium">No decks yet</p>
           <p className="text-sm text-muted-foreground mt-1">Create your first flashcard deck to start learning.</p>
+          <Button className="mt-4" onClick={() => setDialogOpen(true)}><Plus className="w-4 h-4 mr-2" />Create Deck</Button>
         </CardContent></Card>
       ) : (
         <div className="grid gap-3">
@@ -177,8 +209,8 @@ const SpacedRepetitionPage = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => { setActiveDeck(deck.id); setAddCardOpen(true); }}><Plus className="w-3 h-3 mr-1" />Add</Button>
-                  <Button size="sm" onClick={() => startReview(deck.id)} disabled={!deck.due_count}>
+                  <Button size="sm" variant="outline" onClick={() => openAddCard(deck.id)}><Plus className="w-3 h-3 mr-1" />Add</Button>
+                  <Button size="sm" onClick={() => startReview(deck.id)} disabled={!deck.due_count && !deck.card_count}>
                     <Layers className="w-3 h-3 mr-1" />Review
                   </Button>
                 </div>
@@ -187,6 +219,16 @@ const SpacedRepetitionPage = () => {
           ))}
         </div>
       )}
+
+      {/* Add card dialog accessible from deck list */}
+      <Dialog open={addCardOpen} onOpenChange={(open) => { setAddCardOpen(open); if (!open && !cards.length) setActiveDeck(null); }}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Add Card</DialogTitle></DialogHeader>
+          <Textarea placeholder="Front (question)" value={newFront} onChange={e => setNewFront(e.target.value)} />
+          <Textarea placeholder="Back (answer)" value={newBack} onChange={e => setNewBack(e.target.value)} />
+          <Button onClick={addCard}>Add Card</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

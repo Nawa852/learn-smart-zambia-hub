@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Bell, Mail, Smartphone, MessageSquare, BookOpen, Award, Calendar, AlertTriangle } from 'lucide-react';
+import { Bell, Mail, Smartphone, MessageSquare, BookOpen, Award, Calendar, AlertTriangle, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
@@ -15,16 +14,38 @@ const CATEGORIES = [
   { key: 'achievements', label: 'Achievements', icon: Award, desc: 'Badge unlocks and XP milestones' },
 ];
 
+const STORAGE_KEY = 'notification_preferences';
+
+const defaultPrefs = () => Object.fromEntries(CATEGORIES.map(c => [c.key, { inApp: true, push: true }]));
+
 const NotificationPreferencesPage = () => {
-  const [prefs, setPrefs] = useState<Record<string, { inApp: boolean; push: boolean }>>(
-    Object.fromEntries(CATEGORIES.map(c => [c.key, { inApp: true, push: true }]))
-  );
+  const [prefs, setPrefs] = useState<Record<string, { inApp: boolean; push: boolean }>>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return defaultPrefs();
+  });
+  const [saved, setSaved] = useState(true);
 
   const toggle = (key: string, channel: 'inApp' | 'push') => {
     setPrefs(prev => ({ ...prev, [key]: { ...prev[key], [channel]: !prev[key][channel] } }));
+    setSaved(false);
   };
 
-  const save = () => toast.success('Preferences saved!');
+  const save = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    setSaved(true);
+    toast.success('Preferences saved!');
+  };
+
+  const reset = () => {
+    const defaults = defaultPrefs();
+    setPrefs(defaults);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
+    setSaved(true);
+    toast.info('Preferences reset to defaults');
+  };
 
   return (
     <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
@@ -59,7 +80,12 @@ const NotificationPreferencesPage = () => {
               </div>
             </div>
           ))}
-          <Button onClick={save} className="w-full">Save Preferences</Button>
+          <div className="flex gap-2 pt-2">
+            <Button onClick={save} className="flex-1" disabled={saved}>
+              {saved ? '✓ Saved' : 'Save Preferences'}
+            </Button>
+            <Button variant="outline" onClick={reset}><RotateCcw className="w-4 h-4 mr-2" />Reset</Button>
+          </div>
         </CardContent>
       </Card>
     </div>

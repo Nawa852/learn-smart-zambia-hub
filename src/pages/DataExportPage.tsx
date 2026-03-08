@@ -33,19 +33,23 @@ const DataExportPage = () => {
   const exportData = async () => {
     if (!user || !selected.length) return;
     setExporting(true);
+    let exported = 0;
     try {
       for (const key of selected) {
         const opt = EXPORT_OPTIONS.find(o => o.key === key)!;
-        const { data } = await (supabase as any).from(opt.table).select('*').eq(opt.filter, user.id);
+        const { data, error } = await (supabase as any).from(opt.table).select('*').eq(opt.filter, user.id);
+        if (error) { toast.error(`Failed to export ${opt.label}`); continue; }
         if (data?.length) {
           const csv = toCsv(data);
           const blob = new Blob([csv], { type: 'text/csv' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a'); a.href = url; a.download = `${key}_export.csv`; a.click();
           URL.revokeObjectURL(url);
+          exported++;
         }
       }
-      toast.success('Export complete!');
+      if (exported) toast.success(`Exported ${exported} file(s)!`);
+      else toast.info('No data to export');
     } catch { toast.error('Export failed'); }
     setExporting(false);
   };
