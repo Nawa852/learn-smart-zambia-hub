@@ -116,7 +116,7 @@ const MVPLanding = () => {
             <Button
               size="lg"
               onClick={() => navigate('/auth?mode=signup')}
-              className="h-14 px-8 text-base bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 shadow-xl shadow-primary/30 glow-primary"
+              className="h-14 px-8 text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-card"
             >
               Start Learning Free
               <ArrowRight className="ml-2 w-5 h-5" />
