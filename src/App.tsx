@@ -104,6 +104,8 @@ import CourseCatalogPage from '@/pages/CourseCatalogPage';
 import CourseDetailPage from '@/pages/CourseDetailPage';
 import AssignmentPage from '@/pages/AssignmentPage';
 import MyCoursesPage from '@/pages/MyCoursesPage';
+import ProgressReportPage from '@/pages/ProgressReportPage';
+import ECZPracticeQuizPage from '@/pages/ECZPracticeQuizPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
