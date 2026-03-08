@@ -159,7 +159,7 @@ const CourseCatalogPage = () => {
             const gradient = subjectColors[course.subject || ''] || 'from-primary to-accent';
             return (
               <motion.div key={course.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all cursor-pointer group" onClick={() => setSelectedCourse(course)}>
+                <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all cursor-pointer group" onClick={() => isEnrolled ? navigate(`/course/${course.id}`) : setSelectedCourse(course)}>
                   <div className={`h-28 bg-gradient-to-br ${gradient} relative flex items-end p-4`}>
                     <div className="absolute inset-0 bg-black/10" />
                     <div className="relative z-10 flex items-center gap-2">
