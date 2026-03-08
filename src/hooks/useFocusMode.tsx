@@ -62,7 +62,7 @@ export function useFocusMode() {
   }, [state.sessionsCompleted, state.totalFocusSeconds]);
 
   // Persist completed focus session to DB
-  const saveSessionToDB = useCallback(async (subject: string, focusMinutes: number, sessionsCompleted: number, gaveUp: boolean, startedAt: Date) => {
+  const saveSessionToDB = useCallback(async (subject: string, focusMinutes: number, sessionsCompleted: number, gaveUp: boolean, startedAt: Date, distractionCount: number = 0) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -75,6 +75,7 @@ export function useFocusMode() {
         gave_up: gaveUp,
         started_at: startedAt.toISOString(),
         ended_at: new Date().toISOString(),
+        distraction_count: distractionCount,
       });
     } catch (err) {
       console.error('Failed to save focus session:', err);

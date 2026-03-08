@@ -14,6 +14,8 @@ import {
   Bell, Volume2, X, Lock
 } from 'lucide-react';
 import { useFocusMode, FocusPhase } from '@/hooks/useFocusMode';
+import { useDistractionDetector } from '@/hooks/useDistractionDetector';
+import { useStudySchedule } from '@/hooks/useStudySchedule';
 
 // Schedule types
 interface StudySlot {
@@ -59,8 +61,32 @@ const FocusModePage = () => {
   const [newSlot, setNewSlot] = useState({ subject: '', startTime: '08:00', endTime: '09:00', days: ['Mon'] });
   const [gaveUpCount, setGaveUpCount] = useState(0);
   const [showLockScreen, setShowLockScreen] = useState(false);
+  const [wakeLock, setWakeLock] = useState<any>(null);
+
+  const { distractionCount, showWarning, dismissWarning } = useDistractionDetector(
+    state.phase === 'focus' && state.isActive,
+    state.subject
+  );
+  const { schedules: dbSchedules, addSchedule: addDbSchedule, removeSchedule: removeDbSchedule } = useStudySchedule();
 
   const dailyStats = getDailyStats();
+
+  // Wake Lock during focus
+  useEffect(() => {
+    if (state.phase === 'focus' && state.isActive && 'wakeLock' in navigator) {
+      (navigator as any).wakeLock.request('screen').then((wl: any) => setWakeLock(wl)).catch(() => {});
+    }
+    return () => { if (wakeLock) { wakeLock.release(); setWakeLock(null); } };
+  }, [state.phase, state.isActive]);
+
+  // Fullscreen during focus lock screen
+  useEffect(() => {
+    if (showLockScreen && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else if (!showLockScreen && document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+  }, [showLockScreen]);
 
   // Save schedule
   useEffect(() => {
@@ -137,6 +163,33 @@ const FocusModePage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Distraction Warning Overlay */}
+      <AnimatePresence>
+        {showWarning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-destructive/90 flex flex-col items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              className="text-center space-y-6 max-w-sm"
+            >
+              <AlertTriangle className="w-20 h-20 text-destructive-foreground mx-auto" />
+              <h1 className="text-3xl font-black text-destructive-foreground">You Left the App!</h1>
+              <p className="text-destructive-foreground/80">
+                Distraction #{distractionCount} detected. {distractionCount >= 3 ? 'Your guardian has been notified.' : 'Stay focused!'}
+              </p>
+              <Button onClick={dismissWarning} variant="secondary" size="lg">
+                Return to Study
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Lock Screen Overlay */}
       <AnimatePresence>
         {showLockScreen && (
@@ -191,6 +244,12 @@ const FocusModePage = () => {
                   <p className="text-2xl font-bold text-primary">{Math.floor(state.totalFocusSeconds / 60)}m</p>
                   <p className="text-xs text-muted-foreground">Focused</p>
                 </div>
+                {distractionCount > 0 && (
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-destructive">{distractionCount}</p>
+                    <p className="text-xs text-muted-foreground">Distractions</p>
+                  </div>
+                )}
               </div>
 
               {/* Controls */}

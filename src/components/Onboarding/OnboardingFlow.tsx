@@ -6,6 +6,7 @@ import { WelcomeScreen } from "./WelcomeScreen";
 import { GuardianLinkingStep } from "./GuardianLinkingStep";
 import { LearningSphereVisualization } from "./LearningSphereVisualization";
 import { GamificationSetup } from "./GamificationSetup";
+import { DeviceSetupWizard } from "./DeviceSetupWizard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
     { id: 'profile', label: 'Profile' },
     { id: 'guardian', label: 'Guardian' },
     { id: 'sphere', label: 'Learning Path' },
+    { id: 'device', label: 'Device Setup' },
     { id: 'gamification', label: 'Gamification' },
     { id: 'complete', label: 'Complete' },
   ];
@@ -76,6 +78,14 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
   const handleSphereComplete = () => {
     setCurrentStep(4);
+  };
+
+  const handleDeviceSetupComplete = () => {
+    setCurrentStep(5);
+  };
+
+  const handleSkipDeviceSetup = () => {
+    setCurrentStep(5);
   };
 
   const handleGamificationComplete = async (gamificationData: any) => {
@@ -240,6 +250,13 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       case 4:
         return (
           <div className="max-w-4xl mx-auto p-6">
+            <DeviceSetupWizard onComplete={handleDeviceSetupComplete} onSkip={handleSkipDeviceSetup} />
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="max-w-4xl mx-auto p-6">
             <GamificationSetup onComplete={handleGamificationComplete} />
           </div>
         );
@@ -255,7 +272,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
-      {currentStep > 0 && currentStep < 5 && (
+      {currentStep > 0 && currentStep < 7 && (
         <div className="fixed top-0 left-0 right-0 z-50 glass-nav">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-2">
@@ -285,7 +302,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
           </div>
         </div>
       )}
-      <div className={`relative z-10 ${currentStep > 0 && currentStep < 5 ? 'pt-24' : ''}`}>
+      <div className={`relative z-10 ${currentStep > 0 && currentStep < 7 ? 'pt-24' : ''}`}>
         {renderStep()}
       </div>
     </div>

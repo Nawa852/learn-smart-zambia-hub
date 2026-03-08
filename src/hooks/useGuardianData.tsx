@@ -16,7 +16,7 @@ export interface LinkedStudent {
   recentActivity: ActivityItem[];
   quizStats: { totalAttempts: number; avgScore: number };
   lessonCompletionsCount: number;
-  focusStats: { totalMinutes: number; sessionsCompleted: number; gaveUpCount: number };
+  focusStats: { totalMinutes: number; sessionsCompleted: number; gaveUpCount: number; distractionCount: number };
 }
 
 export interface StudentGrade {
@@ -153,6 +153,7 @@ export function useGuardianData() {
         const totalFocusMinutes = studentFocus.reduce((sum: number, f: any) => sum + (f.focus_minutes || 0), 0);
         const focusCompleted = studentFocus.filter((f: any) => !f.gave_up).reduce((sum: number, f: any) => sum + (f.sessions_completed || 0), 0);
         const focusGaveUp = studentFocus.filter((f: any) => f.gave_up).length;
+        const focusDistractions = studentFocus.reduce((sum: number, f: any) => sum + (f.distraction_count || 0), 0);
 
         // Recent activity: combine lessons + quizzes + focus, sort by time
         const activity: ActivityItem[] = [
@@ -194,7 +195,7 @@ export function useGuardianData() {
           recentActivity: activity,
           quizStats: { totalAttempts: studentQuizzes.length, avgScore: avgQuizScore },
           lessonCompletionsCount: studentLessons.length,
-          focusStats: { totalMinutes: totalFocusMinutes, sessionsCompleted: focusCompleted, gaveUpCount: focusGaveUp },
+          focusStats: { totalMinutes: totalFocusMinutes, sessionsCompleted: focusCompleted, gaveUpCount: focusGaveUp, distractionCount: focusDistractions },
         };
       });
 
