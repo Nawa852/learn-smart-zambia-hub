@@ -42,11 +42,9 @@ export const TopNavbar = () => {
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg gradient-bright-sphere flex items-center justify-center">
-            <span className="text-white font-bold text-sm">BS</span>
-          </div>
+          <img src="/favicon.svg" alt="Edu Zambia" className="w-8 h-8 rounded-lg" />
           <span className="hidden md:block font-bold text-lg gradient-text-bright-sphere">
-            Learn Smart Zambia
+            Edu Zambia
           </span>
         </Link>
 

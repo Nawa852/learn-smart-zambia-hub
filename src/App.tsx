@@ -109,6 +109,7 @@ import ECZPracticeQuizPage from '@/pages/ECZPracticeQuizPage';
 import MyAssignmentsPage from '@/pages/MyAssignmentsPage';
 import StudyPlannerPage from '@/pages/StudyPlannerPage';
 import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
+import NotificationsPage from '@/pages/NotificationsPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
@@ -255,6 +256,7 @@ function App() {
             {/* Profile & Settings */}
             <Route path="/profile" element={<ProtectedRoute><MainLayout><ProfilePage /></MainLayout></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><MainLayout><SettingsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
 
             {/* Meal Planner */}
