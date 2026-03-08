@@ -110,6 +110,8 @@ import MyAssignmentsPage from '@/pages/MyAssignmentsPage';
 import StudyPlannerPage from '@/pages/StudyPlannerPage';
 import ECZResourcesExpandedPage from '@/pages/ECZResourcesExpandedPage';
 import NotificationsPage from '@/pages/NotificationsPage';
+import GuardianLinkPage from '@/pages/GuardianLinkPage';
+import GuardianReportsPage from '@/pages/GuardianReportsPage';
 
 // Parent-Specific Pages
 import ParentChildrenPage from '@/pages/ParentChildrenPage';
