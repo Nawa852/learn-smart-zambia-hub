@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { DeviceCapabilitiesPanel } from '@/components/PWA/DeviceCapabilitiesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,18 +16,18 @@ import {
   Settings, User, Bell, Shield, Palette, Globe, Volume2, Eye,
   Moon, Sun, Sparkles, Zap, Monitor, Smartphone, Lock, Key,
   Download, Trash2, LogOut, HelpCircle, Mail, MessageSquare,
-  Check, ChevronRight
+  Check, ChevronRight, Search
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/Auth/AuthProvider';
 
 const tabItems = [
-  { id: 'general', label: 'General', icon: Settings },
-  { id: 'notifications', label: 'Alerts', icon: Bell },
-  { id: 'privacy', label: 'Privacy', icon: Shield },
-  { id: 'accessibility', label: 'Access', icon: Eye },
-  { id: 'device', label: 'Device', icon: Smartphone },
-  { id: 'account', label: 'Account', icon: User },
+  { id: 'general', label: 'General', icon: Settings, keywords: ['theme', 'appearance', 'font', 'language', 'learning', 'autoplay', 'offline', 'difficulty', 'reminder'] },
+  { id: 'notifications', label: 'Alerts', icon: Bell, keywords: ['email', 'push', 'sms', 'study', 'achievement', 'community', 'exam', 'alert', 'notification'] },
+  { id: 'privacy', label: 'Privacy', icon: Shield, keywords: ['privacy', 'profile', 'public', 'progress', 'achievements', 'messages', 'security', 'password', 'two-factor', 'sessions'] },
+  { id: 'accessibility', label: 'Access', icon: Eye, keywords: ['animation', 'contrast', 'voice', 'dyslexia', 'font', 'accessibility'] },
+  { id: 'device', label: 'Device', icon: Smartphone, keywords: ['device', 'capabilities', 'hardware'] },
+  { id: 'account', label: 'Account', icon: User, keywords: ['account', 'email', 'name', 'role', 'data', 'export', 'delete', 'sign out', 'logout'] },
 ];
 
 const SettingsPage = () => {
@@ -37,6 +37,9 @@ const SettingsPage = () => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('general');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
+  const initialSettingsRef = useRef<string>('');
 
   const [settings, setSettings] = useState({
     fontSize: [16],
@@ -56,6 +59,44 @@ const SettingsPage = () => {
     },
   });
 
+  // Track initial state for dirty detection
+  useEffect(() => {
+    initialSettingsRef.current = JSON.stringify(settings);
+  }, []);
+
+  // Dirty detection
+  useEffect(() => {
+    if (initialSettingsRef.current) {
+      setIsDirty(JSON.stringify(settings) !== initialSettingsRef.current);
+    }
+  }, [settings]);
+
+  // Unsaved changes warning on page unload
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty) { e.preventDefault(); }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty]);
+
+  // Filter tabs by search
+  const filteredTabs = useMemo(() => {
+    if (!searchQuery.trim()) return tabItems;
+    const q = searchQuery.toLowerCase();
+    return tabItems.filter(tab =>
+      tab.label.toLowerCase().includes(q) ||
+      tab.keywords.some(k => k.includes(q))
+    );
+  }, [searchQuery]);
+
+  // Auto-select first matching tab
+  useEffect(() => {
+    if (searchQuery.trim() && filteredTabs.length > 0 && !filteredTabs.find(t => t.id === activeTab)) {
+      setActiveTab(filteredTabs[0].id);
+    }
+  }, [filteredTabs, searchQuery, activeTab]);
+
   const updateSetting = (category: string, key: string, value: any) => {
     setSettings(prev => ({
       ...prev,
@@ -65,6 +106,8 @@ const SettingsPage = () => {
 
   const handleSave = () => {
     localStorage.setItem('edu-zambia-settings', JSON.stringify(settings));
+    initialSettingsRef.current = JSON.stringify(settings);
+    setIsDirty(false);
     toast({ title: '✨ Settings saved', description: 'Your preferences have been updated.' });
   };
 
@@ -105,7 +148,6 @@ const SettingsPage = () => {
       case 'general':
         return (
           <div className="space-y-6">
-            {/* Theme Selection */}
             <GlassCard delay={0.1}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -147,7 +189,6 @@ const SettingsPage = () => {
                     </button>
                   ))}
                 </div>
-
                 <div className="space-y-3 pt-2">
                   <Label className="text-sm text-muted-foreground">Font Size: {settings.fontSize[0]}px</Label>
                   <Slider
@@ -160,7 +201,6 @@ const SettingsPage = () => {
               </CardContent>
             </GlassCard>
 
-            {/* Language */}
             <GlassCard delay={0.2}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -182,7 +222,6 @@ const SettingsPage = () => {
               </CardContent>
             </GlassCard>
 
-            {/* Learning Preferences */}
             <GlassCard delay={0.3}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -440,7 +479,17 @@ const SettingsPage = () => {
             className="md:w-56 flex-shrink-0"
           >
             <div className="glass-card border border-border/30 rounded-2xl p-2 space-y-1 md:sticky md:top-20">
-              {tabItems.map((tab) => (
+              {/* Search filter */}
+              <div className="relative mb-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Filter settings..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="pl-8 h-9 text-sm bg-secondary/40 border-border/30"
+                />
+              </div>
+              {filteredTabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
@@ -454,6 +503,9 @@ const SettingsPage = () => {
                   {tab.label}
                 </button>
               ))}
+              {filteredTabs.length === 0 && (
+                <p className="text-xs text-muted-foreground text-center py-3">No matching settings</p>
+              )}
             </div>
           </motion.div>
 
@@ -476,8 +528,13 @@ const SettingsPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="flex justify-end mt-8 gap-3"
+              className="flex justify-end mt-8 gap-3 items-center"
             >
+              {isDirty && (
+                <Badge variant="outline" className="text-xs text-orange-500 border-orange-500/30 bg-orange-500/10">
+                  Unsaved changes
+                </Badge>
+              )}
               <Button variant="outline" className="border-border/30 hover:border-primary/30">
                 Reset to Defaults
               </Button>

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
 import { useClipboard } from '@/hooks/useClipboard';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 const Achievements = () => {
   const { copy } = useClipboard();
@@ -21,7 +22,17 @@ const Achievements = () => {
           <Share2 className="w-4 h-4" /> Share
         </Button>
       </div>
-      <AchievementSystem />
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-primary/5 rounded-xl blur-xl pointer-events-none animate-pulse" />
+        <div className="relative">
+          <AchievementSystem />
+        </div>
+      </motion.div>
     </div>
   );
 };
