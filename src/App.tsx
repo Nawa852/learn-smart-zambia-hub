@@ -104,6 +104,13 @@ import EntrepreneurBusinessPlanPage from '@/pages/EntrepreneurBusinessPlanPage';
 import EntrepreneurPitchDeckPage from '@/pages/EntrepreneurPitchDeckPage';
 import EntrepreneurMarketResearchPage from '@/pages/EntrepreneurMarketResearchPage';
 import EntrepreneurMilestonesPage from '@/pages/EntrepreneurMilestonesPage';
+import EntrepreneurFinancialsPage from '@/pages/EntrepreneurFinancialsPage';
+import EntrepreneurFundingPage from '@/pages/EntrepreneurFundingPage';
+
+// Developer Pages
+import DeveloperProjectsPage from '@/pages/DeveloperProjectsPage';
+import DeveloperChallengesPage from '@/pages/DeveloperChallengesPage';
+import DeveloperCodeReviewPage from '@/pages/DeveloperCodeReviewPage';
 
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
