@@ -260,26 +260,41 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
             </CardContent>
           </Card>
 
-          {/* Student Alerts */}
+          {/* Student Performance Alerts */}
           <Card className="border-0 shadow-lg">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><AlertCircle className="w-5 h-5 text-orange-600" />Student Alerts</CardTitle>
+              <CardTitle className="flex items-center gap-2"><AlertCircle className="w-5 h-5 text-orange-600" />Performance Alerts</CardTitle>
+              <CardDescription>Students scoring below 50% — may need intervention</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {studentAlerts.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">No alerts — all students are performing well! 🎉</p>
-              ) : studentAlerts.map((alert, index) => (
-                <div key={index} className="p-3 border rounded-lg hover:shadow-md transition-all">
-                  <div className="flex items-start gap-3">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${alert.severity === 'high' ? 'bg-destructive' : 'bg-yellow-500'}`} />
-                    <div className="flex-1">
-                      <p className="font-semibold text-sm">{alert.student_name}</p>
-                      <p className="text-xs text-muted-foreground">{alert.course_title}</p>
-                      <p className="text-xs text-destructive mt-1">{alert.issue}</p>
-                    </div>
-                  </div>
+                <div className="text-center py-6">
+                  <TrendingUp className="w-10 h-10 mx-auto mb-2 text-green-500 opacity-60" />
+                  <p className="text-sm text-muted-foreground">No alerts — all students are performing well! 🎉</p>
                 </div>
-              ))}
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="destructive" className="text-xs">{studentAlerts.filter(a => a.severity === 'high').length} critical</Badge>
+                    <Badge variant="secondary" className="text-xs">{studentAlerts.filter(a => a.severity === 'medium').length} warning</Badge>
+                  </div>
+                  {studentAlerts.map((alert, index) => (
+                    <div key={index} className={`p-3 border rounded-lg hover:shadow-md transition-all ${alert.severity === 'high' ? 'border-destructive/30 bg-destructive/5' : 'border-yellow-500/30 bg-yellow-500/5'}`}>
+                      <div className="flex items-start gap-3">
+                        <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${alert.severity === 'high' ? 'bg-destructive' : 'bg-yellow-500'}`} />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm">{alert.student_name}</p>
+                          <p className="text-xs text-muted-foreground truncate">{alert.course_title}</p>
+                          <p className={`text-xs mt-1 font-medium ${alert.severity === 'high' ? 'text-destructive' : 'text-yellow-600'}`}>{alert.issue}</p>
+                        </div>
+                        <Button size="sm" variant="ghost" className="shrink-0 text-xs h-7" onClick={() => navigate('/messenger')}>
+                          <MessageSquare className="w-3 h-3 mr-1" />Contact
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </CardContent>
           </Card>
         </div>

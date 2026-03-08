@@ -161,8 +161,8 @@ export function useTeacherStats() {
         file_url: s.file_url,
       }));
 
-      // Student alerts: students with low scores
-      const studentScores: Record<string, { scores: number[]; name: string; course: string }> = {};
+      // Student alerts: from submissions AND grades table
+      const studentScores: Record<string, { scores: number[]; name: string; course: string; studentId: string; courseId: string }> = {};
       allSubmissions.filter(s => s.score != null).forEach(s => {
         const cid = assignmentCourseMap[s.assignment_id];
         const key = `${s.user_id}_${cid}`;
@@ -171,10 +171,43 @@ export function useTeacherStats() {
             scores: [],
             name: profileMap[s.user_id] || s.user_id,
             course: enrichedCourses.find(c => c.id === cid)?.title || '',
+            studentId: s.user_id,
+            courseId: cid,
           };
         }
         studentScores[key].scores.push(Number(s.score));
       });
+
+      // Also pull from grades table for a more complete picture
+      const { data: gradesData } = await supabase
+        .from('grades')
+        .select('student_id, course_id, score')
+        .eq('recorded_by', user.id)
+        .not('score', 'is', null);
+
+      if (gradesData && gradesData.length > 0) {
+        const gradeStudentIds = [...new Set(gradesData.map(g => g.student_id))];
+        const { data: gradeProfiles } = await supabase
+          .from('profiles')
+          .select('id, full_name')
+          .in('id', gradeStudentIds);
+        (gradeProfiles || []).forEach(p => { profileMap[p.id] = p.full_name || 'Unknown Student'; });
+
+        gradesData.forEach(g => {
+          const key = `${g.student_id}_${g.course_id}`;
+          if (!studentScores[key]) {
+            const course = enrichedCourses.find(c => c.id === g.course_id);
+            studentScores[key] = {
+              scores: [],
+              name: profileMap[g.student_id] || g.student_id,
+              course: course?.title || 'Unknown Course',
+              studentId: g.student_id,
+              courseId: g.course_id,
+            };
+          }
+          studentScores[key].scores.push(Number(g.score));
+        });
+      }
 
       // Also fetch profiles for scored students
       const scoredStudentIds = [...new Set(allSubmissions.filter(s => s.score != null).map(s => s.user_id))];
@@ -189,16 +222,22 @@ export function useTeacherStats() {
       const alerts: StudentAlert[] = [];
       Object.entries(studentScores).forEach(([key, data]) => {
         const avg = data.scores.reduce((a, b) => a + b, 0) / data.scores.length;
-        const studentId = key.split('_')[0];
         if (avg < 50) {
           alerts.push({
-            student_id: studentId,
-            student_name: profileMap[studentId] || data.name,
-            issue: `Average score: ${Math.round(avg)}%`,
+            student_id: data.studentId,
+            student_name: profileMap[data.studentId] || data.name,
+            issue: `Average score: ${Math.round(avg)}% across ${data.scores.length} graded item${data.scores.length !== 1 ? 's' : ''}`,
             severity: avg < 35 ? 'high' : 'medium',
             course_title: data.course,
           });
         }
+      });
+
+      // Sort: high severity first, then by name
+      alerts.sort((a, b) => {
+        if (a.severity === 'high' && b.severity !== 'high') return -1;
+        if (a.severity !== 'high' && b.severity === 'high') return 1;
+        return a.student_name.localeCompare(b.student_name);
       });
 
       setCourses(enrichedCourses);
