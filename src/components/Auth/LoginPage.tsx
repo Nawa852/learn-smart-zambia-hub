@@ -244,7 +244,7 @@ const LoginPage = () => {
                 </TabsContent>
               </Tabs>
             </CardContent>
-          </div>
+          </motion.div>
         </Card>
       </div>
     </div>
