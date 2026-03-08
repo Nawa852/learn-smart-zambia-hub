@@ -18,7 +18,8 @@ export default defineConfig(({ mode }) => ({
       includeAssets: ["favicon.svg", "favicon.ico", "robots.txt"],
       workbox: {
         navigateFallbackDenylist: [/^\/~oauth/],
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,woff2}"],
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
       },
       manifest: {
         name: "Edu Zambia - AI-Powered Education",

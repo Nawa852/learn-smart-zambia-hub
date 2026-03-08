@@ -89,7 +89,8 @@ const GoalsPage = () => {
   const completedCount = goals.filter(g => g.completed).length;
 
   if (loading) {
-    return <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">{[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-xl animate-pulse" />)}</div>;
+    return <div className="max-w-4xl mx-auto py-12 px-4"><LogoLoader text="Loading goals..." /></div>;
+  }
   }
 
   return (

@@ -202,8 +202,8 @@ const AssignmentPage = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">
-        {[1, 2, 3].map(i => <Card key={i} className="animate-pulse"><CardContent className="p-6"><div className="h-5 bg-muted rounded w-1/3 mb-2" /><div className="h-3 bg-muted rounded w-2/3" /></CardContent></Card>)}
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <LogoLoader text="Loading assignments..." />
       </div>
     );
   }
