@@ -26,7 +26,9 @@ import {
   CheckCircle2,
   Stethoscope,
   Rocket,
-  Code
+  Code,
+  Wrench,
+  Shield
 } from 'lucide-react';
 import { z } from 'zod';
 import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
