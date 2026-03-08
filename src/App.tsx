@@ -98,6 +98,13 @@ import MedicalClinicalNotesPage from '@/pages/MedicalClinicalNotesPage';
 import MedicalCaseLogPage from '@/pages/MedicalCaseLogPage';
 import MedicalRotationsPage from '@/pages/MedicalRotationsPage';
 
+// Entrepreneur Pages
+import EntrepreneurVenturesPage from '@/pages/EntrepreneurVenturesPage';
+import EntrepreneurBusinessPlanPage from '@/pages/EntrepreneurBusinessPlanPage';
+import EntrepreneurPitchDeckPage from '@/pages/EntrepreneurPitchDeckPage';
+import EntrepreneurMarketResearchPage from '@/pages/EntrepreneurMarketResearchPage';
+import EntrepreneurMilestonesPage from '@/pages/EntrepreneurMilestonesPage';
+
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
 import ZambianResourcesHubPage from '@/pages/ZambianResourcesHubPage';
