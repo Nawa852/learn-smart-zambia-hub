@@ -242,6 +242,7 @@ function App() {
             <Route path="/study-planner" element={<ProtectedRoute><MainLayout><StudyPlannerPage /></MainLayout></ProtectedRoute>} />
             <Route path="/guardian-link" element={<ProtectedRoute><MainLayout><GuardianLinkPage /></MainLayout></ProtectedRoute>} />
             <Route path="/guardian-reports" element={<ProtectedRoute><MainLayout><GuardianReportsPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/my-notes" element={<ProtectedRoute><MainLayout><MyNotesPage /></MainLayout></ProtectedRoute>} />
 
             {/* Parent-Specific Pages */}
             <Route path="/parent-children" element={<ProtectedRoute><MainLayout><ParentChildrenPage /></MainLayout></ProtectedRoute>} />

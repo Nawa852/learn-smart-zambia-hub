@@ -67,7 +67,7 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<EnrolledCourse[]>([]);
   const [assignments, setAssignments] = useState<UpcomingAssignment[]>([]);
-  const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, completedLessons: 0, totalLessons: 0, averageProgress: 0, streak: 3 });
+  const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, completedLessons: 0, totalLessons: 0, averageProgress: 0, streak: 0 });
   const [loading, setLoading] = useState(true);
 
   const displayName = profile?.full_name || userName || 'Learner';
