@@ -466,6 +466,7 @@ export const skillsNavigation: NavGroup[] = [
     label: "Skills",
     items: [
       { title: "Skills Hub", url: "/skills/dashboard", icon: Wrench, badge: "NEW" },
+      { title: "Choose Focus", url: "/skills/categories", icon: Target, badge: "NEW" },
       { title: "Video Tutorials", url: "/skills/videos", icon: Video, badge: "NEW" },
     ],
   },
