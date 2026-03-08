@@ -88,6 +88,8 @@ import GoalsPage from '@/pages/GoalsPage';
 import JournalingPage from '@/pages/JournalingPage';
 import MentorshipPage from '@/pages/MentorshipPage';
 import FocusModePage from '@/pages/FocusModePage';
+import SetupPage from '@/pages/SetupPage';
+import AppControlPage from '@/pages/AppControlPage';
 
 import ECZExamSimulatorPage from '@/pages/ECZExamSimulatorPage';
 import ECZParentSupportHubPage from '@/pages/ECZParentSupportHubPage';
