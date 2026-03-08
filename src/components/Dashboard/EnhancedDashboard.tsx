@@ -272,11 +272,11 @@ const EnhancedDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {zambianFeatures.map((feature, index) => (
                 <Link key={index} to={feature.link}>
-                  <div className="p-4 border rounded-lg hover:shadow-md transition-all duration-300 hover:border-green-300 cursor-pointer group bg-white">
+                  <div className="p-4 border border-border rounded-lg hover:shadow-md transition-all duration-300 hover:border-emerald-400 cursor-pointer group bg-card">
                     <feature.icon className={`h-8 w-8 ${feature.color} mb-2 group-hover:scale-110 transition-transform duration-300`} />
-                    <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{feature.description}</p>
-                    <Badge variant="outline" className="text-xs bg-green-50">
+                    <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-2">{feature.description}</p>
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10">
                       AI: {feature.aiPowered}
                     </Badge>
                   </div>
