@@ -363,6 +363,53 @@ function App() {
               <Route path="/ministry/ecz-analytics" element={<PG><MinistryECZAnalyticsPage /></PG>} />
               <Route path="/ministry/reports" element={<PG><MinistryReportGeneratorPage /></PG>} />
               <Route path="/ministry/partnerships" element={<PG><MinistryPartnershipsPage /></PG>} />
+              <Route path="/ministry/budget" element={<PG><MinistryBudgetPage /></PG>} />
+              <Route path="/ministry/inspections" element={<PG><MinistryInspectionsPage /></PG>} />
+              <Route path="/ministry/teacher-deployment" element={<PG><MinistryTeacherDeploymentPage /></PG>} />
+              <Route path="/ministry/dropout-tracker" element={<PG><MinistryDropoutTrackerPage /></PG>} />
+              <Route path="/ministry/infrastructure" element={<PG><MinistryInfrastructurePage /></PG>} />
+              <Route path="/ministry/scholarships" element={<PG><MinistryScholarshipsPage /></PG>} />
+              <Route path="/ministry/announcements" element={<PG><MinistryAnnouncementsPage /></PG>} />
+              <Route path="/ministry/data-export" element={<PG><MinistryDataExportPage /></PG>} />
+              <Route path="/ministry/compliance" element={<PG><MinistryCompliancePage /></PG>} />
+              <Route path="/ministry/teacher-training" element={<PG><MinistryTeacherTrainingPage /></PG>} />
+              <Route path="/ministry/resources" element={<PG><MinistryResourceAllocationPage /></PG>} />
+              <Route path="/ministry/welfare" element={<PG><MinistryStudentWelfarePage /></PG>} />
+              <Route path="/ministry/digital-literacy" element={<PG><MinistryDigitalLiteracyPage /></PG>} />
+              <Route path="/ministry/research" element={<PG><MinistryResearchPage /></PG>} />
+              <Route path="/ministry/feedback" element={<PG><MinistryFeedbackPage /></PG>} />
+
+              {/* Cybersecurity New Pages */}
+              <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
+              <Route path="/cybersecurity/forensics" element={<PG><CyberForensicsPage /></PG>} />
+              <Route path="/cybersecurity/crypto" element={<PG><CyberCryptoPage /></PG>} />
+              <Route path="/cybersecurity/incident-response" element={<PG><CyberIncidentResponsePage /></PG>} />
+              <Route path="/cybersecurity/osint" element={<PG><CyberOSINTPage /></PG>} />
+              <Route path="/cybersecurity/certifications" element={<PG><CyberCertTrackerPage /></PG>} />
+              <Route path="/cybersecurity/threat-intel" element={<PG><CyberThreatIntelPage /></PG>} />
+              <Route path="/cybersecurity/bug-bounty" element={<PG><CyberBugBountyPage /></PG>} />
+              <Route path="/cybersecurity/social-engineering" element={<PG><CyberSocialEngineeringPage /></PG>} />
+              <Route path="/cybersecurity/network-lab" element={<PG><CyberNetworkLabPage /></PG>} />
+              <Route path="/cybersecurity/web-security" element={<PG><CyberWebSecPage /></PG>} />
+              <Route path="/cybersecurity/toolkit" element={<PG><CyberToolkitPage /></PG>} />
+              <Route path="/cybersecurity/range" element={<PG><CyberRangePage /></PG>} />
+
+              {/* Skills New Pages */}
+              <Route path="/skills/apprenticeships" element={<PG><SkillsApprenticeshipPage /></PG>} />
+              <Route path="/skills/portfolio" element={<PG><SkillsPortfolioPage /></PG>} />
+              <Route path="/skills/resume" element={<PG><SkillsResumeBuilderPage /></PG>} />
+              <Route path="/skills/interview-prep" element={<PG><SkillsInterviewPrepPage /></PG>} />
+              <Route path="/skills/jobs" element={<PG><SkillsJobBoardPage /></PG>} />
+              <Route path="/skills/mentorship" element={<PG><SkillsMentorshipPage /></PG>} />
+              <Route path="/skills/workshops" element={<PG><SkillsWorkshopCalendarPage /></PG>} />
+              <Route path="/skills/tools" element={<PG><SkillsToolGuidePage /></PG>} />
+              <Route path="/skills/certifications" element={<PG><SkillsCertificationsPage /></PG>} />
+              <Route path="/skills/assessment" element={<PG><SkillsAssessmentPage /></PG>} />
+              <Route path="/skills/industry" element={<PG><SkillsIndustryConnectPage /></PG>} />
+              <Route path="/skills/projects" element={<PG><SkillsProjectsPage /></PG>} />
+              <Route path="/skills/safety" element={<PG><SkillsSafetyPage /></PG>} />
+              <Route path="/skills/financial-literacy" element={<PG><SkillsFinancialLiteracyPage /></PG>} />
+              <Route path="/skills/entrepreneurship" element={<PG><SkillsEntrepreneurshipPage /></PG>} />
 
               {/* Meal Planner */}
               <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
