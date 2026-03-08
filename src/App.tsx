@@ -161,6 +161,7 @@ const SuspenseWrap = ({ children }: { children: React.ReactNode }) => (
 
 function App() {
   return (
+    <ErrorBoundary>
     <ThemeProvider>
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
