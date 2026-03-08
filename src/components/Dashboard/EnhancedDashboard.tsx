@@ -12,10 +12,10 @@ const EnhancedDashboard = () => {
   const { user } = useAuth();
 
   const quickStats = [
-    { title: "Study Sessions", value: "24", icon: Clock, color: "text-blue-600", bg: "bg-blue-50", change: "+5 this week" },
-    { title: "ECZ Progress", value: "78%", icon: BookOpen, color: "text-green-600", bg: "bg-green-50", change: "+12% this month" },
-    { title: "AI Interactions", value: "156", icon: Brain, color: "text-purple-600", bg: "bg-purple-50", change: "Daily avg: 8" },
-    { title: "Community Points", value: "1,250", icon: Award, color: "text-orange-600", bg: "bg-orange-50", change: "Top 10%" },
+    { title: "Study Sessions", value: "24", icon: Clock, color: "text-blue-600", bg: "bg-blue-500/10", change: "+5 this week" },
+    { title: "ECZ Progress", value: "78%", icon: BookOpen, color: "text-green-600", bg: "bg-green-500/10", change: "+12% this month" },
+    { title: "AI Interactions", value: "156", icon: Brain, color: "text-purple-600", bg: "bg-purple-500/10", change: "Daily avg: 8" },
+    { title: "Community Points", value: "1,250", icon: Award, color: "text-orange-600", bg: "bg-orange-500/10", change: "Top 10%" },
   ];
 
   const aiPoweredFeatures = [
