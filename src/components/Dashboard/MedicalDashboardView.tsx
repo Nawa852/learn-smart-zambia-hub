@@ -4,199 +4,155 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import {
-  Stethoscope, Brain, BookOpen, Activity, Users, Award,
-  FileText, Clock, Target, TrendingUp, Microscope, Heart,
-  Pill, ClipboardList, GraduationCap, Zap
+  Stethoscope, Brain, BookOpen, Activity, Award,
+  FileText, Clock, Target, Microscope, Heart,
+  Pill, ClipboardList, GraduationCap, Zap, Loader2
 } from 'lucide-react';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
+import { useClinicalCases } from '@/hooks/useClinicalCases';
+import { useClinicalRotations } from '@/hooks/useClinicalRotations';
 
 interface MedicalDashboardViewProps {
   userName: string;
 }
 
 export const MedicalDashboardView = ({ userName }: MedicalDashboardViewProps) => {
+  const { cases, loading: casesLoading } = useClinicalCases();
+  const { rotations, loading: rotationsLoading } = useClinicalRotations();
+
+  const totalCases = cases.length;
+  const resolvedCases = cases.filter(c => c.outcome === 'resolved').length;
+  const activeRotations = rotations.filter(r => r.status === 'active').length;
+  const completedRotations = rotations.filter(r => r.status === 'completed').length;
+  const avgScore = cases.filter(c => c.accuracy_score).reduce((sum, c) => sum + (c.accuracy_score || 0), 0) / (cases.filter(c => c.accuracy_score).length || 1);
+
   const stats = [
-    { title: "Cases Studied", value: "186", icon: ClipboardList, color: "text-blue-600", bg: "bg-blue-50", change: "+12 this week" },
-    { title: "Clinical Hours", value: "320h", icon: Clock, color: "text-emerald-600", bg: "bg-emerald-50", change: "On track" },
-    { title: "Competencies", value: "24/30", icon: Target, color: "text-purple-600", bg: "bg-purple-50", change: "80% complete" },
-    { title: "Peer Rating", value: "4.8", icon: Award, color: "text-amber-600", bg: "bg-amber-50", change: "Top 10%" },
+    { title: "Cases Studied", value: totalCases.toString(), icon: ClipboardList, color: "text-blue-600", bg: "bg-blue-50", change: `${resolvedCases} resolved` },
+    { title: "Active Rotations", value: activeRotations.toString(), icon: Activity, color: "text-emerald-600", bg: "bg-emerald-50", change: `${completedRotations} completed` },
+    { title: "Avg Score", value: cases.filter(c => c.accuracy_score).length ? `${Math.round(avgScore)}%` : "—", icon: Target, color: "text-purple-600", bg: "bg-purple-50", change: "AI simulations" },
+    { title: "Total Rotations", value: rotations.length.toString(), icon: Award, color: "text-amber-600", bg: "bg-amber-50", change: `${rotations.filter(r => r.status === 'upcoming').length} upcoming` },
   ];
 
-  const currentRotations = [
-    { name: "Internal Medicine", weeks: "Week 4/8", progress: 50, supervisor: "Dr. Mwansa", status: "active" },
-    { name: "Pediatrics", weeks: "Upcoming", progress: 0, supervisor: "Dr. Banda", status: "upcoming" },
-    { name: "Surgery", weeks: "Completed", progress: 100, supervisor: "Dr. Phiri", status: "completed" },
-  ];
+  const recentCases = cases.slice(0, 3);
 
-  const caseLog = [
-    { condition: "Malaria (Severe)", outcome: "Resolved", date: "Today", type: "Infectious" },
-    { condition: "Type 2 Diabetes Management", outcome: "Ongoing", date: "Yesterday", type: "Endocrine" },
-    { condition: "Pediatric Pneumonia", outcome: "Resolved", date: "2 days ago", type: "Respiratory" },
-  ];
+  const getRotationProgress = (r: typeof rotations[0]) => {
+    if (r.status === 'completed') return 100;
+    if (r.status === 'upcoming' || !r.start_date || !r.end_date) return 0;
+    const start = new Date(r.start_date).getTime();
+    const end = new Date(r.end_date).getTime();
+    const now = Date.now();
+    return Math.min(100, Math.max(0, Math.round(((now - start) / (end - start)) * 100)));
+  };
 
   const studyModules = [
-    { icon: Microscope, title: "3D Anatomy Lab", description: "Interactive anatomy exploration", link: "/ai-learning-lab", gradient: "from-rose-500 to-pink-600" },
-    { icon: Pill, title: "Drug Reference", description: "Pharmacology database", link: "/ai-resource-center", gradient: "from-blue-500 to-cyan-600" },
-    { icon: Brain, title: "Case Simulator", description: "AI clinical scenarios", link: "/ai-chat", gradient: "from-purple-500 to-indigo-600" },
-    { icon: Heart, title: "Patient Care", description: "Communication skills", link: "/ai-study-buddy", gradient: "from-red-500 to-orange-500" },
-    { icon: FileText, title: "Clinical Notes", description: "AI-assisted documentation", link: "/ai-study-journal", gradient: "from-emerald-500 to-teal-600" },
-    { icon: GraduationCap, title: "Board Prep", description: "Exam preparation", link: "/ecz-exam-simulator", gradient: "from-amber-500 to-yellow-600" },
+    { icon: Microscope, title: "Case Simulator", description: "AI clinical scenarios", link: "/medical/case-simulator", gradient: "from-rose-500 to-pink-600" },
+    { icon: Pill, title: "Drug Reference", description: "Pharmacology database", link: "/medical/drug-reference", gradient: "from-blue-500 to-cyan-600" },
+    { icon: FileText, title: "Clinical Notes", description: "SOAP note generator", link: "/medical/clinical-notes", gradient: "from-emerald-500 to-teal-600" },
+    { icon: ClipboardList, title: "Case Log", description: "Track your cases", link: "/medical/case-log", gradient: "from-purple-500 to-indigo-600" },
+    { icon: Activity, title: "Rotations", description: "Manage placements", link: "/medical/rotations", gradient: "from-amber-500 to-yellow-600" },
+    { icon: Brain, title: "AI Assistant", description: "Ask anything", link: "/ai", gradient: "from-red-500 to-orange-500" },
   ];
 
-  const upcomingExams = [
-    { name: "Pathology OSCE", date: "March 15", readiness: 72 },
-    { name: "Pharmacology MCQ", date: "March 22", readiness: 85 },
-    { name: "Clinical Skills Assessment", date: "April 5", readiness: 60 },
-  ];
+  const isLoading = casesLoading || rotationsLoading;
 
   return (
     <div className="space-y-6">
-      {/* Welcome */}
       <Card className="border-0 shadow-lg bg-gradient-to-r from-rose-500/10 via-primary/5 to-background">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-3xl font-bold mb-2">Welcome, Dr. {userName}! 🩺</h1>
               <p className="text-muted-foreground">Your clinical learning command center</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">
-                <ClipboardList className="w-4 h-4 mr-2" />
-                Log Case
-              </Button>
-              <Button>
-                <Stethoscope className="w-4 h-4 mr-2" />
-                Start Simulation
-              </Button>
+              <Link to="/medical/case-log"><Button variant="outline"><ClipboardList className="w-4 h-4 mr-2" />Log Case</Button></Link>
+              <Link to="/medical/case-simulator"><Button><Stethoscope className="w-4 h-4 mr-2" />Start Simulation</Button></Link>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <OnboardingWelcomeBanner
-        role="doctor"
-        userName={userName}
-        emoji="🩺"
-        subtitle="Get started with your clinical learning tools."
+      <OnboardingWelcomeBanner role="doctor" userName={userName} emoji="🩺" subtitle="Get started with your clinical learning tools."
         tips={[
-          { icon: Microscope, title: '3D Anatomy Lab', desc: 'Explore interactive anatomical models and visualizations.' },
-          { icon: Brain, title: 'Case Simulator', desc: 'Practice clinical reasoning with AI-generated patient cases.' },
-          { icon: ClipboardList, title: 'Log Cases', desc: 'Track your clinical encounters and build your case portfolio.' },
-          { icon: GraduationCap, title: 'Board Prep', desc: 'AI-powered exam preparation for medical licensing.' },
+          { icon: Microscope, title: 'Case Simulator', desc: 'Practice clinical reasoning with AI cases.' },
+          { icon: Brain, title: 'Drug Reference', desc: 'AI pharmacology database.' },
+          { icon: ClipboardList, title: 'Log Cases', desc: 'Track your clinical encounters.' },
+          { icon: GraduationCap, title: 'Clinical Notes', desc: 'AI-powered SOAP note generation.' },
         ]}
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, i) => (
-          <Card key={i} className="hover:shadow-lg transition-all duration-300 group">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.change}</p>
-                </div>
-                <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Rotations */}
-        <Card className="lg:col-span-2 border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-primary" />
-              Clinical Rotations
-            </CardTitle>
-            <CardDescription>Track your rotation progress</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {currentRotations.map((rot, i) => (
-              <div key={i} className="p-4 border rounded-lg hover:shadow-md transition-all">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h4 className="font-semibold">{rot.name}</h4>
-                    <p className="text-sm text-muted-foreground">Supervisor: {rot.supervisor}</p>
+      {isLoading ? (
+        <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {stats.map((stat, i) => (
+              <Card key={i} className="hover:shadow-lg transition-all duration-300 group">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                      <p className="text-xs text-muted-foreground">{stat.change}</p>
+                    </div>
+                    <div className={`w-12 h-12 ${stat.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                    </div>
                   </div>
-                  <Badge variant={rot.status === 'active' ? 'default' : rot.status === 'completed' ? 'secondary' : 'outline'}>
-                    {rot.weeks}
-                  </Badge>
-                </div>
-                <Progress value={rot.progress} className="h-2" />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Upcoming Exams */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-amber-600" />
-              Exam Readiness
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {upcomingExams.map((exam, i) => (
-              <div key={i} className="p-3 border rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-semibold text-sm">{exam.name}</h4>
-                  <Badge variant="outline" className="text-xs">{exam.date}</Badge>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Progress value={exam.readiness} className="h-2 flex-1" />
-                  <span className="text-sm font-bold">{exam.readiness}%</span>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Cases */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-blue-600" />
-            Recent Case Log
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {caseLog.map((c, i) => (
-              <div key={i} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-rose-50 rounded-full flex items-center justify-center">
-                    <Stethoscope className="w-5 h-5 text-rose-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{c.condition}</p>
-                    <p className="text-sm text-muted-foreground">{c.type} • {c.date}</p>
-                  </div>
-                </div>
-                <Badge variant={c.outcome === 'Resolved' ? 'secondary' : 'default'}>
-                  {c.outcome}
-                </Badge>
-              </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Study Tools */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2 border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Activity className="w-5 h-5 text-primary" />Clinical Rotations</CardTitle>
+                <CardDescription>{rotations.length ? 'Your rotation progress' : 'No rotations added yet'}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {rotations.length === 0 ? (
+                  <Link to="/medical/rotations"><Button variant="outline" className="w-full">Add Your First Rotation</Button></Link>
+                ) : rotations.slice(0, 4).map((rot, i) => (
+                  <div key={i} className="p-4 border rounded-lg hover:shadow-md transition-all">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-semibold">{rot.rotation_name}</h4>
+                        {rot.supervisor_name && <p className="text-sm text-muted-foreground">Supervisor: {rot.supervisor_name}</p>}
+                      </div>
+                      <Badge variant={rot.status === 'active' ? 'default' : rot.status === 'completed' ? 'secondary' : 'outline'}>{rot.status}</Badge>
+                    </div>
+                    <Progress value={getRotationProgress(rot)} className="h-2" />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg">
+              <CardHeader><CardTitle className="flex items-center gap-2"><FileText className="w-5 h-5 text-blue-600" />Recent Cases</CardTitle></CardHeader>
+              <CardContent className="space-y-3">
+                {recentCases.length === 0 ? (
+                  <Link to="/medical/case-log"><Button variant="outline" className="w-full">Log Your First Case</Button></Link>
+                ) : recentCases.map((c, i) => (
+                  <div key={i} className="p-3 border rounded-lg flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center"><Stethoscope className="w-4 h-4 text-primary" /></div>
+                      <div>
+                        <p className="font-medium text-sm">{c.condition}</p>
+                        <p className="text-xs text-muted-foreground">{c.body_system || 'General'} • {new Date(c.created_at).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <Badge variant={c.outcome === 'resolved' ? 'secondary' : 'default'} className="text-xs">{c.outcome}</Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
+
       <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-purple-600" />
-            Medical Study Tools
-          </CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Zap className="w-5 h-5 text-purple-600" />Medical Study Tools</CardTitle></CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {studyModules.map((tool, i) => (

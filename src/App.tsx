@@ -292,6 +292,13 @@ function App() {
             <Route path="/notifications" element={<ProtectedRoute><MainLayout><NotificationsPage /></MainLayout></ProtectedRoute>} />
             <Route path="/resource-library" element={<ProtectedRoute><MainLayout><ECZResourceLibraryPage /></MainLayout></ProtectedRoute>} />
 
+            {/* Medical Pages */}
+            <Route path="/medical/case-simulator" element={<ProtectedRoute><MainLayout><MedicalCaseSimulatorPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/drug-reference" element={<ProtectedRoute><MainLayout><MedicalDrugReferencePage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/clinical-notes" element={<ProtectedRoute><MainLayout><MedicalClinicalNotesPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/case-log" element={<ProtectedRoute><MainLayout><MedicalCaseLogPage /></MainLayout></ProtectedRoute>} />
+            <Route path="/medical/rotations" element={<ProtectedRoute><MainLayout><MedicalRotationsPage /></MainLayout></ProtectedRoute>} />
+
             {/* Meal Planner */}
             <Route path="/meal-planner" element={<ProtectedRoute><MainLayout><MealPlannerPage /></MainLayout></ProtectedRoute>} />
 
