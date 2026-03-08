@@ -144,6 +144,7 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
+            <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             
