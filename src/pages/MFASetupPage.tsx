@@ -185,7 +185,7 @@ const MFASetupPage = () => {
               {/* Methods */}
               <GlassCard delay={0.1}>
                 <CardHeader>
-                  <CardTitle className="text-lg gradient-text">Authentication Methods</CardTitle>
+                  <CardTitle className="text-lg text-primary">Authentication Methods</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <button
