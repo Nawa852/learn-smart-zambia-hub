@@ -14,6 +14,8 @@ import {
   Bell, Volume2, X, Lock
 } from 'lucide-react';
 import { useFocusMode, FocusPhase } from '@/hooks/useFocusMode';
+import { useDistractionDetector } from '@/hooks/useDistractionDetector';
+import { useStudySchedule } from '@/hooks/useStudySchedule';
 
 // Schedule types
 interface StudySlot {
