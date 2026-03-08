@@ -160,18 +160,23 @@ function App() {
             
             <Route path="/chatedu" element={<ChatEduLanding />} />
             
+            {/* Setup Route (no PostLoginGate) */}
+            <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
+            
             {/* Role-Specific Dashboards */}
-            <Route path="/teacher-dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/parent-dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/school-admin" element={<ProtectedRoute><MainLayout><SchoolAdminDashboard /></MainLayout></ProtectedRoute>} />
-            <Route path="/ministry-dashboard" element={<ProtectedRoute><MainLayout><MinistryDashboard /></MainLayout></ProtectedRoute>} />
+            <Route path="/teacher-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/parent-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><Dashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/school-admin" element={<ProtectedRoute><PostLoginGate><MainLayout><SchoolAdminDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
+            <Route path="/ministry-dashboard" element={<ProtectedRoute><PostLoginGate><MainLayout><MinistryDashboard /></MainLayout></PostLoginGate></ProtectedRoute>} />
             
             {/* Main Dashboard */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
+                <PostLoginGate>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </PostLoginGate>
               </ProtectedRoute>
             } />
 
