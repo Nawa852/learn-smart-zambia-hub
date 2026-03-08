@@ -11,13 +11,13 @@ export const XPBar: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
     return (
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="gap-1 text-xs">
-          <Star className="w-3 h-3 text-yellow-500" /> Lv.{stats.level}
+          <Star className="w-3 h-3" /> Lv.{stats.level}
         </Badge>
         <Badge variant="outline" className="gap-1 text-xs">
-          <Zap className="w-3 h-3 text-purple-500" /> {stats.xp} XP
+          <Zap className="w-3 h-3" /> {stats.xp} XP
         </Badge>
         <Badge variant="outline" className="gap-1 text-xs">
-          <Coins className="w-3 h-3 text-amber-500" /> {stats.edu_coins}
+          <Coins className="w-3 h-3" /> {stats.edu_coins}
         </Badge>
       </div>
     );
@@ -27,7 +27,7 @@ export const XPBar: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
             {stats.level}
           </div>
           <div>
@@ -37,11 +37,11 @@ export const XPBar: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
         </div>
         <div className="flex items-center gap-3">
           <div className="text-center">
-            <p className="text-lg font-bold text-purple-500">{stats.xp}</p>
+            <p className="text-lg font-bold text-primary">{stats.xp}</p>
             <p className="text-[10px] text-muted-foreground">XP</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-bold text-amber-500">{stats.edu_coins}</p>
+            <p className="text-lg font-bold text-accent-foreground">{stats.edu_coins}</p>
             <p className="text-[10px] text-muted-foreground">Coins</p>
           </div>
         </div>
