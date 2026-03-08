@@ -44,12 +44,12 @@ export function RoleBasedSidebar() {
         {/* Header */}
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
+            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
               <span className="text-primary-foreground font-bold text-sm">EZ</span>
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <h2 className="font-bold text-sm gradient-text">
+                <h2 className="font-bold text-sm text-foreground">
                   Edu Zambia
                 </h2>
                 <p className="text-xs text-muted-foreground">Smart Learning</p>
@@ -59,17 +59,17 @@ export function RoleBasedSidebar() {
         </div>
 
         {/* User Profile */}
-        <div className="p-3 mx-2 my-2 rounded-xl glow-border bg-primary/5">
+        <div className="p-3 mx-2 my-2 rounded-lg border border-border bg-secondary/50">
           <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9 ring-2 ring-primary/30 flex-shrink-0">
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground font-semibold text-sm">
+            <Avatar className="h-9 w-9 flex-shrink-0">
+              <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm">
                 {userName.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             {!collapsed && (
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm truncate text-foreground">{userName}</h3>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                   {roleLabel}
                 </Badge>
               </div>
@@ -97,9 +97,9 @@ export function RoleBasedSidebar() {
                             <NavLink
                               to={item.url}
                               className={cn(
-                                "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group relative",
+                                "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 group relative",
                                 isActive(item.url)
-                                  ? "bg-primary/15 text-primary shadow-sm border border-primary/20"
+                                  ? "bg-primary/10 text-primary border border-primary/20"
                                   : "hover:bg-secondary text-muted-foreground hover:text-foreground"
                               )}
                             >
@@ -117,14 +117,8 @@ export function RoleBasedSidebar() {
                                   </span>
                                   {item.badge && (
                                     <Badge
-                                      className={cn(
-                                        "text-[10px] px-1.5 py-0",
-                                        item.badge === 'LIVE'
-                                          ? 'bg-green-500/15 text-green-400 border-green-500/20'
-                                          : item.badge === 'NEW'
-                                          ? 'bg-primary/15 text-primary border-primary/20'
-                                          : 'bg-accent/15 text-accent border-accent/20'
-                                      )}
+                                      variant="secondary"
+                                      className="text-[10px] px-1.5 py-0"
                                     >
                                       {item.badge}
                                     </Badge>
@@ -148,9 +142,9 @@ export function RoleBasedSidebar() {
           <NavLink
             to="/settings"
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors",
+              "flex items-center gap-3 px-3 py-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors",
               collapsed && "justify-center",
-              isActive('/settings') && "bg-primary/15 text-primary border border-primary/20"
+              isActive('/settings') && "bg-primary/10 text-primary border border-primary/20"
             )}
           >
             <Settings className="h-4 w-4" />
