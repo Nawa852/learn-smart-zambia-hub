@@ -187,6 +187,12 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
                       {student.focusStats.gaveUpCount} gave up
                     </span>
                   )}
+                  {(student as any).focusStats?.distractionCount > 0 && (
+                    <span className="text-destructive">
+                      <AlertTriangle className="w-4 h-4 inline mr-1" />
+                      {(student as any).focusStats.distractionCount} distractions
+                    </span>
+                  )}
                 </div>
               </CardContent>
             </Card>
