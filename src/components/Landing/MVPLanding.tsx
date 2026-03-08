@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import EduZambiaLogo from '@/assets/edu-zambia-logo.svg';
 
 const features = [
   {
