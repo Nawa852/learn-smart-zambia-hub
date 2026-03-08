@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Bell, 
   Search, 
   MessageCircle, 
   Heart, 
   User, 
   Settings,
   LogOut,
-  Menu
 } from 'lucide-react';
+import { NotificationDropdown } from '@/components/Notifications/NotificationDropdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
