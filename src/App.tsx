@@ -512,6 +512,25 @@ function App() {
               <Route path="/screen-time" element={<PG><ScreenTimePage /></PG>} />
               <Route path="/parental-controls" element={<PG><ParentalControlsPage /></PG>} />
 
+              {/* New Feature Pages */}
+              <Route path="/pomodoro" element={<PG><PomodoroPage /></PG>} />
+              <Route path="/bookmarks" element={<PG><BookmarksPage /></PG>} />
+              <Route path="/spaced-repetition" element={<PG><SpacedRepetitionPage /></PG>} />
+              <Route path="/reading-list" element={<PG><ReadingListPage /></PG>} />
+              <Route path="/data-export" element={<PG><DataExportPage /></PG>} />
+              <Route path="/teacher-report-cards" element={<PG><TeacherReportCardsPage /></PG>} />
+              <Route path="/teacher-announcements" element={<PG><TeacherAnnouncementsPage /></PG>} />
+              <Route path="/teacher-rubric-builder" element={<PG><TeacherRubricBuilderPage /></PG>} />
+              <Route path="/guardian-homework" element={<PG><GuardianHomeworkTrackerPage /></PG>} />
+              <Route path="/guardian-rewards" element={<PG><GuardianRewardSystemPage /></PG>} />
+              <Route path="/guardian-study-comparison" element={<PG><GuardianStudyComparisonPage /></PG>} />
+              <Route path="/cybersecurity/password-analyzer" element={<PG><CyberPasswordAnalyzerPage /></PG>} />
+              <Route path="/cybersecurity/phishing-sim" element={<PG><CyberPhishingSimPage /></PG>} />
+              <Route path="/cybersecurity/glossary" element={<PG><CyberGlossaryPage /></PG>} />
+              <Route path="/developer/api-playground" element={<PG><DevAPIPlaygroundPage /></PG>} />
+              <Route path="/developer/algorithms" element={<PG><DevAlgorithmVisualizerPage /></PG>} />
+              <Route path="/notification-preferences" element={<PG><NotificationPreferencesPage /></PG>} />
+
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
