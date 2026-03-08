@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DeviceCapabilitiesPanel } from '@/components/PWA/DeviceCapabilitiesPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ const tabItems = [
   { id: 'notifications', label: 'Alerts', icon: Bell },
   { id: 'privacy', label: 'Privacy', icon: Shield },
   { id: 'accessibility', label: 'Access', icon: Eye },
+  { id: 'device', label: 'Device', icon: Smartphone },
   { id: 'account', label: 'Account', icon: User },
 ];
 
@@ -386,6 +388,18 @@ const SettingsPage = () => {
                 <Button variant="destructive" className="w-full justify-start gap-2 glow-primary" style={{ '--glow-color': 'hsl(0 72% 55%)' } as React.CSSProperties}>
                   <Trash2 className="w-4 h-4" /> Delete Account
                 </Button>
+              </CardContent>
+            </GlassCard>
+          </div>
+        );
+
+      case 'device':
+        return (
+          <div className="space-y-6">
+            <GlassCard delay={0.1}>
+              <CardHeader><CardTitle className="text-lg flex items-center gap-2"><Smartphone className="w-5 h-5 text-primary" /> Device Capabilities</CardTitle></CardHeader>
+              <CardContent>
+                <DeviceCapabilitiesPanel />
               </CardContent>
             </GlassCard>
           </div>
