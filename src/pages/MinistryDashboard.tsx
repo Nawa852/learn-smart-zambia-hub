@@ -606,7 +606,6 @@ const MinistryDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
   );
 };
 
