@@ -121,7 +121,8 @@ const AssessmentResultsPage = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           {Object.entries(difficultyBreakdown).map(([level, data]) => {
-            const pct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+            const d = data as { total: number; correct: number };
+            const pct = d.total > 0 ? Math.round((d.correct / d.total) * 100) : 0;
             return (
               <div key={level} className="space-y-1">
                 <div className="flex justify-between text-sm">
