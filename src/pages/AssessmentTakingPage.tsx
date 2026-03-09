@@ -166,9 +166,30 @@ const AssessmentTakingPage = () => {
     const coinReward = passed ? 15 : 5;
     await supabase.rpc('award_xp' as any, { p_user_id: user.id, p_xp: xpReward, p_coins: coinReward });
 
+    // Auto-issue certificate on pass
+    if (passed && assessment?.course_id) {
+      const { data: existing } = await supabase
+        .from('certificates')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('course_id', assessment.course_id)
+        .maybeSingle();
+      if (!existing) {
+        await supabase.from('certificates').insert({
+          user_id: user.id,
+          course_id: assessment.course_id,
+        });
+      }
+    }
+
     toast.success(passed ? '🎉 Assessment passed!' : 'Assessment complete');
     setSubmitting(false);
-  }, [user, assessmentId, questions, answers, assessment, timeLeft, submitting]);
+
+    // Navigate to detailed results
+    if (attempt?.id) {
+      navigate(`/assessment-results/${attempt.id}`);
+    }
+  }, [user, assessmentId, questions, answers, assessment, timeLeft, submitting, navigate]);
 
   const currentQuestion = questions[currentIndex];
   const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
