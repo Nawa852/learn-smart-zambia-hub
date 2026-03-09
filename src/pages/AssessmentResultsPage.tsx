@@ -127,7 +127,7 @@ const AssessmentResultsPage = () => {
               <div key={level} className="space-y-1">
                 <div className="flex justify-between text-sm">
                   <span className="capitalize text-foreground">{level}</span>
-                  <span className="text-muted-foreground">{data.correct}/{data.total} ({pct}%)</span>
+                  <span className="text-muted-foreground">{d.correct}/{d.total} ({pct}%)</span>
                 </div>
                 <Progress value={pct} className="h-2" />
               </div>
