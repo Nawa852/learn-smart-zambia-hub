@@ -86,10 +86,11 @@ const CourseDetailPage = () => {
   useEffect(() => {
     if (!courseId) return;
     const fetchData = async () => {
-      const [{ data: courseData }, { data: lessonsData }, { data: materialsData }] = await Promise.all([
+      const [{ data: courseData }, { data: lessonsData }, { data: materialsData }, { data: assessmentsData }] = await Promise.all([
         supabase.from('courses').select('*').eq('id', courseId).single(),
         supabase.from('lessons').select('*').eq('course_id', courseId).order('order_index'),
         supabase.from('course_materials').select('*').eq('course_id', courseId).order('created_at'),
+        supabase.from('course_assessments').select('*').eq('course_id', courseId).eq('is_active', true),
       ]);
 
       if (courseData) {
@@ -101,6 +102,7 @@ const CourseDetailPage = () => {
         if (lessonsData.length > 0) setActiveLesson(lessonsData[0]);
       }
       if (materialsData) setMaterials(materialsData as CourseMaterial[]);
+      if (assessmentsData) setAssessments(assessmentsData as CourseAssessment[]);
 
       if (user) {
         const [{ data: enrollment }, { data: completions }] = await Promise.all([
@@ -114,6 +116,66 @@ const CourseDetailPage = () => {
     };
     fetchData();
   }, [courseId, user]);
+
+  const generateQuizForLesson = async (lesson: Lesson) => {
+    if (!courseId || !course) return;
+    setGeneratingQuiz(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-assessment-questions', {
+        body: {
+          lessonTitle: lesson.title,
+          lessonContent: lesson.content,
+          courseSubject: course.subject,
+          gradeLevel: course.grade_level,
+          questionCount: 5,
+          difficulty: 'medium',
+        },
+      });
+
+      if (error) throw error;
+      if (!data?.questions?.length) throw new Error('No questions generated');
+
+      // Create assessment
+      const { data: assessment, error: assessmentError } = await supabase
+        .from('course_assessments')
+        .insert({
+          course_id: courseId,
+          title: `Quiz: ${lesson.title}`,
+          assessment_type: 'lesson_quiz',
+          lesson_id: lesson.id,
+          question_count: data.questions.length,
+          time_limit_minutes: 10,
+          pass_threshold: 70,
+          is_active: true,
+        })
+        .select()
+        .single();
+
+      if (assessmentError) throw assessmentError;
+
+      // Insert questions
+      const questions = data.questions.map((q: any, idx: number) => ({
+        assessment_id: assessment.id,
+        question_text: q.question_text,
+        options: q.options,
+        correct_answer: q.correct_answer,
+        explanation: q.explanation,
+        difficulty_level: q.difficulty_level || 'medium',
+        points: 1,
+        order_index: idx,
+      }));
+
+      await supabase.from('assessment_questions').insert(questions);
+
+      setAssessments(prev => [...prev, assessment as CourseAssessment]);
+      toast.success(`Quiz generated with ${data.questions.length} questions!`);
+    } catch (err: any) {
+      console.error('Quiz generation error:', err);
+      toast.error(err?.message || 'Failed to generate quiz');
+    } finally {
+      setGeneratingQuiz(false);
+    }
+  };
 
   const fetchRoster = async () => {
     if (!courseId) return;
