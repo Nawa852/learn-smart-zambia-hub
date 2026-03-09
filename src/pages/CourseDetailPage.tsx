@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   BookOpen, ArrowLeft, Play, FileText, Clock, CheckCircle,
   ChevronRight, Layers, Lock, ClipboardCheck, StickyNote, Save, Users,
-  Download, FileDown, BookMarked, ExternalLink
+  Download, FileDown, BookMarked, ExternalLink, Brain, Sparkles, Loader2
 } from 'lucide-react';
 
 interface Lesson {
@@ -33,6 +33,16 @@ interface CourseMaterial {
   type: string;
   year: string | null;
   paper: string | null;
+}
+
+interface CourseAssessment {
+  id: string;
+  title: string;
+  assessment_type: string;
+  question_count: number;
+  time_limit_minutes: number | null;
+  pass_threshold: number;
+  is_active: boolean;
 }
 
 interface Course {
@@ -58,6 +68,7 @@ const CourseDetailPage = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [materials, setMaterials] = useState<CourseMaterial[]>([]);
+  const [assessments, setAssessments] = useState<CourseAssessment[]>([]);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isCreator, setIsCreator] = useState(false);
@@ -70,6 +81,7 @@ const CourseDetailPage = () => {
   const [students, setStudents] = useState<EnrolledStudent[]>([]);
   const [loadingRoster, setLoadingRoster] = useState(false);
   const [sidebarTab, setSidebarTab] = useState('lessons');
+  const [generatingQuiz, setGeneratingQuiz] = useState(false);
 
   useEffect(() => {
     if (!courseId) return;
