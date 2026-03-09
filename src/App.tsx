@@ -406,6 +406,7 @@ function App() {
               <Route path="/study-chat" element={<PG><StudyGroupChatPage /></PG>} />
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
               <Route path="/course/:courseId/assignments" element={<PG><AssignmentPage /></PG>} />
+              <Route path="/assessment/:assessmentId" element={<PG><AssessmentTakingPage /></PG>} />
               <Route path="/lessons" element={<PG><LessonsPage /></PG>} />
               <Route path="/classroom" element={<PG><VirtualClassroomPage /></PG>} />
               <Route path="/video-learning" element={<PG><VideoLearningPage /></PG>} />
