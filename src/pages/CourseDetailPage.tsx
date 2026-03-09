@@ -475,14 +475,15 @@ const CourseDetailPage = () => {
             <CardContent className="p-0">
               <Tabs value={sidebarTab} onValueChange={setSidebarTab}>
                 <div className="p-2 border-b border-border">
-                  <TabsList className="w-full">
-                    <TabsTrigger value="lessons" className="flex-1 text-xs gap-1">
+                  <TabsList className="w-full grid grid-cols-3">
+                    <TabsTrigger value="lessons" className="text-xs gap-1">
                       <Play className="w-3 h-3" /> Lessons
-                      {lessons.length > 0 && <span className="text-[10px] opacity-70">({lessons.length})</span>}
                     </TabsTrigger>
-                    <TabsTrigger value="materials" className="flex-1 text-xs gap-1">
+                    <TabsTrigger value="assessments" className="text-xs gap-1">
+                      <Brain className="w-3 h-3" /> Quizzes
+                    </TabsTrigger>
+                    <TabsTrigger value="materials" className="text-xs gap-1">
                       <FileDown className="w-3 h-3" /> Materials
-                      {materials.length > 0 && <span className="text-[10px] opacity-70">({materials.length})</span>}
                     </TabsTrigger>
                   </TabsList>
                 </div>
