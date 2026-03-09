@@ -121,6 +121,8 @@ const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
 const AssignmentPage = React.lazy(() => import('@/pages/AssignmentPage'));
 const AssessmentTakingPage = React.lazy(() => import('@/pages/AssessmentTakingPage'));
+const AssessmentResultsPage = React.lazy(() => import('@/pages/AssessmentResultsPage'));
+const CertificatesPage = React.lazy(() => import('@/pages/CertificatesPage'));
 const MyCoursesPage = React.lazy(() => import('@/pages/MyCoursesPage'));
 const ProgressReportPage = React.lazy(() => import('@/pages/ProgressReportPage'));
 const ECZPracticeQuizPage = React.lazy(() => import('@/pages/ECZPracticeQuizPage'));
