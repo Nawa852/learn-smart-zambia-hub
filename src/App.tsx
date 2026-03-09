@@ -120,6 +120,7 @@ const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
 const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
 const AssignmentPage = React.lazy(() => import('@/pages/AssignmentPage'));
+const AssessmentTakingPage = React.lazy(() => import('@/pages/AssessmentTakingPage'));
 const MyCoursesPage = React.lazy(() => import('@/pages/MyCoursesPage'));
 const ProgressReportPage = React.lazy(() => import('@/pages/ProgressReportPage'));
 const ECZPracticeQuizPage = React.lazy(() => import('@/pages/ECZPracticeQuizPage'));
@@ -405,6 +406,7 @@ function App() {
               <Route path="/study-chat" element={<PG><StudyGroupChatPage /></PG>} />
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
               <Route path="/course/:courseId/assignments" element={<PG><AssignmentPage /></PG>} />
+              <Route path="/assessment/:assessmentId" element={<PG><AssessmentTakingPage /></PG>} />
               <Route path="/lessons" element={<PG><LessonsPage /></PG>} />
               <Route path="/classroom" element={<PG><VirtualClassroomPage /></PG>} />
               <Route path="/video-learning" element={<PG><VideoLearningPage /></PG>} />
