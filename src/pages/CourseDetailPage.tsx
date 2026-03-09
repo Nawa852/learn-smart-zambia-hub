@@ -530,6 +530,74 @@ const CourseDetailPage = () => {
                   </div>
                 </TabsContent>
 
+                {/* Assessments Tab */}
+                <TabsContent value="assessments" className="m-0">
+                  <div className="divide-y divide-border">
+                    {/* Generate Quiz Button for Creators */}
+                    {isCreator && activeLesson && (
+                      <div className="p-3 bg-muted/30">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="w-full gap-2"
+                          onClick={() => generateQuizForLesson(activeLesson)}
+                          disabled={generatingQuiz}
+                        >
+                          {generatingQuiz ? (
+                            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating...</>
+                          ) : (
+                            <><Sparkles className="w-3.5 h-3.5" /> Generate AI Quiz</>
+                          )}
+                        </Button>
+                        <p className="text-[10px] text-muted-foreground text-center mt-1.5">
+                          For: {activeLesson.title}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Assessment List */}
+                    {assessments.length > 0 ? (
+                      assessments.map(a => (
+                        <button
+                          key={a.id}
+                          onClick={() => isEnrolled && navigate(`/assessment/${a.id}`)}
+                          disabled={!isEnrolled}
+                          className={`w-full p-3 flex items-center gap-3 text-left transition-colors text-sm hover:bg-muted/50 ${
+                            !isEnrolled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+                          }`}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Brain className="w-4 h-4 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium truncate text-foreground text-xs">{a.title}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                              <span>{a.question_count} Qs</span>
+                              {a.time_limit_minutes && (
+                                <span className="flex items-center gap-0.5">
+                                  <Clock className="w-2.5 h-2.5" /> {a.time_limit_minutes}m
+                                </span>
+                              )}
+                              <span>Pass: {a.pass_threshold}%</span>
+                            </div>
+                          </div>
+                          {!isEnrolled ? (
+                            <Lock className="w-3 h-3 text-muted-foreground" />
+                          ) : (
+                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                          )}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="p-6 text-center text-sm text-muted-foreground">
+                        <Brain className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                        No quizzes available yet
+                        {isCreator && <p className="text-xs mt-1">Generate a quiz above!</p>}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+
                 {/* Materials Tab */}
                 <TabsContent value="materials" className="m-0">
                   {materials.length === 0 ? (
