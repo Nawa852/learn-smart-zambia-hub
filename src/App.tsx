@@ -409,6 +409,8 @@ function App() {
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
               <Route path="/course/:courseId/assignments" element={<PG><AssignmentPage /></PG>} />
               <Route path="/assessment/:assessmentId" element={<PG><AssessmentTakingPage /></PG>} />
+              <Route path="/assessment-results/:attemptId" element={<PG><AssessmentResultsPage /></PG>} />
+              <Route path="/certificates" element={<PG><CertificatesPage /></PG>} />
               <Route path="/lessons" element={<PG><LessonsPage /></PG>} />
               <Route path="/classroom" element={<PG><VirtualClassroomPage /></PG>} />
               <Route path="/video-learning" element={<PG><VideoLearningPage /></PG>} />
