@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { ProfileSwitcher } from '@/components/UI/ProfileSwitcher';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
@@ -76,6 +77,7 @@ export const TopNavbar = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-1">
+          <ProfileSwitcher />
           <ThemeSwitcher />
           <NotificationBell />
 

@@ -11,6 +11,11 @@ import { useStudySchedule } from '@/hooks/useStudySchedule';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 import { ScheduleEnforcer } from '@/components/DeviceControl/ScheduleEnforcer';
+import { MacroPanel } from '@/components/UI/MacroPanel';
+import { OfflineBanner } from '@/components/PWA/OfflineBanner';
+import { useContextualPreload } from '@/hooks/useContextualPreload';
+import { useTimeCapsule } from '@/hooks/useTimeCapsule';
+import { useDeepOffline } from '@/hooks/useDeepOffline';
 import { Button } from '@/components/ui/button';
 import { Calendar, Play, X, ChevronRight, Home, Search, Keyboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -145,6 +150,9 @@ const SHORTCUTS = [
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useSecurityAlerts();
+  useContextualPreload();
+  useTimeCapsule();
+  useDeepOffline();
   const { getActiveNow } = useStudySchedule();
   const navigate = useNavigate();
   const location = useLocation();
@@ -267,7 +275,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           
           <MobileBottomNav />
           <QuickNoteButton />
+          <MacroPanel />
           <ScrollToTop />
+          <OfflineBanner />
         </div>
       </div>
 
