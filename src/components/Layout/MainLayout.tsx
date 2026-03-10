@@ -150,6 +150,9 @@ const SHORTCUTS = [
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useSecurityAlerts();
+  useContextualPreload();
+  useTimeCapsule();
+  useDeepOffline();
   const { getActiveNow } = useStudySchedule();
   const navigate = useNavigate();
   const location = useLocation();
