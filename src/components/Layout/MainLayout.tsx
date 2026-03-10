@@ -275,7 +275,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           
           <MobileBottomNav />
           <QuickNoteButton />
+          <MacroPanel />
           <ScrollToTop />
+          <OfflineBanner />
         </div>
       </div>
 

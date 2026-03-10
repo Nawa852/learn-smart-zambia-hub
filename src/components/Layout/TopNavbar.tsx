@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { ProfileSwitcher } from '@/components/UI/ProfileSwitcher';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
