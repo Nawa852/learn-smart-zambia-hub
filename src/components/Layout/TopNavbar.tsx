@@ -76,6 +76,7 @@ export const TopNavbar = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-1">
+          <ProfileSwitcher />
           <ThemeSwitcher />
           <NotificationBell />
 
