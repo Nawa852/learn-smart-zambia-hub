@@ -1,7 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// Route adjacency map: which routes are likely next from current route
 const ROUTE_GRAPH: Record<string, string[]> = {
   '/dashboard': ['/my-courses', '/ai', '/focus-mode', '/study-planner', '/analytics', '/course-catalog'],
   '/my-courses': ['/dashboard', '/course-catalog', '/flashcards', '/ai-quiz'],
@@ -30,7 +29,6 @@ const ROUTE_GRAPH: Record<string, string[]> = {
   '/certificates': ['/achievements', '/my-courses'],
 };
 
-// Track user navigation patterns to learn preferences
 const navigationHistory: string[] = [];
 const transitionCounts: Record<string, Record<string, number>> = {};
 
@@ -54,40 +52,36 @@ export function useContextualPreload() {
   const location = useLocation();
 
   const preloadRoute = useCallback((path: string) => {
-    // Use dynamic import to trigger React.lazy chunk loading
     const routeMap: Record<string, () => Promise<any>> = {
       '/dashboard': () => import('@/pages/Dashboard'),
-      '/my-courses': () => import('@/pages/MyCourses'),
-      '/course-catalog': () => import('@/pages/CourseCatalog'),
-      '/ai': () => import('@/pages/AIStudyBuddy'),
-      '/focus-mode': () => import('@/pages/FocusMode'),
-      '/study-planner': () => import('@/pages/StudyPlanner'),
-      '/flashcards': () => import('@/pages/Flashcards'),
-      '/ai-quiz': () => import('@/pages/AIQuiz'),
-      '/mind-maps': () => import('@/pages/MindMaps'),
+      '/my-courses': () => import('@/pages/MyCoursesPage'),
+      '/course-catalog': () => import('@/pages/CourseCatalogPage'),
+      '/ai': () => import('@/pages/AIStudyBuddyPage'),
+      '/focus-mode': () => import('@/pages/FocusModePage'),
+      '/study-planner': () => import('@/pages/StudyPlannerPage'),
+      '/flashcards': () => import('@/pages/AIFlashcardPage'),
+      '/ai-quiz': () => import('@/pages/AIQuizGeneratorPage'),
+      '/mind-maps': () => import('@/pages/VisualMindMapPage'),
       '/analytics': () => import('@/pages/Analytics'),
       '/achievements': () => import('@/pages/Achievements'),
-      '/goals': () => import('@/pages/Goals'),
-      '/my-notes': () => import('@/pages/MyNotes'),
-      '/pomodoro': () => import('@/pages/Pomodoro'),
-      '/bookmarks': () => import('@/pages/Bookmarks'),
-      '/spaced-repetition': () => import('@/pages/SpacedRepetition'),
-      '/reading-list': () => import('@/pages/ReadingList'),
-      '/my-assignments': () => import('@/pages/MyAssignments'),
-      '/ecz-past-papers': () => import('@/pages/ECZPastPapers'),
-      '/ecz-exam-simulator': () => import('@/pages/ECZExamSimulator'),
-      '/study-groups': () => import('@/pages/StudyGroups'),
-      '/messenger': () => import('@/pages/Messenger'),
+      '/goals': () => import('@/pages/GoalsPage'),
+      '/my-notes': () => import('@/pages/MyNotesPage'),
+      '/pomodoro': () => import('@/pages/PomodoroPage'),
+      '/bookmarks': () => import('@/pages/BookmarksPage'),
+      '/spaced-repetition': () => import('@/pages/SpacedRepetitionPage'),
+      '/reading-list': () => import('@/pages/ReadingListPage'),
+      '/my-assignments': () => import('@/pages/MyAssignmentsPage'),
+      '/ecz-past-papers': () => import('@/pages/ECZPastPapersPage'),
+      '/ecz-exam-simulator': () => import('@/pages/ECZExamSimulatorPage'),
+      '/study-groups': () => import('@/pages/StudyGroupsPage'),
+      '/messenger': () => import('@/pages/MessengerPage'),
       '/profile': () => import('@/pages/Profile'),
-      '/settings': () => import('@/pages/Settings'),
+      '/settings': () => import('@/pages/SettingsPage'),
       '/certificates': () => import('@/pages/CertificatesPage'),
     };
 
     const loader = routeMap[path];
-    if (loader) {
-      // Silently preload - errors are fine, it's just a hint
-      loader().catch(() => {});
-    }
+    if (loader) loader().catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -98,16 +92,12 @@ export function useContextualPreload() {
       recordTransition(previousPath, currentPath);
     }
 
-    // Wait a bit after navigation settles, then preload predicted routes
     const timer = setTimeout(() => {
-      // Combine static graph + learned predictions
       const staticPredictions = ROUTE_GRAPH[currentPath] || [];
       const learnedPredictions = getLearnedPredictions(currentPath);
-      
       const combined = [...new Set([...learnedPredictions, ...staticPredictions])].slice(0, 4);
       
       combined.forEach((path, i) => {
-        // Stagger preloads to avoid network congestion
         setTimeout(() => preloadRoute(path), i * 500);
       });
     }, 1000);
