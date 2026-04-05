@@ -318,6 +318,8 @@ const SemanticSearchPage = React.lazy(() => import('@/pages/SemanticSearchPage')
 const MentorshipCoachingPage = React.lazy(() => import('@/pages/MentorshipCoachingPage'));
 const StudyGoalTrackerPage = React.lazy(() => import('@/pages/StudyGoalTrackerPage'));
 const StudyStreakPage = React.lazy(() => import('@/pages/StudyStreakPage'));
+const CommunicationHubPage = React.lazy(() => import('@/pages/CommunicationHubPage'));
+const PersonalizationPage = React.lazy(() => import('@/pages/PersonalizationPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
