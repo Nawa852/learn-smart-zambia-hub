@@ -8,6 +8,7 @@ import {
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
   Flag, Lock, Search, Bookmark, Code, Flame, FlaskConical,
+  Palette, MessageCircle,
   type LucideIcon
 } from "lucide-react";
 
@@ -92,9 +93,10 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Connect",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messenger", url: "/messenger", icon: MessagesSquare },
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Social Feed", url: "/social-feed", icon: MessageSquare },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
