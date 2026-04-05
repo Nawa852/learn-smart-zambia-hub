@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProfile } from '@/hooks/useProfile';
 import { StudentDashboardView } from '@/components/Dashboard/StudentDashboardView';
 import { TeacherDashboardView } from '@/components/Dashboard/TeacherDashboardView';
@@ -10,9 +10,21 @@ import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboar
 import SkillsDashboardView from '@/components/Dashboard/SkillsDashboardView';
 import CybersecurityDashboardView from '@/components/Dashboard/CybersecurityDashboardView';
 import { LogoLoader } from '@/components/UI/LogoLoader';
+import { OnboardingTour } from '@/components/Dashboard/OnboardingTour';
 
 const Dashboard = () => {
   const { profile, loading } = useProfile();
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    if (!loading && profile) {
+      const shouldShow = localStorage.getItem('edu-zambia-show-tour') === 'true';
+      const alreadyDone = localStorage.getItem('edu-zambia-tour-completed') === 'true';
+      if (shouldShow && !alreadyDone) {
+        setShowTour(true);
+      }
+    }
+  }, [loading, profile]);
 
   const userName = profile?.full_name || 'Learner';
   const userType = profile?.role || 'student';
@@ -43,6 +55,12 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {showTour && (
+        <OnboardingTour 
+          role={userType} 
+          onComplete={() => setShowTour(false)} 
+        />
+      )}
       <div className="container mx-auto px-4 py-6">
         {renderDashboardView()}
       </div>

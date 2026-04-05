@@ -19,6 +19,7 @@ import AuthPage from '@/pages/AuthPage';
 import NotFound from '@/pages/NotFound';
 
 // Lazy-loaded pages
+const ChooseRolePage = React.lazy(() => import('@/pages/ChooseRolePage'));
 const PasswordResetPage = React.lazy(() => import('@/pages/PasswordResetPage'));
 const About = React.lazy(() => import('@/pages/About'));
 const Contact = React.lazy(() => import('@/pages/Contact'));
@@ -317,6 +318,8 @@ const SemanticSearchPage = React.lazy(() => import('@/pages/SemanticSearchPage')
 const MentorshipCoachingPage = React.lazy(() => import('@/pages/MentorshipCoachingPage'));
 const StudyGoalTrackerPage = React.lazy(() => import('@/pages/StudyGoalTrackerPage'));
 const StudyStreakPage = React.lazy(() => import('@/pages/StudyStreakPage'));
+const CommunicationHubPage = React.lazy(() => import('@/pages/CommunicationHubPage'));
+const PersonalizationPage = React.lazy(() => import('@/pages/PersonalizationPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -356,6 +359,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/chatedu" element={<ChatEduLanding />} />
+              <Route path="/choose-role" element={<ProtectedRoute><ChooseRolePage /></ProtectedRoute>} />
 
               {/* Setup Route (no PostLoginGate) */}
               <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
@@ -708,6 +712,8 @@ function App() {
               <Route path="/mentorship-coaching" element={<PG><MentorshipCoachingPage /></PG>} />
               <Route path="/study-goal-tracker" element={<PG><StudyGoalTrackerPage /></PG>} />
               <Route path="/study-streak" element={<PG><StudyStreakPage /></PG>} />
+              <Route path="/communication-hub" element={<PG><CommunicationHubPage /></PG>} />
+              <Route path="/personalization" element={<PG><PersonalizationPage /></PG>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />

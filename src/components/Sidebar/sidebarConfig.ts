@@ -8,6 +8,7 @@ import {
   MessagesSquare, Library, Microscope, Bot, Zap, Rocket, Monitor,
   DollarSign, Package, Megaphone, Database, AlertTriangle, Laptop,
   Flag, Lock, Search, Bookmark, Code, Flame, FlaskConical,
+  Palette, MessageCircle,
   type LucideIcon
 } from "lucide-react";
 
@@ -92,9 +93,10 @@ export const studentNavigation: NavGroup[] = [
   {
     label: "Connect",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messenger", url: "/messenger", icon: MessagesSquare },
       { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Social Feed", url: "/social-feed", icon: MessageSquare },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
@@ -139,9 +141,10 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Connect",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Teacher Hub", url: "/community", icon: Users },
-      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
@@ -168,9 +171,11 @@ export const guardianNavigation: NavGroup[] = [
   {
     label: "Communicate",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messages", url: "/parent-messages", icon: MessageSquare },
       { title: "Teacher Contact", url: "/parent-teacher-contact", icon: UserCheck },
       { title: "School Updates", url: "/parent-school-updates", icon: School },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
