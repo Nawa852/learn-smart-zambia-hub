@@ -19,6 +19,7 @@ import AuthPage from '@/pages/AuthPage';
 import NotFound from '@/pages/NotFound';
 
 // Lazy-loaded pages
+const ChooseRolePage = React.lazy(() => import('@/pages/ChooseRolePage'));
 const PasswordResetPage = React.lazy(() => import('@/pages/PasswordResetPage'));
 const About = React.lazy(() => import('@/pages/About'));
 const Contact = React.lazy(() => import('@/pages/Contact'));
