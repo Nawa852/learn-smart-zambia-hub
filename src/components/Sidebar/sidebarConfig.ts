@@ -171,9 +171,11 @@ export const guardianNavigation: NavGroup[] = [
   {
     label: "Communicate",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messages", url: "/parent-messages", icon: MessageSquare },
       { title: "Teacher Contact", url: "/parent-teacher-contact", icon: UserCheck },
       { title: "School Updates", url: "/parent-school-updates", icon: School },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
