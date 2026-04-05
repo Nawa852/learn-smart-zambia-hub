@@ -356,6 +356,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/chatedu" element={<ChatEduLanding />} />
+              <Route path="/choose-role" element={<ProtectedRoute><ChooseRolePage /></ProtectedRoute>} />
 
               {/* Setup Route (no PostLoginGate) */}
               <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
