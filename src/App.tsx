@@ -712,6 +712,8 @@ function App() {
               <Route path="/mentorship-coaching" element={<PG><MentorshipCoachingPage /></PG>} />
               <Route path="/study-goal-tracker" element={<PG><StudyGoalTrackerPage /></PG>} />
               <Route path="/study-streak" element={<PG><StudyStreakPage /></PG>} />
+              <Route path="/communication-hub" element={<PG><CommunicationHubPage /></PG>} />
+              <Route path="/personalization" element={<PG><PersonalizationPage /></PG>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
