@@ -141,9 +141,10 @@ export const teacherNavigation: NavGroup[] = [
   {
     label: "Connect",
     items: [
+      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
       { title: "Messenger", url: "/messenger", icon: MessageSquare },
       { title: "Teacher Hub", url: "/community", icon: Users },
-      { title: "Mentorship", url: "/mentorship-hub", icon: Heart },
+      { title: "Personalization", url: "/personalization", icon: Palette },
     ],
   },
 ];
