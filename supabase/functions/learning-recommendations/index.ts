@@ -1,5 +1,3 @@
-
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -14,138 +12,140 @@ serve(async (req) => {
   }
 
   try {
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) throw new Error('AI service not configured');
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
-        },
-      }
+      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
     )
 
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
-    
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    const { data: { user } } = await supabaseClient.auth.getUser()
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
-    // Get user's learning history
-    const { data: analytics } = await supabaseClient
-      .from('learning_analytics')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(50);
+    // Gather user learning data in parallel
+    const [enrollments, completions, quizzes, goals, focusSessions, profile] = await Promise.all([
+      supabaseClient.from('enrollments').select('course_id, progress, enrolled_at').eq('user_id', user.id).limit(20),
+      supabaseClient.from('lesson_completions').select('lesson_id, course_id, completed_at').eq('user_id', user.id).order('completed_at', { ascending: false }).limit(30),
+      supabaseClient.from('quiz_attempts').select('subject, correct_answers, total_questions, grade_level, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
+      supabaseClient.from('study_goals').select('title, current, target, completed, goal_type').eq('user_id', user.id).limit(10),
+      supabaseClient.from('focus_sessions').select('subject, focus_minutes, sessions_completed, gave_up, started_at').eq('user_id', user.id).order('started_at', { ascending: false }).limit(20),
+      supabaseClient.from('profiles').select('grade, role').eq('id', user.id).single(),
+    ]);
 
-    const { data: goals } = await supabaseClient
-      .from('study_goals')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('is_completed', false);
+    const quizPerformance = (quizzes.data || []).map(q => ({
+      subject: q.subject,
+      score: q.total_questions > 0 ? Math.round((q.correct_answers / q.total_questions) * 100) : 0,
+      grade: q.grade_level,
+      date: q.created_at,
+    }));
 
-    const openaiApiKey = Deno.env.get('PENAI_API_KEY');
-    if (!openaiApiKey) {
-      throw new Error('OpenAI API key not configured');
-    }
+    const studyHabits = (focusSessions.data || []).map(s => ({
+      subject: s.subject,
+      minutes: s.focus_minutes,
+      completed: !s.gave_up,
+    }));
 
-    const analyticsContext = analytics?.map(a => ({
-      activity: a.activity_type,
-      performance: a.performance_score,
-      subject: a.metadata?.subject
-    })) || [];
+    const prompt = `Analyze this Zambian student's learning data and provide personalized recommendations:
 
-    const goalsContext = goals?.map(g => ({
-      title: g.title,
-      progress: g.progress_percentage
-    })) || [];
+STUDENT PROFILE:
+- Grade: ${profile.data?.grade || 'Unknown'}
+- Role: ${profile.data?.role || 'student'}
+- Active enrollments: ${enrollments.data?.length || 0}
+- Lessons completed: ${completions.data?.length || 0}
 
-    const prompt = `Based on this Zambian student's learning data:
-    
-    Recent Activities: ${JSON.stringify(analyticsContext.slice(0, 10))}
-    Active Goals: ${JSON.stringify(goalsContext)}
-    
-    Provide personalized learning recommendations as JSON:
+QUIZ PERFORMANCE (recent):
+${JSON.stringify(quizPerformance.slice(0, 10))}
+
+STUDY HABITS:
+${JSON.stringify(studyHabits.slice(0, 10))}
+
+ACTIVE GOALS:
+${JSON.stringify((goals.data || []).filter(g => !g.completed))}
+
+Provide a JSON response with:
+{
+  "recommendations": [
     {
-      "recommendations": [
-        {
-          "type": "subject_focus",
-          "title": "Recommendation Title",
-          "description": "Why this helps",
-          "action": "What to do",
-          "priority": "high/medium/low"
-        }
-      ],
-      "insights": {
-        "strengths": ["subject1", "subject2"],
-        "improvement_areas": ["area1", "area2"],
-        "study_patterns": "Pattern analysis"
-      }
-    }`;
+      "type": "subject_focus|study_habit|exam_prep|goal",
+      "title": "Short title",
+      "description": "Actionable advice in 1-2 sentences",
+      "priority": "high|medium|low",
+      "icon": "📚|🧮|🔬|📝|⏰|🎯|💪|🌟"
+    }
+  ],
+  "insights": {
+    "strengths": ["Area 1", "Area 2"],
+    "improvement_areas": ["Area 1", "Area 2"],
+    "study_streak_tip": "One sentence motivation",
+    "weekly_focus": "What to prioritize this week"
+  },
+  "suggested_subjects": ["Subject 1", "Subject 2"]
+}
 
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+Return ONLY valid JSON.`;
+
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'google/gemini-2.5-flash',
         messages: [
-          {
-            role: 'system',
-            content: 'You are an AI tutor for Zambian students. Provide helpful, culturally relevant learning recommendations.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
+          { role: 'system', content: 'You are an AI learning analyst for Zambian students. Provide helpful, specific, actionable recommendations. Return only valid JSON.' },
+          { role: 'user', content: prompt }
         ],
         temperature: 0.5,
-        max_tokens: 1500
+        max_tokens: 1500,
       }),
     });
 
-    const openaiData = await openaiResponse.json();
+    if (!response.ok) {
+      console.error('AI gateway error:', response.status);
+      throw new Error(`AI error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content || '';
+
     let recommendations;
-    
     try {
-      recommendations = JSON.parse(openaiData.choices[0].message.content);
-    } catch (parseError) {
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      recommendations = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+    } catch {
+      recommendations = null;
+    }
+
+    if (!recommendations) {
       recommendations = {
         recommendations: [
-          {
-            type: "general",
-            title: "Continue Learning",
-            description: "Keep up with your studies",
-            action: "Review recent topics",
-            priority: "medium"
-          }
+          { type: 'study_habit', title: 'Keep Learning Daily', description: 'Try to complete at least one lesson each day to build momentum.', priority: 'high', icon: '📚' },
+          { type: 'exam_prep', title: 'Practice Past Papers', description: 'Work through ECZ past papers to familiarize yourself with exam format.', priority: 'medium', icon: '📝' },
         ],
         insights: {
-          strengths: ["consistent learning"],
-          improvement_areas: ["goal setting"],
-          study_patterns: "Regular study sessions"
-        }
+          strengths: ['Active learning'],
+          improvement_areas: ['Consistency'],
+          study_streak_tip: 'Every lesson counts — keep going!',
+          weekly_focus: 'Focus on your weakest subject for 30 minutes daily.',
+        },
+        suggested_subjects: ['Mathematics', 'Science'],
       };
     }
 
-    return new Response(JSON.stringify({ 
-      ...recommendations,
-      success: true
-    }), {
+    return new Response(JSON.stringify({ ...recommendations, success: true }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
-    console.error('Error in learning-recommendations function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      success: false
-    }), {
+    console.error('Error:', error);
+    return new Response(JSON.stringify({ error: error.message, success: false }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

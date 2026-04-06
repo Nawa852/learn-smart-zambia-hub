@@ -1,147 +1,107 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Brain, BookOpen, Target, TrendingUp, Users, Clock, 
-  Star, Play, CheckCircle, ArrowRight, Lightbulb, Zap
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Brain, BookOpen, Target, TrendingUp, Clock,
+  Star, ArrowRight, Lightbulb, Zap, RefreshCw, Loader2
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/components/Auth/AuthProvider';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Recommendation {
-  id: string;
-  type: 'course' | 'skill' | 'mentor' | 'project' | 'event';
+  type: string;
   title: string;
   description: string;
-  confidence: number;
-  reason: string;
-  image?: string;
-  tags: string[];
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  estimatedTime: string;
+  priority: 'high' | 'medium' | 'low';
+  icon: string;
+}
+
+interface Insights {
+  strengths: string[];
+  improvement_areas: string[];
+  study_streak_tip: string;
+  weekly_focus: string;
 }
 
 const SmartRecommendations = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [insights, setInsights] = useState<Insights | null>(null);
+  const [suggestedSubjects, setSuggestedSubjects] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const mockRecommendations: Recommendation[] = [
-    {
-      id: '1',
-      type: 'course',
-      title: 'Advanced Machine Learning with Python',
-      description: 'Deep dive into neural networks, reinforcement learning, and AI applications',
-      confidence: 92,
-      reason: 'Based on your recent completion of Python Fundamentals and interest in AI',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300',
-      tags: ['AI', 'Python', 'Machine Learning', 'Data Science'],
-      difficulty: 'advanced',
-      estimatedTime: '8 weeks'
-    },
-    {
-      id: '2',
-      type: 'mentor',
-      title: 'Dr. Sarah Chen - AI Research Specialist',
-      description: 'PhD in Computer Science, 10+ years in AI research at Google',
-      confidence: 88,
-      reason: 'Perfect match for your AI learning goals and research interests',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b2c8c9b2?w=300',
-      tags: ['AI', 'Research', 'Python', 'Career Guidance'],
-      difficulty: 'advanced',
-      estimatedTime: '1-2 hours/week'
-    },
-    {
-      id: '3',
-      type: 'project',
-      title: 'Build a Personal AI Assistant',
-      description: 'Create your own AI chatbot using OpenAI API and deploy it',
-      confidence: 85,
-      reason: 'Practical application of your current AI knowledge',
-      tags: ['Project', 'AI', 'API', 'Deployment'],
-      difficulty: 'intermediate',
-      estimatedTime: '3-4 weeks'
-    },
-    {
-      id: '4',
-      type: 'skill',
-      title: 'Natural Language Processing',
-      description: 'Master text analysis, sentiment analysis, and language models',
-      confidence: 90,
-      reason: 'Next logical step in your AI learning journey',
-      tags: ['NLP', 'Text Analysis', 'AI', 'Python'],
-      difficulty: 'intermediate',
-      estimatedTime: '6 weeks'
-    },
-    {
-      id: '5',
-      type: 'event',
-      title: 'AI Ethics Workshop - Next Week',
-      description: 'Interactive workshop on responsible AI development and ethics',
-      confidence: 76,
-      reason: 'Important complement to your technical AI studies',
-      tags: ['Ethics', 'AI', 'Workshop', 'Live Session'],
-      difficulty: 'beginner',
-      estimatedTime: '2 hours'
+  const fetchRecommendations = async () => {
+    if (!user) return;
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke('learning-recommendations', {});
+
+      if (fnError) throw fnError;
+
+      if (data?.success) {
+        setRecommendations(data.recommendations || []);
+        setInsights(data.insights || null);
+        setSuggestedSubjects(data.suggested_subjects || []);
+      } else {
+        throw new Error(data?.error || 'Failed to get recommendations');
+      }
+    } catch (err: any) {
+      console.error('Recommendations error:', err);
+      setError('Could not load recommendations right now.');
+      // Fallback
+      setRecommendations([
+        { type: 'study_habit', title: 'Stay Consistent', description: 'Complete at least one lesson daily to build momentum.', priority: 'high', icon: '📚' },
+        { type: 'exam_prep', title: 'Practice Past Papers', description: 'ECZ past papers are the best way to prepare for exams.', priority: 'medium', icon: '📝' },
+        { type: 'goal', title: 'Set Weekly Goals', description: 'Students who set goals perform 40% better on assessments.', priority: 'medium', icon: '🎯' },
+      ]);
+      setInsights({
+        strengths: ['Active learning'],
+        improvement_areas: ['Consistency'],
+        study_streak_tip: 'Every lesson counts — keep going!',
+        weekly_focus: 'Focus on your weakest subject for 30 minutes daily.',
+      });
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    // Simulate AI recommendation loading
-    setTimeout(() => {
-      setRecommendations(mockRecommendations);
-      setIsLoading(false);
-    }, 1500);
-  }, []);
+    fetchRecommendations();
+  }, [user]);
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'course': return <BookOpen className="w-5 h-5" />;
-      case 'mentor': return <Users className="w-5 h-5" />;
-      case 'project': return <Target className="w-5 h-5" />;
-      case 'skill': return <Brain className="w-5 h-5" />;
-      case 'event': return <Clock className="w-5 h-5" />;
-      default: return <Lightbulb className="w-5 h-5" />;
-    }
+  const priorityStyles: Record<string, string> = {
+    high: 'border-l-4 border-l-destructive/60',
+    medium: 'border-l-4 border-l-primary/60',
+    low: 'border-l-4 border-l-muted-foreground/30',
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'course': return 'bg-blue-100 text-blue-700';
-      case 'mentor': return 'bg-green-100 text-green-700';
-      case 'project': return 'bg-purple-100 text-purple-700';
-      case 'skill': return 'bg-orange-100 text-orange-700';
-      case 'event': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
+  const typeIcons: Record<string, React.ReactNode> = {
+    subject_focus: <BookOpen className="h-4 w-4" />,
+    study_habit: <Clock className="h-4 w-4" />,
+    exam_prep: <Target className="h-4 w-4" />,
+    goal: <Star className="h-4 w-4" />,
   };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-700';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-700';
-      case 'advanced': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  const filteredRecommendations = selectedCategory === 'all' 
-    ? recommendations 
-    : recommendations.filter(rec => rec.type === selectedCategory);
 
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <Brain className="w-12 h-12 mx-auto mb-4 text-blue-500 animate-pulse" />
-            <p className="text-gray-600">AI is analyzing your learning pattern...</p>
-            <div className="w-32 h-2 bg-gray-200 rounded-full mx-auto mt-4 overflow-hidden">
-              <div className="h-full bg-blue-500 rounded-full animate-pulse" style={{ width: '60%' }}></div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i}>
+              <CardContent className="p-5">
+                <Skeleton className="h-5 w-3/4 mb-3" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-2/3" />
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     );
@@ -149,142 +109,96 @@ const SmartRecommendations = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Zap className="w-8 h-8" />
-            AI-Powered Recommendations
-          </CardTitle>
-          <p className="text-blue-100">
-            Personalized suggestions based on your learning patterns, goals, and interests
-          </p>
-        </CardHeader>
-      </Card>
+      {/* AI Insights Panel */}
+      {insights && (
+        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-primary" />
+                <CardTitle className="text-base">AI Learning Insights</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" onClick={fetchRecommendations} disabled={isLoading}>
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1.5">Your Strengths</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {insights.strengths.map((s, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs">{s}</Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1.5">Areas to Improve</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {insights.improvement_areas.map((a, i) => (
+                    <Badge key={i} variant="outline" className="text-xs">{a}</Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-      {/* Category Filters */}
-      <div className="flex flex-wrap gap-2">
-        {['all', 'course', 'skill', 'mentor', 'project', 'event'].map((category) => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? "default" : "outline"}
-            onClick={() => setSelectedCategory(category)}
-            className="capitalize"
-          >
-            {category === 'all' ? 'All Recommendations' : `${category}s`}
-          </Button>
-        ))}
-      </div>
+            <div className="flex items-start gap-2 bg-background/60 rounded-lg p-3">
+              <Lightbulb className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium">{insights.weekly_focus}</p>
+                <p className="text-xs text-muted-foreground mt-1">{insights.study_streak_tip}</p>
+              </div>
+            </div>
+
+            {suggestedSubjects.length > 0 && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1.5">Suggested Focus Subjects</p>
+                <div className="flex gap-2">
+                  {suggestedSubjects.map((s, i) => (
+                    <Badge key={i} className="bg-primary/10 text-primary hover:bg-primary/20">{s}</Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recommendations Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRecommendations.map((rec) => (
-          <Card key={rec.id} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className={`p-2 rounded-lg ${getTypeColor(rec.type)}`}>
-                  {getTypeIcon(rec.type)}
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <TrendingUp className="w-4 h-4" />
-                    {rec.confidence}% match
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {recommendations.map((rec, index) => (
+          <Card key={index} className={`${priorityStyles[rec.priority] || ''} hover:shadow-md transition-shadow`}>
+            <CardContent className="p-5">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">{rec.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-sm">{rec.title}</h3>
+                    <Badge
+                      variant={rec.priority === 'high' ? 'destructive' : 'secondary'}
+                      className="text-[10px] h-4 px-1.5"
+                    >
+                      {rec.priority}
+                    </Badge>
                   </div>
-                  <Progress value={rec.confidence} className="w-16 h-2 mt-1" />
-                </div>
-              </div>
-              <CardTitle className="text-lg">{rec.title}</CardTitle>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              {rec.image && rec.type === 'mentor' && (
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={rec.image} alt={rec.title} />
-                    <AvatarFallback>M</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">Available for mentoring</p>
-                    <div className="flex items-center gap-1 text-sm text-green-600">
-                      <CheckCircle className="w-4 h-4" />
-                      Verified Expert
-                    </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{rec.description}</p>
+                  <div className="flex items-center gap-1 mt-2">
+                    {typeIcons[rec.type] || <Zap className="h-3.5 w-3.5" />}
+                    <span className="text-[10px] text-muted-foreground capitalize">{rec.type.replace('_', ' ')}</span>
                   </div>
                 </div>
-              )}
-              
-              <p className="text-gray-600 text-sm">{rec.description}</p>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Difficulty:</span>
-                  <Badge className={getDifficultyColor(rec.difficulty)} variant="outline">
-                    {rec.difficulty}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Time:</span>
-                  <span className="font-medium">{rec.estimatedTime}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-1">
-                {rec.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {rec.tags.length > 3 && (
-                  <Badge variant="secondary" className="text-xs">
-                    +{rec.tags.length - 3} more
-                  </Badge>
-                )}
-              </div>
-              
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-xs text-blue-700 font-medium">Why this recommendation?</p>
-                <p className="text-xs text-blue-600 mt-1">{rec.reason}</p>
-              </div>
-              
-              <div className="flex gap-2">
-                <Button className="flex-1">
-                  <Play className="w-4 h-4 mr-2" />
-                  Start Learning
-                </Button>
-                <Button variant="outline" size="icon">
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* AI Insights */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="w-6 h-6 text-purple-600" />
-            AI Learning Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">87%</div>
-              <p className="text-sm text-green-700">Course Completion Rate</p>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">12</div>
-              <p className="text-sm text-blue-700">Skills Acquired This Month</p>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">5.2hrs</div>
-              <p className="text-sm text-purple-700">Avg. Daily Learning Time</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {error && (
+        <p className="text-xs text-center text-muted-foreground">
+          {error} Showing general recommendations instead.
+        </p>
+      )}
     </div>
   );
 };
