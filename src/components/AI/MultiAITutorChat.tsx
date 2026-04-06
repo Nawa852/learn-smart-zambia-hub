@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Brain, Send, Bot, Zap, MessageCircle, Sparkles, Cpu } from 'lucide-react';
+import { Brain, Send, Bot, Zap, MessageCircle, Sparkles, Cpu, Loader2, User, Copy, Check } from 'lucide-react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -27,14 +26,16 @@ const MultiAITutorChat = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Hello! I'm your multi-AI tutor. I can help you learn using different AI models, each with their own strengths. Choose an AI model and ask me anything!",
+      content: "👋 Hello! I'm **BrightSphere AI** — your personal tutor powered by multiple AI models. I specialize in the Zambian curriculum and ECZ exam preparation.\n\n**Choose a model** and ask me anything — from math problems to essay writing!",
       timestamp: new Date(),
     }
   ]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<string>('openai');
+  const [selectedModel, setSelectedModel] = useState<string>('gemini-flash');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,20 +44,25 @@ const MultiAITutorChat = () => {
   useEffect(scrollToBottom, [messages]);
 
   const aiModels = [
-    { value: 'openai', label: 'OpenAI GPT-4o-mini', icon: Brain, color: 'bg-green-100 text-green-800', description: 'Great for general tutoring and explanations' },
-    { value: 'claude', label: 'Anthropic Claude', icon: MessageCircle, color: 'bg-orange-100 text-orange-800', description: 'Excellent for detailed analysis and reasoning' },
-    { value: 'deepseek', label: 'DeepSeek', icon: Cpu, color: 'bg-blue-100 text-blue-800', description: 'Strong in math, coding, and technical subjects' },
-    { value: 'qwen', label: 'Qwen AI', icon: Sparkles, color: 'bg-purple-100 text-purple-800', description: 'Multilingual support and cultural context' },
-    { value: 'grok', label: 'Grok AI', icon: Zap, color: 'bg-cyan-100 text-cyan-800', description: 'Advanced reasoning and creative problem solving' },
-    { value: 'llama', label: 'LLaMA', icon: Zap, color: 'bg-red-100 text-red-800', description: 'Fast responses and efficient processing' }
+    { value: 'gemini-flash', label: 'Gemini Flash', icon: Zap, color: 'bg-blue-500/10 text-blue-700', description: 'Fast & balanced — great for most questions' },
+    { value: 'gemini-pro', label: 'Gemini Pro', icon: Brain, color: 'bg-purple-500/10 text-purple-700', description: 'Deep reasoning for complex problems' },
+    { value: 'gpt5-mini', label: 'GPT-5 Mini', icon: Sparkles, color: 'bg-emerald-500/10 text-emerald-700', description: 'Versatile — excellent for essays & analysis' },
+    { value: 'gemini-3-flash', label: 'Gemini 3 Flash', icon: Cpu, color: 'bg-orange-500/10 text-orange-700', description: 'Next-gen speed with high quality' },
+    { value: 'gemini-flash-lite', label: 'Flash Lite', icon: MessageCircle, color: 'bg-cyan-500/10 text-cyan-700', description: 'Quickest responses for simple questions' },
   ];
 
   const getCurrentModel = () => {
     return aiModels.find(model => model.value === selectedModel) || aiModels[0];
   };
 
+  const copyToClipboard = (content: string, id: string) => {
+    navigator.clipboard.writeText(content);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   const sendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -71,134 +77,132 @@ const MultiAITutorChat = () => {
     setIsLoading(true);
 
     try {
+      const conversationHistory = messages
+        .filter(m => m.id !== '1')
+        .slice(-10)
+        .map(m => ({ role: m.role, content: m.content }));
+
       const { data, error } = await supabase.functions.invoke('multi-ai-tutor', {
         body: {
           message: currentMessage,
           model: selectedModel,
-          systemPrompt: "You are a helpful AI tutor for students in Zambia. Provide clear, educational explanations and help students understand concepts step by step. Use examples relevant to African/Zambian context when possible."
+          conversationHistory,
         }
       });
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message || 'Failed to get AI response');
-      }
+      if (error) throw error;
 
-      if (!data || !data.response) {
-        throw new Error('No response received from AI');
-      }
-
-      const aiResponse: Message = {
+      const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response,
+        content: data?.response || "I couldn't generate a response. Please try again.",
         timestamp: new Date(),
-        model: selectedModel
+        model: getCurrentModel().label
       };
-      
-      setMessages(prev => [...prev, aiResponse]);
-    } catch (error) {
-      console.error('Error calling AI tutor:', error);
-      
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to get AI response. Please try again.",
-        variant: "destructive",
-      });
 
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error: any) {
+      console.error('AI Tutor error:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again or try a different AI model.',
+        content: "⚠️ I'm having trouble right now. Please try again in a moment, or switch to a different model.",
         timestamp: new Date(),
-        model: selectedModel
       };
       setMessages(prev => [...prev, errorMessage]);
+      toast({
+        title: "Connection issue",
+        description: "Try again or switch AI models.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
+  const quickPrompts = [
+    "Explain photosynthesis for Grade 9",
+    "Solve: 3x² + 5x - 2 = 0",
+    "Help me write an English essay introduction",
+    "What are the provinces of Zambia?",
+    "Explain Newton's laws of motion",
+  ];
 
   return (
-    <Card className="h-[700px] flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <Bot className="w-6 h-6 text-blue-600" />
-          Multi-AI Tutor
-        </CardTitle>
-        <div className="flex flex-col gap-3">
+    <Card className="border-border/50 shadow-lg">
+      <CardHeader className="pb-3 border-b border-border/30">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">AI Model:</span>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-64">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {aiModels.map((model) => {
-                  const IconComponent = model.icon;
-                  return (
-                    <SelectItem key={model.value} value={model.value}>
-                      <div className="flex items-center gap-2">
-                        <IconComponent className="w-4 h-4" />
-                        {model.label}
-                      </div>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Brain className="h-4 w-4 text-primary" />
+            </div>
+            <CardTitle className="text-lg">BrightSphere AI Tutor</CardTitle>
           </div>
-          <div className="text-xs text-gray-600">
-            {getCurrentModel().description}
-          </div>
+          <Select value={selectedModel} onValueChange={setSelectedModel}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {aiModels.map(model => (
+                <SelectItem key={model.value} value={model.value}>
+                  <div className="flex items-center gap-2">
+                    <model.icon className="h-3.5 w-3.5" />
+                    <span className="text-sm">{model.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          {getCurrentModel().description}
+        </p>
       </CardHeader>
-      
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4">
+
+      <CardContent className="p-0">
+        <ScrollArea className="h-[450px] p-4">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : ''}`}
+                className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {message.role === 'assistant' && (
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-blue-100">
-                      <Bot className="w-4 h-4 text-blue-600" />
+                  <Avatar className="h-7 w-7 shrink-0">
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                      <Bot className="h-3.5 w-3.5" />
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <div className="flex flex-col gap-1 max-w-[80%]">
-                  {message.role === 'assistant' && message.model && (
-                    <Badge className={`${getCurrentModel().color} text-xs w-fit`}>
-                      {aiModels.find(m => m.value === message.model)?.label || message.model}
-                    </Badge>
-                  )}
+                <div className={`max-w-[80%] group ${message.role === 'user' ? 'order-first' : ''}`}>
                   <div
-                    className={`rounded-lg p-3 ${
+                    className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                       message.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                        ? 'bg-primary text-primary-foreground ml-auto'
+                        : 'bg-muted'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <span className="text-xs opacity-70 block mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </span>
+                    <div className="whitespace-pre-wrap">{message.content}</div>
                   </div>
+                  {message.role === 'assistant' && message.id !== '1' && (
+                    <div className="flex items-center gap-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {message.model && (
+                        <Badge variant="outline" className="text-[10px] h-5 px-1.5">{message.model}</Badge>
+                      )}
+                      <button
+                        onClick={() => copyToClipboard(message.content, message.id)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {copiedId === message.id ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {message.role === 'user' && (
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback>
-                      {user?.user_metadata?.full_name?.[0] || 'U'}
+                  <Avatar className="h-7 w-7 shrink-0">
+                    <AvatarFallback className="bg-secondary text-xs">
+                      <User className="h-3.5 w-3.5" />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -206,45 +210,55 @@ const MultiAITutorChat = () => {
             ))}
             {isLoading && (
               <div className="flex gap-3">
-                <Avatar className="w-8 h-8">
-                  <AvatarFallback className="bg-blue-100">
-                    <Bot className="w-4 h-4 text-blue-600" />
+                <Avatar className="h-7 w-7 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                    <Bot className="h-3.5 w-3.5" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="bg-gray-100 rounded-lg p-3">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
+                <div className="bg-muted rounded-2xl px-4 py-3 flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  <span className="text-sm text-muted-foreground">Thinking...</span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
-        
-        <div className="p-4 border-t">
-          <div className="flex gap-2">
+
+        {messages.length <= 1 && (
+          <div className="px-4 pb-3">
+            <p className="text-xs text-muted-foreground mb-2">Try asking:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {quickPrompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => { setNewMessage(prompt); inputRef.current?.focus(); }}
+                  className="text-xs px-2.5 py-1.5 rounded-full bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="p-4 border-t border-border/30">
+          <form
+            onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
+            className="flex gap-2"
+          >
             <Input
+              ref={inputRef}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Ask me anything about your studies..."
-              onKeyDown={handleKeyPress}
-              className="flex-1"
+              placeholder="Ask me anything..."
               disabled={isLoading}
+              className="flex-1"
             />
-            <Button 
-              onClick={sendMessage} 
-              disabled={!newMessage.trim() || isLoading}
-              className="px-4"
-            >
-              <Send className="w-4 h-4" />
+            <Button type="submit" disabled={isLoading || !newMessage.trim()} size="icon">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Press Enter to send, Shift+Enter for new line
-          </p>
+          </form>
         </div>
       </CardContent>
     </Card>
