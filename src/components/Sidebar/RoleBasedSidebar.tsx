@@ -1,23 +1,23 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronLeft } from "lucide-react";
-
+import { ChevronLeft } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getNavigationByRole, roleLabels } from "./sidebarConfig";
+import { getNavigationByRole } from "./sidebarConfig";
 import { useProfile } from "@/hooks/useProfile";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import eduLogo from "@/assets/edu-zambia-mark.png";
+import eduIcon from "@/assets/edu-zambia-icon.png";
 
 export function RoleBasedSidebar() {
   const { state, toggleSidebar } = useSidebar();
@@ -27,96 +27,95 @@ export function RoleBasedSidebar() {
 
   const userType = profile?.role || "student";
   const navigation = getNavigationByRole(userType);
-
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <Sidebar
-      className={cn(
-        collapsed ? "w-[56px]" : "w-[220px]",
-        "transition-all duration-200 ease-out"
-      )}
-      collapsible="icon"
-    >
-      <SidebarContent className="bg-sidebar border-r border-sidebar-border flex flex-col h-full">
-        {/* Header */}
-        <div className="h-14 flex items-center px-3 border-b border-sidebar-border shrink-0">
-          <div className="flex items-center gap-2 w-full">
-            <img src={eduLogo} alt="Edu Zambia" className="w-7 h-7 rounded-md flex-shrink-0" />
-            {!collapsed && (
-              <div className="flex-1 flex items-center justify-between min-w-0">
-                <span className="font-bold text-sm text-foreground tracking-tight">Edu Zambia</span>
-                <button
-                  onClick={toggleSidebar}
-                  className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
+    <TooltipProvider delayDuration={0}>
+      <Sidebar
+        className={cn(collapsed ? "w-[60px]" : "w-[230px]", "transition-all duration-200")}
+        collapsible="icon"
+      >
+        <SidebarContent className="bg-sidebar border-r border-sidebar-border flex flex-col h-full">
+          {/* Header */}
+          <div className="h-16 flex items-center px-3 border-b border-sidebar-border shrink-0">
+            <div className="flex items-center gap-2.5 w-full">
+              <img src={eduIcon} alt="Edu Zambia" className="w-8 h-8 flex-shrink-0" />
+              {!collapsed && (
+                <div className="flex-1 flex items-center justify-between min-w-0">
+                  <span className="font-bold text-sm text-foreground">Edu Zambia</span>
+                  <button onClick={toggleSidebar} className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Navigation */}
-        <ScrollArea className="flex-1 px-2 py-2">
-          {navigation.map((group) => (
-            <Collapsible key={group.label} defaultOpen className="mb-1">
-              <SidebarGroup className="p-0">
+          {/* Navigation */}
+          <ScrollArea className="flex-1 py-3">
+            {navigation.map((group) => (
+              <SidebarGroup key={group.label} className="px-2 py-0 mb-1">
                 {!collapsed && (
-                  <CollapsibleTrigger className="flex items-center justify-between w-full px-2 py-1 text-[10px] font-semibold text-muted-foreground/50 hover:text-muted-foreground transition-colors uppercase tracking-widest">
-                    <span>{group.label}</span>
-                    <ChevronDown className="h-3 w-3" />
-                  </CollapsibleTrigger>
+                  <SidebarGroupLabel className="px-3 py-1.5 text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-[0.08em]">
+                    {group.label}
+                  </SidebarGroupLabel>
                 )}
-                <CollapsibleContent>
-                  <SidebarGroupContent>
-                    <SidebarMenu className="space-y-px">
-                      {group.items.map((item) => {
-                        const active = isActive(item.url);
-                        return (
-                          <SidebarMenuItem key={item.url}>
-                            <SidebarMenuButton asChild className="h-auto">
-                              <NavLink
-                                to={item.url}
-                                className={cn(
-                                  "flex items-center gap-2 px-2 py-1.5 rounded-md transition-all duration-100 text-[13px]",
-                                  active
-                                    ? "bg-primary/10 text-primary font-semibold"
-                                    : "text-sidebar-foreground hover:bg-secondary/60 hover:text-foreground"
-                                )}
-                              >
-                                <item.icon className={cn(
-                                  "h-4 w-4 flex-shrink-0",
-                                  active ? "text-primary" : "text-muted-foreground"
-                                )} />
-                                {!collapsed && (
-                                  <>
-                                    <span className="flex-1 truncate">{item.title}</span>
-                                    {item.badge && (
-                                      <span className={cn(
-                                        "text-[9px] px-1 py-0 rounded font-medium",
-                                        item.badge === 'LIVE' ? "bg-destructive/15 text-destructive" :
-                                        item.badge === 'AI' ? "bg-primary/15 text-primary" :
-                                        "bg-muted text-muted-foreground"
-                                      )}>
-                                        {item.badge}
-                                      </span>
-                                    )}
-                                  </>
-                                )}
-                              </NavLink>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        );
-                      })}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu className="space-y-0.5">
+                    {group.items.map((item) => {
+                      const active = isActive(item.url);
+                      const linkEl = (
+                        <NavLink
+                          to={item.url}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 text-[13px]",
+                            active
+                              ? "bg-primary/10 text-primary font-semibold"
+                              : "text-sidebar-foreground hover:bg-secondary/80 hover:text-foreground",
+                            collapsed && "justify-center px-2"
+                          )}
+                        >
+                          <item.icon className={cn("h-[18px] w-[18px] flex-shrink-0", active ? "text-primary" : "text-muted-foreground")} strokeWidth={active ? 2.5 : 1.8} />
+                          {!collapsed && (
+                            <>
+                              <span className="flex-1 truncate">{item.title}</span>
+                              {item.badge && (
+                                <span className={cn(
+                                  "text-[9px] px-1.5 py-0.5 rounded-full font-semibold",
+                                  item.badge === 'LIVE' ? "bg-destructive/15 text-destructive" :
+                                  item.badge === 'AI' ? "bg-primary/15 text-primary" :
+                                  "bg-muted text-muted-foreground"
+                                )}>
+                                  {item.badge}
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </NavLink>
+                      );
+
+                      return (
+                        <SidebarMenuItem key={item.url}>
+                          <SidebarMenuButton asChild className="h-auto p-0">
+                            {collapsed ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>{linkEl}</TooltipTrigger>
+                                <TooltipContent side="right" className="text-xs font-medium">
+                                  {item.title}
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : linkEl}
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
               </SidebarGroup>
-            </Collapsible>
-          ))}
-        </ScrollArea>
-      </SidebarContent>
-    </Sidebar>
+            ))}
+          </ScrollArea>
+        </SidebarContent>
+      </Sidebar>
+    </TooltipProvider>
   );
 }

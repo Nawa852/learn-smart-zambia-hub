@@ -16,12 +16,7 @@ import { useDeepOffline } from '@/hooks/useDeepOffline';
 import { Button } from '@/components/ui/button';
 import { Calendar, Play, X, ChevronRight, Home, Search } from 'lucide-react';
 import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
+  CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from '@/components/ui/command';
 
 interface MainLayoutProps {
@@ -29,49 +24,33 @@ interface MainLayoutProps {
 }
 
 const ROUTE_LABELS: Record<string, string> = {
-  dashboard: 'Dashboard',
-  'my-courses': 'My Courses',
-  'course-catalog': 'Courses',
-  ai: 'AI Study Buddy',
-  'focus-mode': 'Focus Mode',
-  'study-planner': 'Planner',
-  flashcards: 'Flashcards',
-  'ai-quiz': 'AI Quiz',
-  'mind-maps': 'Mind Maps',
-  'my-assignments': 'Assignments',
-  'ecz-past-papers': 'Past Papers',
-  'ecz-exam-simulator': 'Exam Simulator',
-  analytics: 'Analytics',
-  achievements: 'Achievements',
-  goals: 'Goals',
-  'my-notes': 'Notes',
-  bookmarks: 'Bookmarks',
-  'study-groups': 'Study Groups',
-  messenger: 'Messenger',
-  profile: 'Profile',
-  settings: 'Settings',
-  notifications: 'Notifications',
+  dashboard: 'Dashboard', 'my-courses': 'My Courses', 'course-catalog': 'Courses',
+  ai: 'AI Tutor', 'focus-mode': 'Focus Mode', 'study-planner': 'Planner',
+  flashcards: 'Flashcards', 'ai-quiz': 'AI Quiz', 'mind-maps': 'Mind Maps',
+  'my-assignments': 'Assignments', 'ecz-past-papers': 'Past Papers',
+  'ecz-exam-simulator': 'Exam Simulator', analytics: 'Analytics',
+  achievements: 'Achievements', goals: 'Goals', 'my-notes': 'Notes',
+  bookmarks: 'Bookmarks', 'study-groups': 'Study Groups', messenger: 'Messenger',
+  profile: 'Profile', settings: 'Settings', notifications: 'Notifications',
   leaderboard: 'Leaderboard',
 };
 
 const COMMAND_ITEMS = [
-  { label: 'Dashboard', url: '/dashboard', group: 'Navigation' },
-  { label: 'Explore Courses', url: '/course-catalog', group: 'Navigation' },
-  { label: 'My Courses', url: '/my-courses', group: 'Navigation' },
-  { label: 'AI Study Buddy', url: '/ai', group: 'AI Tools' },
-  { label: 'AI Quiz', url: '/ai-quiz', group: 'AI Tools' },
-  { label: 'Flashcards', url: '/flashcards', group: 'AI Tools' },
+  { label: 'Dashboard', url: '/dashboard', group: 'Navigate' },
+  { label: 'Explore Courses', url: '/course-catalog', group: 'Navigate' },
+  { label: 'My Courses', url: '/my-courses', group: 'Navigate' },
+  { label: 'AI Tutor', url: '/ai', group: 'AI' },
+  { label: 'AI Quiz', url: '/ai-quiz', group: 'AI' },
+  { label: 'Flashcards', url: '/flashcards', group: 'AI' },
   { label: 'Focus Mode', url: '/focus-mode', group: 'Study' },
   { label: 'Study Planner', url: '/study-planner', group: 'Study' },
   { label: 'My Notes', url: '/my-notes', group: 'Study' },
   { label: 'Past Papers', url: '/ecz-past-papers', group: 'Resources' },
   { label: 'Exam Simulator', url: '/ecz-exam-simulator', group: 'Resources' },
-  { label: 'Video Library', url: '/ecz-videos', group: 'Resources' },
   { label: 'Analytics', url: '/analytics', group: 'Progress' },
   { label: 'Achievements', url: '/achievements', group: 'Progress' },
-  { label: 'Leaderboard', url: '/leaderboard', group: 'Progress' },
-  { label: 'Messenger', url: '/messenger', group: 'Community' },
-  { label: 'Study Groups', url: '/study-groups', group: 'Community' },
+  { label: 'Messenger', url: '/messenger', group: 'Social' },
+  { label: 'Study Groups', url: '/study-groups', group: 'Social' },
   { label: 'Profile', url: '/profile', group: 'Account' },
   { label: 'Settings', url: '/settings', group: 'Account' },
 ];
@@ -97,24 +76,17 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setCmdOpen(o => !o);
-      }
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setCmdOpen(o => !o); }
     };
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
   }, []);
 
-  const breadcrumbs = location.pathname
-    .split('/')
-    .filter(Boolean)
-    .map((segment, i, arr) => {
-      const path = '/' + arr.slice(0, i + 1).join('/');
-      const key = arr.slice(0, i + 1).join('/');
-      const label = ROUTE_LABELS[key] || ROUTE_LABELS[segment] || segment.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-      return { label, path, isLast: i === arr.length - 1 };
-    });
+  const breadcrumbs = location.pathname.split('/').filter(Boolean).map((segment, i, arr) => {
+    const path = '/' + arr.slice(0, i + 1).join('/');
+    const label = ROUTE_LABELS[segment] || segment.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return { label, path, isLast: i === arr.length - 1 };
+  });
 
   return (
     <SidebarProvider>
@@ -128,12 +100,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <div className="flex-1 flex flex-col min-w-0">
           <TopNavbar />
 
-          {/* Study schedule banner */}
           {activeSchedule && !dismissed && (
             <div className="bg-primary/5 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="w-4 h-4 text-primary" />
-                <span className="text-foreground">Study time: <strong>{activeSchedule.subject}</strong></span>
+                <span>Study time: <strong>{activeSchedule.subject}</strong></span>
               </div>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => navigate(`/focus-mode?subject=${encodeURIComponent(activeSchedule.subject)}`)}>
@@ -146,14 +117,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
 
-          {/* Breadcrumbs */}
           {breadcrumbs.length > 0 && (
-            <div className="px-4 lg:px-6 pt-2.5 flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="px-4 lg:px-6 pt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Link to="/dashboard" className="hover:text-foreground transition-colors">
                 <Home className="w-3.5 h-3.5" />
               </Link>
               {breadcrumbs.map((bc) => (
-                <span key={bc.path} className="inline-flex items-center gap-1">
+                <span key={bc.path} className="inline-flex items-center gap-1.5">
                   <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
                   {bc.isLast ? (
                     <span className="text-foreground font-medium">{bc.label}</span>
@@ -176,12 +146,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </div>
       </div>
 
-      {/* Command Palette */}
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
         <CommandInput placeholder="Search pages..." />
         <CommandList>
           <CommandEmpty>No results.</CommandEmpty>
-          {['Navigation', 'AI Tools', 'Study', 'Resources', 'Progress', 'Community', 'Account'].map(group => {
+          {['Navigate', 'AI', 'Study', 'Resources', 'Progress', 'Social', 'Account'].map(group => {
             const items = COMMAND_ITEMS.filter(i => i.group === group);
             if (!items.length) return null;
             return (
