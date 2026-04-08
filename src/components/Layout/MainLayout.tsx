@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { RoleBasedSidebar } from '@/components/Sidebar/RoleBasedSidebar';
@@ -13,11 +13,13 @@ import { OfflineBanner } from '@/components/PWA/OfflineBanner';
 import { useContextualPreload } from '@/hooks/useContextualPreload';
 import { useTimeCapsule } from '@/hooks/useTimeCapsule';
 import { useDeepOffline } from '@/hooks/useDeepOffline';
+import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { Calendar, Play, X, ChevronRight, Home, Search } from 'lucide-react';
 import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from '@/components/ui/command';
+import { getCommandNavigationByRole, getPrimaryNavigationByRole, matchesNavItem } from '@/components/Sidebar/sidebarConfig';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -35,34 +37,16 @@ const ROUTE_LABELS: Record<string, string> = {
   leaderboard: 'Leaderboard',
 };
 
-const COMMAND_ITEMS = [
-  { label: 'Dashboard', url: '/dashboard', group: 'Navigate' },
-  { label: 'Explore Courses', url: '/course-catalog', group: 'Navigate' },
-  { label: 'My Courses', url: '/my-courses', group: 'Navigate' },
-  { label: 'AI Tutor', url: '/ai', group: 'AI' },
-  { label: 'AI Quiz', url: '/ai-quiz', group: 'AI' },
-  { label: 'Flashcards', url: '/flashcards', group: 'AI' },
-  { label: 'Focus Mode', url: '/focus-mode', group: 'Study' },
-  { label: 'Study Planner', url: '/study-planner', group: 'Study' },
-  { label: 'My Notes', url: '/my-notes', group: 'Study' },
-  { label: 'Past Papers', url: '/ecz-past-papers', group: 'Resources' },
-  { label: 'Exam Simulator', url: '/ecz-exam-simulator', group: 'Resources' },
-  { label: 'Analytics', url: '/analytics', group: 'Progress' },
-  { label: 'Achievements', url: '/achievements', group: 'Progress' },
-  { label: 'Messenger', url: '/messenger', group: 'Social' },
-  { label: 'Study Groups', url: '/study-groups', group: 'Social' },
-  { label: 'Profile', url: '/profile', group: 'Account' },
-  { label: 'Settings', url: '/settings', group: 'Account' },
-];
-
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useSecurityAlerts();
   useContextualPreload();
   useTimeCapsule();
   useDeepOffline();
   const { getActiveNow } = useStudySchedule();
+  const { profile } = useProfile();
   const navigate = useNavigate();
   const location = useLocation();
+  const role = (profile?.role as string) || 'student';
   const [activeSchedule, setActiveSchedule] = useState<ReturnType<typeof getActiveNow>>(undefined);
   const [dismissed, setDismissed] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
@@ -87,6 +71,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const label = ROUTE_LABELS[segment] || segment.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     return { label, path, isLast: i === arr.length - 1 };
   });
+  const primaryNavItems = useMemo(() => getPrimaryNavigationByRole(role), [role]);
+  const commandItems = useMemo(() => getCommandNavigationByRole(role), [role]);
+  const commandGroups = useMemo(() => Array.from(new Set(commandItems.map(item => item.group))), [commandItems]);
+  const showBreadcrumbs = breadcrumbs.length > 1;
 
   return (
     <SidebarProvider>
@@ -117,25 +105,51 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
 
-          {breadcrumbs.length > 0 && (
-            <div className="px-4 lg:px-6 pt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Link to="/dashboard" className="hover:text-foreground transition-colors">
-                <Home className="w-3.5 h-3.5" />
-              </Link>
-              {breadcrumbs.map((bc) => (
-                <span key={bc.path} className="inline-flex items-center gap-1.5">
-                  <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
-                  {bc.isLast ? (
-                    <span className="text-foreground font-medium">{bc.label}</span>
-                  ) : (
-                    <Link to={bc.path} className="hover:text-foreground transition-colors">{bc.label}</Link>
-                  )}
-                </span>
-              ))}
-            </div>
-          )}
+          <div className="border-b border-border/70 bg-background/80">
+            <div className="px-4 lg:px-6 py-3 space-y-3">
+              <div className="hidden lg:flex items-center gap-2">
+                {primaryNavItems.map((item) => {
+                  const active = matchesNavItem(location.pathname, item);
+                  return (
+                    <Button
+                      key={item.url}
+                      variant={active ? 'secondary' : 'ghost'}
+                      size="sm"
+                      className="h-9 rounded-full gap-2 px-3"
+                      onClick={() => navigate(item.url)}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      <span>{item.shortTitle ?? item.title}</span>
+                    </Button>
+                  );
+                })}
+                <Button variant="outline" size="sm" className="ml-auto h-9 rounded-full gap-2" onClick={() => setCmdOpen(true)}>
+                  <Search className="w-4 h-4" />
+                  Open search
+                </Button>
+              </div>
 
-          <main id="main-content" className="flex-1 px-4 py-4 pb-20 lg:px-6 lg:py-5 lg:pb-5 overflow-auto">
+              {showBreadcrumbs && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto whitespace-nowrap">
+                  <Link to="/dashboard" className="hover:text-foreground transition-colors">
+                    <Home className="w-3.5 h-3.5" />
+                  </Link>
+                  {breadcrumbs.map((bc) => (
+                    <span key={bc.path} className="inline-flex items-center gap-1.5">
+                      <ChevronRight className="w-3 h-3 text-muted-foreground/40" />
+                      {bc.isLast ? (
+                        <span className="text-foreground font-medium">{bc.label}</span>
+                      ) : (
+                        <Link to={bc.path} className="hover:text-foreground transition-colors">{bc.label}</Link>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <main id="main-content" className="flex-1 px-4 py-5 pb-20 lg:px-6 lg:py-6 lg:pb-6 overflow-auto">
             {children}
           </main>
 
@@ -147,18 +161,18 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       </div>
 
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
-        <CommandInput placeholder="Search pages..." />
+        <CommandInput placeholder="Search pages, tools, and settings..." />
         <CommandList>
           <CommandEmpty>No results.</CommandEmpty>
-          {['Navigate', 'AI', 'Study', 'Resources', 'Progress', 'Social', 'Account'].map(group => {
-            const items = COMMAND_ITEMS.filter(i => i.group === group);
+          {commandGroups.map(group => {
+            const items = commandItems.filter(i => i.group === group);
             if (!items.length) return null;
             return (
               <CommandGroup key={group} heading={group}>
                 {items.map(item => (
                   <CommandItem key={item.url} onSelect={() => { navigate(item.url); setCmdOpen(false); }}>
-                    <Search className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
-                    {item.label}
+                    <item.icon className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
+                    {item.title}
                   </CommandItem>
                 ))}
               </CommandGroup>
