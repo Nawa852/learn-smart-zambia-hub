@@ -26,11 +26,15 @@ export const TopNavbar = () => {
     navigate('/');
   };
 
+  const openCommandPalette = () => {
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true }));
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full h-14 bg-card/95 backdrop-blur-md border-b border-border">
       <div className="flex h-full items-center px-4 gap-3">
         {/* Mobile sidebar trigger + logo */}
-        <SidebarTrigger className="lg:hidden -ml-1 text-muted-foreground" />
+        <SidebarTrigger className="shrink-0 -ml-1 text-muted-foreground" />
         <Link to="/dashboard" className="flex items-center gap-2 lg:hidden shrink-0">
           <img src={eduIcon} alt="Edu Zambia" className="w-7 h-7" />
         </Link>
@@ -38,7 +42,7 @@ export const TopNavbar = () => {
         {/* Search — center */}
         <div className="flex-1 flex justify-center">
           <button
-            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+            onClick={openCommandPalette}
             className="hidden md:flex items-center gap-2 h-9 w-full max-w-md px-4 rounded-lg bg-secondary/50 border border-border/50 text-muted-foreground hover:bg-secondary hover:border-border transition-all text-sm cursor-pointer"
           >
             <Search className="w-4 h-4 shrink-0" />
@@ -50,7 +54,7 @@ export const TopNavbar = () => {
         {/* Right actions */}
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" className="md:hidden h-9 w-9 text-muted-foreground"
-            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}>
+            onClick={openCommandPalette}>
             <Search className="h-4 w-4" />
           </Button>
 

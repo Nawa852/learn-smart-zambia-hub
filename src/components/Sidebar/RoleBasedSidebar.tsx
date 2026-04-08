@@ -10,11 +10,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getNavigationByRole } from "./sidebarConfig";
+import { getNavigationByRole, matchesNavItem } from "./sidebarConfig";
 import { useProfile } from "@/hooks/useProfile";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import eduIcon from "@/assets/edu-zambia-icon.png";
@@ -27,7 +28,7 @@ export function RoleBasedSidebar() {
 
   const userType = profile?.role || "student";
   const navigation = getNavigationByRole(userType);
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (item: { url: string; matchPrefixes?: string[] }) => matchesNavItem(location.pathname, item);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -63,7 +64,7 @@ export function RoleBasedSidebar() {
                 <SidebarGroupContent>
                   <SidebarMenu className="space-y-0.5">
                     {group.items.map((item) => {
-                      const active = isActive(item.url);
+                      const active = isActive(item);
                       const linkEl = (
                         <NavLink
                           to={item.url}
@@ -115,6 +116,7 @@ export function RoleBasedSidebar() {
             ))}
           </ScrollArea>
         </SidebarContent>
+        <SidebarRail />
       </Sidebar>
     </TooltipProvider>
   );
