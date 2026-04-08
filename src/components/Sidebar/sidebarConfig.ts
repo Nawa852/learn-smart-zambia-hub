@@ -17,6 +17,8 @@ export interface NavItem {
   url: string;
   icon: LucideIcon;
   badge?: string;
+  shortTitle?: string;
+  matchPrefixes?: string[];
 }
 
 export interface NavGroup {
@@ -55,48 +57,69 @@ export function getNavigationByRole(role: string): NavGroup[] {
 // ─── Student Navigation (consolidated) ──────────────
 export const studentNavigation: NavGroup[] = [
   {
-    label: "Learn",
+    label: "Workspace",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "My Courses", url: "/my-courses", icon: GraduationCap },
-      { title: "Explore Courses", url: "/course-catalog", icon: BookOpen },
-      { title: "AI Study Buddy", url: "/ai", icon: Brain, badge: "AI" },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+      {
+        title: "My Learning",
+        url: "/my-courses",
+        icon: GraduationCap,
+        shortTitle: "Learn",
+        matchPrefixes: ["/course-catalog", "/course", "/lessons", "/classroom", "/video-learning", "/youtube-learning", "/adaptive-content", "/live-learning"],
+      },
+      {
+        title: "AI Workspace",
+        url: "/ai",
+        icon: Brain,
+        badge: "AI",
+        shortTitle: "AI",
+        matchPrefixes: ["/multi-ai-tutor", "/ai-tutor", "/learning-path", "/comprehensive-ai", "/study-assistant", "/mind-maps", "/adaptive-difficulty", "/teach-back", "/flashcards", "/ai-quiz", "/math-quiz", "/science-quiz", "/youtube-quiz", "/vocabulary-quiz"],
+      },
+      {
+        title: "Study Planner",
+        url: "/study-planner",
+        icon: Calendar,
+        shortTitle: "Plan",
+        matchPrefixes: ["/focus-mode", "/my-notes", "/goals", "/journal", "/journaling"],
+      },
     ],
   },
   {
-    label: "Study Tools",
+    label: "Preparation",
     items: [
-      { title: "Focus Mode", url: "/focus-mode", icon: Timer },
-      { title: "Flashcards", url: "/flashcards", icon: Layers },
-      { title: "AI Quiz", url: "/ai-quiz", icon: Sparkles },
-      { title: "Study Planner", url: "/study-planner", icon: Calendar },
-      { title: "My Notes", url: "/my-notes", icon: PenTool },
-    ],
-  },
-  {
-    label: "ECZ Resources",
-    items: [
-      { title: "Past Papers", url: "/ecz-past-papers", icon: FileText },
-      { title: "Exam Simulator", url: "/ecz-exam-simulator", icon: Target },
-      { title: "Video Library", url: "/ecz-videos", icon: Youtube },
-    ],
-  },
-  {
-    label: "Progress",
-    items: [
-      { title: "Analytics", url: "/analytics", icon: BarChart3 },
-      { title: "Achievements", url: "/achievements", icon: Trophy },
-      { title: "Goals", url: "/goals", icon: Target },
-      { title: "Leaderboard", url: "/leaderboard", icon: Award },
+      {
+        title: "ECZ Hub",
+        url: "/ecz-past-papers",
+        icon: FileText,
+        shortTitle: "ECZ",
+        matchPrefixes: ["/ecz-exam-simulator", "/ecz-videos", "/zambian-resources"],
+      },
+      {
+        title: "Progress",
+        url: "/analytics",
+        icon: BarChart3,
+        shortTitle: "Stats",
+        matchPrefixes: ["/achievements", "/leaderboard", "/progress-report"],
+      },
     ],
   },
   {
     label: "Connect",
     items: [
-      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
-      { title: "Messenger", url: "/messenger", icon: MessagesSquare },
-      { title: "Study Groups", url: "/study-groups", icon: Users },
-      { title: "Personalization", url: "/personalization", icon: Palette },
+      {
+        title: "Communication Hub",
+        url: "/communication-hub",
+        icon: MessageCircle,
+        shortTitle: "Connect",
+        matchPrefixes: ["/messenger", "/study-groups", "/community", "/social-feed"],
+      },
+      {
+        title: "Personalization",
+        url: "/personalization",
+        icon: Palette,
+        shortTitle: "Me",
+        matchPrefixes: ["/profile", "/settings", "/notifications", "/bookmarks"],
+      },
     ],
   },
 ];
@@ -104,47 +127,50 @@ export const studentNavigation: NavGroup[] = [
 // ─── Teacher Navigation ─────────────────────────────
 export const teacherNavigation: NavGroup[] = [
   {
-    label: "Teaching",
+    label: "Workspace",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "My Classes", url: "/courses", icon: School },
-      { title: "Create Course", url: "/create-course", icon: Layers },
-      { title: "Virtual Classroom", url: "/classroom", icon: Video },
-    ],
-  },
-  {
-    label: "AI Tools",
-    items: [
-      { title: "AI Lesson Plan", url: "/teacher-lesson-plan", icon: Sparkles, badge: "AI" },
-      { title: "AI Quiz Creator", url: "/ai-quiz", icon: Brain },
-      { title: "AI Assistant", url: "/ai", icon: Brain },
-    ],
-  },
-  {
-    label: "Assessment",
-    items: [
-      { title: "Gradebook", url: "/teacher-gradebook", icon: ClipboardCheck },
-      { title: "Class Analytics", url: "/teacher-analytics", icon: BarChart3 },
-      { title: "Report Cards", url: "/teacher-report-cards", icon: FileText },
-      { title: "Attendance QR", url: "/teacher-attendance-qr", icon: UserCheck },
-      { title: "Announcements", url: "/teacher-announcements", icon: Megaphone },
-    ],
-  },
-  {
-    label: "Resources",
-    items: [
-      { title: "Past Papers", url: "/ecz-past-papers", icon: FileText },
-      { title: "Video Library", url: "/ecz-videos", icon: Youtube },
-      { title: "Resources Hub", url: "/zambian-resources", icon: Library },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+      {
+        title: "Class Workspace",
+        url: "/courses",
+        icon: School,
+        shortTitle: "Classes",
+        matchPrefixes: ["/create-course", "/course", "/lessons", "/classroom", "/video-learning", "/youtube-learning"],
+      },
+      {
+        title: "Assessment Hub",
+        url: "/teacher-gradebook",
+        icon: ClipboardCheck,
+        shortTitle: "Assess",
+        matchPrefixes: ["/teacher-analytics", "/teacher-report-cards", "/teacher-attendance-qr"],
+      },
+      {
+        title: "Teaching AI",
+        url: "/ai",
+        icon: Brain,
+        badge: "AI",
+        shortTitle: "AI",
+        matchPrefixes: ["/teacher-lesson-plan", "/ai-quiz", "/multi-ai-tutor"],
+      },
     ],
   },
   {
     label: "Connect",
     items: [
-      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
-      { title: "Messenger", url: "/messenger", icon: MessageSquare },
-      { title: "Teacher Hub", url: "/community", icon: Users },
-      { title: "Personalization", url: "/personalization", icon: Palette },
+      {
+        title: "Communication Hub",
+        url: "/communication-hub",
+        icon: MessageCircle,
+        shortTitle: "Connect",
+        matchPrefixes: ["/messenger", "/community", "/teacher-announcements"],
+      },
+      {
+        title: "Personalization",
+        url: "/personalization",
+        icon: Palette,
+        shortTitle: "Me",
+        matchPrefixes: ["/profile", "/settings", "/notifications"],
+      },
     ],
   },
 ];
@@ -152,30 +178,43 @@ export const teacherNavigation: NavGroup[] = [
 // ─── Guardian Navigation ────────────────────────────
 export const guardianNavigation: NavGroup[] = [
   {
-    label: "Overview",
+    label: "Workspace",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "My Children", url: "/parent-children", icon: Users },
+      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+      { title: "My Children", url: "/parent-children", icon: Users, shortTitle: "Children" },
+      {
+        title: "Progress Overview",
+        url: "/parent-grades",
+        icon: BarChart3,
+        shortTitle: "Progress",
+        matchPrefixes: ["/parent-attendance", "/guardian-homework", "/guardian-activity-feed", "/parent-progress-tracker"],
+      },
+      {
+        title: "Parental Controls",
+        url: "/parental-controls",
+        icon: Shield,
+        shortTitle: "Safety",
+        matchPrefixes: ["/screen-time"],
+      },
     ],
   },
   {
-    label: "Monitor",
+    label: "Connect",
     items: [
-      { title: "Activity Feed", url: "/guardian-activity-feed", icon: Zap, badge: "LIVE" },
-      { title: "Grades", url: "/parent-grades", icon: BarChart3 },
-      { title: "Attendance", url: "/parent-attendance", icon: Calendar },
-      { title: "Homework Tracker", url: "/guardian-homework", icon: ClipboardCheck },
-      { title: "Parental Controls", url: "/parental-controls", icon: Shield },
-    ],
-  },
-  {
-    label: "Communicate",
-    items: [
-      { title: "Communication Hub", url: "/communication-hub", icon: MessageCircle },
-      { title: "Messages", url: "/parent-messages", icon: MessageSquare },
-      { title: "Teacher Contact", url: "/parent-teacher-contact", icon: UserCheck },
-      { title: "School Updates", url: "/parent-school-updates", icon: School },
-      { title: "Personalization", url: "/personalization", icon: Palette },
+      {
+        title: "Communication Hub",
+        url: "/communication-hub",
+        icon: MessageCircle,
+        shortTitle: "Connect",
+        matchPrefixes: ["/parent-messages", "/parent-teacher-contact", "/parent-school-updates"],
+      },
+      {
+        title: "Personalization",
+        url: "/personalization",
+        icon: Palette,
+        shortTitle: "Me",
+        matchPrefixes: ["/profile", "/settings", "/notifications"],
+      },
     ],
   },
 ];
@@ -183,16 +222,347 @@ export const guardianNavigation: NavGroup[] = [
 // ─── Institution Navigation ─────────────────────────
 export const institutionNavigation: NavGroup[] = [
   {
-    label: "Admin",
+    label: "Operations",
     items: [
-      { title: "Dashboard", url: "/school-admin", icon: LayoutDashboard },
-      { title: "User Management", url: "/admin/users", icon: Users },
-      { title: "Curriculum", url: "/admin/curriculum", icon: BookOpen },
-      { title: "Scheduling", url: "/admin/scheduling", icon: Calendar },
-      { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+      { title: "Dashboard", url: "/school-admin", icon: LayoutDashboard, shortTitle: "Home" },
+      { title: "User Management", url: "/admin/users", icon: Users, shortTitle: "Users" },
+      {
+        title: "Curriculum & Scheduling",
+        url: "/admin/curriculum",
+        icon: BookOpen,
+        shortTitle: "Plan",
+        matchPrefixes: ["/admin/scheduling"],
+      },
+      {
+        title: "Analytics",
+        url: "/admin/analytics",
+        icon: BarChart3,
+        shortTitle: "Analytics",
+        matchPrefixes: ["/admin/attendance"],
+      },
     ],
   },
 ];
+
+const rolePrimaryNavigation: Record<string, NavItem[]> = {
+  student: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Learn",
+      url: "/my-courses",
+      icon: GraduationCap,
+      shortTitle: "Learn",
+      matchPrefixes: ["/course-catalog", "/course", "/lessons", "/classroom", "/video-learning", "/youtube-learning"],
+    },
+    {
+      title: "AI",
+      url: "/ai",
+      icon: Brain,
+      shortTitle: "AI",
+      matchPrefixes: ["/multi-ai-tutor", "/ai-tutor", "/flashcards", "/ai-quiz", "/mind-maps", "/learning-path", "/study-assistant"],
+    },
+    {
+      title: "Connect",
+      url: "/communication-hub",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/messenger", "/study-groups", "/community"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/personalization", "/settings", "/notifications", "/bookmarks"],
+    },
+  ],
+  teacher: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Classes",
+      url: "/courses",
+      icon: School,
+      shortTitle: "Classes",
+      matchPrefixes: ["/create-course", "/course", "/lessons", "/classroom"],
+    },
+    {
+      title: "Assess",
+      url: "/teacher-gradebook",
+      icon: ClipboardCheck,
+      shortTitle: "Assess",
+      matchPrefixes: ["/teacher-analytics", "/teacher-report-cards", "/teacher-attendance-qr"],
+    },
+    {
+      title: "Connect",
+      url: "/communication-hub",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/messenger", "/community", "/teacher-announcements"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/personalization", "/settings", "/notifications"],
+    },
+  ],
+  guardian: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    { title: "Children", url: "/parent-children", icon: Users, shortTitle: "Children" },
+    {
+      title: "Progress",
+      url: "/parent-grades",
+      icon: BarChart3,
+      shortTitle: "Progress",
+      matchPrefixes: ["/parent-attendance", "/guardian-homework", "/guardian-activity-feed"],
+    },
+    {
+      title: "Connect",
+      url: "/communication-hub",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/parent-messages", "/parent-teacher-contact", "/parent-school-updates"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/personalization", "/settings", "/notifications"],
+    },
+  ],
+  institution: [
+    { title: "Home", url: "/school-admin", icon: LayoutDashboard, shortTitle: "Home" },
+    { title: "Users", url: "/admin/users", icon: Users, shortTitle: "Users" },
+    {
+      title: "Plan",
+      url: "/admin/curriculum",
+      icon: BookOpen,
+      shortTitle: "Plan",
+      matchPrefixes: ["/admin/scheduling"],
+    },
+    {
+      title: "Analytics",
+      url: "/admin/analytics",
+      icon: BarChart3,
+      shortTitle: "Analytics",
+      matchPrefixes: ["/admin/attendance"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  ministry: [
+    { title: "Home", url: "/ministry-dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    { title: "Schools", url: "/ministry/schools", icon: Building2, shortTitle: "Schools" },
+    {
+      title: "Analytics",
+      url: "/ministry/ecz-analytics",
+      icon: PieChart,
+      shortTitle: "Analytics",
+      matchPrefixes: ["/ministry/live-stats", "/ministry/province-map", "/ministry/school-comparison"],
+    },
+    {
+      title: "Policy",
+      url: "/ministry/policies",
+      icon: Shield,
+      shortTitle: "Policy",
+      matchPrefixes: ["/ministry/budget", "/ministry/reports", "/ministry/announcements"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  doctor: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Clinical",
+      url: "/medical/case-simulator",
+      icon: Microscope,
+      shortTitle: "Clinical",
+      matchPrefixes: ["/medical/case-log", "/medical/rotations", "/medical/clinical-notes"],
+    },
+    {
+      title: "AI",
+      url: "/ai",
+      icon: Brain,
+      shortTitle: "AI",
+      matchPrefixes: ["/medical/drug-reference"],
+    },
+    {
+      title: "Connect",
+      url: "/messenger",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/study-groups"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  entrepreneur: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Ventures",
+      url: "/entrepreneur/ventures",
+      icon: Rocket,
+      shortTitle: "Ventures",
+      matchPrefixes: ["/entrepreneur/financials", "/entrepreneur/milestones"],
+    },
+    {
+      title: "AI",
+      url: "/entrepreneur/business-plan",
+      icon: Sparkles,
+      shortTitle: "AI",
+      matchPrefixes: ["/entrepreneur/pitch-deck", "/entrepreneur/market-research", "/entrepreneur/funding", "/ai"],
+    },
+    {
+      title: "Connect",
+      url: "/mentorship-hub",
+      icon: Heart,
+      shortTitle: "Connect",
+      matchPrefixes: ["/messenger"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  developer: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Projects",
+      url: "/developer/projects",
+      icon: Layers,
+      shortTitle: "Projects",
+      matchPrefixes: ["/developer/ide", "/developer/api-playground", "/developer/algorithms"],
+    },
+    {
+      title: "AI",
+      url: "/developer/code-review",
+      icon: Sparkles,
+      shortTitle: "AI",
+      matchPrefixes: ["/developer/challenges", "/ai"],
+    },
+    {
+      title: "Connect",
+      url: "/study-groups",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/messenger"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  skills: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Skills",
+      url: "/skills/dashboard",
+      icon: Wrench,
+      shortTitle: "Skills",
+      matchPrefixes: ["/skills/videos", "/skills/assessment-quiz", "/skills/portfolio-gallery"],
+    },
+    {
+      title: "Career",
+      url: "/skills/jobs",
+      icon: Briefcase,
+      shortTitle: "Career",
+      matchPrefixes: ["/skills/job-tracker", "/skills/resume", "/skills/apprenticeship-match"],
+    },
+    {
+      title: "Connect",
+      url: "/study-groups",
+      icon: MessageCircle,
+      shortTitle: "Connect",
+      matchPrefixes: ["/messenger", "/ai"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+  cybersecurity: [
+    { title: "Home", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
+    {
+      title: "Labs",
+      url: "/cybersecurity/labs",
+      icon: Monitor,
+      shortTitle: "Labs",
+      matchPrefixes: ["/cybersecurity/ctf", "/cybersecurity/terminal"],
+    },
+    {
+      title: "Tools",
+      url: "/cybersecurity/vuln-scanner",
+      icon: Shield,
+      shortTitle: "Tools",
+      matchPrefixes: ["/cybersecurity/phishing-sim", "/cybersecurity/password-analyzer", "/cybersecurity/report-writer", "/cybersecurity/glossary"],
+    },
+    {
+      title: "AI",
+      url: "/ai",
+      icon: Brain,
+      shortTitle: "AI",
+      matchPrefixes: ["/cybersecurity/videos"],
+    },
+    {
+      title: "Me",
+      url: "/profile",
+      icon: User,
+      shortTitle: "Me",
+      matchPrefixes: ["/settings", "/personalization"],
+    },
+  ],
+};
+
+const commonCommandItems: Array<NavItem & { group: string }> = [
+  { title: "Profile", url: "/profile", icon: User, group: "Account", shortTitle: "Me", matchPrefixes: ["/profile"] },
+  { title: "Settings", url: "/settings", icon: Settings, group: "Account", matchPrefixes: ["/settings", "/personalization", "/notifications"] },
+  { title: "Bookmarks", url: "/bookmarks", icon: Bookmark, group: "Account", matchPrefixes: ["/bookmarks"] },
+];
+
+export function matchesNavItem(pathname: string, item: Pick<NavItem, "url" | "matchPrefixes">) {
+  const candidates = [item.url, ...(item.matchPrefixes ?? [])];
+  return candidates.some((candidate) => pathname === candidate || pathname.startsWith(`${candidate}/`));
+}
+
+export function getPrimaryNavigationByRole(role: string): NavItem[] {
+  return rolePrimaryNavigation[role] || rolePrimaryNavigation.student;
+}
+
+export function getCommandNavigationByRole(role: string): Array<NavItem & { group: string }> {
+  const seen = new Set<string>();
+  return [...getNavigationByRole(role).flatMap((group) => group.items.map((item) => ({ ...item, group: group.label }))), ...commonCommandItems]
+    .filter((item) => {
+      if (seen.has(item.url)) return false;
+      seen.add(item.url);
+      return true;
+    });
+}
 
 // ─── Ministry Navigation ────────────────────────────
 export const ministryNavigation: NavGroup[] = [
