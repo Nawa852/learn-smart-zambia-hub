@@ -61,7 +61,7 @@ export const TopNavbar = () => {
           <ThemeSwitcher />
 
           <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground"
-            onClick={() => navigate('/messenger')}>
+            onClick={() => navigate('/connect?tab=messenger')}>
             <MessageCircle className="h-4 w-4" />
           </Button>
 
@@ -88,10 +88,10 @@ export const TopNavbar = () => {
               <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer gap-2">
                 <User className="h-4 w-4" /> Profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/bookmarks')} className="cursor-pointer gap-2">
+              <DropdownMenuItem onClick={() => navigate('/prepare?tab=bookmarks')} className="cursor-pointer gap-2">
                 <Bookmark className="h-4 w-4" /> Bookmarks
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer gap-2">
+              <DropdownMenuItem onClick={() => navigate('/profile?tab=settings')} className="cursor-pointer gap-2">
                 <Settings className="h-4 w-4" /> Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
