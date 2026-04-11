@@ -1,53 +1,27 @@
-import React, { Suspense } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTabFromUrl } from '@/hooks/useTabFromUrl';
-import { LogoLoader } from '@/components/UI/LogoLoader';
-import { FileText, Play, Video, BookOpen, FlaskConical, Target } from 'lucide-react';
+import React from 'react';
+import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
+import { FileText, Play, Video, BookOpen, Target, Brain } from 'lucide-react';
 
-const ECZPastPapersPage = React.lazy(() => import('@/pages/ECZPastPapersPage'));
-const ECZExamSimulatorPage = React.lazy(() => import('@/pages/ECZExamSimulatorPage'));
-const ECZVideoLibraryPage = React.lazy(() => import('@/pages/ECZVideoLibraryPage'));
-const ECZResourcesExpandedPage = React.lazy(() => import('@/pages/ECZResourcesExpandedPage'));
-const ECZPracticeQuizPage = React.lazy(() => import('@/pages/ECZPracticeQuizPage'));
-
-const Loader = () => <div className="flex justify-center py-12"><LogoLoader text="Loading..." /></div>;
-
-const tabs = [
-  { id: 'papers', label: 'Past Papers', icon: FileText },
-  { id: 'simulator', label: 'Exam Simulator', icon: Play },
-  { id: 'quiz', label: 'Practice Quiz', icon: Target },
-  { id: 'videos', label: 'Video Library', icon: Video },
-  { id: 'resources', label: 'Resources', icon: BookOpen },
+const tabs: HubTab[] = [
+  { id: 'papers', label: 'Past Papers', icon: FileText, component: React.lazy(() => import('@/pages/ECZPastPapersPage')) },
+  { id: 'simulator', label: 'Exam Simulator', icon: Play, component: React.lazy(() => import('@/pages/ECZExamSimulatorPage')), badge: 'NEW' },
+  { id: 'quiz', label: 'Practice Quiz', icon: Target, component: React.lazy(() => import('@/pages/ECZPracticeQuizPage')) },
+  { id: 'videos', label: 'Video Library', icon: Video, component: React.lazy(() => import('@/pages/ECZVideoLibraryPage')) },
+  { id: 'resources', label: 'Resources', icon: BookOpen, component: React.lazy(() => import('@/pages/ECZResourcesExpandedPage')) },
 ];
 
-const ECZHub = () => {
-  const [tab, setTab] = useTabFromUrl('papers');
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">ECZ Exam Hub</h1>
-        <p className="text-muted-foreground text-sm">Past papers, exam simulators, and ECZ preparation resources.</p>
-      </div>
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          {tabs.map(t => (
-            <TabsTrigger key={t.id} value={t.id} className="gap-1.5">
-              <t.icon className="w-3.5 h-3.5" />
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <Suspense fallback={<Loader />}>
-          <TabsContent value="papers"><ECZPastPapersPage /></TabsContent>
-          <TabsContent value="simulator"><ECZExamSimulatorPage /></TabsContent>
-          <TabsContent value="quiz"><ECZPracticeQuizPage /></TabsContent>
-          <TabsContent value="videos"><ECZVideoLibraryPage /></TabsContent>
-          <TabsContent value="resources"><ECZResourcesExpandedPage /></TabsContent>
-        </Suspense>
-      </Tabs>
-    </div>
-  );
-};
+const ECZHub = () => (
+  <HubPageLayout
+    title="ECZ Exam Hub"
+    subtitle="Past papers, exam simulators, and comprehensive ECZ preparation resources."
+    icon={FileText}
+    tabs={tabs}
+    defaultTab="papers"
+    quickLinks={[
+      { label: 'AI Exam Prep', href: '/ai?tab=quiz', icon: Brain },
+      { label: 'Study Planner', href: '/prepare?tab=planner', icon: Target },
+    ]}
+  />
+);
 
 export default ECZHub;

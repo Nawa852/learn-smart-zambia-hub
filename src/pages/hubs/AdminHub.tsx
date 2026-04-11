@@ -1,53 +1,26 @@
-import React, { Suspense } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTabFromUrl } from '@/hooks/useTabFromUrl';
-import { LogoLoader } from '@/components/UI/LogoLoader';
-import { LayoutDashboard, Users, BookOpen, Calendar, BarChart3 } from 'lucide-react';
+import React from 'react';
+import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
+import { LayoutDashboard, Users, BookOpen, Calendar, BarChart3, MessageSquare } from 'lucide-react';
 
-const SchoolAdminDashboard = React.lazy(() => import('@/pages/SchoolAdminDashboard'));
-const AdminUserManagementPage = React.lazy(() => import('@/pages/AdminUserManagementPage'));
-const AdminCurriculumPage = React.lazy(() => import('@/pages/AdminCurriculumPage'));
-const AdminSchedulingPage = React.lazy(() => import('@/pages/AdminSchedulingPage'));
-const AdminAnalyticsPage = React.lazy(() => import('@/pages/AdminAnalyticsPage'));
-
-const Loader = () => <div className="flex justify-center py-12"><LogoLoader text="Loading..." /></div>;
-
-const tabs = [
-  { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'users', label: 'Users', icon: Users },
-  { id: 'curriculum', label: 'Curriculum', icon: BookOpen },
-  { id: 'scheduling', label: 'Scheduling', icon: Calendar },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+const tabs: HubTab[] = [
+  { id: 'overview', label: 'Dashboard', icon: LayoutDashboard, component: React.lazy(() => import('@/pages/SchoolAdminDashboard')) },
+  { id: 'users', label: 'Users', icon: Users, component: React.lazy(() => import('@/pages/AdminUserManagementPage')) },
+  { id: 'curriculum', label: 'Curriculum', icon: BookOpen, component: React.lazy(() => import('@/pages/AdminCurriculumPage')) },
+  { id: 'scheduling', label: 'Scheduling', icon: Calendar, component: React.lazy(() => import('@/pages/AdminSchedulingPage')) },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, component: React.lazy(() => import('@/pages/AdminAnalyticsPage')) },
 ];
 
-const AdminHub = () => {
-  const [tab, setTab] = useTabFromUrl('overview');
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">School Administration</h1>
-        <p className="text-muted-foreground text-sm">Manage users, curriculum, scheduling, and analytics.</p>
-      </div>
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          {tabs.map(t => (
-            <TabsTrigger key={t.id} value={t.id} className="gap-1.5">
-              <t.icon className="w-3.5 h-3.5" />
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <Suspense fallback={<Loader />}>
-          <TabsContent value="overview"><SchoolAdminDashboard /></TabsContent>
-          <TabsContent value="users"><AdminUserManagementPage /></TabsContent>
-          <TabsContent value="curriculum"><AdminCurriculumPage /></TabsContent>
-          <TabsContent value="scheduling"><AdminSchedulingPage /></TabsContent>
-          <TabsContent value="analytics"><AdminAnalyticsPage /></TabsContent>
-        </Suspense>
-      </Tabs>
-    </div>
-  );
-};
+const AdminHub = () => (
+  <HubPageLayout
+    title="School Administration"
+    subtitle="Manage users, curriculum, scheduling, and school-wide analytics."
+    icon={LayoutDashboard}
+    tabs={tabs}
+    defaultTab="overview"
+    quickLinks={[
+      { label: 'Messages', href: '/connect?tab=messenger', icon: MessageSquare },
+    ]}
+  />
+);
 
 export default AdminHub;
