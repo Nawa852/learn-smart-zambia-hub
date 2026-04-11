@@ -4,22 +4,29 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, Brain, Target, Trophy, Clock, ArrowRight,
-  Layers, CheckCircle, Flame, TrendingUp, Sparkles,
-  MessageSquare, ClipboardCheck, GraduationCap, Zap,
-  Monitor, Shield, Award, Star, Coins
+  CheckCircle, Flame, TrendingUp, Sparkles,
+  ClipboardCheck, GraduationCap, Monitor
 } from 'lucide-react';
 import { XPBar } from '@/components/Gamification/XPBar';
 import { useUserStats } from '@/hooks/useUserStats';
 import { useScreenTime } from '@/hooks/useScreenTime';
 import { DailyCheckin } from '@/components/Dashboard/DailyCheckin';
-import { StudyLeaderboard } from '@/components/Dashboard/StudyLeaderboard';
+import { StreakCalendar } from '@/components/Dashboard/StreakCalendar';
+import { QuickQuizWidget } from '@/components/Dashboard/QuickQuizWidget';
+import { StudyTimerWidget } from '@/components/Dashboard/StudyTimerWidget';
+import { CourseRecommendations } from '@/components/Dashboard/CourseRecommendations';
+import { AnnouncementFeed } from '@/components/Dashboard/AnnouncementFeed';
+import { ReadingProgressTracker } from '@/components/Dashboard/ReadingProgressTracker';
+import { GradeCalculator } from '@/components/Dashboard/GradeCalculator';
+import { StudentSpotlight } from '@/components/Dashboard/StudentSpotlight';
+import { CollaborationLauncher } from '@/components/Dashboard/CollaborationLauncher';
+import { AIStudySummary } from '@/components/Dashboard/AIStudySummary';
 
 interface EnrolledCourse {
   id: string;
@@ -49,15 +56,6 @@ interface DashboardStats {
   streak: number;
 }
 
-const stagger = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08 } }
-};
-const item = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35 } }
-};
-
 const subjectColors: Record<string, string> = {
   Mathematics: 'from-blue-500 to-cyan-500',
   English: 'from-purple-500 to-pink-500',
@@ -76,14 +74,11 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
   const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, completedLessons: 0, totalLessons: 0, averageProgress: 0, streak: 0 });
   const [loading, setLoading] = useState(true);
   const { stats: userStats } = useUserStats();
-  const { todayMinutes, dailyLimit } = useScreenTime();
-
-  const displayName = profile?.full_name || userName || 'Learner';
+  const { todayMinutes } = useScreenTime();
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      // Fetch enrollments with course data
       const { data: enrollments } = await supabase
         .from('enrollments')
         .select('course_id, progress, courses(id, title, subject, grade_level)')
@@ -91,8 +86,6 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
       if (enrollments) {
         const courseIds = enrollments.map(e => e.course_id);
-
-        // Fetch lesson counts and completions in parallel
         const [{ data: lessons }, { data: completions }] = await Promise.all([
           supabase.from('lessons').select('id, course_id').in('course_id', courseIds.length ? courseIds : ['none']),
           supabase.from('lesson_completions').select('lesson_id, course_id, completed_at').eq('user_id', user.id),
@@ -100,7 +93,6 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
         const lessonMap: Record<string, number> = {};
         lessons?.forEach(l => { lessonMap[l.course_id] = (lessonMap[l.course_id] || 0) + 1; });
-
         const completionMap: Record<string, number> = {};
         completions?.forEach(c => { completionMap[c.course_id] = (completionMap[c.course_id] || 0) + 1; });
 
@@ -118,7 +110,6 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
         const totalLessons = enrolledCourses.reduce((s, c) => s + c.lesson_count, 0);
         const completedLessons = enrolledCourses.reduce((s, c) => s + c.completed_count, 0);
-        // Calculate streak from lesson completions
         const allCompletionDates = completions?.map(c => new Date(c.completed_at).toISOString().split('T')[0]) || [];
         const uniqueDates = [...new Set(allCompletionDates)].sort().reverse();
         const today = new Date().toISOString().split('T')[0];
@@ -132,15 +123,8 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
           }
         }
 
-        setStats({
-          totalCourses: enrolledCourses.length,
-          completedLessons,
-          totalLessons,
-          averageProgress: enrolledCourses.length > 0 ? enrolledCourses.reduce((s, c) => s + c.progress, 0) / enrolledCourses.length : 0,
-          streak,
-        });
+        setStats({ totalCourses: enrolledCourses.length, completedLessons, totalLessons, averageProgress: enrolledCourses.length > 0 ? enrolledCourses.reduce((s, c) => s + c.progress, 0) / enrolledCourses.length : 0, streak });
 
-        // Fetch upcoming assignments
         if (courseIds.length > 0) {
           const { data: assignmentsData } = await supabase
             .from('assignments')
@@ -149,18 +133,11 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
             .order('due_date', { ascending: true })
             .limit(5);
 
-          const { data: subs } = await supabase
-            .from('submissions')
-            .select('assignment_id')
-            .eq('user_id', user.id);
+          const { data: subs } = await supabase.from('submissions').select('assignment_id').eq('user_id', user.id);
           const submittedSet = new Set(subs?.map(s => s.assignment_id) || []);
 
           if (assignmentsData) {
-            setAssignments(assignmentsData.map((a: any) => ({
-              ...a,
-              course_title: a.courses?.title || 'Course',
-              is_submitted: submittedSet.has(a.id),
-            })));
+            setAssignments(assignmentsData.map((a: any) => ({ ...a, course_title: a.courses?.title || 'Course', is_submitted: submittedSet.has(a.id) })));
           }
         }
       }
@@ -169,104 +146,70 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
     load();
   }, [user]);
 
-  const greeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
-  };
-
   if (loading) {
-    return (
-      <div className="py-12">
-        <LogoLoader text="Loading dashboard..." />
-      </div>
-    );
+    return <div className="py-12"><LogoLoader text="Loading dashboard..." /></div>;
   }
 
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-6">
-      {/* Welcome Card */}
-      <motion.div variants={item}>
-        <Card className="border-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">{greeting()}, {displayName}! 👋</h1>
-                <p className="text-muted-foreground mt-1">
-                  {stats.totalCourses > 0
-                    ? `You're enrolled in ${stats.totalCourses} course${stats.totalCourses !== 1 ? 's' : ''} · ${stats.completedLessons}/${stats.totalLessons} lessons done`
-                    : 'Start by enrolling in a course from the catalog!'}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-orange-500/10 text-orange-600">
-                  <Flame className="w-4 h-4" />
-                  <span className="text-sm font-semibold">{stats.streak} day streak</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
+    <div className="space-y-6">
       {/* Daily Check-in */}
-      <motion.div variants={item}>
-        <DailyCheckin />
-      </motion.div>
+      <DailyCheckin />
 
-
-      <motion.div variants={item}>
-        <Card>
-          <CardContent className="p-4">
-            <XPBar />
-          </CardContent>
-        </Card>
-      </motion.div>
+      {/* XP Bar */}
+      <Card className="border-border/50">
+        <CardContent className="p-4">
+          <XPBar />
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
-      <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-primary' },
-          { label: 'Lessons Done', value: stats.completedLessons, icon: CheckCircle, color: 'text-emerald-500' },
-          { label: 'Avg Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-primary' },
-          { label: 'Assignments', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-accent-foreground' },
-          { label: 'Screen Time', value: `${Math.floor(todayMinutes / 60)}h ${todayMinutes % 60}m`, icon: Monitor, color: 'text-muted-foreground' },
+          { label: 'Courses', value: stats.totalCourses, icon: BookOpen, color: 'text-primary bg-primary/10' },
+          { label: 'Lessons', value: `${stats.completedLessons}/${stats.totalLessons}`, icon: CheckCircle, color: 'text-accent bg-accent/10' },
+          { label: 'Progress', value: `${Math.round(stats.averageProgress)}%`, icon: TrendingUp, color: 'text-primary bg-primary/10' },
+          { label: 'Due', value: assignments.filter(a => !a.is_submitted).length, icon: ClipboardCheck, color: 'text-amber-500 bg-amber-500/10' },
+          { label: 'Study', value: `${Math.floor(todayMinutes / 60)}h ${todayMinutes % 60}m`, icon: Monitor, color: 'text-muted-foreground bg-muted' },
         ].map((s, i) => (
           <Card key={i} className="border-border/50">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className={`p-2 rounded-lg bg-muted ${s.color}`}>
-                <s.icon className="w-5 h-5" />
+            <CardContent className="p-3.5 flex items-center gap-3">
+              <div className={`p-2 rounded-xl ${s.color}`}>
+                <s.icon className="w-4.5 h-4.5" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{s.value}</p>
-                <p className="text-xs text-muted-foreground">{s.label}</p>
+                <p className="text-xl font-bold text-foreground">{s.value}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{s.label}</p>
               </div>
             </CardContent>
           </Card>
         ))}
-      </motion.div>
+      </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* My Courses */}
-        <motion.div variants={item} className="md:col-span-2">
-          <Card>
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Left Column - Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Continue Learning */}
+          <ReadingProgressTracker />
+
+          {/* My Courses */}
+          <Card className="border-border/50">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5 text-primary" /> My Courses
+                <CardTitle className="text-base flex items-center gap-2">
+                  <GraduationCap className="w-4.5 h-4.5 text-primary" /> My Courses
                 </CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/course-catalog')}>
-                  Browse All <ArrowRight className="w-4 h-4 ml-1" />
+                <Button variant="ghost" size="sm" className="text-xs gap-1" onClick={() => navigate('/learn?tab=catalog')}>
+                  Browse <ArrowRight className="w-3 h-3" />
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2">
               {courses.length === 0 ? (
                 <div className="text-center py-8">
                   <BookOpen className="w-10 h-10 mx-auto mb-3 text-muted-foreground/30" />
                   <p className="text-sm text-muted-foreground mb-3">No courses yet</p>
-                  <Button size="sm" onClick={() => navigate('/course-catalog')}>
+                  <Button size="sm" onClick={() => navigate('/learn?tab=catalog')}>
                     <Sparkles className="w-4 h-4 mr-1" /> Explore Courses
                   </Button>
                 </div>
@@ -278,36 +221,36 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
                     <div
                       key={course.id}
                       onClick={() => navigate(`/course/${course.id}`)}
-                      className="flex items-center gap-3 p-3 rounded-lg border border-border/50 hover:border-primary/30 hover:bg-muted/30 cursor-pointer transition-all"
+                      className="flex items-center gap-3 p-3 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-muted/20 cursor-pointer transition-all"
                     >
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center flex-shrink-0`}>
+                      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0`}>
                         <BookOpen className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm text-foreground truncate">{course.title}</p>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-2 mt-1.5">
                           <Progress value={pct} className="h-1.5 flex-1" />
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap font-medium">
                             {course.completed_count}/{course.lesson_count}
                           </span>
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
                     </div>
                   );
                 })
               )}
             </CardContent>
           </Card>
-        </motion.div>
 
-        {/* Right Column */}
-        <motion.div variants={item} className="space-y-6">
-          {/* Upcoming Assignments */}
-          <Card>
+          {/* Announcements */}
+          <AnnouncementFeed />
+
+          {/* Assignments */}
+          <Card className="border-border/50">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
-                <ClipboardCheck className="w-4 h-4 text-primary" /> Assignments
+                <ClipboardCheck className="w-4 h-4 text-primary" /> Upcoming Assignments
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -315,11 +258,8 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
                 <p className="text-sm text-muted-foreground text-center py-4">No assignments yet 🎉</p>
               ) : (
                 assignments.slice(0, 4).map(a => (
-                  <div
-                    key={a.id}
-                    onClick={() => navigate(`/course/${a.course_id}/assignments`)}
-                    className="p-2.5 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                  >
+                  <div key={a.id} onClick={() => navigate(`/course/${a.course_id}/assignments`)}
+                    className="p-3 rounded-xl hover:bg-muted/30 cursor-pointer transition-colors border border-border/30">
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
                       {a.is_submitted ? (
@@ -328,55 +268,37 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
                         <Badge variant="outline" className="text-[10px] shrink-0">Pending</Badge>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">{a.course_title}</p>
-                    {a.due_date && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <Clock className="w-3 h-3" />
-                        {new Date(a.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+                      <span>{a.course_title}</span>
+                      {a.due_date && (
+                        <>
+                          <span>·</span>
+                          <span className="flex items-center gap-0.5">
+                            <Clock className="w-3 h-3" />
+                            {new Date(a.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))
               )}
             </CardContent>
           </Card>
+        </div>
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" /> Quick Actions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {[
-                { label: 'Focus Mode', icon: Shield, path: '/focus-mode', color: 'text-primary' },
-                { label: 'AI Study Buddy', icon: Brain, path: '/ai', color: 'text-primary' },
-                { label: 'Leaderboard', icon: Trophy, path: '/leaderboard', color: 'text-primary' },
-                { label: 'Badges', icon: Award, path: '/badges', color: 'text-primary' },
-                { label: 'Screen Time', icon: Monitor, path: '/screen-time', color: 'text-muted-foreground' },
-                { label: 'ECZ Past Papers', icon: Target, path: '/ecz-past-papers', color: 'text-primary' },
-              ].map(action => (
-                <Button
-                  key={action.path}
-                  variant="ghost"
-                  className="w-full justify-start h-auto py-2.5"
-                  onClick={() => navigate(action.path)}
-                >
-                  <action.icon className={`w-4 h-4 mr-2.5 ${action.color}`} />
-                  <span className="text-sm">{action.label}</span>
-                  <ArrowRight className="w-3 h-3 ml-auto text-muted-foreground" />
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Study Leaderboard */}
-        <motion.div variants={item}>
-          <StudyLeaderboard />
-        </motion.div>
+        {/* Right Column - Widgets */}
+        <div className="space-y-5">
+          <StreakCalendar />
+          <StudyTimerWidget />
+          <QuickQuizWidget />
+          <AIStudySummary />
+          <GradeCalculator />
+          <CourseRecommendations />
+          <CollaborationLauncher />
+          <StudentSpotlight />
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
