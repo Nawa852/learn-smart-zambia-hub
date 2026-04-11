@@ -79,10 +79,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       </a>
 
       <div className="min-h-screen flex w-full bg-background">
-        <RoleBasedSidebar />
+        {/* Sidebar: desktop only */}
+        <div className="hidden lg:block">
+          <RoleBasedSidebar />
+        </div>
+        
         <div className="flex-1 flex flex-col min-w-0">
           <TopNavbar />
 
+          {/* Study schedule banner */}
           {activeSchedule && !dismissed && (
             <div className="bg-primary/5 border-b border-primary/20 px-4 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
@@ -100,11 +105,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
 
-          {/* Breadcrumbs only - no workspace strip duplication */}
+          {/* Breadcrumbs: desktop only */}
           {showBreadcrumbs && (
-            <div className="border-b border-border/40 bg-background/80">
-              <div className="px-4 lg:px-6 py-2.5">
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto whitespace-nowrap">
+            <div className="hidden lg:block border-b border-border/40 bg-background/80">
+              <div className="px-6 py-2.5">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Link to="/dashboard" className="hover:text-foreground transition-colors">
                     <Home className="w-3.5 h-3.5" />
                   </Link>
@@ -123,7 +128,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
 
-          <main id="main-content" className="flex-1 px-4 py-5 pb-20 lg:px-6 lg:py-6 lg:pb-6 overflow-auto">
+          {/* Main content — extra bottom padding on mobile for bottom nav */}
+          <main id="main-content" className="flex-1 px-4 py-4 pb-24 lg:px-6 lg:py-6 lg:pb-6 overflow-auto">
             {children}
           </main>
 

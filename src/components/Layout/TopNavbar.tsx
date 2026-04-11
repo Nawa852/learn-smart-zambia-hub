@@ -31,19 +31,23 @@ export const TopNavbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full h-14 bg-card/95 backdrop-blur-md border-b border-border">
-      <div className="flex h-full items-center px-4 gap-3">
-        {/* Mobile sidebar trigger + logo */}
-        <SidebarTrigger className="shrink-0 -ml-1 text-muted-foreground" />
-        <Link to="/dashboard" className="flex items-center gap-2 lg:hidden shrink-0">
-          <img src={eduIcon} alt="Edu Zambia" className="w-7 h-7" />
-        </Link>
+    <nav className="sticky top-0 z-50 w-full bg-card/90 backdrop-blur-2xl border-b border-border/60">
+      {/* Mobile: compact native-style header */}
+      <div className="flex h-12 lg:h-14 items-center px-3 lg:px-4 gap-2">
+        {/* Desktop sidebar trigger */}
+        <SidebarTrigger className="hidden lg:flex shrink-0 -ml-1 text-muted-foreground" />
+        
+        {/* Mobile: Logo + Title */}
+        <div className="flex items-center gap-2 lg:hidden flex-1 min-w-0">
+          <img src={eduIcon} alt="Edu Zambia" className="w-7 h-7 shrink-0" />
+          <span className="font-semibold text-sm text-foreground truncate">Edu Zambia</span>
+        </div>
 
-        {/* Search — center */}
-        <div className="flex-1 flex justify-center">
+        {/* Desktop: Search center */}
+        <div className="hidden lg:flex flex-1 justify-center">
           <button
             onClick={openCommandPalette}
-            className="hidden md:flex items-center gap-2 h-9 w-full max-w-md px-4 rounded-lg bg-secondary/50 border border-border/50 text-muted-foreground hover:bg-secondary hover:border-border transition-all text-sm cursor-pointer"
+            className="flex items-center gap-2 h-9 w-full max-w-md px-4 rounded-xl bg-secondary/50 border border-border/50 text-muted-foreground hover:bg-secondary hover:border-border transition-all text-sm cursor-pointer"
           >
             <Search className="w-4 h-4 shrink-0" />
             <span className="flex-1 text-left">Search anything...</span>
@@ -51,29 +55,31 @@ export const TopNavbar = () => {
           </button>
         </div>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="md:hidden h-9 w-9 text-muted-foreground"
+        {/* Right actions — compact on mobile */}
+        <div className="flex items-center gap-0.5 lg:gap-1">
+          {/* Mobile search */}
+          <Button variant="ghost" size="icon" className="lg:hidden h-8 w-8 text-muted-foreground rounded-full"
             onClick={openCommandPalette}>
-            <Search className="h-4 w-4" />
+            <Search className="h-[18px] w-[18px]" />
           </Button>
 
           <ThemeSwitcher />
 
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground"
+          {/* Desktop only: messages */}
+          <Button variant="ghost" size="icon" className="hidden lg:flex h-9 w-9 text-muted-foreground hover:text-foreground rounded-full"
             onClick={() => navigate('/connect?tab=messenger')}>
             <MessageCircle className="h-4 w-4" />
           </Button>
 
           <NotificationBell />
 
-          {/* Profile dropdown */}
+          {/* Profile avatar */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-9 w-9 rounded-full p-0 ml-1">
-                <Avatar className="h-8 w-8 ring-2 ring-border">
+              <Button variant="ghost" className="h-8 w-8 lg:h-9 lg:w-9 rounded-full p-0 ml-0.5">
+                <Avatar className="h-7 w-7 lg:h-8 lg:w-8 ring-2 ring-border/50">
                   <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-[11px] font-bold">
                     {profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>

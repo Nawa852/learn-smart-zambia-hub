@@ -12,8 +12,11 @@ export const MobileBottomNav = () => {
   const items = getPrimaryNavigationByRole(role).slice(0, 5);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/98 backdrop-blur-xl border-t border-border shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.15)]">
-      <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+      {/* Frosted glass background */}
+      <div className="absolute inset-0 bg-card/90 backdrop-blur-2xl border-t border-border/60" />
+      
+      <div className="relative flex items-end justify-around h-[72px] max-w-lg mx-auto px-1 pb-[env(safe-area-inset-bottom,8px)]">
         {items.map((item) => {
           const isActive = matchesNavItem(location.pathname, item);
           return (
@@ -21,22 +24,30 @@ export const MobileBottomNav = () => {
               key={item.url}
               onClick={() => navigate(item.url)}
               className={cn(
-                'relative flex flex-col items-center justify-center gap-1 flex-1 h-full py-2 transition-all duration-200',
-                isActive ? 'text-primary' : 'text-muted-foreground active:scale-95'
+                'relative flex flex-col items-center justify-center gap-0.5 flex-1 pt-2 pb-1 transition-all duration-150 active:scale-90',
+                isActive ? 'text-primary' : 'text-muted-foreground'
               )}
             >
+              {/* Active pill indicator */}
               {isActive && (
-                <div className="absolute top-0 w-8 h-[3px] rounded-b-full bg-primary shadow-[0_2px_8px_0_hsl(var(--primary)/0.4)]" />
+                <div className="absolute -top-[1px] w-12 h-[3px] rounded-full bg-primary" />
               )}
+              
+              {/* Icon container */}
               <div className={cn(
-                'flex items-center justify-center w-10 h-7 rounded-xl transition-colors',
-                isActive && 'bg-primary/10'
+                'flex items-center justify-center w-8 h-8 rounded-2xl transition-all duration-200',
+                isActive && 'bg-primary/12 scale-105'
               )}>
-                <item.icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 1.8} />
+                <item.icon 
+                  className={cn("w-[22px] h-[22px]", isActive && "drop-shadow-[0_0_6px_hsl(var(--primary)/0.5)]")} 
+                  strokeWidth={isActive ? 2.4 : 1.6} 
+                />
               </div>
+              
+              {/* Label */}
               <span className={cn(
-                "text-[10px] leading-none",
-                isActive ? "font-bold" : "font-medium"
+                "text-[10px] leading-tight tracking-tight",
+                isActive ? "font-semibold" : "font-normal opacity-70"
               )}>
                 {item.shortTitle ?? item.title}
               </span>
