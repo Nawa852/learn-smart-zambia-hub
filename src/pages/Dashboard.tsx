@@ -34,7 +34,7 @@ const Dashboard = () => {
 
   const userName = profile?.full_name || 'Learner';
   const userType = profile?.role || 'student';
-  const primaryActions = getPrimaryNavigationByRole(userType as string).filter((item) => item.url !== '/dashboard').slice(0, 5);
+  const primaryActions = getPrimaryNavigationByRole(userType as string).filter((item) => item.url !== '/dashboard').slice(0, 4);
 
   if (loading) {
     return (
@@ -66,55 +66,54 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="space-y-4 lg:space-y-6">
       {showTour && <OnboardingTour role={userType} onComplete={() => setShowTour(false)} />}
       
-      <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Hero Welcome Card */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card via-card to-primary/5">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.1),transparent_60%)]" />
-          <div className="relative px-6 py-6">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-1.5">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold uppercase tracking-wider">
-                  <Sparkles className="w-3 h-3" />
-                  {roleLabels[userType as string] || 'Workspace'}
-                </div>
-                <h1 className="text-2xl font-bold text-foreground tracking-tight">
-                  {greeting()}, {userName.split(' ')[0]} 👋
-                </h1>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  Jump into your workspace — everything you need is just a click away.
-                </p>
+      {/* Compact mobile hero / expanded desktop hero */}
+      <div className="relative overflow-hidden rounded-xl lg:rounded-2xl border border-border bg-gradient-to-br from-card via-card to-primary/5">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.1),transparent_60%)]" />
+        <div className="relative px-4 py-4 lg:px-6 lg:py-6">
+          <div className="flex flex-col gap-3 lg:gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] lg:text-[11px] font-semibold uppercase tracking-wider">
+                <Sparkles className="w-3 h-3" />
+                {roleLabels[userType as string] || 'Workspace'}
               </div>
+              <h1 className="text-xl lg:text-2xl font-bold text-foreground tracking-tight">
+                {greeting()}, {userName.split(' ')[0]} 👋
+              </h1>
+              <p className="text-xs lg:text-sm text-muted-foreground max-w-md">
+                Jump into your workspace — everything you need is just a click away.
+              </p>
+            </div>
 
-              <div className="flex flex-wrap gap-2">
-                {primaryActions.map((item) => (
-                  <Button
-                    key={item.url}
-                    variant="secondary"
-                    size="sm"
-                    className="gap-2 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all"
-                    onClick={() => navigate(item.url)}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    {item.shortTitle ?? item.title}
-                    <ArrowRight className="w-3 h-3 opacity-50" />
-                  </Button>
-                ))}
-              </div>
+            {/* Quick actions — horizontal scroll on mobile */}
+            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 -mb-1">
+              {primaryActions.map((item) => (
+                <Button
+                  key={item.url}
+                  variant="secondary"
+                  size="sm"
+                  className="gap-1.5 rounded-full lg:rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0 h-8 text-xs"
+                  onClick={() => navigate(item.url)}
+                >
+                  <item.icon className="w-3.5 h-3.5" />
+                  {item.shortTitle ?? item.title}
+                  <ArrowRight className="w-3 h-3 opacity-40" />
+                </Button>
+              ))}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Two-column layout: Dashboard + Stakeholder Bridge */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2">
-            {renderDashboardView()}
-          </div>
-          <div className="space-y-6">
-            <StakeholderBridge role={userType as string} />
-          </div>
+      {/* Dashboard content */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+        <div className="xl:col-span-2">
+          {renderDashboardView()}
+        </div>
+        <div className="space-y-4 lg:space-y-6">
+          <StakeholderBridge role={userType as string} />
         </div>
       </div>
     </div>
