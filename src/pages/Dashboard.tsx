@@ -10,10 +10,12 @@ import { EntrepreneurDashboardView } from '@/components/Dashboard/EntrepreneurDa
 import { DeveloperDashboardView } from '@/components/Dashboard/DeveloperDashboardView';
 import SkillsDashboardView from '@/components/Dashboard/SkillsDashboardView';
 import CybersecurityDashboardView from '@/components/Dashboard/CybersecurityDashboardView';
+import { StakeholderBridge } from '@/components/Dashboard/StakeholderBridge';
 import { LogoLoader } from '@/components/UI/LogoLoader';
 import { OnboardingTour } from '@/components/Dashboard/OnboardingTour';
 import { Button } from '@/components/ui/button';
 import { getPrimaryNavigationByRole, roleLabels } from '@/components/Sidebar/sidebarConfig';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
   const { profile, loading } = useProfile();
@@ -32,7 +34,7 @@ const Dashboard = () => {
 
   const userName = profile?.full_name || 'Learner';
   const userType = profile?.role || 'student';
-  const primaryActions = getPrimaryNavigationByRole(userType as string).filter((item) => item.url !== '/dashboard').slice(0, 4);
+  const primaryActions = getPrimaryNavigationByRole(userType as string).filter((item) => item.url !== '/dashboard').slice(0, 5);
 
   if (loading) {
     return (
@@ -43,8 +45,7 @@ const Dashboard = () => {
   }
 
   const renderDashboardView = () => {
-    const role = userType as string;
-    switch (role) {
+    switch (userType as string) {
       case 'teacher': return <TeacherDashboardView userName={userName} />;
       case 'guardian': return <GuardianDashboardView userName={userName} />;
       case 'institution': return <InstitutionDashboardView userName={userName} />;
@@ -53,45 +54,68 @@ const Dashboard = () => {
       case 'developer': return <DeveloperDashboardView userName={userName} />;
       case 'skills': return <SkillsDashboardView />;
       case 'cybersecurity': return <CybersecurityDashboardView />;
-      case 'student':
       default: return <StudentDashboardView userName={userName} />;
     }
   };
 
+  const greeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      {showTour && (
-        <OnboardingTour 
-          role={userType} 
-          onComplete={() => setShowTour(false)} 
-        />
-      )}
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-6 rounded-3xl border border-border bg-card px-5 py-5 shadow-sm">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {roleLabels[userType as string] || 'Workspace'} workspace
-              </p>
-              <div>
-                <h1 className="text-2xl font-semibold text-foreground">Welcome back, {userName.split(' ')[0]}</h1>
-                <p className="text-sm text-muted-foreground">
-                  Use these main areas to jump straight into learning, teaching, communication, or your personal setup.
+      {showTour && <OnboardingTour role={userType} onComplete={() => setShowTour(false)} />}
+      
+      <div className="container mx-auto px-4 py-6 space-y-6">
+        {/* Hero Welcome Card */}
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-card via-card to-primary/5">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.1),transparent_60%)]" />
+          <div className="relative px-6 py-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" />
+                  {roleLabels[userType as string] || 'Workspace'}
+                </div>
+                <h1 className="text-2xl font-bold text-foreground tracking-tight">
+                  {greeting()}, {userName.split(' ')[0]} 👋
+                </h1>
+                <p className="text-sm text-muted-foreground max-w-md">
+                  Jump into your workspace — everything you need is just a click away.
                 </p>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-              {primaryActions.map((item) => (
-                <Button key={item.url} variant="secondary" className="justify-start gap-2" onClick={() => navigate(item.url)}>
-                  <item.icon className="w-4 h-4" />
-                  {item.shortTitle ?? item.title}
-                </Button>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {primaryActions.map((item) => (
+                  <Button
+                    key={item.url}
+                    variant="secondary"
+                    size="sm"
+                    className="gap-2 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all"
+                    onClick={() => navigate(item.url)}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    {item.shortTitle ?? item.title}
+                    <ArrowRight className="w-3 h-3 opacity-50" />
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        {renderDashboardView()}
+
+        {/* Two-column layout: Dashboard + Stakeholder Bridge */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            {renderDashboardView()}
+          </div>
+          <div className="space-y-6">
+            <StakeholderBridge role={userType as string} />
+          </div>
+        </div>
       </div>
     </div>
   );

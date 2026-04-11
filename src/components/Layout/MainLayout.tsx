@@ -19,22 +19,18 @@ import { Calendar, Play, X, ChevronRight, Home, Search } from 'lucide-react';
 import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
 } from '@/components/ui/command';
-import { getCommandNavigationByRole, getPrimaryNavigationByRole, matchesNavItem } from '@/components/Sidebar/sidebarConfig';
+import { getCommandNavigationByRole, matchesNavItem } from '@/components/Sidebar/sidebarConfig';
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 const ROUTE_LABELS: Record<string, string> = {
-  dashboard: 'Dashboard', 'my-courses': 'My Courses', 'course-catalog': 'Courses',
-  ai: 'AI Tutor', 'focus-mode': 'Focus Mode', 'study-planner': 'Planner',
-  flashcards: 'Flashcards', 'ai-quiz': 'AI Quiz', 'mind-maps': 'Mind Maps',
-  'my-assignments': 'Assignments', 'ecz-past-papers': 'Past Papers',
-  'ecz-exam-simulator': 'Exam Simulator', analytics: 'Analytics',
-  achievements: 'Achievements', goals: 'Goals', 'my-notes': 'Notes',
-  bookmarks: 'Bookmarks', 'study-groups': 'Study Groups', messenger: 'Messenger',
-  profile: 'Profile', settings: 'Settings', notifications: 'Notifications',
-  leaderboard: 'Leaderboard',
+  dashboard: 'Dashboard', learn: 'Learning Hub', ai: 'AI Workspace',
+  prepare: 'Study Hub', ecz: 'ECZ Exams', progress: 'Progress',
+  connect: 'Connect', profile: 'Profile', teach: 'Teaching Hub',
+  family: 'Family', admin: 'Admin', ministry: 'Ministry',
+  course: 'Course',
 };
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
@@ -71,7 +67,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const label = ROUTE_LABELS[segment] || segment.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     return { label, path, isLast: i === arr.length - 1 };
   });
-  const primaryNavItems = useMemo(() => getPrimaryNavigationByRole(role), [role]);
   const commandItems = useMemo(() => getCommandNavigationByRole(role), [role]);
   const commandGroups = useMemo(() => Array.from(new Set(commandItems.map(item => item.group))), [commandItems]);
   const showBreadcrumbs = breadcrumbs.length > 1;
@@ -95,7 +90,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 <span>Study time: <strong>{activeSchedule.subject}</strong></span>
               </div>
               <div className="flex items-center gap-2">
-                <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => navigate(`/focus-mode?subject=${encodeURIComponent(activeSchedule.subject)}`)}>
+                <Button size="sm" variant="default" className="h-7 text-xs" onClick={() => navigate(`/prepare?tab=focus&subject=${encodeURIComponent(activeSchedule.subject)}`)}>
                   <Play className="w-3 h-3 mr-1" />Start
                 </Button>
                 <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setDismissed(true)}>
@@ -105,31 +100,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             </div>
           )}
 
-          <div className="border-b border-border/70 bg-background/80">
-            <div className="px-4 lg:px-6 py-3 space-y-3">
-              <div className="hidden lg:flex items-center gap-2">
-                {primaryNavItems.map((item) => {
-                  const active = matchesNavItem(location.pathname, item);
-                  return (
-                    <Button
-                      key={item.url}
-                      variant={active ? 'secondary' : 'ghost'}
-                      size="sm"
-                      className="h-9 rounded-full gap-2 px-3"
-                      onClick={() => navigate(item.url)}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.shortTitle ?? item.title}</span>
-                    </Button>
-                  );
-                })}
-                <Button variant="outline" size="sm" className="ml-auto h-9 rounded-full gap-2" onClick={() => setCmdOpen(true)}>
-                  <Search className="w-4 h-4" />
-                  Open search
-                </Button>
-              </div>
-
-              {showBreadcrumbs && (
+          {/* Breadcrumbs only - no workspace strip duplication */}
+          {showBreadcrumbs && (
+            <div className="border-b border-border/40 bg-background/80">
+              <div className="px-4 lg:px-6 py-2.5">
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground overflow-x-auto whitespace-nowrap">
                   <Link to="/dashboard" className="hover:text-foreground transition-colors">
                     <Home className="w-3.5 h-3.5" />
@@ -145,9 +119,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                     </span>
                   ))}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
 
           <main id="main-content" className="flex-1 px-4 py-5 pb-20 lg:px-6 lg:py-6 lg:pb-6 overflow-auto">
             {children}
@@ -163,7 +137,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <CommandDialog open={cmdOpen} onOpenChange={setCmdOpen}>
         <CommandInput placeholder="Search pages, tools, and settings..." />
         <CommandList>
-          <CommandEmpty>No results.</CommandEmpty>
+          <CommandEmpty>No results found.</CommandEmpty>
           {commandGroups.map(group => {
             const items = commandItems.filter(i => i.group === group);
             if (!items.length) return null;
@@ -171,7 +145,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <CommandGroup key={group} heading={group}>
                 {items.map(item => (
                   <CommandItem key={item.url} onSelect={() => { navigate(item.url); setCmdOpen(false); }}>
-                    <item.icon className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
+                    <item.icon className="w-4 h-4 mr-2.5 text-muted-foreground" />
                     {item.title}
                   </CommandItem>
                 ))}
