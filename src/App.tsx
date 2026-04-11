@@ -1,5 +1,5 @@
-import React, { Suspense, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { CookieConsent } from '@/components/CookieConsent';
@@ -18,319 +18,39 @@ import Index from '@/pages/Index';
 import AuthPage from '@/pages/AuthPage';
 import NotFound from '@/pages/NotFound';
 
-// Lazy-loaded pages
+// Lazy: public
 const ChooseRolePage = React.lazy(() => import('@/pages/ChooseRolePage'));
 const PasswordResetPage = React.lazy(() => import('@/pages/PasswordResetPage'));
 const About = React.lazy(() => import('@/pages/About'));
 const Contact = React.lazy(() => import('@/pages/Contact'));
-const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
-const Courses = React.lazy(() => import('@/pages/Courses'));
-const ProfilePage = React.lazy(() => import('@/pages/ProfilePage'));
-const AIChat = React.lazy(() => import('@/pages/AIChat'));
-const CommunityHub = React.lazy(() => import('@/pages/CommunityHub'));
-const LearningAnalytics = React.lazy(() => import('@/pages/LearningAnalytics'));
-const TeacherAnalyticsPage = React.lazy(() => import('@/pages/TeacherAnalyticsPage'));
-const Achievements = React.lazy(() => import('@/pages/Achievements'));
-const StudyMaterialRepository = React.lazy(() => import('@/pages/StudyMaterialRepository'));
-const StudyToolsPage = React.lazy(() => import('@/pages/StudyToolsPage'));
-const InteractiveLessons = React.lazy(() => import('@/components/Learning/InteractiveLessons'));
-const VirtualClassroom = React.lazy(() => import('@/components/Learning/VirtualClassroom'));
-const ChatEduLanding = React.lazy(() => import('@/pages/ChatEduLanding'));
-const SchoolAdminDashboard = React.lazy(() => import('@/pages/SchoolAdminDashboard'));
-const MinistryDashboard = React.lazy(() => import('@/pages/MinistryDashboard'));
-const AIQuizGeneratorPage = React.lazy(() => import('@/pages/AIQuizGeneratorPage'));
-const AIMathQuizPage = React.lazy(() => import('@/pages/AIMathQuizPage'));
-const AIScienceQuizPage = React.lazy(() => import('@/pages/AIScienceQuizPage'));
-const AIYouTubeQuizPage = React.lazy(() => import('@/pages/AIYouTubeQuizPage'));
-const AIVocabularyQuizPage = React.lazy(() => import('@/pages/AIVocabularyQuizPage'));
-const AIFlashcardPage = React.lazy(() => import('@/pages/AIFlashcardPage'));
-const AITutorPage = React.lazy(() => import('@/pages/AITutorPage'));
-const AILearningPathPage = React.lazy(() => import('@/pages/AILearningPathPage'));
-const ComprehensiveAIPage = React.lazy(() => import('@/pages/ComprehensiveAIPage'));
-const StudyAssistantPage = React.lazy(() => import('@/pages/StudyAssistantPage'));
-const DailyGoalCoachPage = React.lazy(() => import('@/pages/DailyGoalCoachPage'));
-const VisualMindMapPage = React.lazy(() => import('@/pages/VisualMindMapPage'));
-const AdaptiveDifficultyPage = React.lazy(() => import('@/pages/AdaptiveDifficultyPage'));
-const ClaudeJournalingPage = React.lazy(() => import('@/pages/ClaudeJournalingPage'));
-const TeachBackPage = React.lazy(() => import('@/pages/TeachBackPage'));
-const MultiAITutorPage = React.lazy(() => import('@/pages/MultiAITutorPage'));
-const StudyGroupsPage = React.lazy(() => import('@/pages/StudyGroupsPage'));
-const SocialFeedPage = React.lazy(() => import('@/pages/SocialFeedPage'));
-const CampusMapPage = React.lazy(() => import('@/pages/CampusMapPage'));
-const AcademicProfilePage = React.lazy(() => import('@/pages/AcademicProfilePage'));
-const VideoLearningPage = React.lazy(() => import('@/pages/VideoLearningPage'));
-const AdaptiveContentPage = React.lazy(() => import('@/pages/AdaptiveContentPage'));
-const SmartRecommendationsPage = React.lazy(() => import('@/pages/SmartRecommendationsPage'));
-const YouTubeLearningPage = React.lazy(() => import('@/pages/YouTubeLearningPage'));
-const MealPlannerPage = React.lazy(() => import('@/pages/MealPlannerPage'));
-const StudyMaterialsPage = React.lazy(() => import('@/pages/StudyMaterialsPage'));
-const CommunityPage = React.lazy(() => import('@/pages/CommunityPage'));
-const SkillPassportPage = React.lazy(() => import('@/pages/SkillPassportPage'));
-const LiveLearningPage = React.lazy(() => import('@/pages/LiveLearningPage'));
-const MentorshipHubPage = React.lazy(() => import('@/pages/MentorshipHubPage'));
-const LessonsPage = React.lazy(() => import('@/pages/LessonsPage'));
-const VirtualClassroomPage = React.lazy(() => import('@/pages/VirtualClassroomPage'));
-const GoalsPage = React.lazy(() => import('@/pages/GoalsPage'));
-const JournalingPage = React.lazy(() => import('@/pages/JournalingPage'));
-const MentorshipPage = React.lazy(() => import('@/pages/MentorshipPage'));
-const FocusModePage = React.lazy(() => import('@/pages/FocusModePage'));
 const SetupPage = React.lazy(() => import('@/pages/SetupPage'));
-const AppControlPage = React.lazy(() => import('@/pages/AppControlPage'));
-const MedicalCaseSimulatorPage = React.lazy(() => import('@/pages/MedicalCaseSimulatorPage'));
-const MedicalDrugReferencePage = React.lazy(() => import('@/pages/MedicalDrugReferencePage'));
-const MedicalClinicalNotesPage = React.lazy(() => import('@/pages/MedicalClinicalNotesPage'));
-const MedicalCaseLogPage = React.lazy(() => import('@/pages/MedicalCaseLogPage'));
-const MedicalRotationsPage = React.lazy(() => import('@/pages/MedicalRotationsPage'));
-const EntrepreneurVenturesPage = React.lazy(() => import('@/pages/EntrepreneurVenturesPage'));
-const EntrepreneurBusinessPlanPage = React.lazy(() => import('@/pages/EntrepreneurBusinessPlanPage'));
-const EntrepreneurPitchDeckPage = React.lazy(() => import('@/pages/EntrepreneurPitchDeckPage'));
-const EntrepreneurMarketResearchPage = React.lazy(() => import('@/pages/EntrepreneurMarketResearchPage'));
-const EntrepreneurMilestonesPage = React.lazy(() => import('@/pages/EntrepreneurMilestonesPage'));
-const EntrepreneurFinancialsPage = React.lazy(() => import('@/pages/EntrepreneurFinancialsPage'));
-const EntrepreneurFundingPage = React.lazy(() => import('@/pages/EntrepreneurFundingPage'));
-const EntrepreneurYouTubePage = React.lazy(() => import('@/pages/EntrepreneurYouTubePage'));
-const SkillsDashboardPage = React.lazy(() => import('@/pages/SkillsDashboardPage'));
-const SkillsVideoPage = React.lazy(() => import('@/pages/SkillsVideoPage'));
-const CybersecurityDashboardPage = React.lazy(() => import('@/pages/CybersecurityDashboardPage'));
-const CybersecurityLabsPage = React.lazy(() => import('@/pages/CybersecurityLabsPage'));
-const CybersecurityVideoPage = React.lazy(() => import('@/pages/CybersecurityVideoPage'));
-const HackingTerminalPage = React.lazy(() => import('@/pages/HackingTerminalPage'));
-const StudentVideoHubPage = React.lazy(() => import('@/pages/StudentVideoHubPage'));
-const RoleVideoHubPage = React.lazy(() => import('@/pages/RoleVideoHubPage'));
-const SkillsCategoryPage = React.lazy(() => import('@/pages/SkillsCategoryPage'));
-const DeveloperProjectsPage = React.lazy(() => import('@/pages/DeveloperProjectsPage'));
-const DeveloperChallengesPage = React.lazy(() => import('@/pages/DeveloperChallengesPage'));
-const DeveloperCodeReviewPage = React.lazy(() => import('@/pages/DeveloperCodeReviewPage'));
-const DeveloperIDEPage = React.lazy(() => import('@/pages/DeveloperIDEPage'));
-const ECZExamSimulatorPage = React.lazy(() => import('@/pages/ECZExamSimulatorPage'));
-const ECZParentSupportHubPage = React.lazy(() => import('@/pages/ECZParentSupportHubPage'));
-const ZambianResourcesHubPage = React.lazy(() => import('@/pages/ZambianResourcesHubPage'));
-const ECZVideoLibraryPage = React.lazy(() => import('@/pages/ECZVideoLibraryPage'));
-const ECZPastPapersPage = React.lazy(() => import('@/pages/ECZPastPapersPage'));
-const ECZResourceLibraryPage = React.lazy(() => import('@/pages/ECZResourceLibraryPage'));
-const SettingsPage = React.lazy(() => import('@/pages/SettingsPage'));
-const MFASetupPage = React.lazy(() => import('@/pages/MFASetupPage'));
-const SessionManagementPage = React.lazy(() => import('@/pages/SessionManagementPage'));
-const AdminUserManagementPage = React.lazy(() => import('@/pages/AdminUserManagementPage'));
-const AdminCurriculumPage = React.lazy(() => import('@/pages/AdminCurriculumPage'));
-const AdminSchedulingPage = React.lazy(() => import('@/pages/AdminSchedulingPage'));
-const AdminAnalyticsPage = React.lazy(() => import('@/pages/AdminAnalyticsPage'));
-const AdminAttendancePage = React.lazy(() => import('@/pages/AdminAttendancePage'));
-const StudyGroupChatPage = React.lazy(() => import('@/pages/StudyGroupChatPage'));
-const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
-const CourseCatalogPage = React.lazy(() => import('@/pages/CourseCatalogPage'));
+
+// Lazy: Hub pages
+const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
+const LearnHub = React.lazy(() => import('@/pages/hubs/LearnHub'));
+const AIHub = React.lazy(() => import('@/pages/hubs/AIHub'));
+const PrepareHub = React.lazy(() => import('@/pages/hubs/PrepareHub'));
+const ConnectHub = React.lazy(() => import('@/pages/hubs/ConnectHub'));
+const ProgressHub = React.lazy(() => import('@/pages/hubs/ProgressHub'));
+const ProfileHub = React.lazy(() => import('@/pages/hubs/ProfileHub'));
+const ECZHub = React.lazy(() => import('@/pages/hubs/ECZHub'));
+const TeachHub = React.lazy(() => import('@/pages/hubs/TeachHub'));
+const FamilyHub = React.lazy(() => import('@/pages/hubs/FamilyHub'));
+const MinistryHub = React.lazy(() => import('@/pages/hubs/MinistryHub'));
+const AdminHub = React.lazy(() => import('@/pages/hubs/AdminHub'));
+
+// Lazy: Dynamic detail pages (keep standalone)
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
 const AssignmentPage = React.lazy(() => import('@/pages/AssignmentPage'));
 const AssessmentTakingPage = React.lazy(() => import('@/pages/AssessmentTakingPage'));
 const AssessmentResultsPage = React.lazy(() => import('@/pages/AssessmentResultsPage'));
-const CertificatesPage = React.lazy(() => import('@/pages/CertificatesPage'));
-const MyCoursesPage = React.lazy(() => import('@/pages/MyCoursesPage'));
-const ProgressReportPage = React.lazy(() => import('@/pages/ProgressReportPage'));
-const ECZPracticeQuizPage = React.lazy(() => import('@/pages/ECZPracticeQuizPage'));
-const ECZResourcesExpandedPage = React.lazy(() => import('@/pages/ECZResourcesExpandedPage'));
-const MyAssignmentsPage = React.lazy(() => import('@/pages/MyAssignmentsPage'));
-const StudyPlannerPage = React.lazy(() => import('@/pages/StudyPlannerPage'));
-const NotificationsPage = React.lazy(() => import('@/pages/NotificationsPage'));
-const GuardianLinkPage = React.lazy(() => import('@/pages/GuardianLinkPage'));
-const GuardianReportsPage = React.lazy(() => import('@/pages/GuardianReportsPage'));
-const MyNotesPage = React.lazy(() => import('@/pages/MyNotesPage'));
-const MessengerPage = React.lazy(() => import('@/pages/MessengerPage'));
-const ParentChildrenPage = React.lazy(() => import('@/pages/ParentChildrenPage'));
-const ParentAttendancePage = React.lazy(() => import('@/pages/ParentAttendancePage'));
-const ParentGradesPage = React.lazy(() => import('@/pages/ParentGradesPage'));
-const ParentAlertsPage = React.lazy(() => import('@/pages/ParentAlertsPage'));
-const ParentMessagesPage = React.lazy(() => import('@/pages/ParentMessagesPage'));
-const ParentTeacherContactPage = React.lazy(() => import('@/pages/ParentTeacherContactPage'));
-const ParentSchoolUpdatesPage = React.lazy(() => import('@/pages/ParentSchoolUpdatesPage'));
-const ParentProgressTrackerPage = React.lazy(() => import('@/pages/ParentProgressTrackerPage'));
-const TeacherCollaborationHubPage = React.lazy(() => import('@/pages/TeacherCollaborationHubPage'));
-const MinistryProvincesPage = React.lazy(() => import('@/pages/MinistryProvincesPage'));
-const MinistryPolicyTrackerPage = React.lazy(() => import('@/pages/MinistryPolicyTrackerPage'));
-const MinistrySchoolRegistryPage = React.lazy(() => import('@/pages/MinistrySchoolRegistryPage'));
-const MinistryInterventionsPage = React.lazy(() => import('@/pages/MinistryInterventionsPage'));
-const MinistryECZAnalyticsPage = React.lazy(() => import('@/pages/MinistryECZAnalyticsPage'));
-const MinistryReportGeneratorPage = React.lazy(() => import('@/pages/MinistryReportGeneratorPage'));
-const MinistryPartnershipsPage = React.lazy(() => import('@/pages/MinistryPartnershipsPage'));
-const TeacherGradebookPage = React.lazy(() => import('@/pages/TeacherGradebookPage'));
-const TeacherLessonPlanPage = React.lazy(() => import('@/pages/TeacherLessonPlanPage'));
-const TeacherBulkGradePage = React.lazy(() => import('@/pages/TeacherBulkGradePage'));
-const TeacherAssignmentAnalyticsPage = React.lazy(() => import('@/pages/TeacherAssignmentAnalyticsPage'));
-const TeacherAttendanceQRPage = React.lazy(() => import('@/pages/TeacherAttendanceQRPage'));
-const GuardianDigestPage = React.lazy(() => import('@/pages/GuardianDigestPage'));
-const GuardianActivityFeedPage = React.lazy(() => import('@/pages/GuardianActivityFeedPage'));
-const MinistryAuditPage = React.lazy(() => import('@/pages/MinistryAuditPage'));
-const MinistrySchoolComparisonPage = React.lazy(() => import('@/pages/MinistrySchoolComparisonPage'));
-const MinistryLiveStatsPage = React.lazy(() => import('@/pages/MinistryLiveStatsPage'));
-const MinistryProvinceMapPage = React.lazy(() => import('@/pages/MinistryProvinceMapPage'));
-const CyberVulnScannerPage = React.lazy(() => import('@/pages/CyberVulnScannerPage'));
-const CyberKillChainPage = React.lazy(() => import('@/pages/CyberKillChainPage'));
-const CyberReportWriterPage = React.lazy(() => import('@/pages/CyberReportWriterPage'));
-const LeaderboardPage = React.lazy(() => import('@/pages/LeaderboardPage'));
-const BadgesPage = React.lazy(() => import('@/pages/BadgesPage'));
-const ScreenTimePage = React.lazy(() => import('@/pages/ScreenTimePage'));
-const ParentalControlsPage = React.lazy(() => import('@/pages/ParentalControlsPage'));
-const MinistryBudgetPage = React.lazy(() => import('@/pages/MinistryBudgetPage'));
-const MinistryInspectionsPage = React.lazy(() => import('@/pages/MinistryInspectionsPage'));
-const MinistryTeacherDeploymentPage = React.lazy(() => import('@/pages/MinistryTeacherDeploymentPage'));
-const MinistryDropoutTrackerPage = React.lazy(() => import('@/pages/MinistryDropoutTrackerPage'));
-const MinistryInfrastructurePage = React.lazy(() => import('@/pages/MinistryInfrastructurePage'));
-const MinistryScholarshipsPage = React.lazy(() => import('@/pages/MinistryScholarshipsPage'));
-const MinistryAnnouncementsPage = React.lazy(() => import('@/pages/MinistryAnnouncementsPage'));
-const MinistryDataExportPage = React.lazy(() => import('@/pages/MinistryDataExportPage'));
-const MinistryCompliancePage = React.lazy(() => import('@/pages/MinistryCompliancePage'));
-const MinistryTeacherTrainingPage = React.lazy(() => import('@/pages/MinistryTeacherTrainingPage'));
-const MinistryResourceAllocationPage = React.lazy(() => import('@/pages/MinistryResourceAllocationPage'));
-const MinistryStudentWelfarePage = React.lazy(() => import('@/pages/MinistryStudentWelfarePage'));
-const MinistryDigitalLiteracyPage = React.lazy(() => import('@/pages/MinistryDigitalLiteracyPage'));
-const MinistryResearchPage = React.lazy(() => import('@/pages/MinistryResearchPage'));
-const MinistryFeedbackPage = React.lazy(() => import('@/pages/MinistryFeedbackPage'));
-const CyberCTFPage = React.lazy(() => import('@/pages/CyberCTFPage'));
-const CyberForensicsPage = React.lazy(() => import('@/pages/CyberForensicsPage'));
-const CyberCryptoPage = React.lazy(() => import('@/pages/CyberCryptoPage'));
-const CyberIncidentResponsePage = React.lazy(() => import('@/pages/CyberIncidentResponsePage'));
-const CyberOSINTPage = React.lazy(() => import('@/pages/CyberOSINTPage'));
-const CyberCertTrackerPage = React.lazy(() => import('@/pages/CyberCertTrackerPage'));
-const CyberThreatIntelPage = React.lazy(() => import('@/pages/CyberThreatIntelPage'));
-const CyberBugBountyPage = React.lazy(() => import('@/pages/CyberBugBountyPage'));
-const CyberSocialEngineeringPage = React.lazy(() => import('@/pages/CyberSocialEngineeringPage'));
-const CyberNetworkLabPage = React.lazy(() => import('@/pages/CyberNetworkLabPage'));
-const CyberWebSecPage = React.lazy(() => import('@/pages/CyberWebSecPage'));
-const CyberToolkitPage = React.lazy(() => import('@/pages/CyberToolkitPage'));
-const CyberRangePage = React.lazy(() => import('@/pages/CyberRangePage'));
-const SkillsApprenticeshipPage = React.lazy(() => import('@/pages/SkillsApprenticeshipPage'));
-const SkillsPortfolioPage = React.lazy(() => import('@/pages/SkillsPortfolioPage'));
-const SkillsResumeBuilderPage = React.lazy(() => import('@/pages/SkillsResumeBuilderPage'));
-const SkillsInterviewPrepPage = React.lazy(() => import('@/pages/SkillsInterviewPrepPage'));
-const SkillsJobBoardPage = React.lazy(() => import('@/pages/SkillsJobBoardPage'));
-const SkillsMentorshipPage = React.lazy(() => import('@/pages/SkillsMentorshipPage'));
-const SkillsWorkshopCalendarPage = React.lazy(() => import('@/pages/SkillsWorkshopCalendarPage'));
-const SkillsToolGuidePage = React.lazy(() => import('@/pages/SkillsToolGuidePage'));
-const SkillsCertificationsPage = React.lazy(() => import('@/pages/SkillsCertificationsPage'));
-const SkillsAssessmentPage = React.lazy(() => import('@/pages/SkillsAssessmentPage'));
-const SkillsIndustryConnectPage = React.lazy(() => import('@/pages/SkillsIndustryConnectPage'));
-const SkillsProjectsPage = React.lazy(() => import('@/pages/SkillsProjectsPage'));
-const SkillsSafetyPage = React.lazy(() => import('@/pages/SkillsSafetyPage'));
-const SkillsFinancialLiteracyPage = React.lazy(() => import('@/pages/SkillsFinancialLiteracyPage'));
-const SkillsEntrepreneurshipPage = React.lazy(() => import('@/pages/SkillsEntrepreneurshipPage'));
-const SkillsJobTrackerPage = React.lazy(() => import('@/pages/SkillsJobTrackerPage'));
-const SkillsApprenticeshipMatchPage = React.lazy(() => import('@/pages/SkillsApprenticeshipMatchPage'));
-const SkillsPortfolioGalleryPage = React.lazy(() => import('@/pages/SkillsPortfolioGalleryPage'));
-const SkillsAssessmentQuizPage = React.lazy(() => import('@/pages/SkillsAssessmentQuizPage'));
-const PomodoroPage = React.lazy(() => import('@/pages/PomodoroPage'));
-const BookmarksPage = React.lazy(() => import('@/pages/BookmarksPage'));
-const SpacedRepetitionPage = React.lazy(() => import('@/pages/SpacedRepetitionPage'));
-const ReadingListPage = React.lazy(() => import('@/pages/ReadingListPage'));
-const DataExportPage = React.lazy(() => import('@/pages/DataExportPage'));
-const TeacherReportCardsPage = React.lazy(() => import('@/pages/TeacherReportCardsPage'));
-const TeacherAnnouncementsPage = React.lazy(() => import('@/pages/TeacherAnnouncementsPage'));
-const TeacherRubricBuilderPage = React.lazy(() => import('@/pages/TeacherRubricBuilderPage'));
-const GuardianHomeworkTrackerPage = React.lazy(() => import('@/pages/GuardianHomeworkTrackerPage'));
-const GuardianRewardSystemPage = React.lazy(() => import('@/pages/GuardianRewardSystemPage'));
-const GuardianStudyComparisonPage = React.lazy(() => import('@/pages/GuardianStudyComparisonPage'));
-const CyberPasswordAnalyzerPage = React.lazy(() => import('@/pages/CyberPasswordAnalyzerPage'));
-const CyberPhishingSimPage = React.lazy(() => import('@/pages/CyberPhishingSimPage'));
-const CyberGlossaryPage = React.lazy(() => import('@/pages/CyberGlossaryPage'));
-const DevAPIPlaygroundPage = React.lazy(() => import('@/pages/DevAPIPlaygroundPage'));
-const DevAlgorithmVisualizerPage = React.lazy(() => import('@/pages/DevAlgorithmVisualizerPage'));
-const NotificationPreferencesPage = React.lazy(() => import('@/pages/NotificationPreferencesPage'));
-
-// ─── NEW: Previously orphaned pages ────────────────────
-const AIContentGeneratorPage = React.lazy(() => import('@/pages/AIContentGeneratorPage'));
-const AIContentStudio = React.lazy(() => import('@/pages/AIContentStudio'));
-const AICreatorStudioPage = React.lazy(() => import('@/pages/AICreatorStudioPage'));
-const AICurriculumMapperPage = React.lazy(() => import('@/pages/AICurriculumMapperPage'));
-const AIExamPrepCoachPage = React.lazy(() => import('@/pages/AIExamPrepCoachPage'));
-const AIFeedbackPortalPage = React.lazy(() => import('@/pages/AIFeedbackPortalPage'));
-const AILearningLab = React.lazy(() => import('@/pages/AILearningLab'));
-const AIProgressDashboardPage = React.lazy(() => import('@/pages/AIProgressDashboardPage'));
-const AIQuizCreatorPage = React.lazy(() => import('@/pages/AIQuizCreatorPage'));
-const AIResourceCenterPage = React.lazy(() => import('@/pages/AIResourceCenterPage'));
-const AIResourceCuratorPage = React.lazy(() => import('@/pages/AIResourceCuratorPage'));
-const AIStudyAnalyticsPage = React.lazy(() => import('@/pages/AIStudyAnalyticsPage'));
-const AIStudyBuddyPage = React.lazy(() => import('@/pages/AIStudyBuddyPage'));
-const AIStudyGroupFinderPage = React.lazy(() => import('@/pages/AIStudyGroupFinderPage'));
-const AIStudyGroupModeratorPage = React.lazy(() => import('@/pages/AIStudyGroupModeratorPage'));
-const AIStudyHelper = React.lazy(() => import('@/pages/AIStudyHelper'));
-const AIStudyInsightsPage = React.lazy(() => import('@/pages/AIStudyInsightsPage'));
-const AIStudyJournalPage = React.lazy(() => import('@/pages/AIStudyJournalPage'));
-const AIStudyMentorPage = React.lazy(() => import('@/pages/AIStudyMentorPage'));
-const AIStudyMotivatorPage = React.lazy(() => import('@/pages/AIStudyMotivatorPage'));
-const AIStudyProgressMonitorPage = React.lazy(() => import('@/pages/AIStudyProgressMonitorPage'));
-const AIStudyProgressTrackerPage = React.lazy(() => import('@/pages/AIStudyProgressTrackerPage'));
-const AIStudyProgressVisualizerPage = React.lazy(() => import('@/pages/AIStudyProgressVisualizerPage'));
-const AIStudyResourceEditorPage = React.lazy(() => import('@/pages/AIStudyResourceEditorPage'));
-const AIStudyResourceFinderPage = React.lazy(() => import('@/pages/AIStudyResourceFinderPage'));
-const AIStudySchedulerPage = React.lazy(() => import('@/pages/AIStudySchedulerPage'));
-const AIStudyTaskManagerPage = React.lazy(() => import('@/pages/AIStudyTaskManagerPage'));
-const EnhancedAITutorPage = React.lazy(() => import('@/pages/EnhancedAITutorPage'));
-const ComprehensiveAIStudyPage = React.lazy(() => import('@/pages/ComprehensiveAIStudyPage'));
-
-// ECZ Extended
-const ECZAssignmentHubPage = React.lazy(() => import('@/pages/ECZAssignmentHubPage'));
-const ECZProjectShowcasePage = React.lazy(() => import('@/pages/ECZProjectShowcasePage'));
-const ECZResourceAnnotatorPage = React.lazy(() => import('@/pages/ECZResourceAnnotatorPage'));
-const ECZResourceMarketplacePage = React.lazy(() => import('@/pages/ECZResourceMarketplacePage'));
-const ECZResourceSharingHubPage = React.lazy(() => import('@/pages/ECZResourceSharingHubPage'));
-const ECZResourceTranslatorPage = React.lazy(() => import('@/pages/ECZResourceTranslatorPage'));
-const ECZResourceValidatorPage = React.lazy(() => import('@/pages/ECZResourceValidatorPage'));
-const ECZStudyCommunityForumPage = React.lazy(() => import('@/pages/ECZStudyCommunityForumPage'));
-const ECZStudyCommunityPage = React.lazy(() => import('@/pages/ECZStudyCommunityPage'));
-const ECZStudyGroupChatPage = React.lazy(() => import('@/pages/ECZStudyGroupChatPage'));
-const ECZStudyNotesEditorPage = React.lazy(() => import('@/pages/ECZStudyNotesEditorPage'));
-const ECZStudyPlannerPage = React.lazy(() => import('@/pages/ECZStudyPlannerPage'));
-const ECZStudyResourceAnalyzerPage = React.lazy(() => import('@/pages/ECZStudyResourceAnalyzerPage'));
-const ECZStudyResourceCreatorPage = React.lazy(() => import('@/pages/ECZStudyResourceCreatorPage'));
-const ECZStudyResourceHubPage = React.lazy(() => import('@/pages/ECZStudyResourceHubPage'));
-const ECZStudyResourcePortalPage = React.lazy(() => import('@/pages/ECZStudyResourcePortalPage'));
-const ECZVirtualLabSimulatorPage = React.lazy(() => import('@/pages/ECZVirtualLabSimulatorPage'));
-const ECZVirtualTutorPage = React.lazy(() => import('@/pages/ECZVirtualTutorPage'));
-const ECZVirtualWhiteboardPage = React.lazy(() => import('@/pages/ECZVirtualWhiteboardPage'));
-const ECZParentTeacherPortalPage = React.lazy(() => import('@/pages/ECZParentTeacherPortalPage'));
-const InteractiveECZGamesPage = React.lazy(() => import('@/pages/InteractiveECZGamesPage'));
-const VirtualECZLibraryPage = React.lazy(() => import('@/pages/VirtualECZLibraryPage'));
-
-// Social/Community
-const EnhancedSocialPage = React.lazy(() => import('@/pages/EnhancedSocialPage'));
-const GroupCompetitionArenaPage = React.lazy(() => import('@/pages/GroupCompetitionArenaPage'));
-const KnowledgeFeedPage = React.lazy(() => import('@/pages/KnowledgeFeedPage'));
-const KnowledgeRepositoryPage = React.lazy(() => import('@/pages/KnowledgeRepositoryPage'));
-const KnowledgeTree = React.lazy(() => import('@/pages/KnowledgeTree'));
-const PeerFinderPage = React.lazy(() => import('@/pages/PeerFinderPage'));
-const PeerMentorshipPortalPage = React.lazy(() => import('@/pages/PeerMentorshipPortalPage'));
-const SocialLearningHubPage = React.lazy(() => import('@/pages/SocialLearningHubPage'));
-const VirtualStudyRoomPage = React.lazy(() => import('@/pages/VirtualStudyRoomPage'));
-
-// Misc
-const ContentMarketplacePage = React.lazy(() => import('@/pages/ContentMarketplacePage'));
-const EmotionDetectionPage = React.lazy(() => import('@/pages/EmotionDetectionPage'));
-const ComprehensiveDashboard = React.lazy(() => import('@/pages/ComprehensiveDashboard'));
-const SmartDashboardPage = React.lazy(() => import('@/pages/SmartDashboardPage'));
-const AdaptiveCoursePage = React.lazy(() => import('@/pages/AdaptiveCoursePage'));
-const AdaptiveLearning = React.lazy(() => import('@/pages/AdaptiveLearning'));
-const GameifyVault = React.lazy(() => import('@/pages/GameifyVault'));
-const RealTimeSummarizerPage = React.lazy(() => import('@/pages/RealTimeSummarizerPage'));
-const MultilingualTranslatorPage = React.lazy(() => import('@/pages/MultilingualTranslatorPage'));
-const EnterpriseOperationsPage = React.lazy(() => import('@/pages/EnterpriseOperationsPage'));
-const EventsLearningPage = React.lazy(() => import('@/pages/EventsLearningPage'));
-const SkillsIntelligenceLabPage = React.lazy(() => import('@/pages/SkillsIntelligenceLabPage'));
-const APIFlowchartPage = React.lazy(() => import('@/pages/APIFlowchartPage'));
-const SemanticSearchPage = React.lazy(() => import('@/pages/SemanticSearchPage'));
-const MentorshipCoachingPage = React.lazy(() => import('@/pages/MentorshipCoachingPage'));
-const StudyGoalTrackerPage = React.lazy(() => import('@/pages/StudyGoalTrackerPage'));
-const StudyStreakPage = React.lazy(() => import('@/pages/StudyStreakPage'));
-const CommunicationHubPage = React.lazy(() => import('@/pages/CommunicationHubPage'));
-const PersonalizationPage = React.lazy(() => import('@/pages/PersonalizationPage'));
+const CreateCoursePage = React.lazy(() => import('@/pages/CreateCoursePage'));
+const StudyGroupChatPage = React.lazy(() => import('@/pages/StudyGroupChatPage'));
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
+  defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
 });
 
-// Helper: Protected route with PostLoginGate and MainLayout
 const PG = ({ children }: { children: React.ReactNode }) => (
   <ProtectedRoute><PostLoginGate><MainLayout>{children}</MainLayout></PostLoginGate></ProtectedRoute>
 );
@@ -350,7 +70,7 @@ function App() {
         <Router>
           <SuspenseWrap>
             <Routes>
-              {/* Public Routes */}
+              {/* Public */}
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/login" element={<AuthPage />} />
@@ -358,362 +78,123 @@ function App() {
               <Route path="/password-reset" element={<PasswordResetPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/chatedu" element={<ChatEduLanding />} />
               <Route path="/choose-role" element={<ProtectedRoute><ChooseRolePage /></ProtectedRoute>} />
-
-              {/* Setup Route (no PostLoginGate) */}
               <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
 
-              {/* Role-Specific Dashboards */}
-              <Route path="/teacher-dashboard" element={<PG><Dashboard /></PG>} />
-              <Route path="/parent-dashboard" element={<PG><Dashboard /></PG>} />
-              <Route path="/school-admin" element={<PG><SchoolAdminDashboard /></PG>} />
-              <Route path="/ministry-dashboard" element={<PG><MinistryDashboard /></PG>} />
-
-              {/* Main Dashboard */}
+              {/* ─── Hub Pages ─────────────────────────────────── */}
               <Route path="/dashboard" element={<PG><Dashboard /></PG>} />
+              <Route path="/learn" element={<PG><LearnHub /></PG>} />
+              <Route path="/ai" element={<PG><AIHub /></PG>} />
+              <Route path="/prepare" element={<PG><PrepareHub /></PG>} />
+              <Route path="/connect" element={<PG><ConnectHub /></PG>} />
+              <Route path="/progress" element={<PG><ProgressHub /></PG>} />
+              <Route path="/profile" element={<PG><ProfileHub /></PG>} />
+              <Route path="/ecz" element={<PG><ECZHub /></PG>} />
+              <Route path="/teach" element={<PG><TeachHub /></PG>} />
+              <Route path="/family" element={<PG><FamilyHub /></PG>} />
+              <Route path="/ministry" element={<PG><MinistryHub /></PG>} />
+              <Route path="/admin" element={<PG><AdminHub /></PG>} />
 
-              {/* AI Quiz Tools */}
-              <Route path="/ai-quiz" element={<PG><AIQuizGeneratorPage /></PG>} />
-              <Route path="/math-quiz" element={<PG><AIMathQuizPage /></PG>} />
-              <Route path="/science-quiz" element={<PG><AIScienceQuizPage /></PG>} />
-              <Route path="/youtube-quiz" element={<PG><AIYouTubeQuizPage /></PG>} />
-              <Route path="/vocabulary-quiz" element={<PG><AIVocabularyQuizPage /></PG>} />
-
-              {/* AI Features */}
-              <Route path="/ai" element={<PG><AIChat /></PG>} />
-              <Route path="/flashcards" element={<PG><AIFlashcardPage /></PG>} />
-              <Route path="/ai-tutor" element={<PG><AITutorPage /></PG>} />
-              <Route path="/learning-path" element={<PG><AILearningPathPage /></PG>} />
-              <Route path="/comprehensive-ai" element={<PG><ComprehensiveAIPage /></PG>} />
-              <Route path="/study-assistant" element={<PG><StudyAssistantPage /></PG>} />
-              <Route path="/goals" element={<PG><GoalsPage /></PG>} />
-              <Route path="/mind-maps" element={<PG><VisualMindMapPage /></PG>} />
-              <Route path="/adaptive-difficulty" element={<PG><AdaptiveDifficultyPage /></PG>} />
-              <Route path="/journaling" element={<PG><ClaudeJournalingPage /></PG>} />
-              <Route path="/teach-back" element={<PG><TeachBackPage /></PG>} />
-              <Route path="/multi-ai-tutor" element={<PG><MultiAITutorPage /></PG>} />
-
-              {/* Community & Social */}
-              <Route path="/community" element={<PG><CommunityHub /></PG>} />
-              <Route path="/study-groups" element={<PG><StudyGroupsPage /></PG>} />
-              <Route path="/social-feed" element={<PG><SocialFeedPage /></PG>} />
-              <Route path="/campus-map" element={<PG><CampusMapPage /></PG>} />
-              <Route path="/academic-profile" element={<PG><AcademicProfilePage /></PG>} />
-              <Route path="/mentorship" element={<PG><CommunityPage /></PG>} />
-              <Route path="/mentorship-hub" element={<PG><MentorshipHubPage /></PG>} />
-              <Route path="/messenger" element={<PG><MessengerPage /></PG>} />
-
-              {/* Courses & Learning */}
-              <Route path="/courses" element={<PG><Courses /></PG>} />
-              <Route path="/my-courses" element={<PG><MyCoursesPage /></PG>} />
-              <Route path="/course-catalog" element={<PG><CourseCatalogPage /></PG>} />
-              <Route path="/create-course" element={<PG><CreateCoursePage /></PG>} />
-              <Route path="/study-chat" element={<PG><StudyGroupChatPage /></PG>} />
+              {/* ─── Dynamic Detail Pages ──────────────────────── */}
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
               <Route path="/course/:courseId/assignments" element={<PG><AssignmentPage /></PG>} />
               <Route path="/assessment/:assessmentId" element={<PG><AssessmentTakingPage /></PG>} />
               <Route path="/assessment-results/:attemptId" element={<PG><AssessmentResultsPage /></PG>} />
-              <Route path="/certificates" element={<PG><CertificatesPage /></PG>} />
-              <Route path="/lessons" element={<PG><LessonsPage /></PG>} />
-              <Route path="/classroom" element={<PG><VirtualClassroomPage /></PG>} />
-              <Route path="/video-learning" element={<PG><VideoLearningPage /></PG>} />
-              <Route path="/youtube-learning" element={<PG><YouTubeLearningPage /></PG>} />
-              <Route path="/adaptive-content" element={<PG><AdaptiveContentPage /></PG>} />
-              <Route path="/live-learning" element={<PG><LiveLearningPage /></PG>} />
-              <Route path="/goals-tracker" element={<PG><GoalsPage /></PG>} />
-              <Route path="/journal" element={<PG><JournalingPage /></PG>} />
-              <Route path="/mentors" element={<PG><MentorshipPage /></PG>} />
+              <Route path="/create-course" element={<PG><CreateCoursePage /></PG>} />
+              <Route path="/study-chat" element={<PG><StudyGroupChatPage /></PG>} />
 
-              {/* Study Materials & Resources */}
-              <Route path="/materials" element={<PG><StudyMaterialRepository /></PG>} />
-              <Route path="/study-tools" element={<PG><StudyToolsPage /></PG>} />
-              <Route path="/study-materials" element={<PG><StudyMaterialsPage /></PG>} />
-              <Route path="/skill-passport" element={<PG><SkillPassportPage /></PG>} />
+              {/* ─── Backwards Compatibility Redirects ─────────── */}
+              {/* Learning */}
+              <Route path="/my-courses" element={<Navigate to="/learn?tab=my-courses" replace />} />
+              <Route path="/course-catalog" element={<Navigate to="/learn?tab=catalog" replace />} />
+              <Route path="/courses" element={<Navigate to="/learn?tab=my-courses" replace />} />
+              <Route path="/lessons" element={<Navigate to="/learn?tab=lessons" replace />} />
+              <Route path="/video-learning" element={<Navigate to="/learn?tab=videos" replace />} />
+              <Route path="/youtube-learning" element={<Navigate to="/learn?tab=youtube" replace />} />
+              <Route path="/live-learning" element={<Navigate to="/learn?tab=live" replace />} />
 
-              {/* ECZ & Zambian Resources */}
-              <Route path="/zambian-resources" element={<PG><ZambianResourcesHubPage /></PG>} />
-              <Route path="/ecz-resources" element={<PG><ZambianResourcesHubPage /></PG>} />
-              <Route path="/ecz-past-papers" element={<PG><ECZPastPapersPage /></PG>} />
-              <Route path="/ecz-videos" element={<PG><ECZVideoLibraryPage /></PG>} />
-              <Route path="/ecz-exam-simulator" element={<PG><ECZExamSimulatorPage /></PG>} />
-              <Route path="/ecz-practice-quiz" element={<PG><ECZPracticeQuizPage /></PG>} />
-              <Route path="/ecz-resource-library" element={<PG><ECZResourcesExpandedPage /></PG>} />
-              <Route path="/ecz-parent-support" element={<PG><ECZParentSupportHubPage /></PG>} />
+              {/* AI */}
+              <Route path="/flashcards" element={<Navigate to="/ai?tab=flashcards" replace />} />
+              <Route path="/ai-tutor" element={<Navigate to="/ai?tab=tutor" replace />} />
+              <Route path="/multi-ai-tutor" element={<Navigate to="/ai?tab=tutor" replace />} />
+              <Route path="/ai-quiz" element={<Navigate to="/ai?tab=quiz" replace />} />
+              <Route path="/mind-maps" element={<Navigate to="/ai?tab=mind-maps" replace />} />
+              <Route path="/teach-back" element={<Navigate to="/ai?tab=teach-back" replace />} />
+              <Route path="/comprehensive-ai" element={<Navigate to="/ai?tab=workspace" replace />} />
+              <Route path="/study-assistant" element={<Navigate to="/ai?tab=chat" replace />} />
+              <Route path="/learning-path" element={<Navigate to="/ai?tab=chat" replace />} />
+              <Route path="/adaptive-difficulty" element={<Navigate to="/ai?tab=chat" replace />} />
 
-              {/* Student Feature Pages */}
-              <Route path="/my-assignments" element={<PG><MyAssignmentsPage /></PG>} />
-              <Route path="/study-planner" element={<PG><StudyPlannerPage /></PG>} />
-              <Route path="/guardian-link" element={<PG><GuardianLinkPage /></PG>} />
-              <Route path="/guardian-reports" element={<PG><GuardianReportsPage /></PG>} />
-              <Route path="/my-notes" element={<PG><MyNotesPage /></PG>} />
-              <Route path="/focus-mode" element={<PG><FocusModePage /></PG>} />
-              <Route path="/app-control" element={<PG><AppControlPage /></PG>} />
+              {/* Prepare */}
+              <Route path="/study-planner" element={<Navigate to="/prepare?tab=planner" replace />} />
+              <Route path="/focus-mode" element={<Navigate to="/prepare?tab=focus" replace />} />
+              <Route path="/my-notes" element={<Navigate to="/prepare?tab=notes" replace />} />
+              <Route path="/goals" element={<Navigate to="/prepare?tab=goals" replace />} />
+              <Route path="/pomodoro" element={<Navigate to="/prepare?tab=pomodoro" replace />} />
+              <Route path="/journaling" element={<Navigate to="/prepare?tab=journal" replace />} />
+              <Route path="/journal" element={<Navigate to="/prepare?tab=journal" replace />} />
+              <Route path="/bookmarks" element={<Navigate to="/prepare?tab=bookmarks" replace />} />
 
-              {/* Parent Pages */}
-              <Route path="/parent-children" element={<PG><ParentChildrenPage /></PG>} />
-              <Route path="/parent-attendance" element={<PG><ParentAttendancePage /></PG>} />
-              <Route path="/parent-grades" element={<PG><ParentGradesPage /></PG>} />
-              <Route path="/parent-alerts" element={<PG><ParentAlertsPage /></PG>} />
-              <Route path="/parent-messages" element={<PG><ParentMessagesPage /></PG>} />
-              <Route path="/parent-teacher-contact" element={<PG><ParentTeacherContactPage /></PG>} />
-              <Route path="/parent-school-updates" element={<PG><ParentSchoolUpdatesPage /></PG>} />
-              <Route path="/parent-progress" element={<PG><ParentProgressTrackerPage /></PG>} />
-              <Route path="/guardian-digest" element={<PG><GuardianDigestPage /></PG>} />
-              <Route path="/guardian-activity-feed" element={<PG><GuardianActivityFeedPage /></PG>} />
+              {/* Connect */}
+              <Route path="/messenger" element={<Navigate to="/connect?tab=messenger" replace />} />
+              <Route path="/study-groups" element={<Navigate to="/connect?tab=groups" replace />} />
+              <Route path="/community" element={<Navigate to="/connect?tab=community" replace />} />
+              <Route path="/mentorship-hub" element={<Navigate to="/connect?tab=mentorship" replace />} />
+              <Route path="/mentorship" element={<Navigate to="/connect?tab=mentorship" replace />} />
+              <Route path="/social-feed" element={<Navigate to="/connect?tab=community" replace />} />
+              <Route path="/communication-hub" element={<Navigate to="/connect?tab=messenger" replace />} />
 
-              {/* School Admin Management Pages */}
-              <Route path="/admin/users" element={<PG><AdminUserManagementPage /></PG>} />
-              <Route path="/admin/curriculum" element={<PG><AdminCurriculumPage /></PG>} />
-              <Route path="/admin/scheduling" element={<PG><AdminSchedulingPage /></PG>} />
-              <Route path="/admin/analytics" element={<PG><AdminAnalyticsPage /></PG>} />
-              <Route path="/admin/attendance" element={<PG><AdminAttendancePage /></PG>} />
+              {/* Progress */}
+              <Route path="/analytics" element={<Navigate to="/progress?tab=analytics" replace />} />
+              <Route path="/achievements" element={<Navigate to="/progress?tab=achievements" replace />} />
+              <Route path="/leaderboard" element={<Navigate to="/progress?tab=leaderboard" replace />} />
+              <Route path="/certificates" element={<Navigate to="/progress?tab=certificates" replace />} />
 
-              {/* Analytics & Progress */}
-              <Route path="/analytics" element={<PG><LearningAnalytics /></PG>} />
-              <Route path="/teacher-analytics" element={<PG><TeacherAnalyticsPage /></PG>} />
-              <Route path="/achievements" element={<PG><Achievements /></PG>} />
-              <Route path="/progress-report" element={<PG><ProgressReportPage /></PG>} />
-              <Route path="/smart-recommendations" element={<PG><SmartRecommendationsPage /></PG>} />
+              {/* Profile */}
+              <Route path="/settings" element={<Navigate to="/profile?tab=settings" replace />} />
+              <Route path="/notifications" element={<Navigate to="/profile?tab=notifications" replace />} />
+              <Route path="/personalization" element={<Navigate to="/profile?tab=settings" replace />} />
 
-              {/* Profile & Settings */}
-              <Route path="/profile" element={<PG><ProfilePage /></PG>} />
-              <Route path="/settings" element={<PG><SettingsPage /></PG>} />
-              <Route path="/mfa-setup" element={<PG><MFASetupPage /></PG>} />
-              <Route path="/sessions" element={<PG><SessionManagementPage /></PG>} />
-              <Route path="/notifications" element={<PG><NotificationsPage /></PG>} />
-              <Route path="/resource-library" element={<PG><ECZResourceLibraryPage /></PG>} />
+              {/* ECZ */}
+              <Route path="/ecz-past-papers" element={<Navigate to="/ecz?tab=papers" replace />} />
+              <Route path="/ecz-exam-simulator" element={<Navigate to="/ecz?tab=simulator" replace />} />
+              <Route path="/ecz-videos" element={<Navigate to="/ecz?tab=videos" replace />} />
+              <Route path="/ecz-practice-quiz" element={<Navigate to="/ecz?tab=quiz" replace />} />
+              <Route path="/ecz-resource-library" element={<Navigate to="/ecz?tab=resources" replace />} />
+              <Route path="/zambian-resources" element={<Navigate to="/ecz?tab=resources" replace />} />
 
-              {/* Medical Pages */}
-              <Route path="/medical/case-simulator" element={<PG><MedicalCaseSimulatorPage /></PG>} />
-              <Route path="/medical/drug-reference" element={<PG><MedicalDrugReferencePage /></PG>} />
-              <Route path="/medical/clinical-notes" element={<PG><MedicalClinicalNotesPage /></PG>} />
-              <Route path="/medical/case-log" element={<PG><MedicalCaseLogPage /></PG>} />
-              <Route path="/medical/rotations" element={<PG><MedicalRotationsPage /></PG>} />
+              {/* Teacher */}
+              <Route path="/teacher-gradebook" element={<Navigate to="/teach?tab=gradebook" replace />} />
+              <Route path="/teacher-lesson-plan" element={<Navigate to="/teach?tab=lesson-plans" replace />} />
+              <Route path="/teacher-analytics" element={<Navigate to="/teach?tab=analytics" replace />} />
+              <Route path="/teacher-announcements" element={<Navigate to="/teach?tab=announcements" replace />} />
+              <Route path="/teacher-attendance-qr" element={<Navigate to="/teach?tab=attendance" replace />} />
+              <Route path="/teacher-dashboard" element={<Navigate to="/dashboard" replace />} />
 
-              {/* Entrepreneur Pages */}
-              <Route path="/entrepreneur/ventures" element={<PG><EntrepreneurVenturesPage /></PG>} />
-              <Route path="/entrepreneur/business-plan" element={<PG><EntrepreneurBusinessPlanPage /></PG>} />
-              <Route path="/entrepreneur/pitch-deck" element={<PG><EntrepreneurPitchDeckPage /></PG>} />
-              <Route path="/entrepreneur/market-research" element={<PG><EntrepreneurMarketResearchPage /></PG>} />
-              <Route path="/entrepreneur/milestones" element={<PG><EntrepreneurMilestonesPage /></PG>} />
-              <Route path="/entrepreneur/financials" element={<PG><EntrepreneurFinancialsPage /></PG>} />
-              <Route path="/entrepreneur/funding" element={<PG><EntrepreneurFundingPage /></PG>} />
-              <Route path="/entrepreneur/videos" element={<PG><EntrepreneurYouTubePage /></PG>} />
+              {/* Guardian */}
+              <Route path="/parent-children" element={<Navigate to="/family?tab=children" replace />} />
+              <Route path="/parent-grades" element={<Navigate to="/family?tab=grades" replace />} />
+              <Route path="/parental-controls" element={<Navigate to="/family?tab=controls" replace />} />
+              <Route path="/guardian-homework" element={<Navigate to="/family?tab=homework" replace />} />
+              <Route path="/guardian-rewards" element={<Navigate to="/family?tab=rewards" replace />} />
+              <Route path="/guardian-activity-feed" element={<Navigate to="/family?tab=activity" replace />} />
+              <Route path="/parent-dashboard" element={<Navigate to="/dashboard" replace />} />
 
-              {/* Skills Development Pages */}
-              <Route path="/skills/dashboard" element={<PG><SkillsDashboardPage /></PG>} />
-              <Route path="/skills/videos" element={<PG><SkillsVideoPage /></PG>} />
-              <Route path="/skills/categories" element={<PG><SkillsCategoryPage /></PG>} />
+              {/* Ministry */}
+              <Route path="/ministry-dashboard" element={<Navigate to="/ministry?tab=overview" replace />} />
+              <Route path="/ministry/schools" element={<Navigate to="/ministry?tab=schools" replace />} />
+              <Route path="/ministry/ecz-analytics" element={<Navigate to="/ministry?tab=analytics" replace />} />
+              <Route path="/ministry/policies" element={<Navigate to="/ministry?tab=policy" replace />} />
+              <Route path="/ministry/budget" element={<Navigate to="/ministry?tab=budget" replace />} />
+              <Route path="/ministry/reports" element={<Navigate to="/ministry?tab=reports" replace />} />
+              <Route path="/ministry/live-stats" element={<Navigate to="/ministry?tab=live" replace />} />
 
-              {/* Cybersecurity Pages */}
-              <Route path="/cybersecurity/dashboard" element={<PG><CybersecurityDashboardPage /></PG>} />
-              <Route path="/cybersecurity/labs" element={<PG><CybersecurityLabsPage /></PG>} />
-              <Route path="/cybersecurity/videos" element={<PG><CybersecurityVideoPage /></PG>} />
-              <Route path="/cybersecurity/terminal" element={<PG><HackingTerminalPage /></PG>} />
-
-              {/* Role-specific Video Hubs */}
-              <Route path="/student-videos" element={<PG><StudentVideoHubPage /></PG>} />
-              <Route path="/teacher-videos" element={<PG><RoleVideoHubPage role="teacher" /></PG>} />
-              <Route path="/parent-videos" element={<PG><RoleVideoHubPage role="guardian" /></PG>} />
-              <Route path="/medical-videos" element={<PG><RoleVideoHubPage role="doctor" /></PG>} />
-              <Route path="/developer-videos" element={<PG><RoleVideoHubPage role="developer" /></PG>} />
-
-              {/* Developer Pages */}
-              <Route path="/developer/projects" element={<PG><DeveloperProjectsPage /></PG>} />
-              <Route path="/developer/challenges" element={<PG><DeveloperChallengesPage /></PG>} />
-              <Route path="/developer/code-review" element={<PG><DeveloperCodeReviewPage /></PG>} />
-              <Route path="/developer/ide" element={<PG><DeveloperIDEPage /></PG>} />
-
-              {/* Teacher Pages */}
-              <Route path="/teacher-collaboration" element={<PG><TeacherCollaborationHubPage /></PG>} />
-              <Route path="/teacher-gradebook" element={<PG><TeacherGradebookPage /></PG>} />
-              <Route path="/teacher-lesson-plan" element={<PG><TeacherLessonPlanPage /></PG>} />
-              <Route path="/teacher-bulk-grades" element={<PG><TeacherBulkGradePage /></PG>} />
-              <Route path="/teacher-assignment-analytics" element={<PG><TeacherAssignmentAnalyticsPage /></PG>} />
-              <Route path="/teacher-attendance-qr" element={<PG><TeacherAttendanceQRPage /></PG>} />
-
-              {/* Ministry Pages */}
-              <Route path="/ministry/provinces" element={<PG><MinistryProvincesPage /></PG>} />
-              <Route path="/ministry/policies" element={<PG><MinistryPolicyTrackerPage /></PG>} />
-              <Route path="/ministry/schools" element={<PG><MinistrySchoolRegistryPage /></PG>} />
-              <Route path="/ministry/interventions" element={<PG><MinistryInterventionsPage /></PG>} />
-              <Route path="/ministry/ecz-analytics" element={<PG><MinistryECZAnalyticsPage /></PG>} />
-              <Route path="/ministry/reports" element={<PG><MinistryReportGeneratorPage /></PG>} />
-              <Route path="/ministry/partnerships" element={<PG><MinistryPartnershipsPage /></PG>} />
-              <Route path="/ministry/budget" element={<PG><MinistryBudgetPage /></PG>} />
-              <Route path="/ministry/inspections" element={<PG><MinistryInspectionsPage /></PG>} />
-              <Route path="/ministry/teacher-deployment" element={<PG><MinistryTeacherDeploymentPage /></PG>} />
-              <Route path="/ministry/dropout-tracker" element={<PG><MinistryDropoutTrackerPage /></PG>} />
-              <Route path="/ministry/infrastructure" element={<PG><MinistryInfrastructurePage /></PG>} />
-              <Route path="/ministry/scholarships" element={<PG><MinistryScholarshipsPage /></PG>} />
-              <Route path="/ministry/announcements" element={<PG><MinistryAnnouncementsPage /></PG>} />
-              <Route path="/ministry/data-export" element={<PG><MinistryDataExportPage /></PG>} />
-              <Route path="/ministry/compliance" element={<PG><MinistryCompliancePage /></PG>} />
-              <Route path="/ministry/teacher-training" element={<PG><MinistryTeacherTrainingPage /></PG>} />
-              <Route path="/ministry/resources" element={<PG><MinistryResourceAllocationPage /></PG>} />
-              <Route path="/ministry/welfare" element={<PG><MinistryStudentWelfarePage /></PG>} />
-              <Route path="/ministry/digital-literacy" element={<PG><MinistryDigitalLiteracyPage /></PG>} />
-              <Route path="/ministry/research" element={<PG><MinistryResearchPage /></PG>} />
-              <Route path="/ministry/feedback" element={<PG><MinistryFeedbackPage /></PG>} />
-              <Route path="/ministry/audit" element={<PG><MinistryAuditPage /></PG>} />
-              <Route path="/ministry/school-comparison" element={<PG><MinistrySchoolComparisonPage /></PG>} />
-              <Route path="/ministry/live-stats" element={<PG><MinistryLiveStatsPage /></PG>} />
-              <Route path="/ministry/province-map" element={<PG><MinistryProvinceMapPage /></PG>} />
-
-              {/* Cybersecurity New Pages */}
-              <Route path="/cybersecurity/ctf" element={<PG><CyberCTFPage /></PG>} />
-              <Route path="/cybersecurity/vuln-scanner" element={<PG><CyberVulnScannerPage /></PG>} />
-              <Route path="/cybersecurity/kill-chain" element={<PG><CyberKillChainPage /></PG>} />
-              <Route path="/cybersecurity/report-writer" element={<PG><CyberReportWriterPage /></PG>} />
-              <Route path="/cybersecurity/forensics" element={<PG><CyberForensicsPage /></PG>} />
-              <Route path="/cybersecurity/crypto" element={<PG><CyberCryptoPage /></PG>} />
-              <Route path="/cybersecurity/incident-response" element={<PG><CyberIncidentResponsePage /></PG>} />
-              <Route path="/cybersecurity/osint" element={<PG><CyberOSINTPage /></PG>} />
-              <Route path="/cybersecurity/certifications" element={<PG><CyberCertTrackerPage /></PG>} />
-              <Route path="/cybersecurity/threat-intel" element={<PG><CyberThreatIntelPage /></PG>} />
-              <Route path="/cybersecurity/bug-bounty" element={<PG><CyberBugBountyPage /></PG>} />
-              <Route path="/cybersecurity/social-engineering" element={<PG><CyberSocialEngineeringPage /></PG>} />
-              <Route path="/cybersecurity/network-lab" element={<PG><CyberNetworkLabPage /></PG>} />
-              <Route path="/cybersecurity/web-security" element={<PG><CyberWebSecPage /></PG>} />
-              <Route path="/cybersecurity/toolkit" element={<PG><CyberToolkitPage /></PG>} />
-              <Route path="/cybersecurity/range" element={<PG><CyberRangePage /></PG>} />
-
-              {/* Skills New Pages */}
-              <Route path="/skills/apprenticeships" element={<PG><SkillsApprenticeshipPage /></PG>} />
-              <Route path="/skills/portfolio" element={<PG><SkillsPortfolioPage /></PG>} />
-              <Route path="/skills/resume" element={<PG><SkillsResumeBuilderPage /></PG>} />
-              <Route path="/skills/interview-prep" element={<PG><SkillsInterviewPrepPage /></PG>} />
-              <Route path="/skills/jobs" element={<PG><SkillsJobBoardPage /></PG>} />
-              <Route path="/skills/mentorship" element={<PG><SkillsMentorshipPage /></PG>} />
-              <Route path="/skills/workshops" element={<PG><SkillsWorkshopCalendarPage /></PG>} />
-              <Route path="/skills/tools" element={<PG><SkillsToolGuidePage /></PG>} />
-              <Route path="/skills/certifications" element={<PG><SkillsCertificationsPage /></PG>} />
-              <Route path="/skills/assessment" element={<PG><SkillsAssessmentPage /></PG>} />
-              <Route path="/skills/industry" element={<PG><SkillsIndustryConnectPage /></PG>} />
-              <Route path="/skills/projects" element={<PG><SkillsProjectsPage /></PG>} />
-              <Route path="/skills/safety" element={<PG><SkillsSafetyPage /></PG>} />
-              <Route path="/skills/financial-literacy" element={<PG><SkillsFinancialLiteracyPage /></PG>} />
-              <Route path="/skills/entrepreneurship" element={<PG><SkillsEntrepreneurshipPage /></PG>} />
-              <Route path="/skills/job-tracker" element={<PG><SkillsJobTrackerPage /></PG>} />
-              <Route path="/skills/apprenticeship-match" element={<PG><SkillsApprenticeshipMatchPage /></PG>} />
-              <Route path="/skills/portfolio-gallery" element={<PG><SkillsPortfolioGalleryPage /></PG>} />
-              <Route path="/skills/assessment-quiz" element={<PG><SkillsAssessmentQuizPage /></PG>} />
-
-              {/* Meal Planner */}
-              <Route path="/meal-planner" element={<PG><MealPlannerPage /></PG>} />
-
-              {/* Gamification & Device Control */}
-              <Route path="/leaderboard" element={<PG><LeaderboardPage /></PG>} />
-              <Route path="/badges" element={<PG><BadgesPage /></PG>} />
-              <Route path="/screen-time" element={<PG><ScreenTimePage /></PG>} />
-              <Route path="/parental-controls" element={<PG><ParentalControlsPage /></PG>} />
-
-              {/* Feature Pages */}
-              <Route path="/pomodoro" element={<PG><PomodoroPage /></PG>} />
-              <Route path="/bookmarks" element={<PG><BookmarksPage /></PG>} />
-              <Route path="/spaced-repetition" element={<PG><SpacedRepetitionPage /></PG>} />
-              <Route path="/reading-list" element={<PG><ReadingListPage /></PG>} />
-              <Route path="/data-export" element={<PG><DataExportPage /></PG>} />
-              <Route path="/teacher-report-cards" element={<PG><TeacherReportCardsPage /></PG>} />
-              <Route path="/teacher-announcements" element={<PG><TeacherAnnouncementsPage /></PG>} />
-              <Route path="/teacher-rubric-builder" element={<PG><TeacherRubricBuilderPage /></PG>} />
-              <Route path="/guardian-homework" element={<PG><GuardianHomeworkTrackerPage /></PG>} />
-              <Route path="/guardian-rewards" element={<PG><GuardianRewardSystemPage /></PG>} />
-              <Route path="/guardian-study-comparison" element={<PG><GuardianStudyComparisonPage /></PG>} />
-              <Route path="/cybersecurity/password-analyzer" element={<PG><CyberPasswordAnalyzerPage /></PG>} />
-              <Route path="/cybersecurity/phishing-sim" element={<PG><CyberPhishingSimPage /></PG>} />
-              <Route path="/cybersecurity/glossary" element={<PG><CyberGlossaryPage /></PG>} />
-              <Route path="/developer/api-playground" element={<PG><DevAPIPlaygroundPage /></PG>} />
-              <Route path="/developer/algorithms" element={<PG><DevAlgorithmVisualizerPage /></PG>} />
-              <Route path="/notification-preferences" element={<PG><NotificationPreferencesPage /></PG>} />
-
-              {/* ─── NEW: Previously orphaned AI pages ────────────── */}
-              <Route path="/ai-content-generator" element={<PG><AIContentGeneratorPage /></PG>} />
-              <Route path="/ai-content-studio" element={<PG><AIContentStudio /></PG>} />
-              <Route path="/ai-creator-studio" element={<PG><AICreatorStudioPage /></PG>} />
-              <Route path="/ai-curriculum-mapper" element={<PG><AICurriculumMapperPage /></PG>} />
-              <Route path="/ai-exam-prep" element={<PG><AIExamPrepCoachPage /></PG>} />
-              <Route path="/ai-feedback" element={<PG><AIFeedbackPortalPage /></PG>} />
-              <Route path="/ai-learning-lab" element={<PG><AILearningLab /></PG>} />
-              <Route path="/ai-progress-dashboard" element={<PG><AIProgressDashboardPage /></PG>} />
-              <Route path="/ai-quiz-creator" element={<PG><AIQuizCreatorPage /></PG>} />
-              <Route path="/ai-resource-center" element={<PG><AIResourceCenterPage /></PG>} />
-              <Route path="/ai-resource-curator" element={<PG><AIResourceCuratorPage /></PG>} />
-              <Route path="/ai-study-analytics" element={<PG><AIStudyAnalyticsPage /></PG>} />
-              <Route path="/ai-study-buddy" element={<PG><AIStudyBuddyPage /></PG>} />
-              <Route path="/ai-group-finder" element={<PG><AIStudyGroupFinderPage /></PG>} />
-              <Route path="/ai-group-moderator" element={<PG><AIStudyGroupModeratorPage /></PG>} />
-              <Route path="/ai-study-helper" element={<PG><AIStudyHelper /></PG>} />
-              <Route path="/ai-study-insights" element={<PG><AIStudyInsightsPage /></PG>} />
-              <Route path="/ai-study-journal" element={<PG><AIStudyJournalPage /></PG>} />
-              <Route path="/ai-study-mentor" element={<PG><AIStudyMentorPage /></PG>} />
-              <Route path="/ai-study-motivator" element={<PG><AIStudyMotivatorPage /></PG>} />
-              <Route path="/ai-progress-monitor" element={<PG><AIStudyProgressMonitorPage /></PG>} />
-              <Route path="/ai-progress-tracker" element={<PG><AIStudyProgressTrackerPage /></PG>} />
-              <Route path="/ai-progress-visualizer" element={<PG><AIStudyProgressVisualizerPage /></PG>} />
-              <Route path="/ai-resource-editor" element={<PG><AIStudyResourceEditorPage /></PG>} />
-              <Route path="/ai-resource-finder" element={<PG><AIStudyResourceFinderPage /></PG>} />
-              <Route path="/ai-scheduler" element={<PG><AIStudySchedulerPage /></PG>} />
-              <Route path="/ai-task-manager" element={<PG><AIStudyTaskManagerPage /></PG>} />
-              <Route path="/enhanced-ai-tutor" element={<PG><EnhancedAITutorPage /></PG>} />
-              <Route path="/comprehensive-ai-study" element={<PG><ComprehensiveAIStudyPage /></PG>} />
-
-              {/* ─── NEW: ECZ Extended pages ──────────────────── */}
-              <Route path="/ecz-assignment-hub" element={<PG><ECZAssignmentHubPage /></PG>} />
-              <Route path="/ecz-project-showcase" element={<PG><ECZProjectShowcasePage /></PG>} />
-              <Route path="/ecz-resource-annotator" element={<PG><ECZResourceAnnotatorPage /></PG>} />
-              <Route path="/ecz-resource-marketplace" element={<PG><ECZResourceMarketplacePage /></PG>} />
-              <Route path="/ecz-resource-sharing" element={<PG><ECZResourceSharingHubPage /></PG>} />
-              <Route path="/ecz-resource-translator" element={<PG><ECZResourceTranslatorPage /></PG>} />
-              <Route path="/ecz-resource-validator" element={<PG><ECZResourceValidatorPage /></PG>} />
-              <Route path="/ecz-community-forum" element={<PG><ECZStudyCommunityForumPage /></PG>} />
-              <Route path="/ecz-community" element={<PG><ECZStudyCommunityPage /></PG>} />
-              <Route path="/ecz-group-chat" element={<PG><ECZStudyGroupChatPage /></PG>} />
-              <Route path="/ecz-notes-editor" element={<PG><ECZStudyNotesEditorPage /></PG>} />
-              <Route path="/ecz-study-planner" element={<PG><ECZStudyPlannerPage /></PG>} />
-              <Route path="/ecz-resource-analyzer" element={<PG><ECZStudyResourceAnalyzerPage /></PG>} />
-              <Route path="/ecz-resource-creator" element={<PG><ECZStudyResourceCreatorPage /></PG>} />
-              <Route path="/ecz-resource-hub" element={<PG><ECZStudyResourceHubPage /></PG>} />
-              <Route path="/ecz-resource-portal" element={<PG><ECZStudyResourcePortalPage /></PG>} />
-              <Route path="/ecz-virtual-lab" element={<PG><ECZVirtualLabSimulatorPage /></PG>} />
-              <Route path="/ecz-virtual-tutor" element={<PG><ECZVirtualTutorPage /></PG>} />
-              <Route path="/ecz-whiteboard" element={<PG><ECZVirtualWhiteboardPage /></PG>} />
-              <Route path="/ecz-parent-teacher" element={<PG><ECZParentTeacherPortalPage /></PG>} />
-              <Route path="/ecz-games" element={<PG><InteractiveECZGamesPage /></PG>} />
-              <Route path="/ecz-virtual-library" element={<PG><VirtualECZLibraryPage /></PG>} />
-
-              {/* ─── NEW: Social/Community pages ─────────────── */}
-              <Route path="/enhanced-social" element={<PG><EnhancedSocialPage /></PG>} />
-              <Route path="/competition-arena" element={<PG><GroupCompetitionArenaPage /></PG>} />
-              <Route path="/knowledge-feed" element={<PG><KnowledgeFeedPage /></PG>} />
-              <Route path="/knowledge-repository" element={<PG><KnowledgeRepositoryPage /></PG>} />
-              <Route path="/knowledge-tree" element={<PG><KnowledgeTree /></PG>} />
-              <Route path="/peer-finder" element={<PG><PeerFinderPage /></PG>} />
-              <Route path="/peer-mentorship" element={<PG><PeerMentorshipPortalPage /></PG>} />
-              <Route path="/social-learning" element={<PG><SocialLearningHubPage /></PG>} />
-              <Route path="/virtual-study-room" element={<PG><VirtualStudyRoomPage /></PG>} />
-
-              {/* ─── NEW: Misc pages ─────────────────────────── */}
-              <Route path="/content-marketplace" element={<PG><ContentMarketplacePage /></PG>} />
-              <Route path="/emotion-detection" element={<PG><EmotionDetectionPage /></PG>} />
-              <Route path="/comprehensive-dashboard" element={<PG><ComprehensiveDashboard /></PG>} />
-              <Route path="/smart-dashboard" element={<PG><SmartDashboardPage /></PG>} />
-              <Route path="/adaptive-course" element={<PG><AdaptiveCoursePage /></PG>} />
-              <Route path="/adaptive-learning" element={<PG><AdaptiveLearning /></PG>} />
-              <Route path="/gameify-vault" element={<PG><GameifyVault /></PG>} />
-              <Route path="/real-time-summarizer" element={<PG><RealTimeSummarizerPage /></PG>} />
-              <Route path="/multilingual-translator" element={<PG><MultilingualTranslatorPage /></PG>} />
-              <Route path="/enterprise-operations" element={<PG><EnterpriseOperationsPage /></PG>} />
-              <Route path="/events-learning" element={<PG><EventsLearningPage /></PG>} />
-              <Route path="/skills-intelligence-lab" element={<PG><SkillsIntelligenceLabPage /></PG>} />
-              <Route path="/api-flowchart" element={<PG><APIFlowchartPage /></PG>} />
-              <Route path="/semantic-search" element={<PG><SemanticSearchPage /></PG>} />
-              <Route path="/mentorship-coaching" element={<PG><MentorshipCoachingPage /></PG>} />
-              <Route path="/study-goal-tracker" element={<PG><StudyGoalTrackerPage /></PG>} />
-              <Route path="/study-streak" element={<PG><StudyStreakPage /></PG>} />
-              <Route path="/communication-hub" element={<PG><CommunicationHubPage /></PG>} />
-              <Route path="/personalization" element={<PG><PersonalizationPage /></PG>} />
+              {/* Admin */}
+              <Route path="/school-admin" element={<Navigate to="/admin?tab=overview" replace />} />
+              <Route path="/admin/users" element={<Navigate to="/admin?tab=users" replace />} />
+              <Route path="/admin/curriculum" element={<Navigate to="/admin?tab=curriculum" replace />} />
+              <Route path="/admin/scheduling" element={<Navigate to="/admin?tab=scheduling" replace />} />
+              <Route path="/admin/analytics" element={<Navigate to="/admin?tab=analytics" replace />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
