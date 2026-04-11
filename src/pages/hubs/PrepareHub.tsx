@@ -1,59 +1,29 @@
-import React, { Suspense } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useTabFromUrl } from '@/hooks/useTabFromUrl';
-import { LogoLoader } from '@/components/UI/LogoLoader';
+import React from 'react';
+import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
 import { Calendar, Timer, FileText, Target, BookOpen, Bookmark, Flame } from 'lucide-react';
 
-const StudyPlannerPage = React.lazy(() => import('@/pages/StudyPlannerPage'));
-const FocusModePage = React.lazy(() => import('@/pages/FocusModePage'));
-const MyNotesPage = React.lazy(() => import('@/pages/MyNotesPage'));
-const GoalsPage = React.lazy(() => import('@/pages/GoalsPage'));
-const BookmarksPage = React.lazy(() => import('@/pages/BookmarksPage'));
-const PomodoroPage = React.lazy(() => import('@/pages/PomodoroPage'));
-const JournalingPage = React.lazy(() => import('@/pages/JournalingPage'));
-
-const Loader = () => <div className="flex justify-center py-12"><LogoLoader text="Loading..." /></div>;
-
-const tabs = [
-  { id: 'planner', label: 'Planner', icon: Calendar },
-  { id: 'focus', label: 'Focus Mode', icon: Timer },
-  { id: 'notes', label: 'My Notes', icon: FileText },
-  { id: 'goals', label: 'Goals', icon: Target },
-  { id: 'pomodoro', label: 'Pomodoro', icon: Flame },
-  { id: 'journal', label: 'Journal', icon: BookOpen },
-  { id: 'bookmarks', label: 'Bookmarks', icon: Bookmark },
+const tabs: HubTab[] = [
+  { id: 'planner', label: 'Study Planner', icon: Calendar, component: React.lazy(() => import('@/pages/StudyPlannerPage')) },
+  { id: 'focus', label: 'Focus Mode', icon: Timer, component: React.lazy(() => import('@/pages/FocusModePage')) },
+  { id: 'notes', label: 'My Notes', icon: FileText, component: React.lazy(() => import('@/pages/MyNotesPage')) },
+  { id: 'goals', label: 'Goals', icon: Target, component: React.lazy(() => import('@/pages/GoalsPage')) },
+  { id: 'pomodoro', label: 'Pomodoro', icon: Flame, component: React.lazy(() => import('@/pages/PomodoroPage')) },
+  { id: 'journal', label: 'Journal', icon: BookOpen, component: React.lazy(() => import('@/pages/JournalingPage')) },
+  { id: 'bookmarks', label: 'Bookmarks', icon: Bookmark, component: React.lazy(() => import('@/pages/BookmarksPage')) },
 ];
 
-const PrepareHub = () => {
-  const [tab, setTab] = useTabFromUrl('planner');
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Study Hub</h1>
-        <p className="text-muted-foreground text-sm">Plan, focus, and track your study progress.</p>
-      </div>
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="w-full justify-start overflow-x-auto">
-          {tabs.map(t => (
-            <TabsTrigger key={t.id} value={t.id} className="gap-1.5">
-              <t.icon className="w-3.5 h-3.5" />
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <Suspense fallback={<Loader />}>
-          <TabsContent value="planner"><StudyPlannerPage /></TabsContent>
-          <TabsContent value="focus"><FocusModePage /></TabsContent>
-          <TabsContent value="notes"><MyNotesPage /></TabsContent>
-          <TabsContent value="goals"><GoalsPage /></TabsContent>
-          <TabsContent value="pomodoro"><PomodoroPage /></TabsContent>
-          <TabsContent value="journal"><JournalingPage /></TabsContent>
-          <TabsContent value="bookmarks"><BookmarksPage /></TabsContent>
-        </Suspense>
-      </Tabs>
-    </div>
-  );
-};
+const PrepareHub = () => (
+  <HubPageLayout
+    title="Study Hub"
+    subtitle="Plan, focus, and track your study progress with powerful tools."
+    icon={Calendar}
+    tabs={tabs}
+    defaultTab="planner"
+    quickLinks={[
+      { label: 'AI Flashcards', href: '/ai?tab=flashcards', icon: Flame },
+      { label: 'My Courses', href: '/learn', icon: BookOpen },
+    ]}
+  />
+);
 
 export default PrepareHub;
