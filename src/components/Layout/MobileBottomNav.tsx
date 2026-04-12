@@ -13,9 +13,10 @@ export const MobileBottomNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-      <div className="absolute inset-0 bg-background/95 backdrop-blur-2xl border-t border-border/20" />
+      {/* Premium frosted glass background */}
+      <div className="absolute inset-0 bg-background/90 backdrop-blur-3xl border-t border-border/15" />
       
-      <div className="relative flex items-center justify-around h-[60px] max-w-lg mx-auto px-1 pb-[env(safe-area-inset-bottom,2px)]">
+      <div className="relative flex items-center justify-around h-[64px] max-w-lg mx-auto px-2 pb-[env(safe-area-inset-bottom,2px)]">
         {items.map((item) => {
           const isActive = matchesNavItem(location.pathname, item);
           return (
@@ -23,24 +24,27 @@ export const MobileBottomNav = () => {
               key={item.url}
               onClick={() => navigate(item.url)}
               className={cn(
-                'relative flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-all duration-200 active:scale-95',
+                'relative flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 transition-all duration-300 active:scale-90',
                 isActive ? 'text-primary' : 'text-muted-foreground'
               )}
             >
-              {/* Google-style active indicator */}
+              {/* Active pill indicator */}
               <div className={cn(
-                'flex items-center justify-center w-16 h-8 rounded-full transition-all duration-300',
-                isActive ? 'bg-primary/12' : ''
+                'flex items-center justify-center w-14 h-8 rounded-2xl transition-all duration-300',
+                isActive ? 'bg-primary/12 shadow-sm shadow-primary/10' : 'bg-transparent'
               )}>
                 <item.icon
-                  className={cn("w-[22px] h-[22px] transition-all", isActive && "text-primary")}
-                  strokeWidth={isActive ? 2.2 : 1.6}
+                  className={cn(
+                    "w-[20px] h-[20px] transition-all duration-300",
+                    isActive && "text-primary scale-105"
+                  )}
+                  strokeWidth={isActive ? 2.4 : 1.5}
                 />
               </div>
               
               <span className={cn(
-                "text-[11px] leading-none transition-colors",
-                isActive ? "font-semibold text-primary" : "font-medium text-muted-foreground"
+                "text-[10px] leading-none transition-all duration-300 mt-0.5",
+                isActive ? "font-bold text-primary" : "font-medium text-muted-foreground/70"
               )}>
                 {item.shortTitle ?? item.title}
               </span>
