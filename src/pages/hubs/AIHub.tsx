@@ -1,8 +1,9 @@
 import React from 'react';
 import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
-import { Brain, MessageSquare, Layers, Target, Map, PenTool, Sparkles, Swords, Zap, Calculator, Lightbulb } from 'lucide-react';
+import { Brain, MessageSquare, Layers, Target, Map, PenTool, Sparkles, Swords, Zap, Calculator, Lightbulb, Mic } from 'lucide-react';
 
 const tabs: HubTab[] = [
+  { id: 'voice', label: 'Voice Tutor', icon: Mic, component: React.lazy(() => import('@/pages/VoiceAITutorPage')), badge: 'NEW' },
   { id: 'chat', label: 'AI Chat', icon: MessageSquare, component: React.lazy(() => import('@/pages/AIChat')) },
   { id: 'tutor', label: 'AI Tutor', icon: Brain, component: React.lazy(() => import('@/pages/MultiAITutorPage')), badge: 'PRO' },
   { id: 'homework', label: 'Homework Solver', icon: Calculator, component: React.lazy(() => import('@/pages/AIHomeworkSolverPage')), badge: 'NEW' },
