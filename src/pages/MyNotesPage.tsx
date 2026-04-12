@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
-import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer } from 'lucide-react';
+import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer, Mic, MicOff, Loader2, FileAudio } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Note {
@@ -31,6 +31,15 @@ const MyNotesPage = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
+
+  // Recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const recognitionRef = useRef<any>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const transcriptRef = useRef('');
 
   useEffect(() => {
     if (!user) return;
@@ -66,6 +75,100 @@ const MyNotesPage = () => {
     load();
   }, [user]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.stop();
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const startRecording = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error('Speech recognition not supported. Try Chrome or Edge.');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-ZM';
+
+    transcriptRef.current = '';
+    setLiveTranscript('');
+    setRecordingTime(0);
+
+    recognition.onresult = (event: any) => {
+      let final = '';
+      let interim = '';
+      for (let i = 0; i < event.results.length; i++) {
+        if (event.results[i].isFinal) final += event.results[i][0].transcript + ' ';
+        else interim += event.results[i][0].transcript;
+      }
+      transcriptRef.current = final;
+      setLiveTranscript(final + interim);
+    };
+
+    recognition.onerror = (e: any) => {
+      if (e.error !== 'no-speech') toast.error('Microphone error: ' + e.error);
+    };
+
+    recognition.onend = () => {
+      // Auto-restart if still recording (browser stops after silence)
+      if (isRecording) {
+        try { recognition.start(); } catch {}
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+
+    timerRef.current = setInterval(() => {
+      setRecordingTime(prev => prev + 1);
+    }, 1000);
+  };
+
+  const stopRecording = async () => {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setIsRecording(false);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+
+    const transcript = transcriptRef.current.trim();
+    if (!transcript) {
+      toast.error('No speech detected. Try again.');
+      setLiveTranscript('');
+      return;
+    }
+
+    setIsTranscribing(true);
+
+    // Save as a new note
+    const now = new Date().toISOString();
+    const title = `🎙️ Lecture Recording — ${new Date().toLocaleDateString('en-ZM', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+
+    const { data, error } = await (supabase as any)
+      .from('student_notes')
+      .insert({ user_id: user!.id, title, content: transcript, created_at: now, updated_at: now })
+      .select()
+      .single();
+
+    setIsTranscribing(false);
+    setLiveTranscript('');
+
+    if (error) {
+      toast.error('Failed to save recording');
+      return;
+    }
+
+    setNotes(prev => [{ ...data, course_title: undefined, lesson_title: undefined }, ...prev]);
+    toast.success('Lecture recording saved as note!');
+  };
+
+  const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+
   const deleteNote = async (id: string) => {
     const { error } = await (supabase as any).from('student_notes').delete().eq('id', id);
     if (error) { toast.error('Failed to delete note'); return; }
@@ -100,19 +203,65 @@ const MyNotesPage = () => {
           </h1>
           <p className="text-sm text-muted-foreground">{notes.length} notes saved</p>
         </div>
-        {notes.length > 0 && (
-          <Button variant="outline" size="sm" onClick={() => window.print()}>
-            <Printer className="w-4 h-4 mr-2" />Export PDF
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {notes.length > 0 && (
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Printer className="w-4 h-4 mr-1" />PDF
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Lecture Recording Card */}
+      <Card className={`border-2 transition-colors ${isRecording ? 'border-destructive/50 bg-destructive/5' : 'border-dashed border-primary/30 hover:border-primary/50'}`}>
+        <CardContent className="py-4">
+          {isRecording ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
+                  </span>
+                  <span className="text-sm font-medium text-destructive">Recording Lecture</span>
+                  <Badge variant="outline" className="font-mono text-xs">{formatTime(recordingTime)}</Badge>
+                </div>
+                <Button size="sm" variant="destructive" onClick={stopRecording}>
+                  <MicOff className="w-4 h-4 mr-1" /> Stop & Save
+                </Button>
+              </div>
+              {liveTranscript && (
+                <div className="bg-background/80 rounded-lg p-3 max-h-32 overflow-y-auto border">
+                  <p className="text-xs text-muted-foreground mb-1">Live transcript:</p>
+                  <p className="text-sm text-foreground">{liveTranscript}</p>
+                </div>
+              )}
+            </div>
+          ) : isTranscribing ? (
+            <div className="flex items-center justify-center gap-2 py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-sm text-muted-foreground">Saving recording...</span>
+            </div>
+          ) : (
+            <button onClick={startRecording} className="w-full flex items-center justify-center gap-3 py-2 group">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Mic className="w-5 h-5 text-primary" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-medium text-foreground">Record Lecture</p>
+                <p className="text-xs text-muted-foreground">Tap to start recording — speech will be transcribed to a note</p>
+              </div>
+            </button>
+          )}
+        </CardContent>
+      </Card>
 
       {notes.length === 0 ? (
         <Card>
           <CardContent className="py-16 text-center">
             <Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
             <p className="font-medium text-foreground">No notes yet</p>
-            <p className="text-sm text-muted-foreground mt-1">Take notes while studying lessons and they'll appear here.</p>
+            <p className="text-sm text-muted-foreground mt-1">Take notes while studying or record a lecture above.</p>
           </CardContent>
         </Card>
       ) : (
@@ -123,6 +272,9 @@ const MyNotesPage = () => {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2 flex-wrap">
+                      {note.title?.startsWith('🎙️') && (
+                        <Badge variant="secondary" className="text-xs"><FileAudio className="w-3 h-3 mr-1" />Recording</Badge>
+                      )}
                       {note.course_title && <Badge variant="secondary" className="text-xs"><BookOpen className="w-3 h-3 mr-1" />{note.course_title}</Badge>}
                       {note.lesson_title && <Badge variant="outline" className="text-xs">{note.lesson_title}</Badge>}
                     </div>
