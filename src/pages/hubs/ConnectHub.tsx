@@ -1,12 +1,15 @@
 import React from 'react';
 import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
-import { MessageSquare, Users, Globe, Heart } from 'lucide-react';
+import { MessageSquare, Users, Globe, Heart, Sparkles, CalendarDays, PenTool } from 'lucide-react';
 
 const tabs: HubTab[] = [
   { id: 'messenger', label: 'Messenger', icon: MessageSquare, component: React.lazy(() => import('@/pages/MessengerPage')) },
-  { id: 'groups', label: 'Study Groups', icon: Users, component: React.lazy(() => import('@/pages/StudyGroupsPage')) },
+  { id: 'groups', label: 'Groups', icon: Users, component: React.lazy(() => import('@/pages/StudyGroupsPage')) },
+  { id: 'peers', label: 'Peers', icon: Sparkles, component: React.lazy(() => import('@/pages/PeerMatchingPage')) },
+  { id: 'mentorship', label: 'Mentors', icon: Heart, component: React.lazy(() => import('@/pages/MentorConnectPage')) },
+  { id: 'events', label: 'Events', icon: CalendarDays, component: React.lazy(() => import('@/pages/CommunityEventsPage')) },
+  { id: 'collab', label: 'Collab', icon: PenTool, component: React.lazy(() => import('@/pages/LiveCollaborationPage')) },
   { id: 'community', label: 'Community', icon: Globe, component: React.lazy(() => import('@/pages/CommunityHub')) },
-  { id: 'mentorship', label: 'Mentorship', icon: Heart, component: React.lazy(() => import('@/pages/MentorshipHubPage')) },
 ];
 
 const ConnectHub = () => (
@@ -17,8 +20,9 @@ const ConnectHub = () => (
     tabs={tabs}
     defaultTab="messenger"
     quickLinks={[
-      { label: 'Study Groups', href: '/connect?tab=groups', icon: Users },
-      { label: 'Find Mentors', href: '/connect?tab=mentorship', icon: Heart },
+      { label: 'Find Peers', href: '/connect?tab=peers', icon: Sparkles },
+      { label: 'Events', href: '/connect?tab=events', icon: CalendarDays },
+      { label: 'Mentors', href: '/connect?tab=mentorship', icon: Heart },
     ]}
   />
 );
