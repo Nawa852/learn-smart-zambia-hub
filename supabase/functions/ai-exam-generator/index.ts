@@ -1,0 +1,69 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+
+  try {
+    const { subject, grade, topic, paperType, questionCount } = await req.json();
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+
+    const systemPrompt = `You are an expert ECZ (Examinations Council of Zambia) exam paper creator. Generate authentic exam papers that match the ECZ format, difficulty, and style for Zambian students.
+
+Always include:
+1. Paper header with subject, grade, time allowed, and instructions
+2. Numbered questions with mark allocations
+3. A mix of question types (MCQ, short answer, structured, essay)
+4. A complete marking scheme with acceptable answers and mark distribution
+
+Format the output in clean markdown with clear sections.`;
+
+    const userPrompt = `Generate a ${paperType || 'full'} ECZ exam paper for:
+- Subject: ${subject}
+- Grade: ${grade}
+- ${topic ? `Topic focus: ${topic}` : 'Cover the full syllabus'}
+- Number of questions: ${questionCount || 40}
+
+Include SECTION A (Multiple Choice - 20 marks), SECTION B (Structured Questions - 40 marks), and SECTION C (Essay Questions - 40 marks).
+
+After the exam paper, provide a complete MARKING SCHEME with detailed answers and mark allocation for each question.`;
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        stream: true,
+      }),
+    });
+
+    if (!response.ok) {
+      const status = response.status;
+      if (status === 429) return new Response(JSON.stringify({ error: "Rate limited, try again shortly." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (status === 402) return new Response(JSON.stringify({ error: "Credits exhausted." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      throw new Error(`AI gateway error: ${status}`);
+    }
+
+    return new Response(response.body, {
+      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    });
+  } catch (e) {
+    console.error("ai-exam-generator error:", e);
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
