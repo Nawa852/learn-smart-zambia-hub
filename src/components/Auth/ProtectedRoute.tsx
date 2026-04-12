@@ -9,9 +9,12 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isDemo } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const location = useLocation();
+
+  // Demo mode bypasses auth
+  if (isDemo) return <>{children}</>;
 
   if (authLoading || profileLoading) {
     return (
@@ -22,7 +25,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    // Avoid redirect loops by checking current path
     const publicPaths = ['/login', '/signup', '/welcome'];
     if (publicPaths.some(p => location.pathname.startsWith(p))) {
       return <>{children}</>;
@@ -30,7 +32,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // If user is authenticated and trying to access login/signup/welcome, redirect to dashboard
   if (user && ['/login', '/signup', '/welcome'].includes(location.pathname)) {
     return <Navigate to="/dashboard" replace />;
   }

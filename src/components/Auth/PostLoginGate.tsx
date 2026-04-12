@@ -10,10 +10,13 @@ interface PostLoginGateProps {
 }
 
 const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isDemo } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const { schedules, loading: schedulesLoading } = useStudySchedule();
   const location = useLocation();
+
+  // Demo mode skips all gates
+  if (isDemo) return <>{children}</>;
 
   // Don't gate these paths
   const exemptPaths = ['/setup', '/login', '/signup', '/auth', '/password-reset', '/settings', '/profile'];
