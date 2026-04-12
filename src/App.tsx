@@ -12,6 +12,7 @@ import PostLoginGate from '@/components/Auth/PostLoginGate';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { LogoLoader } from '@/components/UI/LogoLoader';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import DemoBanner from '@/components/Auth/DemoBanner';
 
 // Core Pages (eagerly loaded)
 import Index from '@/pages/Index';
@@ -68,6 +69,7 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <Router>
+          <DemoBanner />
           <SuspenseWrap>
             <Routes>
               {/* Public */}
