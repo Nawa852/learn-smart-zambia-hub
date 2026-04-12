@@ -1,8 +1,9 @@
 import React from 'react';
 import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
-import { Calendar, Timer, FileText, Target, BookOpen, Bookmark, Flame } from 'lucide-react';
+import { Calendar, Timer, FileText, Target, BookOpen, Bookmark, Flame, Zap } from 'lucide-react';
 
 const tabs: HubTab[] = [
+  { id: 'challenges', label: 'Daily Challenge', icon: Zap, component: React.lazy(() => import('@/pages/DailyChallengePage')), badge: 'NEW' },
   { id: 'planner', label: 'Study Planner', icon: Calendar, component: React.lazy(() => import('@/pages/StudyPlannerPage')) },
   { id: 'focus', label: 'Focus Mode', icon: Timer, component: React.lazy(() => import('@/pages/FocusModePage')) },
   { id: 'notes', label: 'My Notes', icon: FileText, component: React.lazy(() => import('@/pages/MyNotesPage')) },
@@ -15,13 +16,13 @@ const tabs: HubTab[] = [
 const PrepareHub = () => (
   <HubPageLayout
     title="Study Hub"
-    subtitle="Plan, focus, and track your study progress with powerful tools."
+    subtitle="Daily challenges, focus tools, and study planning — all in one place."
     icon={Calendar}
     tabs={tabs}
-    defaultTab="planner"
+    defaultTab="challenges"
     quickLinks={[
-      { label: 'AI Flashcards', href: '/ai?tab=flashcards', icon: Flame },
-      { label: 'My Courses', href: '/learn', icon: BookOpen },
+      { label: 'Daily Challenge', href: '/prepare?tab=challenges', icon: Zap },
+      { label: 'Focus Mode', href: '/prepare?tab=focus', icon: Timer },
     ]}
   />
 );
