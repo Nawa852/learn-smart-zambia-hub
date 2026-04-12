@@ -64,22 +64,23 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-5 lg:space-y-6">
+    <div className="space-y-4 lg:space-y-5">
       {showTour && <OnboardingTour role={userType} onComplete={() => setShowTour(false)} />}
       
-      {/* Hero — clean, minimal */}
-      <div className="relative overflow-hidden rounded-2xl bg-card border border-border/40">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/4" />
+      {/* Hero — premium card */}
+      <div className="relative overflow-hidden rounded-2xl bg-card border border-border/20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-accent/[0.03]" />
+        <div className="absolute top-0 right-0 w-[200px] h-[200px] rounded-full bg-primary/[0.04] blur-[80px]" />
         <div className="relative px-4 py-5 lg:px-6 lg:py-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-[10px] text-primary font-semibold uppercase tracking-[0.15em] mb-1">
+              <p className="text-[10px] text-primary font-bold uppercase tracking-[0.15em] mb-1.5">
                 {roleLabels[userType as string] || 'Workspace'}
               </p>
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground">
-                {greeting()}, {userName.split(' ')[0]}
+              <h1 className="text-xl lg:text-2xl font-extrabold text-foreground tracking-tight">
+                {greeting()}, {userName.split(' ')[0]} 👋
               </h1>
-              <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+              <p className="text-[13px] text-muted-foreground mt-1 max-w-sm leading-relaxed">
                 Your workspace is ready. Pick up where you left off.
               </p>
             </div>
@@ -91,7 +92,7 @@ const Dashboard = () => {
                   key={item.url}
                   variant="secondary"
                   size="sm"
-                  className="gap-1.5 rounded-xl border border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0 h-9 text-xs font-medium"
+                  className="gap-1.5 rounded-xl border border-border/20 hover:border-primary/25 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0 h-9 text-xs font-medium shadow-sm"
                   onClick={() => navigate(item.url)}
                 >
                   <item.icon className="w-3.5 h-3.5" />
@@ -105,11 +106,11 @@ const Dashboard = () => {
       </div>
 
       {/* Content */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 lg:gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-5">
         <div className="xl:col-span-2">
           {renderDashboardView()}
         </div>
-        <div className="space-y-5">
+        <div className="space-y-4">
           <StakeholderBridge role={userType as string} />
         </div>
       </div>
