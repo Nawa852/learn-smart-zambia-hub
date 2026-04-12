@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/components/Auth/AuthProvider';
 import { Calculator, Loader2, Lightbulb, AlertTriangle, CheckCircle, ArrowRight, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 

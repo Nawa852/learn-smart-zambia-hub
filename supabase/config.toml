@@ -44,3 +44,10 @@ verify_jwt = false
 
 [functions.ai-debate]
 verify_jwt = false
+
+[functions.ai-study-planner]
+verify_jwt = false
+
+[functions.ai-homework-solver]
+
+verify_jwt = false

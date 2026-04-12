@@ -1,9 +1,10 @@
 import React from 'react';
 import { HubPageLayout, HubTab } from '@/components/Layout/HubPageLayout';
-import { Calendar, Timer, FileText, Target, BookOpen, Bookmark, Flame, Zap } from 'lucide-react';
+import { Calendar, Timer, FileText, Target, BookOpen, Bookmark, Flame, Zap, Brain } from 'lucide-react';
 
 const tabs: HubTab[] = [
   { id: 'challenges', label: 'Daily Challenge', icon: Zap, component: React.lazy(() => import('@/pages/DailyChallengePage')), badge: 'NEW' },
+  { id: 'ai-planner', label: 'AI Planner', icon: Brain, component: React.lazy(() => import('@/pages/AIStudyPlannerPage')), badge: 'NEW' },
   { id: 'planner', label: 'Study Planner', icon: Calendar, component: React.lazy(() => import('@/pages/StudyPlannerPage')) },
   { id: 'focus', label: 'Focus Mode', icon: Timer, component: React.lazy(() => import('@/pages/FocusModePage')) },
   { id: 'notes', label: 'My Notes', icon: FileText, component: React.lazy(() => import('@/pages/MyNotesPage')) },

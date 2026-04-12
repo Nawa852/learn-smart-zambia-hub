@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/components/Auth/AuthProvider';
 import { Sparkles, Loader2, BookOpen, TrendingUp, Lightbulb, Target, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
