@@ -3,7 +3,7 @@ import { useAuth } from '@/components/Auth/AuthProvider';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, Brain, BookOpen, Target, Check, Sparkles,
-  GraduationCap, Users, Building, Globe, Mail, Heart, Play, Award, Clock, Zap, Star, Shield
+  GraduationCap, Users, Building, Globe, Mail, Heart, Play, Award, Clock, Zap, Star, Shield, TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -27,7 +27,7 @@ const roles = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
