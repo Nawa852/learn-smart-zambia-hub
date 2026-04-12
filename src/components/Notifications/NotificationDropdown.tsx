@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, CheckCheck, FileText, Award, Clock, Calendar, AlertTriangle, Trash2, Filter } from 'lucide-react';
+import { Bell, CheckCheck, FileText, Award, Clock, Calendar, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import { requestNotificationPermission, checkDeadlinesAndNotify, setupAnnouncementNotifications } from '@/utils/pushNotifications';
 
 interface Notification {
   id: string;
@@ -52,38 +53,21 @@ export const NotificationDropdown = () => {
 
     fetchNotifications();
 
-    // Check for upcoming deadlines
-    const checkDeadlines = async () => {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      
-      const { data: assignments } = await supabase
-        .from('assignments')
-        .select('id, title, due_date, course_id')
-        .gte('due_date', new Date().toISOString())
-        .lte('due_date', tomorrow.toISOString());
+    // Request browser notification permission & check deadlines with push
+    requestNotificationPermission();
+    checkDeadlinesAndNotify(user.id);
 
-      if (assignments?.length) {
-        // Check which ones the student hasn't submitted
-        const { data: submissions } = await supabase
-          .from('submissions')
-          .select('assignment_id')
-          .eq('user_id', user.id)
-          .in('assignment_id', assignments.map(a => a.id));
+    // Subscribe to announcements for enrolled courses
+    let cleanupAnnouncements = () => {};
+    supabase.from('enrollments').select('course_id').eq('user_id', user.id)
+      .then(({ data }) => {
+        if (data?.length) {
+          cleanupAnnouncements = setupAnnouncementNotifications(user.id, data.map(e => e.course_id));
+        }
+      });
 
-        const submittedIds = new Set(submissions?.map(s => s.assignment_id) || []);
-        const pending = assignments.filter(a => !submittedIds.has(a.id));
-
-        pending.forEach(a => {
-          const exists = notifications.some(n => n.type === 'deadline' && n.message?.includes(a.id));
-          if (!exists) {
-            toast.warning(`⏰ "${a.title}" is due soon!`, { duration: 6000 });
-          }
-        });
-      }
-    };
-
-    checkDeadlines();
+    // Also check deadlines every 30 minutes
+    const deadlineInterval = setInterval(() => checkDeadlinesAndNotify(user.id), 30 * 60 * 1000);
 
     // Realtime subscription
     const channel = supabase
@@ -100,7 +84,11 @@ export const NotificationDropdown = () => {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+      cleanupAnnouncements();
+      clearInterval(deadlineInterval);
+    };
   }, [user]);
 
   const markAllRead = async () => {
