@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/components/Auth/AuthProvider';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, Brain, BookOpen, Target, Check, Sparkles,
@@ -33,7 +34,13 @@ const fadeUp = {
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
 const MVPLanding = () => {
+  const { enterDemoMode } = useAuth();
   const navigate = useNavigate();
+
+  const handleDemo = () => {
+    enterDemoMode();
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-background">
