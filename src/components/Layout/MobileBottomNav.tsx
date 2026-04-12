@@ -13,10 +13,9 @@ export const MobileBottomNav = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-      {/* Frosted glass background */}
-      <div className="absolute inset-0 bg-card/90 backdrop-blur-2xl border-t border-border/60" />
+      <div className="absolute inset-0 bg-card/95 backdrop-blur-2xl border-t border-border/30" />
       
-      <div className="relative flex items-end justify-around h-[72px] max-w-lg mx-auto px-1 pb-[env(safe-area-inset-bottom,8px)]">
+      <div className="relative flex items-center justify-around h-16 max-w-lg mx-auto px-2 pb-[env(safe-area-inset-bottom,4px)]">
         {items.map((item) => {
           const isActive = matchesNavItem(location.pathname, item);
           return (
@@ -24,30 +23,24 @@ export const MobileBottomNav = () => {
               key={item.url}
               onClick={() => navigate(item.url)}
               className={cn(
-                'relative flex flex-col items-center justify-center gap-0.5 flex-1 pt-2 pb-1 transition-all duration-150 active:scale-90',
-                isActive ? 'text-primary' : 'text-muted-foreground'
+                'relative flex flex-col items-center justify-center gap-[3px] flex-1 py-1 transition-all duration-200 active:scale-90',
+                isActive ? 'text-primary' : 'text-muted-foreground/70'
               )}
             >
-              {/* Active pill indicator */}
-              {isActive && (
-                <div className="absolute -top-[1px] w-12 h-[3px] rounded-full bg-primary" />
-              )}
-              
-              {/* Icon container */}
+              {/* Active background pill */}
               <div className={cn(
-                'flex items-center justify-center w-8 h-8 rounded-2xl transition-all duration-200',
-                isActive && 'bg-primary/12 scale-105'
+                'flex items-center justify-center w-10 h-8 rounded-2xl transition-all duration-300',
+                isActive ? 'bg-primary/12' : ''
               )}>
-                <item.icon 
-                  className={cn("w-[22px] h-[22px]", isActive && "drop-shadow-[0_0_6px_hsl(var(--primary)/0.5)]")} 
-                  strokeWidth={isActive ? 2.4 : 1.6} 
+                <item.icon
+                  className={cn("w-5 h-5 transition-all", isActive && "drop-shadow-[0_0_8px_hsl(var(--primary)/0.4)]")}
+                  strokeWidth={isActive ? 2.2 : 1.5}
                 />
               </div>
               
-              {/* Label */}
               <span className={cn(
-                "text-[10px] leading-tight tracking-tight",
-                isActive ? "font-semibold" : "font-normal opacity-70"
+                "text-[10px] leading-none",
+                isActive ? "font-semibold text-primary" : "font-normal"
               )}>
                 {item.shortTitle ?? item.title}
               </span>

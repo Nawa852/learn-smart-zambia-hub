@@ -6,94 +6,93 @@
 
 @layer base {
   :root {
-    /* GitHub Dark — Default */
-    --background: 220 14% 8%;
-    --foreground: 210 17% 88%;
+    /* Modern Dark — Refined 2025 */
+    --background: 228 14% 7%;
+    --foreground: 220 20% 92%;
 
-    --card: 220 13% 11%;
-    --card-foreground: 210 17% 90%;
+    --card: 228 12% 10%;
+    --card-foreground: 220 20% 93%;
 
-    --popover: 220 13% 10%;
-    --popover-foreground: 210 17% 90%;
+    --popover: 228 12% 9%;
+    --popover-foreground: 220 20% 93%;
 
-    /* Facebook Blue */
-    --primary: 214 89% 52%;
+    /* Vibrant Blue-Violet */
+    --primary: 230 90% 62%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 14%;
-    --secondary-foreground: 210 17% 85%;
+    --secondary: 228 12% 14%;
+    --secondary-foreground: 220 15% 85%;
 
-    --muted: 220 14% 14%;
-    --muted-foreground: 213 10% 55%;
+    --muted: 228 10% 15%;
+    --muted-foreground: 220 10% 50%;
 
-    /* GitHub Green accent */
-    --accent: 137 66% 49%;
+    /* Emerald accent */
+    --accent: 160 84% 44%;
     --accent-foreground: 0 0% 100%;
 
-    --success: 137 66% 49%;
+    --success: 160 84% 44%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 39 100% 57%;
-    --warning-foreground: 220 14% 8%;
+    --warning: 43 96% 56%;
+    --warning-foreground: 228 14% 7%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 56%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 10% 18%;
-    --input: 220 10% 16%;
-    --ring: 214 89% 52%;
+    --border: 228 8% 16%;
+    --input: 228 8% 14%;
+    --ring: 230 90% 62%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Sidebar tokens */
-    --sidebar-background: 220 14% 9%;
-    --sidebar-foreground: 210 17% 75%;
-    --sidebar-primary: 214 89% 52%;
+    /* Sidebar */
+    --sidebar-background: 228 14% 8%;
+    --sidebar-foreground: 220 15% 70%;
+    --sidebar-primary: 230 90% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 14%;
-    --sidebar-accent-foreground: 210 17% 90%;
-    --sidebar-border: 220 10% 16%;
-    --sidebar-ring: 214 89% 52%;
+    --sidebar-accent: 228 12% 14%;
+    --sidebar-accent-foreground: 220 20% 92%;
+    --sidebar-border: 228 8% 14%;
+    --sidebar-ring: 230 90% 62%;
   }
 
-  /* Facebook Light */
   .light {
-    --background: 220 20% 97%;
-    --foreground: 220 20% 10%;
+    --background: 0 0% 98%;
+    --foreground: 228 20% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 228 20% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 228 20% 10%;
 
-    --primary: 214 89% 52%;
+    --primary: 230 90% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 93%;
-    --secondary-foreground: 220 20% 10%;
+    --secondary: 228 15% 94%;
+    --secondary-foreground: 228 20% 10%;
 
-    --muted: 220 15% 93%;
-    --muted-foreground: 220 8% 46%;
+    --muted: 228 15% 94%;
+    --muted-foreground: 228 8% 46%;
 
-    --accent: 114 62% 44%;
+    --accent: 160 84% 39%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 10% 88%;
-    --input: 220 10% 88%;
-    --ring: 214 89% 52%;
+    --border: 228 10% 90%;
+    --input: 228 10% 90%;
+    --ring: 230 90% 56%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 20% 30%;
-    --sidebar-primary: 214 89% 52%;
+    --sidebar-foreground: 228 15% 30%;
+    --sidebar-primary: 230 90% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 95%;
-    --sidebar-accent-foreground: 220 20% 10%;
-    --sidebar-border: 220 10% 92%;
-    --sidebar-ring: 214 89% 52%;
+    --sidebar-accent: 228 15% 96%;
+    --sidebar-accent-foreground: 228 20% 10%;
+    --sidebar-border: 228 10% 92%;
+    --sidebar-ring: 230 90% 56%;
   }
 }
 
@@ -109,24 +108,19 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Better heading hierarchy */
-  h1 { @apply tracking-tight; }
-  h2 { @apply tracking-tight; }
-  h3 { @apply tracking-tight; }
+  h1, h2, h3 { @apply tracking-tight; }
 }
 
 @layer utilities {
-  /* Card shadows */
+  /* Elevated card shadows */
   .shadow-card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1);
   }
-
   .shadow-card-hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
   }
-
   .shadow-elevated {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   /* Gradient text */
@@ -134,38 +128,34 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
   }
 
-  /* Glass effect */
+  /* Glass */
   .glass-card {
-    @apply bg-card/80 backdrop-blur-md;
+    @apply bg-card/70 backdrop-blur-xl;
   }
 
-  /* Glow effects */
+  /* Glow */
   .glow-border {
-    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.2), 0 0 20px -5px hsl(var(--primary) / 0.15);
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15), 0 0 24px -6px hsl(var(--primary) / 0.12);
   }
-
   .glow-primary {
-    box-shadow: 0 0 20px -4px hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 24px -4px hsl(var(--primary) / 0.35);
   }
 
   /* Animations */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease forwards;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
-
   .animate-slide-up {
-    animation: slideUp 0.3s ease forwards;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     transform: translateY(8px);
     opacity: 0;
   }
-
   .animate-scale-in {
-    animation: scaleIn 0.2s ease-out forwards;
-    transform: scale(0.97);
+    animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: scale(0.96);
     opacity: 0;
   }
-
   .animate-shimmer {
     animation: shimmer 2s linear infinite;
   }
@@ -184,57 +174,53 @@
 
   /* Keyframes */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes slideUp {
     to { transform: translateY(0); opacity: 1; }
   }
-
   @keyframes scaleIn {
     to { transform: scale(1); opacity: 1; }
   }
-
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
   }
-
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 0; }
+    100% { transform: scale(0.9); opacity: 0; }
   }
 
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
 
-  /* Safe area for mobile bottom nav */
+  /* Safe area */
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
-  /* Page container utility */
-  .page-container {
-    @apply max-w-4xl mx-auto;
-  }
-
-  .page-container-wide {
-    @apply max-w-6xl mx-auto;
-  }
+  /* Page containers */
+  .page-container { @apply max-w-4xl mx-auto; }
+  .page-container-wide { @apply max-w-6xl mx-auto; }
 
   /* Focus ring */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
-  /* Smooth interactive states */
+  /* Smooth touch */
   .interactive {
-    @apply transition-all duration-200 active:scale-[0.98];
+    @apply transition-all duration-200 active:scale-[0.97];
   }
 
-  /* Hide scrollbar but keep scrolling */
+  /* Hide scrollbar */
   .scrollbar-none {
     -ms-overflow-style: none;
     scrollbar-width: none;

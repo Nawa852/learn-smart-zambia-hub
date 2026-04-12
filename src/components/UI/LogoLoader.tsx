@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from "framer-motion";
-import eduLogo from "@/assets/edu-zambia-mark.png";
+import nexusIcon from "@/assets/nexus-icon.png";
 
 interface LogoLoaderProps {
   size?: "sm" | "md" | "lg";
@@ -8,93 +7,58 @@ interface LogoLoaderProps {
 }
 
 const sizeConfig = {
-  sm: { logo: 32, container: 56, ring: 64 },
-  md: { logo: 48, container: 76, ring: 88 },
-  lg: { logo: 64, container: 96, ring: 112 },
+  sm: { logo: 28, container: 48 },
+  md: { logo: 40, container: 64 },
+  lg: { logo: 56, container: 80 },
 };
 
-const STUDY_TIPS = [
-  "Did you know? Spaced repetition improves retention by 200%",
-  "Tip: Teaching others is the best way to learn",
-  "Try the Pomodoro technique — 25 min focus, 5 min break",
+const TIPS = [
+  "Spaced repetition boosts retention by 200%",
+  "Teaching others is the best way to learn",
+  "Short study sessions beat cramming",
   "Active recall beats re-reading by 150%",
-  "Short study sessions are more effective than cramming",
+  "Exercise before studying improves focus",
   "Your brain consolidates memories during sleep",
-  "Taking notes by hand boosts comprehension",
-  "Exercise before studying improves focus and memory",
 ];
 
 export function LogoLoader({ size = "md", text }: LogoLoaderProps) {
   const s = sizeConfig[size];
-  const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * STUDY_TIPS.length));
+  const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * TIPS.length));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTipIndex(i => (i + 1) % STUDY_TIPS.length);
+      setTipIndex(i => (i + 1) % TIPS.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5 min-h-[180px] w-full">
-      <div className="relative" style={{ width: s.ring + 16, height: s.ring + 16 }}>
-        {/* Ambient glow */}
-        <motion.div
-          className="absolute rounded-full bg-primary/10 blur-2xl"
-          style={{ width: s.ring + 24, height: s.ring + 24, top: '50%', left: '50%', x: '-50%', y: '-50%' }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+    <div className="flex flex-col items-center justify-center gap-4 min-h-[140px] w-full">
+      <div className="relative" style={{ width: s.container, height: s.container }}>
+        {/* Pulse ring */}
+        <div
+          className="absolute inset-0 rounded-2xl border-2 border-primary/20"
+          style={{ animation: 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
         />
-
-        {/* Spinning ring */}
-        <motion.div
-          className="absolute border-2 border-primary/20 rounded-full"
-          style={{ width: s.ring, height: s.ring, top: '50%', left: '50%', x: '-50%', y: '-50%' }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        
+        {/* Logo container */}
+        <div
+          className="absolute inset-0 flex items-center justify-center rounded-2xl bg-card border border-border/50 shadow-elevated"
+          style={{ animation: 'fadeIn 0.5s ease-out' }}
         >
-          <motion.div
-            className="absolute w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]"
-            style={{ top: -5, left: '50%', x: '-50%' }}
-          />
-        </motion.div>
-
-        {/* Center logo */}
-        <motion.div
-          className="absolute bg-card rounded-2xl shadow-lg border border-border/50 flex items-center justify-center overflow-hidden"
-          style={{ width: s.container, height: s.container, top: '50%', left: '50%', x: '-50%', y: '-50%' }}
-          animate={{
-            scale: [1, 1.03, 1],
-            boxShadow: [
-              '0 0 0 0 hsl(var(--primary) / 0)',
-              '0 0 16px 3px hsl(var(--primary) / 0.12)',
-              '0 0 0 0 hsl(var(--primary) / 0)',
-            ],
-          }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <img src={eduLogo} alt="Loading" style={{ width: s.logo, height: s.logo }} className="relative z-10 rounded-lg" />
-        </motion.div>
+          <img src={nexusIcon} alt="Loading" style={{ width: s.logo, height: s.logo }} className="rounded-lg" />
+        </div>
       </div>
 
       {text && (
-        <motion.p
-          className="text-sm text-muted-foreground font-medium"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
+        <p className="text-sm text-muted-foreground font-medium animate-fade-in">
           {text}
-        </motion.p>
+        </p>
       )}
 
-      <motion.p
-        key={tipIndex}
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-xs text-muted-foreground/60 max-w-xs text-center"
-      >
-        💡 {STUDY_TIPS[tipIndex]}
-      </motion.p>
+      <p key={tipIndex} className="text-[11px] text-muted-foreground/50 max-w-xs text-center animate-fade-in">
+        💡 {TIPS[tipIndex]}
+      </p>
     </div>
   );
 }
