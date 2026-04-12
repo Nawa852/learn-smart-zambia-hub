@@ -7,9 +7,9 @@ interface LogoLoaderProps {
 }
 
 const sizeConfig = {
-  sm: { logo: 28, container: 48 },
-  md: { logo: 40, container: 64 },
-  lg: { logo: 56, container: 80 },
+  sm: { logo: 24, container: 44 },
+  md: { logo: 36, container: 56 },
+  lg: { logo: 48, container: 72 },
 };
 
 const TIPS = [
@@ -33,30 +33,30 @@ export function LogoLoader({ size = "md", text }: LogoLoaderProps) {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 min-h-[140px] w-full">
+    <div className="flex flex-col items-center justify-center gap-5 min-h-[140px] w-full">
       <div className="relative" style={{ width: s.container, height: s.container }}>
         {/* Pulse ring */}
         <div
-          className="absolute inset-0 rounded-2xl border-2 border-primary/20"
-          style={{ animation: 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
+          className="absolute inset-[-4px] rounded-2xl border border-primary/15"
+          style={{ animation: 'pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
         />
         
         {/* Logo container */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-2xl bg-card border border-border/50 shadow-elevated"
+          className="absolute inset-0 flex items-center justify-center rounded-2xl bg-card border border-border/30 shadow-elevated"
           style={{ animation: 'fadeIn 0.5s ease-out' }}
         >
-          <img src={nexusIcon} alt="Loading" style={{ width: s.logo, height: s.logo }} className="rounded-lg" />
+          <img src={nexusIcon} alt="Loading" style={{ width: s.logo, height: s.logo }} className="rounded-xl" />
         </div>
       </div>
 
       {text && (
-        <p className="text-sm text-muted-foreground font-medium animate-fade-in">
+        <p className="text-[13px] text-muted-foreground font-medium animate-fade-in">
           {text}
         </p>
       )}
 
-      <p key={tipIndex} className="text-[11px] text-muted-foreground/50 max-w-xs text-center animate-fade-in">
+      <p key={tipIndex} className="text-[11px] text-muted-foreground/40 max-w-xs text-center animate-fade-in">
         💡 {TIPS[tipIndex]}
       </p>
     </div>

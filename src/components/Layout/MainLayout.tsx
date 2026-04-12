@@ -129,7 +129,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           )}
 
           {/* Main content — extra bottom padding on mobile for bottom nav */}
-          <main id="main-content" className="flex-1 px-4 py-4 pb-24 lg:px-6 lg:py-6 lg:pb-6 overflow-auto">
+          <main id="main-content" className="flex-1 px-3 py-3 pb-24 lg:px-5 lg:py-5 lg:pb-5 overflow-auto">
             {children}
           </main>
 
