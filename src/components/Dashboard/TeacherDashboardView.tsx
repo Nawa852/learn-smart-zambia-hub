@@ -8,6 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Users, BookOpen, ClipboardCheck, TrendingUp, AlertCircle, FileText, MessageSquare, Video, Award, PieChart, Brain, Wand2, Sparkles, Loader2, Save } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { ClassPerformanceHeatmap } from './ClassPerformanceHeatmap';
+import { GradingQueue } from './GradingQueue';
+import { AttendanceOverview } from './AttendanceOverview';
+import { QuickAnnouncementWidget } from './QuickAnnouncementWidget';
+import { TopStudentsWidget } from './TopStudentsWidget';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 import { useTeacherStats } from '@/hooks/useTeacherStats';
 import { LogoLoader } from '@/components/UI/LogoLoader';
@@ -222,81 +227,92 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* My Classes */}
-          <Card className="lg:col-span-2 border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" />My Courses</CardTitle>
-              <CardDescription>Your created courses and enrollment stats</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {courses.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                  <p className="font-medium">No courses yet</p>
-                  <p className="text-sm mb-4">Create your first course to get started</p>
-                  <Button asChild size="sm"><Link to="/create-course">Create Course</Link></Button>
-                </div>
-              ) : courses.map(course => (
-                <Card key={course.id} className="hover:shadow-md transition-all">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{course.title}</h3>
-                        <p className="text-sm text-muted-foreground">{course.subject || 'No subject'} • {course.grade_level || 'All grades'}</p>
-                      </div>
-                      <Badge variant={course.is_published ? 'default' : 'secondary'}>{course.is_published ? 'Published' : 'Draft'}</Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div><p className="text-muted-foreground mb-1">Students Enrolled</p><p className="font-semibold text-lg">{course.enrollment_count}</p></div>
-                      <div><p className="text-muted-foreground mb-1">Avg Score</p><p className="font-semibold text-lg">{course.avg_score != null ? `${course.avg_score}%` : 'N/A'}</p></div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" asChild className="flex-1"><Link to={`/course/${course.id}`}>View</Link></Button>
-                      <Button size="sm" asChild className="flex-1"><Link to={`/course/${course.id}/assignments`}>Assignments</Link></Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Student Performance Alerts */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2"><AlertCircle className="w-5 h-5 text-orange-600" />Performance Alerts</CardTitle>
-              <CardDescription>Students scoring below 50% — may need intervention</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {studentAlerts.length === 0 ? (
-                <div className="text-center py-6">
-                  <TrendingUp className="w-10 h-10 mx-auto mb-2 text-green-500 opacity-60" />
-                  <p className="text-sm text-muted-foreground">No alerts — all students are performing well! 🎉</p>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="destructive" className="text-xs">{studentAlerts.filter(a => a.severity === 'high').length} critical</Badge>
-                    <Badge variant="secondary" className="text-xs">{studentAlerts.filter(a => a.severity === 'medium').length} warning</Badge>
+          {/* Left: My Classes + Pending */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="border-border/40">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" />My Courses</CardTitle>
+                <CardDescription>Your created courses and enrollment stats</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {courses.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                    <p className="font-medium">No courses yet</p>
+                    <p className="text-sm mb-4">Create your first course to get started</p>
+                    <Button asChild size="sm"><Link to="/create-course">Create Course</Link></Button>
                   </div>
-                  {studentAlerts.map((alert, index) => (
-                    <div key={index} className={`p-3 border rounded-lg hover:shadow-md transition-all ${alert.severity === 'high' ? 'border-destructive/30 bg-destructive/5' : 'border-yellow-500/30 bg-yellow-500/5'}`}>
-                      <div className="flex items-start gap-3">
-                        <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${alert.severity === 'high' ? 'bg-destructive' : 'bg-yellow-500'}`} />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm">{alert.student_name}</p>
-                          <p className="text-xs text-muted-foreground truncate">{alert.course_title}</p>
-                          <p className={`text-xs mt-1 font-medium ${alert.severity === 'high' ? 'text-destructive' : 'text-yellow-600'}`}>{alert.issue}</p>
+                ) : courses.map(course => (
+                  <Card key={course.id} className="border-border/40">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-base">{course.title}</h3>
+                          <p className="text-xs text-muted-foreground">{course.subject || 'No subject'} • {course.grade_level || 'All grades'}</p>
                         </div>
-                        <Button size="sm" variant="ghost" className="shrink-0 text-xs h-7" onClick={() => navigate('/messenger')}>
-                          <MessageSquare className="w-3 h-3 mr-1" />Contact
-                        </Button>
+                        <Badge variant={course.is_published ? 'default' : 'secondary'} className="text-[10px]">{course.is_published ? 'Published' : 'Draft'}</Badge>
                       </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div><p className="text-muted-foreground mb-0.5 text-xs">Students</p><p className="font-bold text-lg">{course.enrollment_count}</p></div>
+                        <div><p className="text-muted-foreground mb-0.5 text-xs">Avg Score</p><p className="font-bold text-lg">{course.avg_score != null ? `${course.avg_score}%` : 'N/A'}</p></div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" asChild className="flex-1"><Link to={`/course/${course.id}`}>View</Link></Button>
+                        <Button size="sm" asChild className="flex-1"><Link to={`/course/${course.id}/assignments`}>Assignments</Link></Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Student Performance Alerts */}
+            <Card className="border-border/40">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><AlertCircle className="w-5 h-5 text-warning" />Performance Alerts</CardTitle>
+                <CardDescription>Students scoring below 50%</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {studentAlerts.length === 0 ? (
+                  <div className="text-center py-6">
+                    <TrendingUp className="w-10 h-10 mx-auto mb-2 text-accent opacity-60" />
+                    <p className="text-sm text-muted-foreground">All students performing well! 🎉</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="destructive" className="text-[10px]">{studentAlerts.filter(a => a.severity === 'high').length} critical</Badge>
+                      <Badge variant="secondary" className="text-[10px]">{studentAlerts.filter(a => a.severity === 'medium').length} warning</Badge>
                     </div>
-                  ))}
-                </>
-              )}
-            </CardContent>
-          </Card>
+                    {studentAlerts.map((alert, index) => (
+                      <div key={index} className={`p-3 border rounded-xl transition-all ${alert.severity === 'high' ? 'border-destructive/30 bg-destructive/5' : 'border-warning/30 bg-warning/5'}`}>
+                        <div className="flex items-start gap-3">
+                          <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${alert.severity === 'high' ? 'bg-destructive' : 'bg-warning'}`} />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-sm">{alert.student_name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{alert.course_title}</p>
+                            <p className={`text-xs mt-1 font-medium ${alert.severity === 'high' ? 'text-destructive' : 'text-warning'}`}>{alert.issue}</p>
+                          </div>
+                          <Button size="sm" variant="ghost" className="shrink-0 text-xs h-7" onClick={() => navigate('/connect?tab=messenger')}>
+                            <MessageSquare className="w-3 h-3 mr-1" />Contact
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right: Interactive Widgets */}
+          <div className="space-y-5">
+            <ClassPerformanceHeatmap />
+            <GradingQueue />
+            <AttendanceOverview />
+            <QuickAnnouncementWidget />
+            <TopStudentsWidget />
+          </div>
         </div>
 
         {/* Pending Grading */}
