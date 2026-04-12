@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
-import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer, Mic, MicOff, Loader2, FileAudio } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { StickyNote, BookOpen, Trash2, Edit3, Save, X, Inbox, Printer, Mic, MicOff, Loader2, FileAudio, Filter, Tag } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Note {
@@ -23,6 +24,13 @@ interface Note {
   lesson_title?: string;
   course_title?: string;
 }
+
+interface CourseOption {
+  id: string;
+  title: string;
+}
+
+const SUBJECTS = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History', 'Geography', 'Civic Education', 'Computer Science', 'Other'];
 
 const MyNotesPage = () => {
   const { user } = useAuth();
@@ -41,39 +49,72 @@ const MyNotesPage = () => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const transcriptRef = useRef('');
 
+  // Tagging state for recording
+  const [recSubject, setRecSubject] = useState('');
+  const [recCourseId, setRecCourseId] = useState('');
+  const [showTagPicker, setShowTagPicker] = useState(false);
+
+  // Enrolled courses for tagging
+  const [enrolledCourses, setEnrolledCourses] = useState<CourseOption[]>([]);
+
+  // Filter state
+  const [filterSubject, setFilterSubject] = useState('all');
+  const [filterCourse, setFilterCourse] = useState('all');
+
   useEffect(() => {
     if (!user) return;
-    const load = async () => {
-      const { data, error } = await (supabase as any)
-        .from('student_notes')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false });
-
-      if (error) { toast.error('Failed to load notes'); setLoading(false); return; }
-
-      if (data) {
-        const courseIds = [...new Set(data.filter((n: any) => n.course_id).map((n: any) => n.course_id))] as string[];
-        const lessonIds = [...new Set(data.filter((n: any) => n.lesson_id).map((n: any) => n.lesson_id))] as string[];
-
-        const [{ data: courses }, { data: lessons }] = await Promise.all([
-          courseIds.length ? supabase.from('courses').select('id, title').in('id', courseIds) : { data: [] as any[] },
-          lessonIds.length ? supabase.from('lessons').select('id, title').in('id', lessonIds) : { data: [] as any[] },
-        ]);
-
-        const courseMap = Object.fromEntries((courses || []).map((c: any) => [c.id, c.title]));
-        const lessonMap = Object.fromEntries((lessons || []).map((l: any) => [l.id, l.title]));
-
-        setNotes(data.map((n: any) => ({
-          ...n,
-          course_title: courseMap[n.course_id] || undefined,
-          lesson_title: lessonMap[n.lesson_id] || undefined,
-        })));
-      }
-      setLoading(false);
-    };
-    load();
+    loadNotes();
+    loadEnrolledCourses();
   }, [user]);
+
+  const loadEnrolledCourses = async () => {
+    if (!user) return;
+    const { data: enrollments } = await supabase
+      .from('enrollments')
+      .select('course_id')
+      .eq('user_id', user.id);
+
+    if (!enrollments?.length) return;
+
+    const courseIds = enrollments.map(e => e.course_id);
+    const { data: courses } = await supabase
+      .from('courses')
+      .select('id, title')
+      .in('id', courseIds);
+
+    if (courses) setEnrolledCourses(courses);
+  };
+
+  const loadNotes = async () => {
+    if (!user) return;
+    const { data, error } = await (supabase as any)
+      .from('student_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false });
+
+    if (error) { toast.error('Failed to load notes'); setLoading(false); return; }
+
+    if (data) {
+      const courseIds = [...new Set(data.filter((n: any) => n.course_id).map((n: any) => n.course_id))] as string[];
+      const lessonIds = [...new Set(data.filter((n: any) => n.lesson_id).map((n: any) => n.lesson_id))] as string[];
+
+      const [{ data: courses }, { data: lessons }] = await Promise.all([
+        courseIds.length ? supabase.from('courses').select('id, title').in('id', courseIds) : { data: [] as any[] },
+        lessonIds.length ? supabase.from('lessons').select('id, title').in('id', lessonIds) : { data: [] as any[] },
+      ]);
+
+      const courseMap = Object.fromEntries((courses || []).map((c: any) => [c.id, c.title]));
+      const lessonMap = Object.fromEntries((lessons || []).map((l: any) => [l.id, l.title]));
+
+      setNotes(data.map((n: any) => ({
+        ...n,
+        course_title: courseMap[n.course_id] || undefined,
+        lesson_title: lessonMap[n.lesson_id] || undefined,
+      })));
+    }
+    setLoading(false);
+  };
 
   // Cleanup on unmount
   useEffect(() => {
@@ -115,7 +156,6 @@ const MyNotesPage = () => {
     };
 
     recognition.onend = () => {
-      // Auto-restart if still recording (browser stops after silence)
       if (isRecording) {
         try { recognition.start(); } catch {}
       }
@@ -145,13 +185,23 @@ const MyNotesPage = () => {
 
     setIsTranscribing(true);
 
-    // Save as a new note
     const now = new Date().toISOString();
-    const title = `🎙️ Lecture Recording — ${new Date().toLocaleDateString('en-ZM', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+    const subjectTag = recSubject && recSubject !== '' ? ` [${recSubject}]` : '';
+    const title = `🎙️ Lecture Recording${subjectTag} — ${new Date().toLocaleDateString('en-ZM', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+
+    const insertData: any = {
+      user_id: user!.id,
+      title,
+      content: transcript,
+      created_at: now,
+      updated_at: now,
+    };
+
+    if (recCourseId) insertData.course_id = recCourseId;
 
     const { data, error } = await (supabase as any)
       .from('student_notes')
-      .insert({ user_id: user!.id, title, content: transcript, created_at: now, updated_at: now })
+      .insert(insertData)
       .select()
       .single();
 
@@ -163,8 +213,12 @@ const MyNotesPage = () => {
       return;
     }
 
-    setNotes(prev => [{ ...data, course_title: undefined, lesson_title: undefined }, ...prev]);
-    toast.success('Lecture recording saved as note!');
+    const courseName = enrolledCourses.find(c => c.id === recCourseId)?.title;
+    setNotes(prev => [{ ...data, course_title: courseName || undefined, lesson_title: undefined }, ...prev]);
+    toast.success('Lecture recording saved!');
+    setRecSubject('');
+    setRecCourseId('');
+    setShowTagPicker(false);
   };
 
   const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
@@ -186,6 +240,27 @@ const MyNotesPage = () => {
     toast.success('Note updated');
   };
 
+  // Extract subject tags from titles for filtering
+  const getSubjectFromTitle = (title: string | null) => {
+    if (!title) return null;
+    const match = title.match(/\[(.+?)\]/);
+    return match ? match[1] : null;
+  };
+
+  const availableSubjectsInNotes = [...new Set(notes.map(n => getSubjectFromTitle(n.title)).filter(Boolean))] as string[];
+  const availableCoursesInNotes = [...new Set(notes.filter(n => n.course_title).map(n => n.course_title!))] as string[];
+
+  const filteredNotes = notes.filter(n => {
+    if (filterSubject !== 'all') {
+      const noteSubject = getSubjectFromTitle(n.title);
+      if (noteSubject !== filterSubject) return false;
+    }
+    if (filterCourse !== 'all') {
+      if (n.course_title !== filterCourse) return false;
+    }
+    return true;
+  });
+
   if (loading) return (
     <div className="max-w-3xl mx-auto py-6 px-4 space-y-4">
       <Skeleton className="h-8 w-48" />
@@ -201,7 +276,7 @@ const MyNotesPage = () => {
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <StickyNote className="w-6 h-6 text-primary" /> My Notes
           </h1>
-          <p className="text-sm text-muted-foreground">{notes.length} notes saved</p>
+          <p className="text-sm text-muted-foreground">{filteredNotes.length} of {notes.length} notes</p>
         </div>
         <div className="flex gap-2">
           {notes.length > 0 && (
@@ -214,8 +289,76 @@ const MyNotesPage = () => {
 
       {/* Lecture Recording Card */}
       <Card className={`border-2 transition-colors ${isRecording ? 'border-destructive/50 bg-destructive/5' : 'border-dashed border-primary/30 hover:border-primary/50'}`}>
-        <CardContent className="py-4">
-          {isRecording ? (
+        <CardContent className="py-4 space-y-3">
+          {!isRecording && !isTranscribing && (
+            <>
+              {/* Tag Picker */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowTagPicker(!showTagPicker)}
+                  className="text-xs"
+                >
+                  <Tag className="w-3.5 h-3.5 mr-1" />
+                  {recSubject || recCourseId ? 'Tagged' : 'Add Tags'}
+                  {(recSubject || recCourseId) && (
+                    <Badge variant="secondary" className="ml-1 text-[10px]">
+                      {[recSubject, enrolledCourses.find(c => c.id === recCourseId)?.title].filter(Boolean).join(' · ')}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
+
+              {showTagPicker && (
+                <div className="flex flex-wrap gap-2 p-3 bg-muted/50 rounded-lg border">
+                  <div className="w-full sm:w-auto flex-1 min-w-[140px]">
+                    <label className="text-[10px] text-muted-foreground font-medium mb-1 block">Subject</label>
+                    <Select value={recSubject} onValueChange={setRecSubject}>
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Select subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUBJECTS.map(s => <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="w-full sm:w-auto flex-1 min-w-[140px]">
+                    <label className="text-[10px] text-muted-foreground font-medium mb-1 block">Course</label>
+                    <Select value={recCourseId} onValueChange={setRecCourseId}>
+                      <SelectTrigger className="h-8 text-xs">
+                        <SelectValue placeholder="Select course" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {enrolledCourses.length === 0 ? (
+                          <SelectItem value="_none" disabled className="text-xs">No enrolled courses</SelectItem>
+                        ) : (
+                          enrolledCourses.map(c => <SelectItem key={c.id} value={c.id} className="text-xs">{c.title}</SelectItem>)
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {(recSubject || recCourseId) && (
+                    <Button variant="ghost" size="sm" className="self-end h-8 text-xs" onClick={() => { setRecSubject(''); setRecCourseId(''); }}>
+                      <X className="w-3 h-3 mr-1" /> Clear
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              <button onClick={startRecording} className="w-full flex items-center justify-center gap-3 py-2 group">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Mic className="w-5 h-5 text-primary" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium text-foreground">Record Lecture</p>
+                  <p className="text-xs text-muted-foreground">Tap to start — speech will be transcribed to a note</p>
+                </div>
+              </button>
+            </>
+          )}
+
+          {isRecording && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -223,8 +366,9 @@ const MyNotesPage = () => {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive"></span>
                   </span>
-                  <span className="text-sm font-medium text-destructive">Recording Lecture</span>
+                  <span className="text-sm font-medium text-destructive">Recording</span>
                   <Badge variant="outline" className="font-mono text-xs">{formatTime(recordingTime)}</Badge>
+                  {recSubject && <Badge variant="secondary" className="text-[10px]">{recSubject}</Badge>}
                 </div>
                 <Button size="sm" variant="destructive" onClick={stopRecording}>
                   <MicOff className="w-4 h-4 mr-1" /> Stop & Save
@@ -237,26 +381,52 @@ const MyNotesPage = () => {
                 </div>
               )}
             </div>
-          ) : isTranscribing ? (
+          )}
+
+          {isTranscribing && (
             <div className="flex items-center justify-center gap-2 py-2">
               <Loader2 className="w-4 h-4 animate-spin text-primary" />
               <span className="text-sm text-muted-foreground">Saving recording...</span>
             </div>
-          ) : (
-            <button onClick={startRecording} className="w-full flex items-center justify-center gap-3 py-2 group">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Mic className="w-5 h-5 text-primary" />
-              </div>
-              <div className="text-left">
-                <p className="text-sm font-medium text-foreground">Record Lecture</p>
-                <p className="text-xs text-muted-foreground">Tap to start recording — speech will be transcribed to a note</p>
-              </div>
-            </button>
           )}
         </CardContent>
       </Card>
 
-      {notes.length === 0 ? (
+      {/* Filters */}
+      {notes.length > 0 && (availableSubjectsInNotes.length > 0 || availableCoursesInNotes.length > 0) && (
+        <div className="flex flex-wrap gap-2 items-center">
+          <Filter className="w-4 h-4 text-muted-foreground" />
+          {availableSubjectsInNotes.length > 0 && (
+            <Select value={filterSubject} onValueChange={setFilterSubject}>
+              <SelectTrigger className="h-8 w-[130px] text-xs">
+                <SelectValue placeholder="Subject" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all" className="text-xs">All Subjects</SelectItem>
+                {availableSubjectsInNotes.map(s => <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          )}
+          {availableCoursesInNotes.length > 0 && (
+            <Select value={filterCourse} onValueChange={setFilterCourse}>
+              <SelectTrigger className="h-8 w-[150px] text-xs">
+                <SelectValue placeholder="Course" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all" className="text-xs">All Courses</SelectItem>
+                {availableCoursesInNotes.map(c => <SelectItem key={c} value={c} className="text-xs">{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          )}
+          {(filterSubject !== 'all' || filterCourse !== 'all') && (
+            <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => { setFilterSubject('all'); setFilterCourse('all'); }}>
+              <X className="w-3 h-3 mr-1" /> Clear
+            </Button>
+          )}
+        </div>
+      )}
+
+      {filteredNotes.length === 0 && notes.length === 0 ? (
         <Card>
           <CardContent className="py-16 text-center">
             <Inbox className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
@@ -264,9 +434,16 @@ const MyNotesPage = () => {
             <p className="text-sm text-muted-foreground mt-1">Take notes while studying or record a lecture above.</p>
           </CardContent>
         </Card>
+      ) : filteredNotes.length === 0 ? (
+        <Card>
+          <CardContent className="py-8 text-center">
+            <Filter className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+            <p className="text-sm text-muted-foreground">No notes match your filters.</p>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-3">
-          {notes.map(note => (
+          {filteredNotes.map(note => (
             <motion.div key={note.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <Card className="border-border/50">
                 <CardContent className="p-4">
@@ -274,6 +451,11 @@ const MyNotesPage = () => {
                     <div className="flex items-center gap-2 flex-wrap">
                       {note.title?.startsWith('🎙️') && (
                         <Badge variant="secondary" className="text-xs"><FileAudio className="w-3 h-3 mr-1" />Recording</Badge>
+                      )}
+                      {getSubjectFromTitle(note.title) && (
+                        <Badge className="text-xs bg-primary/10 text-primary hover:bg-primary/20 border-0">
+                          <Tag className="w-3 h-3 mr-1" />{getSubjectFromTitle(note.title)}
+                        </Badge>
                       )}
                       {note.course_title && <Badge variant="secondary" className="text-xs"><BookOpen className="w-3 h-3 mr-1" />{note.course_title}</Badge>}
                       {note.lesson_title && <Badge variant="outline" className="text-xs">{note.lesson_title}</Badge>}
