@@ -5,14 +5,14 @@ import MVPLanding from "@/components/Landing/MVPLanding";
 import { LogoLoader } from "@/components/UI/LogoLoader";
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, isDemo } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && (user || isDemo)) {
       navigate('/dashboard');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, isDemo, navigate]);
 
   if (loading) {
     return (
