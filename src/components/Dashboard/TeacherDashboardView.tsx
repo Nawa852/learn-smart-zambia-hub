@@ -54,12 +54,12 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
   ];
 
   const teacherTools = [
-    { icon: FileText, title: "Course Builder", description: "Create lessons", link: "/create-course", gradient: "from-blue-500 to-purple-600" },
-    { icon: Video, title: "Live Classes", description: "Virtual classroom", link: "/classroom", gradient: "from-green-500 to-teal-500" },
-    { icon: ClipboardCheck, title: "Course Catalog", description: "Browse courses", link: "/course-catalog", gradient: "from-orange-500 to-red-500" },
-    { icon: PieChart, title: "Analytics", description: "Student insights", link: "/teacher-analytics", gradient: "from-purple-500 to-pink-500" },
-    { icon: MessageSquare, title: "Study Groups", description: "Group chats", link: "/study-groups", gradient: "from-cyan-500 to-blue-500" },
-    { icon: Award, title: "ECZ Resources", description: "Past papers", link: "/zambian-resources", gradient: "from-yellow-500 to-orange-500" },
+    { icon: FileText, title: "Course Builder", description: "Create lessons", link: "/create-course", color: "text-primary", bg: "bg-primary/10" },
+    { icon: Video, title: "Live Classes", description: "Virtual classroom", link: "/classroom", color: "text-accent", bg: "bg-accent/10" },
+    { icon: ClipboardCheck, title: "Course Catalog", description: "Browse courses", link: "/course-catalog", color: "text-warning", bg: "bg-warning/10" },
+    { icon: PieChart, title: "Analytics", description: "Student insights", link: "/teacher-analytics", color: "text-primary", bg: "bg-primary/10" },
+    { icon: MessageSquare, title: "Study Groups", description: "Group chats", link: "/study-groups", color: "text-accent", bg: "bg-accent/10" },
+    { icon: Award, title: "ECZ Resources", description: "Past papers", link: "/zambian-resources", color: "text-warning", bg: "bg-warning/10" },
   ];
 
   const handleGenerateLesson = async () => {
@@ -318,7 +318,7 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         {/* Pending Grading */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-green-600" />Pending Grading</CardTitle>
+            <CardTitle className="flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-accent" />Pending Grading</CardTitle>
             <CardDescription>Submissions awaiting your review</CardDescription>
           </CardHeader>
           <CardContent>
@@ -368,18 +368,18 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         </Card>
 
         {/* Teacher Tools */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader><CardTitle className="flex items-center gap-2"><Award className="w-5 h-5 text-purple-600" />Teaching Tools</CardTitle></CardHeader>
+        <Card className="border-border/50 shadow-card">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Award className="w-5 h-5 text-primary" />Teaching Tools</CardTitle></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               {teacherTools.map((tool, index) => (
                 <Link key={index} to={tool.link}>
-                  <Card className="hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group">
+                  <Card className="hover:shadow-card-hover transition-all hover:-translate-y-1 cursor-pointer group border-border/40">
                     <CardContent className="p-4 text-center space-y-2">
-                      <div className={`w-12 h-12 mx-auto bg-gradient-to-r ${tool.gradient} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                        <tool.icon className="w-6 h-6 text-white" />
+                      <div className={`w-12 h-12 mx-auto ${tool.bg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                        <tool.icon className={`w-6 h-6 ${tool.color}`} />
                       </div>
-                      <h3 className="font-semibold text-sm">{tool.title}</h3>
+                      <h3 className="font-semibold text-sm text-foreground">{tool.title}</h3>
                       <p className="text-xs text-muted-foreground">{tool.description}</p>
                     </CardContent>
                   </Card>
