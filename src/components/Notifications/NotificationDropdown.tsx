@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, CheckCheck, FileText, Award, Clock, Calendar, AlertTriangle, Trash2, Filter } from 'lucide-react';
+import { Bell, CheckCheck, FileText, Award, Clock, Calendar, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
+import { requestNotificationPermission, checkDeadlinesAndNotify, setupAnnouncementNotifications } from '@/utils/pushNotifications';
 
 interface Notification {
   id: string;
