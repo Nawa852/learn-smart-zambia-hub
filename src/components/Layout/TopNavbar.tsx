@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Search, MessageCircle, User, Settings, LogOut, Bookmark } from 'lucide-react';
 import { NotificationBell } from '@/components/Notifications/NotificationBell';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
@@ -13,7 +13,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { roleLabels } from '@/components/Sidebar/sidebarConfig';
-import eduIcon from '@/assets/edu-zambia-icon.png';
+import nexusMark from '@/assets/nexus-mark.png';
 
 export const TopNavbar = () => {
   const navigate = useNavigate();
@@ -31,33 +31,34 @@ export const TopNavbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-card/90 backdrop-blur-2xl border-b border-border/60">
-      {/* Mobile: compact native-style header */}
+    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border/40">
       <div className="flex h-12 lg:h-14 items-center px-3 lg:px-4 gap-2">
         {/* Desktop sidebar trigger */}
         <SidebarTrigger className="hidden lg:flex shrink-0 -ml-1 text-muted-foreground" />
         
         {/* Mobile: Logo + Title */}
-        <div className="flex items-center gap-2 lg:hidden flex-1 min-w-0">
-          <img src={eduIcon} alt="Edu Zambia" className="w-7 h-7 shrink-0" />
-          <span className="font-semibold text-sm text-foreground truncate">Edu Zambia</span>
+        <div className="flex items-center gap-2.5 lg:hidden flex-1 min-w-0">
+          <img src={nexusMark} alt="Nexus" className="w-8 h-8 shrink-0 rounded-xl" />
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-sm text-foreground leading-tight">Nexus</span>
+            <span className="text-[9px] text-muted-foreground leading-tight uppercase tracking-widest font-medium">Learning</span>
+          </div>
         </div>
 
         {/* Desktop: Search center */}
         <div className="hidden lg:flex flex-1 justify-center">
           <button
             onClick={openCommandPalette}
-            className="flex items-center gap-2 h-9 w-full max-w-md px-4 rounded-xl bg-secondary/50 border border-border/50 text-muted-foreground hover:bg-secondary hover:border-border transition-all text-sm cursor-pointer"
+            className="flex items-center gap-2 h-9 w-full max-w-md px-4 rounded-xl bg-secondary/60 border border-border/40 text-muted-foreground hover:bg-secondary hover:border-border/60 transition-all text-sm cursor-pointer"
           >
             <Search className="w-4 h-4 shrink-0" />
             <span className="flex-1 text-left">Search anything...</span>
-            <kbd className="ml-auto px-1.5 py-0.5 rounded bg-muted/60 text-[10px] font-mono border border-border/30">⌘K</kbd>
+            <kbd className="ml-auto px-1.5 py-0.5 rounded-md bg-muted/80 text-[10px] font-mono border border-border/30">⌘K</kbd>
           </button>
         </div>
 
-        {/* Right actions — compact on mobile */}
+        {/* Right actions */}
         <div className="flex items-center gap-0.5 lg:gap-1">
-          {/* Mobile search */}
           <Button variant="ghost" size="icon" className="lg:hidden h-8 w-8 text-muted-foreground rounded-full"
             onClick={openCommandPalette}>
             <Search className="h-[18px] w-[18px]" />
@@ -65,7 +66,6 @@ export const TopNavbar = () => {
 
           <ThemeSwitcher />
 
-          {/* Desktop only: messages */}
           <Button variant="ghost" size="icon" className="hidden lg:flex h-9 w-9 text-muted-foreground hover:text-foreground rounded-full"
             onClick={() => navigate('/connect?tab=messenger')}>
             <MessageCircle className="h-4 w-4" />
@@ -73,13 +73,13 @@ export const TopNavbar = () => {
 
           <NotificationBell />
 
-          {/* Profile avatar */}
+          {/* Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 lg:h-9 lg:w-9 rounded-full p-0 ml-0.5">
-                <Avatar className="h-7 w-7 lg:h-8 lg:w-8 ring-2 ring-border/50">
+                <Avatar className="h-7 w-7 lg:h-8 lg:w-8 ring-2 ring-primary/20">
                   <AvatarImage src={profile?.avatar_url} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-[11px] font-bold">
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground text-[11px] font-bold">
                     {profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>

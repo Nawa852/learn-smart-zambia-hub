@@ -15,7 +15,7 @@ import { LogoLoader } from '@/components/UI/LogoLoader';
 import { OnboardingTour } from '@/components/Dashboard/OnboardingTour';
 import { Button } from '@/components/ui/button';
 import { getPrimaryNavigationByRole, roleLabels } from '@/components/Sidebar/sidebarConfig';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const Dashboard = () => {
   const { profile, loading } = useProfile();
@@ -26,9 +26,7 @@ const Dashboard = () => {
     if (!loading && profile) {
       const shouldShow = localStorage.getItem('edu-zambia-show-tour') === 'true';
       const alreadyDone = localStorage.getItem('edu-zambia-tour-completed') === 'true';
-      if (shouldShow && !alreadyDone) {
-        setShowTour(true);
-      }
+      if (shouldShow && !alreadyDone) setShowTour(true);
     }
   }, [loading, profile]);
 
@@ -39,7 +37,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <LogoLoader size="lg" text="Loading dashboard..." />
+        <LogoLoader size="lg" text="Loading your workspace..." />
       </div>
     );
   }
@@ -66,40 +64,39 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-4 lg:space-y-6">
+    <div className="space-y-5 lg:space-y-6">
       {showTour && <OnboardingTour role={userType} onComplete={() => setShowTour(false)} />}
       
-      {/* Compact mobile hero / expanded desktop hero */}
-      <div className="relative overflow-hidden rounded-xl lg:rounded-2xl border border-border bg-gradient-to-br from-card via-card to-primary/5">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.1),transparent_60%)]" />
-        <div className="relative px-4 py-4 lg:px-6 lg:py-6">
-          <div className="flex flex-col gap-3 lg:gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] lg:text-[11px] font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3 h-3" />
+      {/* Hero — clean, minimal */}
+      <div className="relative overflow-hidden rounded-2xl bg-card border border-border/40">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/4" />
+        <div className="relative px-4 py-5 lg:px-6 lg:py-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-[10px] text-primary font-semibold uppercase tracking-[0.15em] mb-1">
                 {roleLabels[userType as string] || 'Workspace'}
-              </div>
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground tracking-tight">
-                {greeting()}, {userName.split(' ')[0]} 👋
+              </p>
+              <h1 className="text-xl lg:text-2xl font-bold text-foreground">
+                {greeting()}, {userName.split(' ')[0]}
               </h1>
-              <p className="text-xs lg:text-sm text-muted-foreground max-w-md">
-                Jump into your workspace — everything you need is just a click away.
+              <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+                Your workspace is ready. Pick up where you left off.
               </p>
             </div>
 
-            {/* Quick actions — horizontal scroll on mobile */}
+            {/* Quick actions */}
             <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1 -mb-1">
               {primaryActions.map((item) => (
                 <Button
                   key={item.url}
                   variant="secondary"
                   size="sm"
-                  className="gap-1.5 rounded-full lg:rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0 h-8 text-xs"
+                  className="gap-1.5 rounded-xl border border-border/40 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0 h-9 text-xs font-medium"
                   onClick={() => navigate(item.url)}
                 >
                   <item.icon className="w-3.5 h-3.5" />
                   {item.shortTitle ?? item.title}
-                  <ArrowRight className="w-3 h-3 opacity-40" />
+                  <ArrowRight className="w-3 h-3 opacity-30" />
                 </Button>
               ))}
             </div>
@@ -107,12 +104,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Dashboard content */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+      {/* Content */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 lg:gap-6">
         <div className="xl:col-span-2">
           {renderDashboardView()}
         </div>
-        <div className="space-y-4 lg:space-y-6">
+        <div className="space-y-5">
           <StakeholderBridge role={userType as string} />
         </div>
       </div>
