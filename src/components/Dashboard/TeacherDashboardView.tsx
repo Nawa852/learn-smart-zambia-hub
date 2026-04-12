@@ -47,10 +47,10 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
   const [isGrading, setIsGrading] = useState(false);
 
   const quickStats = [
-    { title: "Total Students", value: totalStudents.toString(), icon: Users, color: "text-blue-600", bg: "bg-blue-50", change: `${courses.length} course${courses.length !== 1 ? 's' : ''}` },
-    { title: "Active Classes", value: courses.filter(c => c.is_published).length.toString(), icon: BookOpen, color: "text-green-600", bg: "bg-green-50", change: `${courses.length} total` },
-    { title: "Pending Grading", value: pendingCount.toString(), icon: ClipboardCheck, color: "text-orange-600", bg: "bg-orange-50", change: "To review" },
-    { title: "Avg Performance", value: avgPerformance > 0 ? `${avgPerformance}%` : "N/A", icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50", change: avgPerformance > 0 ? "From graded work" : "No grades yet" },
+    { title: "Total Students", value: totalStudents.toString(), icon: Users, color: "text-primary", bg: "bg-primary/10", change: `${courses.length} course${courses.length !== 1 ? 's' : ''}` },
+    { title: "Active Classes", value: courses.filter(c => c.is_published).length.toString(), icon: BookOpen, color: "text-accent", bg: "bg-accent/10", change: `${courses.length} total` },
+    { title: "Pending Grading", value: pendingCount.toString(), icon: ClipboardCheck, color: "text-warning", bg: "bg-warning/10", change: "To review" },
+    { title: "Avg Performance", value: avgPerformance > 0 ? `${avgPerformance}%` : "N/A", icon: TrendingUp, color: "text-primary", bg: "bg-primary/10", change: avgPerformance > 0 ? "From graded work" : "No grades yet" },
   ];
 
   const teacherTools = [
