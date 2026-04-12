@@ -38,7 +38,7 @@ const MyNotesPage = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState('');
   const recognitionRef = useRef<any>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const transcriptRef = useRef('');
 
   useEffect(() => {
