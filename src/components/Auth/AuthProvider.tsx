@@ -7,6 +7,9 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isDemo: boolean;
+  enterDemoMode: () => void;
+  exitDemoMode: () => void;
   signOut: () => Promise<void>;
   signUp: (email: string, password: string, fullName?: string, userType?: string, grade?: string) => Promise<{ error: any }>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
@@ -36,6 +39,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemo, setIsDemo] = useState(() => localStorage.getItem('edu-zambia-demo') === 'true');
+
+  const enterDemoMode = () => {
+    setIsDemo(true);
+    localStorage.setItem('edu-zambia-demo', 'true');
+  };
+
+  const exitDemoMode = () => {
+    setIsDemo(false);
+    localStorage.removeItem('edu-zambia-demo');
+  };
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -192,6 +206,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     session,
     loading,
+    isDemo,
+    enterDemoMode,
+    exitDemoMode,
     signOut,
     signUp,
     signInWithEmail,

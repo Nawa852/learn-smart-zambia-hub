@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/components/Auth/AuthProvider';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, Brain, BookOpen, Target, Check, Sparkles,
@@ -33,7 +34,13 @@ const fadeUp = {
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
 const MVPLanding = () => {
+  const { enterDemoMode } = useAuth();
   const navigate = useNavigate();
+
+  const handleDemo = () => {
+    enterDemoMode();
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,12 +56,15 @@ const MVPLanding = () => {
             <a href="#roles" className="hover:text-foreground transition-colors">Who It's For</a>
             <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={handleDemo} className="font-medium text-xs">
+              Try Demo
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate('/auth')} className="font-medium">
               Log in
             </Button>
             <Button size="sm" onClick={() => navigate('/auth?mode=signup')} className="font-semibold gap-1.5 shadow-sm">
-              Sign Up Free <ArrowRight className="w-3.5 h-3.5" />
+              Sign Up <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
         </div>
@@ -81,15 +91,18 @@ const MVPLanding = () => {
             AI tutors, ECZ exam practice, smart courses, and study tools — everything Zambian students need to succeed, in one platform.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
             <Button size="lg" onClick={() => navigate('/auth?mode=signup')} className="h-12 px-8 text-base font-semibold shadow-lg shadow-primary/25 gap-2">
               Start Learning — It's Free
               <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate('/about')} className="h-12 px-8 text-base font-semibold gap-2">
+            <Button size="lg" variant="outline" onClick={handleDemo} className="h-12 px-8 text-base font-semibold gap-2">
               <Play className="w-4 h-4 fill-current" />
-              See How It Works
+              Try Demo
             </Button>
+          </motion.div>
+          <motion.div variants={fadeUp} className="mb-8">
+            <p className="text-xs text-muted-foreground">No account needed — explore all features instantly</p>
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
