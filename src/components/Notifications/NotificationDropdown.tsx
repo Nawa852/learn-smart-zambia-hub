@@ -84,7 +84,11 @@ export const NotificationDropdown = () => {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+      cleanupAnnouncements();
+      clearInterval(deadlineInterval);
+    };
   }, [user]);
 
   const markAllRead = async () => {
