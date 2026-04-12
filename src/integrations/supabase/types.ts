@@ -565,6 +565,45 @@ export type Database = {
         }
         Relationships: []
       }
+      collaboration_sessions: {
+        Row: {
+          content_data: Json | null
+          created_at: string
+          created_by: string
+          id: string
+          is_active: boolean
+          participants: string[] | null
+          session_type: string
+          subject: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_data?: Json | null
+          created_at?: string
+          created_by: string
+          id?: string
+          is_active?: boolean
+          participants?: string[] | null
+          session_type?: string
+          subject?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_data?: Json | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_active?: boolean
+          participants?: string[] | null
+          session_type?: string
+          subject?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       communication_logs: {
         Row: {
           communication_type: string | null
@@ -595,6 +634,57 @@ export type Database = {
           student_id?: string | null
           subject?: string
           teacher_id?: string
+        }
+        Relationships: []
+      }
+      community_events: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          end_date: string | null
+          event_date: string
+          event_type: string
+          grade_level: string | null
+          id: string
+          is_virtual: boolean
+          location: string | null
+          max_attendees: number | null
+          meeting_link: string | null
+          subject: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          end_date?: string | null
+          event_date: string
+          event_type?: string
+          grade_level?: string | null
+          id?: string
+          is_virtual?: boolean
+          location?: string | null
+          max_attendees?: number | null
+          meeting_link?: string | null
+          subject?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          end_date?: string | null
+          event_date?: string
+          event_type?: string
+          grade_level?: string | null
+          id?: string
+          is_virtual?: boolean
+          location?: string | null
+          max_attendees?: number | null
+          meeting_link?: string | null
+          subject?: string | null
+          title?: string
         }
         Relationships: []
       }
@@ -1018,6 +1108,38 @@ export type Database = {
           },
         ]
       }
+      event_attendees: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          rsvp_status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          rsvp_status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          rsvp_status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_attendees_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flashcard_cards: {
         Row: {
           back: string
@@ -1431,6 +1553,42 @@ export type Database = {
         }
         Relationships: []
       }
+      mentorships: {
+        Row: {
+          created_at: string
+          goals: string | null
+          id: string
+          mentee_id: string
+          mentor_id: string
+          notes: string | null
+          status: string
+          subject_area: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          goals?: string | null
+          id?: string
+          mentee_id: string
+          mentor_id: string
+          notes?: string | null
+          status?: string
+          subject_area: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          goals?: string | null
+          id?: string
+          mentee_id?: string
+          mentor_id?: string
+          notes?: string | null
+          status?: string
+          subject_area?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -1592,6 +1750,39 @@ export type Database = {
           title?: string
           uploaded_by?: string | null
           year?: string
+        }
+        Relationships: []
+      }
+      peer_matches: {
+        Row: {
+          created_at: string
+          id: string
+          match_score: number | null
+          matched_user_id: string
+          message: string | null
+          requester_id: string
+          status: string
+          subjects: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_score?: number | null
+          matched_user_id: string
+          message?: string | null
+          requester_id: string
+          status?: string
+          subjects?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_score?: number | null
+          matched_user_id?: string
+          message?: string | null
+          requester_id?: string
+          status?: string
+          subjects?: string[] | null
         }
         Relationships: []
       }
