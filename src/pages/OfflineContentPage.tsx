@@ -157,7 +157,7 @@ const OfflineContentPage = () => {
                   <CardTitle className="text-sm text-foreground">{courseName}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  {lessons.map((lesson: any) => (
+                  {(lessons as any[]).map((lesson: any) => (
                     <div key={lesson.id} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border">
                       <div className="flex-1 min-w-0 mr-3">
                         <p className="text-sm font-medium text-foreground truncate">{lesson.title}</p>
