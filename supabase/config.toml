@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.guardian-weekly-digest]
 verify_jwt = false
+
+[functions.peer-matcher]
+verify_jwt = false
