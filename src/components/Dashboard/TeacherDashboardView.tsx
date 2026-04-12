@@ -209,7 +209,7 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickStats.map((stat, index) => (
-            <Card key={index} className="hover:shadow-lg transition-all duration-300 group">
+            <Card key={index} className="border-border/40 hover:shadow-card-hover transition-all duration-300 group">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
@@ -316,7 +316,7 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
         </div>
 
         {/* Pending Grading */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border-border/50 shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-accent" />Pending Grading</CardTitle>
             <CardDescription>Submissions awaiting your review</CardDescription>
