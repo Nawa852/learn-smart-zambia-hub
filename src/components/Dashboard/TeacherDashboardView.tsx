@@ -182,16 +182,16 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
 
       <TabsContent value="overview" className="space-y-6">
         {/* Welcome */}
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-primary/10 via-primary/5 to-background">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <Card className="border-border/50 shadow-card bg-gradient-to-r from-primary/8 via-primary/4 to-transparent">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Welcome, {userName}! 👨‍🏫</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-xl lg:text-2xl font-bold text-foreground mb-1">Welcome, {userName}! 👨‍🏫</h1>
+                <p className="text-sm text-muted-foreground">
                   {pendingCount > 0 ? `You have ${pendingCount} submission${pendingCount !== 1 ? 's' : ''} to grade` : 'All caught up — no pending grades!'}
                 </p>
               </div>
-              <Button asChild><Link to="/create-course"><BookOpen className="w-4 h-4 mr-2" />Create Course</Link></Button>
+              <Button asChild size="sm" className="shrink-0"><Link to="/create-course"><BookOpen className="w-4 h-4 mr-1.5" />Create Course</Link></Button>
             </div>
           </CardContent>
         </Card>
