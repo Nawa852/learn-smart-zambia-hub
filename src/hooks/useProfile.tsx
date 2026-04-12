@@ -33,9 +33,28 @@ function toAppRole(value: string | null | undefined): AppRole {
 export const useProfile = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, isDemo } = useAuth();
 
   const fetchProfile = useCallback(async () => {
+    if (isDemo) {
+      setProfile({
+        id: 'demo-user',
+        full_name: 'Demo Student',
+        avatar_url: null,
+        role: 'student',
+        bio: null,
+        phone: null,
+        school: 'Demo School',
+        grade: 'Grade 10',
+        province: 'Lusaka',
+        device_setup_complete: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      setLoading(false);
+      return;
+    }
+
     if (!user) {
       setProfile(null);
       setLoading(false);
