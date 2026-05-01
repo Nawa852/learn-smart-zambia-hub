@@ -135,21 +135,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signInWithGoogle = async () => {
-    // Using Lovable Cloud managed Google OAuth
-    try {
-      const { lovable } = await import('@/integrations/lovable');
-      const { error } = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.origin,
-      });
-      
-      if (error) {
-        toast.error("Google sign in failed");
-        throw error;
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Google sign in failed");
-      throw error;
-    }
+    toast.info("Google sign-in has been disabled. Please use email & password.");
   };
 
   const signInWithFacebook = async () => {
