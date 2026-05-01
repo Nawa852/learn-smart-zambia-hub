@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Facebook, Mail, User, Lock, GraduationCap, Users, BookOpen } from 'lucide-react';
+import { Mail, User, Lock, GraduationCap, Users, BookOpen } from 'lucide-react';
 import { useAuth } from './AuthProvider';
 
 const SignUpPage = () => {
@@ -20,7 +20,7 @@ const SignUpPage = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { signUp, signInWithFacebook, signInWithGoogle } = useAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const validateForm = () => {
