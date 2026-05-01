@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import nexusMark from '@/assets/nexus-mark.png';
+import eduMark from '@/assets/edu-zambia-icon.png';
 
 const features = [
   { icon: Brain, title: 'AI Tutor', desc: 'Personal AI that adapts to how you learn — ask anything, anytime.', color: 'from-blue-500/20 to-cyan-500/20' },
@@ -45,9 +45,9 @@ const MVPLanding = () => {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-2xl border-b border-border/10">
         <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-          <Link to="/" className="flex items-center gap-2.5">
-            <img src={nexusMark} alt="" className="w-8 h-8 rounded-xl shadow-card" />
-            <span className="font-bold text-base text-foreground tracking-tight">Nexus</span>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img src={eduMark} alt="Edu Zambia" className="w-9 h-9 rounded-xl shadow-card transition-transform group-hover:scale-105" />
+            <span className="font-extrabold text-base text-foreground tracking-tight">Edu Zambia</span>
           </Link>
           <div className="hidden md:flex items-center gap-8 text-[13px] text-muted-foreground font-medium">
             <a href="#features" className="hover:text-foreground transition-colors">Features</a>
@@ -257,8 +257,8 @@ const MVPLanding = () => {
       <footer className="border-t border-border/10 py-8 px-4">
         <div className="container mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2.5">
-            <img src={nexusMark} alt="" className="w-5 h-5 rounded-lg" />
-            <span className="text-xs">© 2024 Nexus Learning. Made with <Heart className="w-3 h-3 inline text-destructive fill-current" /> in Zambia</span>
+            <img src={eduMark} alt="Edu Zambia" className="w-6 h-6 rounded-lg" />
+            <span className="text-xs">© 2026 Edu Zambia. Made with <Heart className="w-3 h-3 inline text-destructive fill-current" /> in Zambia</span>
           </div>
           <div className="flex items-center gap-6 text-xs">
             <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
