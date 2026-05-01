@@ -13,7 +13,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/components/Auth/AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
 import { roleLabels } from '@/components/Sidebar/sidebarConfig';
-import nexusMark from '@/assets/nexus-mark.png';
+import eduMark from '@/assets/edu-zambia-icon.png';
 
 export const TopNavbar = () => {
   const navigate = useNavigate();
@@ -38,8 +38,8 @@ export const TopNavbar = () => {
         
         {/* Mobile: Logo */}
         <div className="flex items-center gap-2.5 lg:hidden flex-1 min-w-0">
-          <img src={nexusMark} alt="Nexus" className="w-7 h-7 shrink-0 rounded-lg shadow-sm" />
-          <span className="font-bold text-[15px] text-foreground tracking-tight">Nexus</span>
+          <img src={eduMark} alt="Edu Zambia" className="w-7 h-7 shrink-0 rounded-lg shadow-sm" />
+          <span className="font-bold text-[15px] text-foreground tracking-tight">Edu Zambia</span>
         </div>
 
         {/* Desktop: Search center */}
