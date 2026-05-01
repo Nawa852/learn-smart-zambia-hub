@@ -54,7 +54,18 @@ const SignUpPage = () => {
     }
   };
 
-
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md relative z-10 shadow-card-hover bg-card">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+              <GraduationCap className="w-8 h-8 text-primary-foreground" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold">Join EDU ZAMBIA</CardTitle>
+          <CardDescription className="text-lg">Start your learning journey with Africa's leading AI-powered education platform</CardDescription>
+        </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleEmailSignUp} className="space-y-4">
             <div className="space-y-2">

@@ -50,31 +50,6 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
     navigate('/dashboard');
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await signInWithGoogle();
-      navigate('/dashboard');
-      onSuccess?.();
-    } catch (error) {
-      console.error('Google sign in failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFacebookSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await signInWithFacebook();
-      navigate('/dashboard');
-      onSuccess?.();
-    } catch (error) {
-      console.error('Facebook sign in failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
