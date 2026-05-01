@@ -119,34 +119,6 @@ const AuthPage = () => {
     }
   };
 
-  const handleGoogleAuth = async () => {
-    setLoading(true);
-    try {
-      localStorage.setItem('edu-zambia-needs-role', 'true');
-      const { error } = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: `${window.location.origin}/choose-role`,
-      });
-      if (error) throw error;
-    } catch (error: any) {
-      toast({ title: 'Google sign in failed', description: error.message, variant: 'destructive' });
-      setLoading(false);
-    }
-  };
-
-  const handleAppleAuth = async () => {
-    setLoading(true);
-    try {
-      localStorage.setItem('edu-zambia-needs-role', 'true');
-      const { error } = await lovable.auth.signInWithOAuth('apple', {
-        redirect_uri: `${window.location.origin}/choose-role`,
-      });
-      if (error) throw error;
-    } catch (error: any) {
-      toast({ title: 'Apple sign in failed', description: error.message, variant: 'destructive' });
-      setLoading(false);
-    }
-  };
-
   const handleForgotPassword = async () => {
     if (!email) {
       toast({ title: 'Enter your email first', variant: 'destructive' }); return;
