@@ -30,14 +30,18 @@ const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
 
   // Check completeness conditions
   const profileComplete = !!(profile?.full_name?.trim());
-  const deviceSetup = !!(profile as any)?.device_setup_complete;
-  const hasSchedule = schedules.length > 0;
+  const setupDone = !!(profile as any)?.device_setup_complete;
+  const role = profile?.role || 'student';
 
-  // Enforce setup for learner-type roles (not institution/ministry)
-  const exemptRoles = ['institution', 'ministry'];
-  const needsSetup = !exemptRoles.includes(profile?.role || '');
+  // Roles that should be routed through their tailored onboarding wizard
+  const onboardableRoles = ['student','teacher','guardian','doctor','entrepreneur','developer','skills','cybersecurity'];
+  const needsSetup = onboardableRoles.includes(role);
 
-  if (needsSetup && (!profileComplete || !deviceSetup || !hasSchedule)) {
+  // Students additionally need a study schedule
+  const isStudentLike = ['student','doctor','developer','skills','cybersecurity'].includes(role);
+  const studentNeedsSchedule = isStudentLike && schedules.length === 0;
+
+  if (needsSetup && (!profileComplete || !setupDone || studentNeedsSchedule)) {
     return <Navigate to="/setup" replace state={{ from: location }} />;
   }
 
