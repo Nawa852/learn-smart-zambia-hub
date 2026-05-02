@@ -19,6 +19,29 @@ export interface Profile {
   province: string | null;
   onboarding_completed?: boolean;
   device_setup_complete?: boolean;
+  // Extended profile fields
+  education_level?: string | null;
+  institution_name?: string | null;
+  institution_type?: string | null;
+  program_of_study?: string | null;
+  year_of_study?: string | null;
+  subjects?: string[] | null;
+  exam_target?: string | null;
+  exam_year?: number | null;
+  study_goals?: string | null;
+  date_of_birth?: string | null;
+  guardian_contact?: string | null;
+  career_interest?: string | null;
+  learning_style?: string | null;
+  preferred_language?: string | null;
+  // Teacher
+  subjects_taught?: string[] | null;
+  grades_taught?: string[] | null;
+  years_experience?: number | null;
+  teacher_qualification?: string | null;
+  // Parent
+  relationship_to_child?: string | null;
+  num_children?: number | null;
   created_at: string;
   updated_at: string;
 }
