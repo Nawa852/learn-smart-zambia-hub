@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
-import { useStudySchedule } from '@/hooks/useStudySchedule';
+
 import { LogoLoader } from '@/components/UI/LogoLoader';
 
 interface PostLoginGateProps {
@@ -12,7 +12,7 @@ interface PostLoginGateProps {
 const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
   const { user, isDemo } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
-  const { schedules, loading: schedulesLoading } = useStudySchedule();
+  
   const location = useLocation();
 
   // Demo mode skips all gates
@@ -24,7 +24,7 @@ const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  if (!user || profileLoading || schedulesLoading) {
+  if (!user || profileLoading) {
     return <>{children}</>;
   }
 
