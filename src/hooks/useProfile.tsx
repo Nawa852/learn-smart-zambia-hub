@@ -168,6 +168,17 @@ export const useProfile = () => {
       if (updates.grade_level !== undefined) dbUpdates.grade = updates.grade_level;
       if (updates.role !== undefined) dbUpdates.role = updates.role;
       if (updates.user_type !== undefined) dbUpdates.role = toAppRole(updates.user_type);
+      // Extended pass-through fields
+      const passthrough = [
+        'education_level','institution_name','institution_type','program_of_study','year_of_study',
+        'subjects','exam_target','exam_year','study_goals','date_of_birth','guardian_contact',
+        'career_interest','learning_style','preferred_language',
+        'subjects_taught','grades_taught','years_experience','teacher_qualification',
+        'relationship_to_child','num_children','device_setup_complete',
+      ] as const;
+      for (const k of passthrough) {
+        if ((updates as any)[k] !== undefined) dbUpdates[k] = (updates as any)[k];
+      }
 
       const { error } = await supabase
         .from('profiles')
