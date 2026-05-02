@@ -37,11 +37,7 @@ const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
   const onboardableRoles = ['student','teacher','guardian','doctor','entrepreneur','developer','skills','cybersecurity'];
   const needsSetup = onboardableRoles.includes(role);
 
-  // Students additionally need a study schedule
-  const isStudentLike = ['student','doctor','developer','skills','cybersecurity'].includes(role);
-  const studentNeedsSchedule = isStudentLike && schedules.length === 0;
-
-  if (needsSetup && (!profileComplete || !setupDone || studentNeedsSchedule)) {
+  if (needsSetup && (!profileComplete || !setupDone)) {
     return <Navigate to="/setup" replace state={{ from: location }} />;
   }
 
