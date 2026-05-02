@@ -1790,47 +1790,107 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          career_interest: string | null
           created_at: string
+          date_of_birth: string | null
           device_setup_complete: boolean
+          education_level: string | null
+          exam_target: string | null
+          exam_year: number | null
           full_name: string | null
           grade: string | null
+          grades_taught: string[] | null
+          guardian_contact: string | null
           id: string
+          institution_name: string | null
+          institution_type: string | null
+          learning_style: string | null
+          num_children: number | null
           phone: string | null
+          preferred_language: string | null
+          program_of_study: string | null
           province: string | null
+          relationship_to_child: string | null
           role: Database["public"]["Enums"]["app_role"]
           school: string | null
+          study_goals: string | null
+          subjects: string[] | null
+          subjects_taught: string[] | null
+          teacher_qualification: string | null
           theme_preference: string | null
           updated_at: string
+          year_of_study: string | null
+          years_experience: number | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          career_interest?: string | null
           created_at?: string
+          date_of_birth?: string | null
           device_setup_complete?: boolean
+          education_level?: string | null
+          exam_target?: string | null
+          exam_year?: number | null
           full_name?: string | null
           grade?: string | null
+          grades_taught?: string[] | null
+          guardian_contact?: string | null
           id: string
+          institution_name?: string | null
+          institution_type?: string | null
+          learning_style?: string | null
+          num_children?: number | null
           phone?: string | null
+          preferred_language?: string | null
+          program_of_study?: string | null
           province?: string | null
+          relationship_to_child?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           school?: string | null
+          study_goals?: string | null
+          subjects?: string[] | null
+          subjects_taught?: string[] | null
+          teacher_qualification?: string | null
           theme_preference?: string | null
           updated_at?: string
+          year_of_study?: string | null
+          years_experience?: number | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          career_interest?: string | null
           created_at?: string
+          date_of_birth?: string | null
           device_setup_complete?: boolean
+          education_level?: string | null
+          exam_target?: string | null
+          exam_year?: number | null
           full_name?: string | null
           grade?: string | null
+          grades_taught?: string[] | null
+          guardian_contact?: string | null
           id?: string
+          institution_name?: string | null
+          institution_type?: string | null
+          learning_style?: string | null
+          num_children?: number | null
           phone?: string | null
+          preferred_language?: string | null
+          program_of_study?: string | null
           province?: string | null
+          relationship_to_child?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           school?: string | null
+          study_goals?: string | null
+          subjects?: string[] | null
+          subjects_taught?: string[] | null
+          teacher_qualification?: string | null
           theme_preference?: string | null
           updated_at?: string
+          year_of_study?: string | null
+          years_experience?: number | null
         }
         Relationships: []
       }
