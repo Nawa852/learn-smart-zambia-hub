@@ -39,6 +39,8 @@ const TeachHub = React.lazy(() => import('@/pages/hubs/TeachHub'));
 const FamilyHub = React.lazy(() => import('@/pages/hubs/FamilyHub'));
 const MinistryHub = React.lazy(() => import('@/pages/hubs/MinistryHub'));
 const AdminHub = React.lazy(() => import('@/pages/hubs/AdminHub'));
+const CybersecurityHub = React.lazy(() => import('@/pages/hubs/CybersecurityHub'));
+const SetupSchedulePage = React.lazy(() => import('@/pages/SetupSchedulePage'));
 
 // Lazy: Dynamic detail pages (keep standalone)
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
@@ -96,6 +98,8 @@ function App() {
               <Route path="/family" element={<PG><FamilyHub /></PG>} />
               <Route path="/ministry" element={<PG><MinistryHub /></PG>} />
               <Route path="/admin" element={<PG><AdminHub /></PG>} />
+              <Route path="/cybersecurity" element={<PG><CybersecurityHub /></PG>} />
+              <Route path="/setup-schedule" element={<PG><SetupSchedulePage /></PG>} />
 
               {/* ─── Dynamic Detail Pages ──────────────────────── */}
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />

@@ -11,6 +11,7 @@ import { GuardianCourseTracker } from './GuardianCourseTracker';
 import { GuardianActivityFeed } from './GuardianActivityFeed';
 import { GuardianRewardSystem } from './GuardianRewardSystem';
 import { ScreenTimeSummary } from './ScreenTimeSummary';
+import { ProfileCompletenessCard } from './ProfileCompletenessCard';
 
 interface GuardianDashboardViewProps {
   userName: string;
@@ -33,13 +34,16 @@ export const GuardianDashboardView = ({ userName }: GuardianDashboardViewProps) 
 
   return (
     <div className="space-y-5">
+      <ProfileCompletenessCard />
+
       {/* Empty State */}
       {students.length === 0 && (
         <Card className="border-2 border-dashed border-border/40">
           <CardContent className="p-10 text-center">
             <UserPlus className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-            <h2 className="text-lg font-bold mb-1">No Students Linked</h2>
-            <p className="text-sm text-muted-foreground mb-4">Ask your child to link you as a guardian to start monitoring their progress.</p>
+            <h2 className="text-lg font-bold mb-1">Link your first child</h2>
+            <p className="text-sm text-muted-foreground mb-4">Connect to your child's account to monitor progress, attendance, and grades.</p>
+            <Link to="/family?tab=children"><Button className="gap-2"><UserPlus className="w-4 h-4" /> Add a child</Button></Link>
           </CardContent>
         </Card>
       )}
