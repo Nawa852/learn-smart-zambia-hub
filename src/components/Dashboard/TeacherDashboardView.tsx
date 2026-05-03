@@ -16,6 +16,8 @@ import { TopStudentsWidget } from './TopStudentsWidget';
 import { OnboardingWelcomeBanner } from './OnboardingWelcomeBanner';
 import { useTeacherStats } from '@/hooks/useTeacherStats';
 import { LogoLoader } from '@/components/UI/LogoLoader';
+import { TeacherQuickAccess } from './TeacherQuickAccess';
+import { ProfileCompletenessCard } from './ProfileCompletenessCard';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -195,6 +197,10 @@ export const TeacherDashboardView = ({ userName }: TeacherDashboardViewProps) =>
             </div>
           </CardContent>
         </Card>
+
+        <TeacherQuickAccess />
+
+        <ProfileCompletenessCard />
 
         <OnboardingWelcomeBanner
           role="teacher" userName={userName} emoji="📚" subtitle="Here are some tips to make the most of your teaching tools."
