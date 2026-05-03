@@ -27,6 +27,8 @@ import { GradeCalculator } from '@/components/Dashboard/GradeCalculator';
 import { StudentSpotlight } from '@/components/Dashboard/StudentSpotlight';
 import { CollaborationLauncher } from '@/components/Dashboard/CollaborationLauncher';
 import { AIStudySummary } from '@/components/Dashboard/AIStudySummary';
+import { StudyScheduleCTA } from '@/components/Dashboard/StudyScheduleCTA';
+import { ProfileCompletenessCard } from '@/components/Dashboard/ProfileCompletenessCard';
 
 interface EnrolledCourse {
   id: string;
@@ -152,6 +154,9 @@ export const StudentDashboardView = ({ userName }: { userName: string }) => {
 
   return (
     <div className="space-y-6">
+      <StudyScheduleCTA />
+      <ProfileCompletenessCard />
+
       {/* Daily Check-in */}
       <DailyCheckin />
 
