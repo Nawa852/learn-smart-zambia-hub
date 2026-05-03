@@ -187,8 +187,8 @@ const cybersecurityNavigation: NavGroup[] = [
     label: "Main",
     items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, shortTitle: "Home" },
-      { title: "My Learning", url: "/learn", icon: GraduationCap, shortTitle: "Learn" },
-      { title: "AI Tools", url: "/ai", icon: Brain, badge: "AI", shortTitle: "AI" },
+      { title: "Cyber Hub", url: "/cybersecurity", icon: Shield, shortTitle: "Cyber" },
+      { title: "AI Mentor", url: "/ai", icon: Brain, badge: "AI", shortTitle: "AI" },
       { title: "Connect", url: "/connect", icon: MessageSquare, shortTitle: "Connect" },
       { title: "My Account", url: "/profile", icon: User, shortTitle: "Me" },
     ],
