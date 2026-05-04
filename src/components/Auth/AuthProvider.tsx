@@ -19,6 +19,7 @@ interface AuthContextType {
   verifyPhone: (phone: string, code: string) => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
   updatePassword: (password: string) => Promise<{ error: any }>;
+  resendVerification: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -188,6 +189,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const resendVerification = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+      });
+      if (error) {
+        toast.error(error.message);
+        return { error };
+      }
+      toast.success('Verification email sent! Check your inbox.');
+      return { error: null };
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to resend verification');
+      return { error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -204,6 +224,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     verifyPhone,
     resetPassword,
     updatePassword,
+    resendVerification,
   };
 
   return (
