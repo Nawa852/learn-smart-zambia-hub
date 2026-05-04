@@ -138,6 +138,16 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           </div>
         </motion.div>
         
+        {needsVerification && (
+          <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-3 text-sm space-y-2">
+            <p className="font-medium text-foreground">Your email isn't verified yet.</p>
+            <p className="text-xs text-muted-foreground">Click the link in your inbox, or resend it below.</p>
+            <Button type="button" size="sm" variant="outline" onClick={handleResend} className="w-full">
+              Resend verification email
+            </Button>
+          </div>
+        )}
+
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
           <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-card transition-all" disabled={isLoading}>
             {isLoading ? 'Signing In...' : 'Sign In'}
