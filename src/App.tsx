@@ -40,6 +40,9 @@ const FamilyHub = React.lazy(() => import('@/pages/hubs/FamilyHub'));
 const MinistryHub = React.lazy(() => import('@/pages/hubs/MinistryHub'));
 const AdminHub = React.lazy(() => import('@/pages/hubs/AdminHub'));
 const CybersecurityHub = React.lazy(() => import('@/pages/hubs/CybersecurityHub'));
+const CyberTerminalSandboxPage = React.lazy(() => import('@/pages/CyberTerminalSandboxPage'));
+const CyberSOCSimulatorPage = React.lazy(() => import('@/pages/CyberSOCSimulatorPage'));
+const CyberSkillTreePage = React.lazy(() => import('@/pages/CyberSkillTreePage'));
 const SetupSchedulePage = React.lazy(() => import('@/pages/SetupSchedulePage'));
 
 // Lazy: Dynamic detail pages (keep standalone)
@@ -99,6 +102,9 @@ function App() {
               <Route path="/ministry" element={<PG><MinistryHub /></PG>} />
               <Route path="/admin" element={<PG><AdminHub /></PG>} />
               <Route path="/cybersecurity" element={<PG><CybersecurityHub /></PG>} />
+              <Route path="/cyber-terminal" element={<PG><CyberTerminalSandboxPage /></PG>} />
+              <Route path="/cyber-soc" element={<PG><CyberSOCSimulatorPage /></PG>} />
+              <Route path="/cyber-skills" element={<PG><CyberSkillTreePage /></PG>} />
               <Route path="/setup-schedule" element={<PG><SetupSchedulePage /></PG>} />
 
               {/* ─── Dynamic Detail Pages ──────────────────────── */}
