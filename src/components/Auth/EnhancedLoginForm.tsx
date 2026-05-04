@@ -14,11 +14,12 @@ interface EnhancedLoginFormProps {
 
 const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const navigate = useNavigate();
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail, resendVerification } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,15 +28,25 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
       return;
     }
     setIsLoading(true);
+    setNeedsVerification(false);
     try {
       await signInWithEmail(email, password);
       navigate('/dashboard');
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
+      const msg = (error?.message || '').toLowerCase();
+      if (msg.includes('not confirmed') || msg.includes('confirm')) {
+        setNeedsVerification(true);
+      }
       console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResend = async () => {
+    if (!email) { toast.error('Enter your email first'); return; }
+    await resendVerification(email);
   };
 
   const handleQuickLogin = () => {
@@ -127,6 +138,16 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
           </div>
         </motion.div>
         
+        {needsVerification && (
+          <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-3 text-sm space-y-2">
+            <p className="font-medium text-foreground">Your email isn't verified yet.</p>
+            <p className="text-xs text-muted-foreground">Click the link in your inbox, or resend it below.</p>
+            <Button type="button" size="sm" variant="outline" onClick={handleResend} className="w-full">
+              Resend verification email
+            </Button>
+          </div>
+        )}
+
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
           <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-card transition-all" disabled={isLoading}>
             {isLoading ? 'Signing In...' : 'Sign In'}

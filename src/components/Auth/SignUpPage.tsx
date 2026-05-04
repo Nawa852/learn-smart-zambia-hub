@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Mail, User, Lock, GraduationCap, Users, BookOpen } from 'lucide-react';
+import { Mail, User, Lock, GraduationCap, Users, BookOpen, Eye, EyeOff, MailCheck } from 'lucide-react';
 import { useAuth } from './AuthProvider';
+import { PasswordStrengthMeter, getPasswordStrength } from './PasswordStrengthMeter';
+import { toast } from 'sonner';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
@@ -20,16 +21,24 @@ const SignUpPage = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { signUp } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState<string | null>(null);
+  const { signUp, resendVerification } = useAuth();
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (!fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (fullName.trim().length < 2) newErrors.fullName = 'Enter your full name';
     if (!email.trim()) newErrors.email = 'Email is required';
-    if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Enter a valid email address';
     if (!password) newErrors.password = 'Password is required';
-    if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    else {
+      const strength = getPasswordStrength(password);
+      if (password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+      else if (strength.score < 60) newErrors.password = 'Password is too weak — add uppercase, numbers or symbols';
+    }
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (!userType) newErrors.userType = 'Please select your role';
     if (userType === 'student' && !grade) newErrors.grade = 'Please select your grade';
@@ -44,8 +53,12 @@ const SignUpPage = () => {
     setLoading(true);
     try {
       const { error } = await signUp(email, password, fullName, userType, grade);
-      if (error?.message.includes('User already exists')) {
-        setErrors({ ...errors, email: 'A user with this email already exists.' });
+      if (error) {
+        if (error.message?.toLowerCase().includes('already')) {
+          setErrors({ ...errors, email: 'An account with this email already exists. Try signing in instead.' });
+        }
+      } else {
+        setSignupSuccess(email);
       }
     } catch (error) {
       console.error('Sign up error:', error);
@@ -53,6 +66,41 @@ const SignUpPage = () => {
       setLoading(false);
     }
   };
+
+  const handleResend = async () => {
+    if (!signupSuccess) return;
+    await resendVerification(signupSuccess);
+  };
+
+  if (signupSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md shadow-card-hover bg-card text-center">
+          <CardHeader className="space-y-4">
+            <div className="mx-auto w-16 h-16 rounded-full bg-primary/15 flex items-center justify-center">
+              <MailCheck className="w-8 h-8 text-primary" />
+            </div>
+            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <CardDescription>
+              We sent a verification link to <span className="font-semibold text-foreground">{signupSuccess}</span>.
+              Click the link to activate your Edu Zambia account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button variant="outline" className="w-full" onClick={handleResend}>
+              Resend verification email
+            </Button>
+            <Button variant="ghost" className="w-full" onClick={() => navigate('/login')}>
+              Back to sign in
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Didn't get it? Check your spam folder, or wait a minute and resend.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -123,8 +171,27 @@ const SignUpPage = () => {
               <Label htmlFor="password" className="text-sm font-medium">Password *</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="Create a password (min. 6 characters)" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10 h-11" required minLength={6} />
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10 pr-10 h-11"
+                  required
+                  minLength={8}
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
+              <PasswordStrengthMeter password={password} />
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
@@ -132,7 +199,24 @@ const SignUpPage = () => {
               <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password *</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input id="confirmPassword" type="password" placeholder="Confirm your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pl-10 h-11" required />
+                <Input
+                  id="confirmPassword"
+                  type={showConfirm ? 'text' : 'password'}
+                  placeholder="Re-enter your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="pl-10 pr-10 h-11"
+                  required
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm((s) => !s)}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                  aria-label={showConfirm ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
               {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
             </div>
