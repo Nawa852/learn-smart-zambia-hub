@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { useProfile } from '@/hooks/useProfile';
+import { useScheduleReminders } from '@/hooks/useScheduleReminders';
 
 import { LogoLoader } from '@/components/UI/LogoLoader';
 
@@ -12,8 +13,10 @@ interface PostLoginGateProps {
 const PostLoginGate: React.FC<PostLoginGateProps> = ({ children }) => {
   const { user, isDemo } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
-  
   const location = useLocation();
+
+  // Mount global study-schedule reminders for authenticated users
+  useScheduleReminders();
 
   // Demo mode skips all gates
   if (isDemo) return <>{children}</>;
