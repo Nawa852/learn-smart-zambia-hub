@@ -14,11 +14,12 @@ interface EnhancedLoginFormProps {
 
 const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
   const navigate = useNavigate();
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail, resendVerification } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,15 +28,25 @@ const EnhancedLoginForm = ({ onSuccess }: EnhancedLoginFormProps) => {
       return;
     }
     setIsLoading(true);
+    setNeedsVerification(false);
     try {
       await signInWithEmail(email, password);
       navigate('/dashboard');
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
+      const msg = (error?.message || '').toLowerCase();
+      if (msg.includes('not confirmed') || msg.includes('confirm')) {
+        setNeedsVerification(true);
+      }
       console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResend = async () => {
+    if (!email) { toast.error('Enter your email first'); return; }
+    await resendVerification(email);
   };
 
   const handleQuickLogin = () => {
