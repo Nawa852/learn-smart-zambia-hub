@@ -1028,6 +1028,33 @@ export type Database = {
         }
         Relationships: []
       }
+      direct_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       education_policies: {
         Row: {
           actual_result: string | null
@@ -1287,6 +1314,53 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grants: {
+        Row: {
+          amount_zmw: number
+          awarded_date: string | null
+          created_at: string
+          deadline: string | null
+          donor_name: string
+          id: string
+          notes: string | null
+          owner_id: string
+          program_id: string | null
+          status: string
+        }
+        Insert: {
+          amount_zmw?: number
+          awarded_date?: string | null
+          created_at?: string
+          deadline?: string | null
+          donor_name: string
+          id?: string
+          notes?: string | null
+          owner_id: string
+          program_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount_zmw?: number
+          awarded_date?: string | null
+          created_at?: string
+          deadline?: string | null
+          donor_name?: string
+          id?: string
+          notes?: string | null
+          owner_id?: string
+          program_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grants_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "ngo_programs"
             referencedColumns: ["id"]
           },
         ]
@@ -1553,6 +1627,125 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_services: {
+        Row: {
+          category: string | null
+          created_at: string
+          delivery_days: number | null
+          description: string | null
+          id: string
+          price_zmw: number
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          delivery_days?: number | null
+          description?: string | null
+          id?: string
+          price_zmw?: number
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          delivery_days?: number | null
+          description?: string | null
+          id?: string
+          price_zmw?: number
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mentor_requests: {
+        Row: {
+          created_at: string
+          id: string
+          mentor_id: string
+          message: string
+          requester_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentor_id: string
+          message: string
+          requester_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentor_id?: string
+          message?: string
+          requester_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentor_requests_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors_directory"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentors_directory: {
+        Row: {
+          bio: string | null
+          contact_email: string | null
+          created_at: string
+          created_by: string
+          directory_type: string
+          expertise: string | null
+          id: string
+          is_verified: boolean
+          linkedin_url: string | null
+          name: string
+          province: string | null
+          sectors: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          contact_email?: string | null
+          created_at?: string
+          created_by: string
+          directory_type?: string
+          expertise?: string | null
+          id?: string
+          is_verified?: boolean
+          linkedin_url?: string | null
+          name: string
+          province?: string | null
+          sectors?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          contact_email?: string | null
+          created_at?: string
+          created_by?: string
+          directory_type?: string
+          expertise?: string | null
+          id?: string
+          is_verified?: boolean
+          linkedin_url?: string | null
+          name?: string
+          province?: string | null
+          sectors?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       mentorships: {
         Row: {
           created_at: string
@@ -1624,6 +1817,50 @@ export type Database = {
           },
         ]
       }
+      ngo_beneficiaries: {
+        Row: {
+          age: number | null
+          created_at: string
+          gender: string | null
+          id: string
+          name: string
+          notes: string | null
+          owner_id: string
+          program_id: string
+          school: string | null
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          owner_id: string
+          program_id: string
+          school?: string | null
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          gender?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          owner_id?: string
+          program_id?: string
+          school?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ngo_beneficiaries_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "ngo_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ngo_partnerships: {
         Row: {
           contact_email: string | null
@@ -1675,6 +1912,57 @@ export type Database = {
         }
         Relationships: []
       }
+      ngo_programs: {
+        Row: {
+          beneficiaries_count: number | null
+          beneficiaries_target: number | null
+          budget_zmw: number | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          focus_area: string | null
+          id: string
+          name: string
+          owner_id: string
+          province: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          beneficiaries_count?: number | null
+          beneficiaries_target?: number | null
+          budget_zmw?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          focus_area?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          province?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          beneficiaries_count?: number | null
+          beneficiaries_target?: number | null
+          budget_zmw?: number | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          focus_area?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          province?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -1705,6 +1993,45 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      partner_schools: {
+        Row: {
+          contact_person: string | null
+          contact_phone: string | null
+          created_at: string
+          district: string | null
+          id: string
+          name: string
+          owner_id: string
+          province: string | null
+          school_type: string | null
+          students_enrolled: number | null
+        }
+        Insert: {
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          district?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          province?: string | null
+          school_type?: string | null
+          students_enrolled?: number | null
+        }
+        Update: {
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          district?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          province?: string | null
+          school_type?: string | null
+          students_enrolled?: number | null
         }
         Relationships: []
       }
@@ -1785,6 +2112,44 @@ export type Database = {
           subjects?: string[] | null
         }
         Relationships: []
+      }
+      pitch_decks: {
+        Row: {
+          content_json: Json
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+          venture_id: string | null
+        }
+        Insert: {
+          content_json?: Json
+          created_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+          venture_id?: string | null
+        }
+        Update: {
+          content_json?: Json
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          venture_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pitch_decks_venture_id_fkey"
+            columns: ["venture_id"]
+            isOneToOne: false
+            referencedRelation: "ventures"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -2017,6 +2382,60 @@ export type Database = {
         }
         Relationships: []
       }
+      school_interventions: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          intervention_date: string
+          intervention_type: string
+          notes: string | null
+          owner_id: string
+          program_id: string | null
+          school_id: string
+          students_reached: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          intervention_date?: string
+          intervention_type: string
+          notes?: string | null
+          owner_id: string
+          program_id?: string | null
+          school_id: string
+          students_reached?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          intervention_date?: string
+          intervention_type?: string
+          notes?: string | null
+          owner_id?: string
+          program_id?: string | null
+          school_id?: string
+          students_reached?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "school_interventions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "ngo_programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "school_interventions_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "partner_schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       screen_time_logs: {
         Row: {
           app_name: string
@@ -2046,6 +2465,138 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      service_orders: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          id: string
+          message: string | null
+          seller_id: string
+          service_id: string
+          status: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          seller_id: string
+          service_id: string
+          status?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          seller_id?: string
+          service_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_orders_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "social_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_posts: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          media_url: string | null
+          updated_at: string
+          user_id: string
+          visibility: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          updated_at?: string
+          user_id: string
+          visibility?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          media_url?: string | null
+          updated_at?: string
+          user_id?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
+      social_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          reaction_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "social_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       student_notes: {
         Row: {
@@ -2156,6 +2707,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "study_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_group_messages: {
+        Row: {
+          content: string
+          created_at: string
+          group_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          group_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          group_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_group_messages_group_id_fkey"
             columns: ["group_id"]
             isOneToOne: false
             referencedRelation: "study_groups"

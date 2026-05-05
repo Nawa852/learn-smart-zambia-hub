@@ -44,6 +44,8 @@ const CyberTerminalSandboxPage = React.lazy(() => import('@/pages/CyberTerminalS
 const CyberSOCSimulatorPage = React.lazy(() => import('@/pages/CyberSOCSimulatorPage'));
 const CyberSkillTreePage = React.lazy(() => import('@/pages/CyberSkillTreePage'));
 const SetupSchedulePage = React.lazy(() => import('@/pages/SetupSchedulePage'));
+const EntrepreneurHub = React.lazy(() => import('@/pages/hubs/EntrepreneurHub'));
+const NGOHub = React.lazy(() => import('@/pages/hubs/NGOHub'));
 
 // Lazy: Dynamic detail pages (keep standalone)
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
@@ -106,6 +108,8 @@ function App() {
               <Route path="/cyber-soc" element={<PG><CyberSOCSimulatorPage /></PG>} />
               <Route path="/cyber-skills" element={<PG><CyberSkillTreePage /></PG>} />
               <Route path="/setup-schedule" element={<PG><SetupSchedulePage /></PG>} />
+              <Route path="/entrepreneur" element={<PG><EntrepreneurHub /></PG>} />
+              <Route path="/ngo" element={<PG><NGOHub /></PG>} />
 
               {/* ─── Dynamic Detail Pages ──────────────────────── */}
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
