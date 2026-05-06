@@ -46,6 +46,13 @@ const CyberSkillTreePage = React.lazy(() => import('@/pages/CyberSkillTreePage')
 const SetupSchedulePage = React.lazy(() => import('@/pages/SetupSchedulePage'));
 const EntrepreneurHub = React.lazy(() => import('@/pages/hubs/EntrepreneurHub'));
 const NGOHub = React.lazy(() => import('@/pages/hubs/NGOHub'));
+const VideoRoomsPage = React.lazy(() => import('@/pages/VideoRoomsPage'));
+const StudyGroupsHubPage = React.lazy(() => import('@/pages/StudyGroupsHubPage'));
+const GroupChatPage = React.lazy(() => import('@/pages/GroupChatPage'));
+const GroupFilesPage = React.lazy(() => import('@/pages/GroupFilesPage'));
+const GroupVideoPage = React.lazy(() => import('@/pages/GroupVideoPage'));
+const SchoolAnnouncementsPage = React.lazy(() => import('@/pages/SchoolAnnouncementsPage'));
+const DonorImpactPage = React.lazy(() => import('@/pages/DonorImpactPage'));
 
 // Lazy: Dynamic detail pages (keep standalone)
 const CourseDetailPage = React.lazy(() => import('@/pages/CourseDetailPage'));
@@ -110,6 +117,13 @@ function App() {
               <Route path="/setup-schedule" element={<PG><SetupSchedulePage /></PG>} />
               <Route path="/entrepreneur" element={<PG><EntrepreneurHub /></PG>} />
               <Route path="/ngo" element={<PG><NGOHub /></PG>} />
+              <Route path="/video-rooms" element={<PG><VideoRoomsPage /></PG>} />
+              <Route path="/groups" element={<PG><StudyGroupsHubPage /></PG>} />
+              <Route path="/group/:groupId/chat" element={<PG><GroupChatPage /></PG>} />
+              <Route path="/group/:groupId/files" element={<PG><GroupFilesPage /></PG>} />
+              <Route path="/group/:groupId/video" element={<PG><GroupVideoPage /></PG>} />
+              <Route path="/school-announcements" element={<PG><SchoolAnnouncementsPage /></PG>} />
+              <Route path="/donor-impact" element={<DonorImpactPage />} />
 
               {/* ─── Dynamic Detail Pages ──────────────────────── */}
               <Route path="/course/:courseId" element={<PG><CourseDetailPage /></PG>} />
