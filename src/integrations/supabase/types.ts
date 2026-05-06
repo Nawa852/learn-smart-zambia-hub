@@ -1055,6 +1055,39 @@ export type Database = {
         }
         Relationships: []
       }
+      donor_pledges: {
+        Row: {
+          amount_zmw: number
+          created_at: string
+          donor_name: string
+          id: string
+          is_public: boolean
+          message: string | null
+          pledger_id: string | null
+          program_id: string | null
+        }
+        Insert: {
+          amount_zmw?: number
+          created_at?: string
+          donor_name: string
+          id?: string
+          is_public?: boolean
+          message?: string | null
+          pledger_id?: string | null
+          program_id?: string | null
+        }
+        Update: {
+          amount_zmw?: number
+          created_at?: string
+          donor_name?: string
+          id?: string
+          is_public?: boolean
+          message?: string | null
+          pledger_id?: string | null
+          program_id?: string | null
+        }
+        Relationships: []
+      }
       education_policies: {
         Row: {
           actual_result: string | null
@@ -1361,6 +1394,47 @@ export type Database = {
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "ngo_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_files: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_url: string
+          group_id: string
+          id: string
+          mime: string | null
+          size_bytes: number | null
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_url: string
+          group_id: string
+          id?: string
+          mime?: string | null
+          size_bytes?: number | null
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_url?: string
+          group_id?: string
+          id?: string
+          mime?: string | null
+          size_bytes?: number | null
+          uploader_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_files_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
             referencedColumns: ["id"]
           },
         ]
@@ -2343,6 +2417,39 @@ export type Database = {
         }
         Relationships: []
       }
+      school_announcements: {
+        Row: {
+          audience: string
+          author_id: string
+          body: string | null
+          created_at: string
+          id: string
+          priority: string
+          school: string
+          title: string
+        }
+        Insert: {
+          audience?: string
+          author_id: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          school: string
+          title: string
+        }
+        Update: {
+          audience?: string
+          author_id?: string
+          body?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          school?: string
+          title?: string
+        }
+        Relationships: []
+      }
       school_events: {
         Row: {
           created_at: string
@@ -3040,6 +3147,83 @@ export type Database = {
         }
         Relationships: []
       }
+      video_room_participants: {
+        Row: {
+          id: string
+          joined_at: string
+          left_at: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_room_participants_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "video_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_rooms: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          host_id: string
+          id: string
+          is_recording: boolean
+          provider: string
+          room_code: string
+          scheduled_at: string | null
+          scope: string
+          scope_id: string | null
+          started_at: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          host_id: string
+          id?: string
+          is_recording?: boolean
+          provider?: string
+          room_code?: string
+          scheduled_at?: string | null
+          scope?: string
+          scope_id?: string | null
+          started_at?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          host_id?: string
+          id?: string
+          is_recording?: boolean
+          provider?: string
+          room_code?: string
+          scheduled_at?: string | null
+          scope?: string
+          scope_id?: string | null
+          started_at?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -3056,6 +3240,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_group_member: {
+        Args: { _group_id: string; _user_id: string }
         Returns: boolean
       }
     }
