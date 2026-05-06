@@ -19,9 +19,9 @@ const GroupChatPage: React.FC = () => {
   useEffect(() => {
     if (!groupId) return;
     (async () => {
-      const { data } = await supabase.from('study_group_messages' as any)
+      const { data } = await (supabase.from('study_group_messages' as any) as any)
         .select('*').eq('group_id', groupId).order('created_at', { ascending: true }).limit(200);
-      setMessages((data as Msg[]) || []);
+      setMessages(((data as unknown) as Msg[]) || []);
     })();
     const ch = supabase.channel(`group-${groupId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'study_group_messages', filter: `group_id=eq.${groupId}` },
